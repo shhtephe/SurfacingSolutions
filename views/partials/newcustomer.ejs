@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<div ng-controller="newCustomerCtrl" ng-init="save = <%if (save) {%><%= save %><%}else{%><%= false %><%}%>">
+	<form role="form" action="/admin" method="post">
+		New Customer: <br>	
+		First name <br> <input type='text' ng-model="firstName" name='firstName'><br>
+		Last name <br> <input type='text' ng-model="lastName" name='lastName'><br>
+		Company <br> <input type='text'  ng-model="companyName" name='companyName'><br>
+		Email Address <br> <input type='text' ng-model="email" name='email'><br>
+		Address <br> <input type='text' ng-model="addressLine1" name='addressLine1'><br>
+		Postal Code <br> <input type='text' ng-model="postal" name='postal'><br>
+		City <br> <input type='text' ng-model="city" name='city'><br>
+		Home Phone <br> <input type='text' ng-model="homePhone" name='homePhone'><br>
+		Cellphone <br> <input type='text' ng-model="mobilePhone" name='mobilePhone'><br>
+		<button type="button" style='btn' ng-click= "newCustomer(
+			firstName,
+			lastName,
+			companyName,
+			email,
+			addressLine1,
+			postal,
+			homePhone,
+			mobilePhone
+		)">Create new Customer</button>
+	</form>
+	<div ng-show="save">{{save}}</div>
+</div>

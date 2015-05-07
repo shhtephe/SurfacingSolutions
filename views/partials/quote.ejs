@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<div ng-controller="quoteCtrl" ng-init='customer=<%- JSON.stringify(customer) %>;quote=<%- JSON.stringify(quote) %>; addTable == false; products=<%- JSON.stringify(products) %>'>
+	Customer: {{customer.lastName}}, {{customer.firstName}}
+	<br>QuoteID: {{quote.quoteID}}
+	<br>
+	<br>
+	<div ng-hide="addTable == true">
+		<button type="button" style="btn" ng-click="showCounter()">Add a table</button>
+	</div>
+	<div ng-show="addTable == true">
+		<form>
+			Counter Shape: 
+			<select name="shape" ng-model="shape" id="shape">
+				<option value="" selected='selected'>----Select----</option>
+				<option  value="rectangle">Rectangle</option>
+				<option value="circle">Circle</option>
+			</select>
+			<br>
+			Width: <input type="text" ng-model="counterWidth" name="counterWidth">
+			<br>
+			<div ng-show="shape == 'rectangle'">
+				Length: <input type="text" ng-model="counterLength" name="counterLength">
+			</div>
+			<br>
+			<br>
+		</form>
+	</div>
+	<div ng-show="dropDown2 && dropDown1">
+	</div>
+	<br>
+	<div ng-show="addTable == true">
+		<button type="button" style="btn" ng-click="hideCounter()">Cancel</button>
+		<button type="button" style="btn" ng-click="saveTable(quote, counterWidth, counterLength, shape)">Save Table</button>
+	</div>
+	<br><br>
+	<u>Summary</u>: 
+	<br>
+	<div ng-repeat="counter in quote.counters">
+  		<u>Counter {{$index + 1}}</u> <button type="button" style="btn" ng-click="deleteTable(quote, $index)">DELETE THIS TABLE</button>
+  		<br>
+  		<br>Counter Shape: {{counter.counterShape}} 
+  		<br>counter Width: {{counter.counterWidth}}
+      	<br>counter Length: {{counter.counterLength}}
+      	<!--<br>counter Thickness: {{counter.counterThickness1}}
+      	<br>counter Thickness 2: {{counter.counterThickness1}}-->
+		<br><u>Addons:</u> 
+		<br>
+		<div ng-show="counter.addons.highGlossFinish.quantity > 0">High Gloss Finish: {{counter.addons.highGlossFinish.quantity}} <a href="#" ng-click="removeAddon('highGlossFinish', $index, quote)">remove</a></div>
+		<div ng-show="counter.addons.cuttingBoards.quantity > 0"><br>Cutting Boards: {{counter.addons.cuttingBoards.quantity}} <a href="#" ng-click="removeAddon('cuttingBoards', $index, quote)">remove</a></div>
+		<div ng-show="counter.addons.backBridgeForSlideInStove.quantity > 0"><br>Back Bridge for Slide in Stove: {{counter.addons.backBridgeForSlideInStove.quantity}} <a href="#" ng-click="removeAddon('backBridgeForSlideInStove', $index, quote)">remove</a></div>
+		<div ng-show="counter.addons.drainBoard.quantity > 0"><br>Drainboard: {{counter.addons.drainBoard.quantity}} <a href="#" ng-click="removeAddon('drainBoard', $index, quote)">remove</a></div>
+		<div ng-show="counter.addons.directionalMaterialFabrication.quantity > 0"><br>Directional Material Fabrication: {{counter.addons.directionalMaterialFabrication.quantity}} <a href="#" ng-click="removeAddon('directionalMaterialFabrication', $index, quote)">remove</a></div>
+		<div ng-show="counter.addons.adhesivePerLinerFoot.quantity > 0"><br>Adhesive Per Liner Foot: {{counter.addons.adhesivePerLinerFoot.quantity}} <a href="#" ng-click="removeAddon('adhesivePerLinerFoot', $index, quote)">remove</a></div>
+		<div ng-show="counter.addons.siteJoint.quantity > 0"><br>Adhesive Per Liner Foot: {{counter.addons.siteJoint.quantity}} <a href="#" ng-click="removeAddon('siteJoint', $index, quote)">remove</a></div>
+		<br>
+		<br>Add more addons
+		<select name="category" ng-model="dropDown1" ng-options="product.category for product in products | unique: 'category' track by product.category">
+			<option value="">----Select----</option>
+		</select>
+		<br>
+		<div ng-show="dropDown1">
+			<br>
+			Choose a Product:
+			<select name="product" ng-model="dropDown2" ng-options="product.product for product in products | filter:{category: dropDown1.category} track by product.product">
+				<option value="">----Select----</option>
+			</select>
+		</div>
+		<div ng-show="dropDown2 && dropDown1">
+			<br>
+			<ul class="list-group"> 
+				<li class="list-group-item">
+					Product Description: {{dropDown2.product}} <br>
+				</li>
+				<li class="list-group-item">	
+					Price: {{dropDown2.price}}<br>
+				</li>	
+				<li class="list-group-item">	
+					Quantity: <input type="text" ng-model="addonQuantity" name="addonQuantity">
+				</li>
+			    <button type="button" class="btn btn-default" ng-click="saveAddon(quote, $index, dropDown2.name, addonQuantity)">Add</button>
+			</ul>
+		</div>
+		---------------------------------------------------------------------------------------------------------------------------------------------
+
+	</div>
+	<br>Total Price: {{quote.totalPrice}}
+	<br>Job Difficulty: {{quote.jobDifficulty}}
+	<br>
+	<button type="button" style="btn" ng-click="saveQuote(quote)">Save Quote</button>
+</div>

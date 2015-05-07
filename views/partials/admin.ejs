@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<div ng-controller="adminCtrl" ng-init='products=<%- JSON.stringify(products) %>'>	
+	<form role="form" action="/admin" method="post">
+		Choose a Category:
+		<select name="category" ng-model="dropDown1" ng-options="product.category for product in products | unique: 'category' track by product.category">
+			<option value="">----Select----</option>
+		</select>
+		<br>
+		<div ng-show="dropDown1">
+			<br>
+			Choose a Product:
+			<select name="product" ng-model="dropDown2" ng-options="product.product for product in products | filter:{category: dropDown1.category} track by product.product">
+				<option value="">----Select----</option>
+			</select>
+		</div>
+		<div ng-show="dropDown2 && dropDown1">
+			<br>
+			<ul class="list-group"> 
+				<li class="list-group-item">
+					Product Description: {{dropDown2.product}} <br>
+				</li>
+				<li class="list-group-item">
+					Product ID: {{dropDown2.id}}<br>
+				</li>
+				<li class="list-group-item">	
+					Price: <input type="text" name="price" ng-model="dropDown2.price"> <br>
+				</li>	
+				<li class="list-group-item">	
+						Charge by: 
+						<select name="unitOfMeasure" ng-model="dropDown2.unitOfMeasure">
+							<option value="Inch">Inch</option>
+							<option value="Foot">Foot</option>
+							<option value="Per Unit">Per Unit</option>
+						</select> <br>
+				</li>
+				<li class="list-group-item">	
+						Charge Type: 
+						<select name="chargeType" ng-model="dropDown2.chargeType">
+							<option value="Flat Rate">Flat Rate</option>
+							<option value="Per Unit">Per Unit</option>
+						</select> <br>
+				</li>
+			    <button type="submit" class="btn btn-default">Save</button>
+			</ul>
+		</div>
+	</form>
+</div>
+

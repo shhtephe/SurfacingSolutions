@@ -1,6 +1,32 @@
 'use strict';
 
-app.controller('adminCtrl',
-    ['$scope', function ($scope) {
+app.controller('adminCtrl', ['$scope', function ($scope) {
+	$scope.alerts = [
+  	];
 
-    }]);
+  	$scope.save = function(products){
+		console.log(products);
+		$http.post('/admin', {"quote":quote}).
+  		success(function(data, status, headers, config) {
+    	// this callback will be called asynchronously
+    	// when the response is available
+    	$scope.addAlert("success", "Saved Successfully");
+	  	}).
+  		error(function(data, status, headers, config) {
+	    // called asynchronously if an error occurs
+	    // or server returns response with an error status.
+		$scope.addAlert("danger", "Error: Changes did not save");
+  		});
+  	}
+
+  	$scope.addAlert = function(type, msg) {
+	    $scope.alerts.push({
+	    	type: type,
+	    	msg: msg
+	    });
+  	};
+
+  	$scope.closeAlert = function(index) {
+	    $scope.alerts.splice(index, 1);
+  	};
+}]);

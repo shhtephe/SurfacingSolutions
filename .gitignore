@@ -23,5 +23,10 @@ coverage
 build/Release
 
 # Dependency directory
+<<<<<<< HEAD
 # https://docs.npmjs.com/misc/faq#should-i-check-my-node-modules-folder-into-git
 node_modules
+=======
+# https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
+node_modules
+>>>>>>> 7d0b4138b363a23554b91f38eab41dfccea87a32

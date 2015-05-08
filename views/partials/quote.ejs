@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <div ng-controller="quoteCtrl" ng-init='customer=<%- JSON.stringify(customer) %>;quote=<%- JSON.stringify(quote) %>; addTable == false; products=<%- JSON.stringify(products) %>'>
+	<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
 	Customer: {{customer.lastName}}, {{customer.firstName}}
 	<br>QuoteID: {{quote.quoteID}}
 	<br>

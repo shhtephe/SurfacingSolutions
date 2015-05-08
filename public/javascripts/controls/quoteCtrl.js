@@ -10,6 +10,20 @@ app.controller('quoteCtrl',
 		$scope.addTable = false;
 	};
 
+	$scope.alerts = [
+  	];
+
+  	$scope.addAlert = function(type, msg) {
+	    $scope.alerts.push({
+	    	type: type,
+	    	msg: msg
+	    });
+  	};
+
+  	$scope.closeAlert = function(index) {
+	    $scope.alerts.splice(index, 1);
+  	};
+
 	$scope.saveTable = function(quote, width, length, shape) {
 		console.log("width: " + width + "length: " + length);
 		var pushObj = {
@@ -70,17 +84,20 @@ app.controller('quoteCtrl',
 
 	$scope.saveQuote = function(quote) {
 		//save the quote
+		//Need to declare that it's sending a json doc
+		$http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
+
 		console.log(quote);
 		$http.post('/savequote', {"quote":quote}).
   		success(function(data, status, headers, config) {
-    	// this callback will be called asynchronously
-    	// when the response is available
-    	$scope.msg = "Quote Saved!";
+	    	// this callback will be called asynchronously
+	    	// when the response is available
+	    	$scope.addAlert("success", "Quote saved Successfully");
 	  	}).
   		error(function(data, status, headers, config) {
-	    // called asynchronously if an error occurs
-	    // or server returns response with an error status.
-		$scope.msg = "Error: Quote did not save.";
+		    // called asynchronously if an error occurs
+		    // or server returns response with an error status.
+			$scope.addAlert("danger", "Error: Quote did not save");
   		});
 	}
 }]);

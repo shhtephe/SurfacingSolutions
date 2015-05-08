@@ -248,18 +248,22 @@ router.post('/admin', function(req, res) {
 });
 
 router.post('/savequote', function(req, res){
+  console.log(req.body.quote);
+
   var conditions = {quoteID: req.body.quote.quoteID, custCode: req.body.quote.custCode}
   , update = req.body.quote
   , options = { multi: false};
-  console.log(req.body.quote);
+
   mongoose.model('quote').update(conditions, update, options, callback);
   function callback (err, numAffected) {
     //numAffected is the number of updated documents
     if(err) {
       console.log("Errors: " + err);
+      res.sendStatus(500);
     }
     else {
       console.log("Quote Saved!");
+      res.send("No Error"); 
     }
   }
 });

@@ -1,4 +1,4 @@
-var app = angular.module('surfacingSolutions', ['ui.router', 'angular.filter']);
+var app = angular.module('surfacingSolutions', ['ui.router', 'angular.filter', 'ui.bootstrap']);
 
 app.config([
 '$stateProvider',

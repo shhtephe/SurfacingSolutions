@@ -29,43 +29,32 @@ app.controller('quoteCtrl',
 		var pushObj = {
 			counterShape: shape,
 			counterLength: length,
-			counterWidth: width,
-			addons: {
-				highGlossFinish: {
-					quantity: 0
-				},
-				cuttingBoards: {
-					quantity: 0
-				},
-				backBridgeForSlideInStove: {
-					quantity: 0
-				},
-				drainBoard: {
-					quantity: 0
-				},
-				directionalMaterialFabrication: {
-					quantity: 0
-				},
-				adhesivePerLinerFoot: {
-					quantity: 0
-				},
-				siteJoint: {
-					quantity: 0
-				}
-			}
+			counterWidth: width
 		};
-		var addonsPushObj = {
+	quote.counters.push(pushObj);
+	$scope.addTable = false;
+	};
 
-		}
-		quote.counters.push(pushObj);
-		$scope.addTable = false;
-	}
-
-	$scope.saveAddon = function(quote, index, product, quantity) {
+	$scope.saveAddon = function(quote, index, name, product, quantity) {
 		console.log(product);
 		console.log(quote.counters[index].addons);
 
-		quote.counters[index].addons[product].quantity = quantity
+		if(typeof quote.counters[index].addons[product] == 'undefined'){
+			var pushObj = {
+				name: name,
+				product: product,
+				quantity: quantity,
+				price: price
+			};
+			console.log("It's undefined, obviously");
+			//quote.counters[index].addons.push(pushObj);
+		} else {
+			//quote.counters[index].addons[product].splice(index, index+1);
+			//quote.counters[index].addons[product].pop()
+		}
+		/*.quantity = {
+			quantity
+		}*/
 
 		$scope.dropDown1 = 0;
 		$scope.dropDown2 = 0;

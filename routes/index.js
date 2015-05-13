@@ -7,6 +7,7 @@ var product = require('../models/products');
 var quotes = require('../models/quotes'); 
 var customers = require('../models/customers'); 
 var customerSchema = require('../models/customers');
+var materials = require('../models/materials');
 //mongoose
 var mongoose = require('mongoose');
 //Recieve JSON from Angular

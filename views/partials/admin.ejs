@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <div ng-controller="adminCtrl" ng-init='products=<%- JSON.stringify(products) %>'>	
 	<form role="form">
+		<u>Products</u>
 		Choose a Category:
 		<select name="category" ng-model="dropDown1" ng-options="product.category for product in products | unique: 'category' track by product.category">
 			<option value="">----Select----</option>
@@ -45,5 +46,16 @@
 		</div>
 	</form>
 		<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+	<br><br>
+	<u>Materials</u>
+	<br>
+	 <button type="button" ng-click="showNewMaterial()" class="btn btn-default">Add new Material</button>      <button type="button" ng-click="save(products)" class="btn btn-default">Edit Current Materials</button>
+	
+	<div ng-show="newMaterial == true">
+		<br>Colour Group <input type="text" name="colourGroup" ng-model="colourGroup">
+		<br>Material Name: <input type="text" name="materialName" ng-model="materialName">
+		<br>Price: <input type="text" name="materialPrice" ng-model="materialPrice">
+		<button type="button" ng-click="showNewMaterial()" class="btn btn-default">CancelM</button>
+	</div>
 </div>
 

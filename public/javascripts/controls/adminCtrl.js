@@ -1,8 +1,13 @@
 'use strict';
 
-app.controller('adminCtrl', ['$scope', function ($scope) {
+app.controller('adminCtrl', ['$scope', '$http', function ($scope, $http) {
 	$scope.alerts = [
   	];
+
+  	$scope.showNewMaterial = function(){
+  		$scope.newMaterial = true;
+  		console.log("well I did my part");
+  	}
 
   	$scope.save = function(products){
 		console.log(products);

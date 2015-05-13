@@ -13,29 +13,12 @@ var quote = new Schema({
 		counterWidth: Number,
 		counterThickness1: Number,
 		counterThickness2: Number,
-		addons: {
-			highGlossFinish: {
-				quantity: Number
-			},
-			cuttingBoards: {
-				quantity: Number
-			},
-			backBridgeForSlideInStove: {
-				quantity: Number
-			},
-			drainBoard: {
-				quantity: Number
-			},
-			directionalMaterialFabrication: {
-				quantity: Number
-			},
-			adhesivePerLinerFoot: {
-				quantity: Number
-			},
-			siteJoint: {
-				quantity: Number
-			}
-		}
+		addons: [{
+			product: String,
+			name: String,
+			price: Number,
+			itemType: String
+		}]
 	}]
 });
 

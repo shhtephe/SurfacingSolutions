@@ -2,6 +2,10 @@
  
 app.controller('quoteCtrl',
   ['$scope', '$state', '$http',  function ($scope, $state, $http) {
+  	function updatePrice() {
+  		
+  	};
+  	
 	$scope.showCounter = function() {  
 		$scope.addTable = true;
 	};
@@ -29,23 +33,30 @@ app.controller('quoteCtrl',
 		var pushObj = {
 			counterShape: shape,
 			counterLength: length,
-			counterWidth: width
+			counterWidth: width,
+			addons: [{
+
+			}]
 		};
 	quote.counters.push(pushObj);
 	$scope.addTable = false;
+
+	//update total price
+	updatePrice();
 	};
 
 	$scope.saveAddon = function(quote, index, name, product, quantity) {
 		console.log(product);
-		console.log(quote.counters[index].addons);
-
-		if(typeof quote.counters[index].addons[product] == 'undefined'){
-			var pushObj = {
+		console.log(quote.counters[index]);
+		var pushObj = {addons: {}};
+		if(typeof quote.counters[index].addons === 'undefined'){
+			quote.counters[index].push(pushobj)
+			/*
 				name: name,
 				product: product,
 				quantity: quantity,
 				price: price
-			};
+			};*/
 			console.log("It's undefined, obviously");
 			//quote.counters[index].addons.push(pushObj);
 		} else {

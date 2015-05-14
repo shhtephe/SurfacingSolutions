@@ -18,6 +18,13 @@ var http = require('http');
     res.render("index", { user : req.user });
 });*/
 
+//I might have to ditch the error handler. Currently used in router.param(quote)
+function errorHandler(err, req, res, next) {
+  console.log(err);
+  //res.status(500);
+  //res.render('error', { error: err });
+}
+
 /* GET home page. */
 router.get('/home', function(req, res, next) {
   res.render('partials/home', { title: 'Express' });
@@ -149,8 +156,11 @@ router.get('/customer/:customer/quote/:quote', function(req, res, next) {
 
 router.get('/admin', function(req, res, next) {
   mongoose.model("products").find(function(err, products){
-    res.render('partials/admin', { 
-      products: products
+    mongoose.model("materials").find(function(err, materials){
+      res.render('partials/admin', { 
+        products: products,
+        materials: materials
+      });
     });
   });
 });
@@ -214,18 +224,34 @@ router.post('/newcustomer', function(req, res) {
   });
 });
 
+router.post('/savenewmaterial', function(req, res) {
+  console.log(req.body);
+  var newMaterial = new materials({
+    colourGroup: req.body.materials.colourGroup,
+    colour: req.body.materials.colour,
+    price: req.body.materials.price
+  });
+  newMaterial.save(function (err, materials) {
+    if (err) {
+      console.log("Errors: " + err);
+      res.sendStatus(500);
+    }
+    else {
+      // saved!
+      console.log("Saved!")
+      res.sendStatus(200);
+    }
+  });
+});
 
-//I might have to ditch the error handler. Currently used in router.param(quote)
-function errorHandler(err, req, res, next) {
-  console.log(err);
-  //res.status(500);
-  //res.render('error', { error: err });
-}
+router.post('/savematerial', function(req, res) {
 
-router.post('/admin', function(req, res) {
+});
+
+router.post('/saveproduct', function(req, res) {
   //res.send(req.body);
-  var conditions = { category: req.body.category, product: req.body.product }
-    , update = {price: req.body.price, unitOfMeasure: req.body.unitOfMeasure, chargeType: req.body.chargeType}
+  var conditions = { category: req.body.productCategory, product: req.body.productProduct }
+    , update = {price: req.body.productPrice, unitOfMeasure: req.body.productUnitOfMeasure, chargeType: req.body.productChargeType}
     , options = { multi: false};
 
   mongoose.model('products').update(conditions, update, options, callback);

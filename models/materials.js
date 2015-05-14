@@ -4,10 +4,9 @@ var Schema = mongoose.Schema;
 
 var materials = new Schema({
 	colourGroup: String,
-	material: String
-	name: String,
+	colour: String,
 	price: Number
 });
 
 
-module.exports = mongoose.model('products', products);
+module.exports = mongoose.model('materials', materials);

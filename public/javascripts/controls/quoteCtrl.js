@@ -79,7 +79,7 @@ app.controller('quoteCtrl',
 	$scope.deleteTable = function(quote, index) {
 		quote.counters.splice(index, index+1);
 
-//I don't think I need a refresh		$state.go($state.current, {}, {reload: true}); //second parameter is for $stateParams
+	//I don't think I need a refresh		$state.go($state.current, {}, {reload: true}); //second parameter is for $stateParams
 	}
 
 	$scope.saveQuote = function(quote) {

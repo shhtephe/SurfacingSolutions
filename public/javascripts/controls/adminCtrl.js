@@ -39,6 +39,7 @@ app.controller('adminCtrl', ['$scope', '$http', '$state', function ($scope, $htt
       // this callback will be called asynchronously
       // when the response is available      
       $scope.addAlert("success", "Materials Saved Successfully");
+      console.log(data);
       //$state.go($state.current, {}, {reload: true}); //second parameter is for $stateParams
     }).
     error(function(data, status, headers, config) {

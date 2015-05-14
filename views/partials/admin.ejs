@@ -81,22 +81,22 @@
 	<br>
 	<u>Edit Materials</u>
 	<br>
-	Choose a Colour Group: <select name="materialColourGroup" ng-model="materialColourGroup" ng-options="material.colourGroup for material in materials | orderBy:'colourGroup' | unique: 'colourGroup' track by material.colourGroup">
+	Choose a Colour Group: <select name="editMaterialColourGroup" ng-model="editMaterialColourGroup" ng-options="material.colourGroup for material in materials | orderBy:'colourGroup' | unique: 'colourGroup' track by material.colourGroup">
 	<option value="">----Select----</option>
 	</select>
 	<br>
-	<div ng-show="materialColourGroup">
+	<div ng-show="editMaterialColourGroup">
 		<br>
 		Choose a Colour:
-		<select name="materialColour" ng-model="materialColour" ng-options=" material.colour for material in materials | filter:{colour: materialColourGroup.colourGroup} track by material.colour">
+		<select name="editMaterialColour" ng-model="editMaterialColour" ng-options=" material.colour for material in materials | filter:{colour: materialColourGroup.colourGroup} track by material.colour">
 			<option value="">----Select----</option>
 		</select>
 	</div>
-	<div ng-show="materialColourGroup && materialColour">
+	<div ng-show="editMaterialColourGroup && editMaterialColour">
 		<br>
 		<ul class="list-group"> 
 			<li class="list-group-item">	
-				Price: <input type="text" name="price" ng-model="materialDropDown2.price"> <br>
+				Price: <input type="text" name="price" ng-model="editPrice"> <br>
 			</li>	
 		    <button type="button" ng-click="saveNewMaterial(materials)" class="btn btn-default">Save</button>
 		</ul>

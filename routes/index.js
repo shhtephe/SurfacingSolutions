@@ -239,7 +239,7 @@ router.post('/savenewmaterial', function(req, res) {
     else {
       // saved!
       console.log("Saved!")
-      res.sendStatus(200);
+      res.send();
     }
   });
 });

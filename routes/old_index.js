@@ -7,18 +7,28 @@ var product = require('../models/products');
 var quotes = require('../models/quotes'); 
 var customers = require('../models/customers'); 
 var customerSchema = require('../models/customers');
+var materials = require('../models/materials');
 //mongoose
 var mongoose = require('mongoose');
 //Recieve JSON from Angular
 var http = require('http');
 
+//I might have to ditch the error handler. Currently used in router.param(quote)
+function errorHandler(err, req, res, next) {
+  console.log(err);
+  //res.status(500);
+  //res.render('error', { error: err });
+}
+
 //html5 refresh fix
 router.all("/*", function(req, res) {
+    console.log("Router Get all ran");
     res.render("index", { user : req.user });
 });
 
 /* GET home page. */
-router.get('/home_partial', function(req, res, next) {
+router.get('/home', function(req, res, next) {
+  console.log("This has ran");
   res.render('partials/home', { title: 'Express' });
 });
 
@@ -148,8 +158,11 @@ router.get('/customer/:customer/quote/:quote', function(req, res, next) {
 
 router.get('/admin', function(req, res, next) {
   mongoose.model("products").find(function(err, products){
-    res.render('partials/admin', { 
-      products: products
+    mongoose.model("materials").find(function(err, materials){
+      res.render('partials/admin', { 
+        products: products,
+        materials: materials
+      });
     });
   });
 });
@@ -213,18 +226,34 @@ router.post('/newcustomer', function(req, res) {
   });
 });
 
+router.post('/savenewmaterial', function(req, res) {
+  console.log(req.body);
+  var newMaterial = new materials({
+    colourGroup: req.body.materials.colourGroup,
+    colour: req.body.materials.colour,
+    price: req.body.materials.price
+  });
+  newMaterial.save(function (err, materials) {
+    if (err) {
+      console.log("Errors: " + err);
+      res.sendStatus(500);
+    }
+    else {
+      // saved!
+      console.log("Saved!")
+      res.send();
+    }
+  });
+});
 
-//I might have to ditch the error handler. Currently used in router.param(quote)
-function errorHandler(err, req, res, next) {
-  console.log(err);
-  //res.status(500);
-  //res.render('error', { error: err });
-}
+router.post('/savematerial', function(req, res) {
 
-router.post('/admin', function(req, res) {
+});
+
+router.post('/saveproduct', function(req, res) {
   //res.send(req.body);
-  var conditions = { category: req.body.category, product: req.body.product }
-    , update = {price: req.body.price, unitOfMeasure: req.body.unitOfMeasure, chargeType: req.body.chargeType}
+  var conditions = { category: req.body.productCategory, product: req.body.productProduct }
+    , update = {price: req.body.productPrice, unitOfMeasure: req.body.productUnitOfMeasure, chargeType: req.body.productChargeType}
     , options = { multi: false};
 
   mongoose.model('products').update(conditions, update, options, callback);
@@ -305,52 +334,52 @@ router.post('/savequote', function(req, res){
     });
   });*/
 
-// router.get('/customers', function(req, res, next) {
-//   mongoose.model('customers').find(function(err, data) {
-//       res.render('partials/customers', { data: data });
-//   }); 
-// });
+router.get('/customers', function(req, res, next) {
+  mongoose.model('customers').find(function(err, data) {
+      res.render('partials/customers', { data: data });
+  }); 
+});
 
-// router.get('/', function (req, res) {
-//     res.render('index', { user : req.user });
-// });
+router.get('/', function (req, res) {
+    res.render('index', { user : req.user });
+});
 
-// router.get('/register', function(req, res) {
-//     res.render('partials/register', { user : req.user });
-// });
+router.get('/register', function(req, res) {
+    res.render('partials/register', { user : req.user });
+});
 
-// router.post('/register', function(req, res) {
-//     account.register(new account({ username : req.body.username }), req.body.password, function(err, account) {
-//         if (err) {
-//           return res.render("index", {info: "Sorry. That username already exists. Try again."});
-//         }
+router.post('/register', function(req, res) {
+    account.register(new account({ username : req.body.username }), req.body.password, function(err, account) {
+        if (err) {
+          return res.render("index", {info: "Sorry. That username already exists. Try again."});
+        }
 
-//         passport.authenticate('local')(req, res, function () {
-//             res.redirect('/');
-//         });
-//     });
-// });
+        passport.authenticate('local')(req, res, function () {
+            res.redirect('/');
+        });
+    });
+});
 
-// ;
-// router.get('/login', function(req, res) {
-//     res.render('partials/login', { user : req.user });
-// });
+;
+router.get('/login', function(req, res) {
+    res.render('partials/login', { user : req.user });
+});
 
-// router.post('/login', passport.authenticate('local'), function(req, res) {
-//     res.redirect('/');
-// });
+router.post('/login', passport.authenticate('local'), function(req, res) {
+    res.redirect('/');
+});
 
-// router.get('/logout', function(req, res) {
-//     req.logout();
-//     res.redirect('/');
-// });
+router.get('/logout', function(req, res) {
+    req.logout();
+    res.redirect('/');
+});
 
-// router.get('/ping', function(req, res){
-//   res.send("Get Request to ping!");
-// });
+router.get('/ping', function(req, res){
+  res.send("Get Request to ping!");
+});
 
-// router.post('/ping', function(req, res){
-//   res.send("Post Request to ping!");
-// });
+router.post('/ping', function(req, res){
+  res.send("Post Request to ping!");
+});
 
 module.exports = router;

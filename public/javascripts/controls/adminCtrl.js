@@ -27,14 +27,15 @@ app.controller('adminCtrl', ['$scope', '$http', '$state', function ($scope, $htt
 	}
 
   $scope.saveNewMaterial = function(group, colour, price){
-    var materials = {
+    var newMaterial = {
       colourGroup: group,
       colour: colour,
       price: price
     };
-    console.log(materials);
+    $scope.materials.push(newMaterial);  
+    console.log($scope.materials);
 
-    $http.post('/savenewmaterial', {"materials":materials}).
+    $http.post('/savenewmaterial', {"materials":newMaterial}).
     success(function(data, status, headers, config) {
       // this callback will be called asynchronously
       // when the response is available      

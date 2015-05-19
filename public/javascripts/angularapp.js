@@ -9,7 +9,7 @@ function($stateProvider, $urlRouterProvider, $locationProvider) {
   $stateProvider
     .state('home', {
       url: '/home',
-      templateUrl: '/home_partial',
+      templateUrl: '/home',
       data: {
         requireLogin: false
       }

@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var timestamps = require('mongoose-timestamp');
 var Schema = mongoose.Schema;
 
 
@@ -17,5 +18,5 @@ var customers = new Schema({
 	custCode: Number
 });
 
-
+customers.plugin(timestamps);
 module.exports = mongoose.model('customers', customers);

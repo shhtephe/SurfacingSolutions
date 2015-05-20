@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
+var timestamps = require('mongoose-timestamp');
 var Schema = mongoose.Schema;
-
 
 var products = new Schema({
 	category: String,
@@ -13,5 +13,5 @@ var products = new Schema({
 	menuType: String
 });
 
-
+products.plugin(timestamps);
 module.exports = mongoose.model('products', products);

@@ -5,9 +5,10 @@
 	<br>QuoteID: {{quote.quoteID}}
 	<br>
 	<br>
-	<div ng-hide="addTable == true">
-		<button type="button" style="btn" ng-click="showCounter()">Add a table</button>
-	</div>
+	Description:
+	<br>
+	<textarea rows="4" columns="150" ng-model="quote.description"></textarea>
+	<br>
 	<div ng-show="addTable == true">
 		<form>
 			Counter Shape: 
@@ -17,10 +18,12 @@
 				<option value="circle">Circle</option>
 			</select>
 			<br>
-			Width: <input type="text" ng-model="counterWidth" name="counterWidth">
+			<div ng-show="shape == 'rectangle' || shape == 'circle'">
+				Width in inches: <input type="text" ng-model="counterWidth" name="counterWidth">
+			</div>
 			<br>
 			<div ng-show="shape == 'rectangle'">
-				Length: <input type="text" ng-model="counterLength" name="counterLength">
+				Length in inches: <input type="text" ng-model="counterLength" name="counterLength">
 			</div>
 			<br>
 			<br>
@@ -32,6 +35,9 @@
 	<div ng-show="addTable == true">
 		<button type="button" style="btn" ng-click="hideCounter()">Cancel</button>
 		<button type="button" style="btn" ng-click="saveTable(quote, counterWidth, counterLength, shape)">Save Table</button>
+	</div>
+	<div ng-hide="addTable == true">
+		<button type="button" style="btn" ng-click="showCounter()">Add a table</button>
 	</div>
 	<br><br>
 	<u>Summary</u>: 
@@ -45,6 +51,8 @@
       	<!--<br>counter Thickness: {{counter.counterThickness1}}
       	<br>counter Thickness 2: {{counter.counterThickness1}}-->
 		<br><u>Addons:</u> 
+		<br>
+		{{counters.addons}}
 		<br>
 		<div ng-repeat="addon in counters.addons">
 			{{addon.name}}
@@ -71,6 +79,7 @@
 		</div>
 		<div ng-show="dropDown2 && dropDown1">
 			<br>
+			{{dropDown2.menuType}}
 			<ul class="list-group"> 
 				<li class="list-group-item">
 					Product Description: {{dropDown2.product}} <br>
@@ -78,8 +87,16 @@
 				<li class="list-group-item">	
 					Price: {{dropDown2.price}}<br>
 				</li>	
-				<li class="list-group-item">	
+				<li class="list-group-item" ng-show="dropDown2.menuType == 'textbox'">	
 					Quantity: <input type="text" ng-model="addonQuantity" name="addonQuantity">
+				</li>
+				<li class="list-group-item" ng-show="dropDown2.menuType == 'checkbox'">	
+					Include: <input type="checkbox" ng-model="addonQuantity" name="addonQuantity">
+				</li>
+				<li class="list-group-item" ng-show="dropDown2.menuType == 'dropDown'">	
+					Size: <select name="product" ng-model="dropDown2" ng-options="product.product for product in products | filter:{category: dropDown1.category} track by product.product">
+				<option value="">----Select----</option>
+			</select>
 				</li>
 			    <button type="button" class="btn btn-default" ng-click="saveAddon(quote, $index, dropDown2.name, dropDown2.product,  addonQuantity)">Add</button>
 			</ul>
@@ -92,12 +109,8 @@
 		</div>>
 		---------------------------------------------------------------------------------------------------------------------------------------------
 	</div>
-
 	<br>Total Price: {{quote.totalPrice}}
 	<br>Job Difficulty: {{quote.jobDifficulty}}
 	<br>
-	<button type="button" style="btn" ng-click="saveQuote(quote)">Save Quote</button>
-	{{quote}}
-
-	'sup bro'
+	<button type="button" style="btn" ng-click="saveQuote(quote, quote.description)">Save Quote</button>
 </div>

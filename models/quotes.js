@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var timestamps = require('mongoose-timestamp');
 var Schema = mongoose.Schema;
 
 
@@ -19,7 +20,9 @@ var quote = new Schema({
 			price: Number,
 			itemType: String
 		}]
-	}]
+	}],
+	description: String
 });
 
+quote.plugin(timestamps);
 module.exports = mongoose.model('quote', quote);

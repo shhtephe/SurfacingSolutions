@@ -3,7 +3,7 @@
 quotes=<%- JSON.stringify(quotes) %>'>
   <br>Customer:<br>{{customer.firstName}} {{customer.lastName}}<br><br>Quotes:<br>
 	<div ng-repeat="quote in quotes">
-    	<a ng-href="/customer/{{customer.custCode}}/quote/{{quote.quoteID}}">{{quote.quoteID}}</a>
+    	<a ng-href="/customer/{{customer.custCode}}/quote/{{quote.quoteID}}">{{quote.quoteID}} - {{quote.createdAt}}</a> - {{quote.description}}
   	</div>
 	<br>
 <button type="button" class="btn" ng-click="newQuote(quotes, customer.custCode)">New Quote</button>

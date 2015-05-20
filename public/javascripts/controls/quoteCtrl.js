@@ -3,7 +3,7 @@
 app.controller('quoteCtrl',
   ['$scope', '$state', '$http',  function ($scope, $state, $http) {
   	function updatePrice() {
-  		
+
   	};
   	
 	$scope.showCounter = function() {  
@@ -29,24 +29,35 @@ app.controller('quoteCtrl',
   	};
 
 	$scope.saveTable = function(quote, width, length, shape) {
+		if($scope.shape == "circle"){
+			length = 0;
+		}
 		console.log("width: " + width + "length: " + length);
 		var pushObj = {
-			counterShape: shape,
+			coutmongoonerShape: shape,
 			counterLength: length,
 			counterWidth: width,
 			addons: [{
 
 			}]
 		};
-	quote.counters.push(pushObj);
-	$scope.addTable = false;
+		quote.counters.push(pushObj);
+		$scope.addTable = false;
 
-	//update total price
-	updatePrice();
+		console.log(quote.counters);
+
+		//update total price
+		updatePrice();
 	};
 
 	$scope.saveAddon = function(quote, index, name, product, quantity) {
+		console.log(quote);
+		console.log(index);
+		console.log(name);
 		console.log(product);
+		console.log(quantity);
+
+
 		console.log(quote.counters[index]);
 		var pushObj = {addons: {}};
 		if(typeof quote.counters[index].addons === 'undefined'){
@@ -67,8 +78,8 @@ app.controller('quoteCtrl',
 			quantity
 		}*/
 
-		$scope.dropDown1 = 0;
-		$scope.dropDown2 = 0;
+		$scope.dropDown1 = "";
+		$scope.dropDown2 = "";
 		$scope.addonQuantity = "";
 	}
 	$scope.removeAddon = function(addon, index, quote){
@@ -82,7 +93,8 @@ app.controller('quoteCtrl',
 	//I don't think I need a refresh		$state.go($state.current, {}, {reload: true}); //second parameter is for $stateParams
 	}
 
-	$scope.saveQuote = function(quote) {
+	$scope.saveQuote = function(quote, description) {
+		quote['description'] = description;
 		//save the quote
 		//Need to declare that it's sending a json doc
 		$http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';

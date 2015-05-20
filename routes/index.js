@@ -13,6 +13,7 @@ var mongoose = require('mongoose');
 //Recieve JSON from Angular
 var http = require('http');
 
+
 //I might have to ditch the error handler. Currently used in router.param(quote)
 function errorHandler(err, req, res, next) {
   console.log(err);
@@ -173,18 +174,22 @@ router.get('/newcustomer', function(req, res, next) {
 
 router.post('/newcustomer', function(req, res) {
 
+
   var highCode=0;
   //find customer with highest id and make new one with increment of one
   highCode = mongoose.model("customers").findOne().sort({custCode : "desc"}).exec(function(err, customer){
     console.log("Latest Customer:");
+    console.log(typeof customer);
     console.log(customer);
-    if (typeof customer.custCode === null) {
+
+    if (customer == null) {
       highCode = 1;
     } else {
       highCode = customer.custCode + 1;
+      console.log("Customer code:" + customer.custCode); 
     }
-    console.log("Customer code:" + customer.custCode);
-    console.log("New Customer:" + highCode);  
+
+    console.log("New Customer number: " + highCode);  
 
     var firstName = req.body.firstName,
     lastName = req.body.lastName,
@@ -221,7 +226,7 @@ router.post('/newcustomer', function(req, res) {
       else {
         // saved!
         console.log(newCustomer);
-        console.log("Post saved");
+        console.log("Customer Saved");
       }
     });
   });
@@ -340,6 +345,8 @@ router.post('/savequote', function(req, res){
 
 router.get('/customers', function(req, res, next) {
   mongoose.model('customers').find(function(err, data) {
+      console.log(data);
+      console.log(data[0]._id.getTimestamp());
       res.render('partials/customers', { data: data });
   }); 
 });

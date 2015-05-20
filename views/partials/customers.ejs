@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<div ng-controller="customersCtrl" ng-init='customers=<%- JSON.stringify(data) %>'>
+<div ng-controller="customersCtrl" ng-init='customers=<%- JSON.stringify(data) %>; init()'>
 	Search by Name: <input type="text" ng-model="filters.search"><br><br>
 	<ul>
 		<li ng-repeat="customer in customers | filter:filters.search">
@@ -8,3 +8,6 @@
 	</ul>
 	<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
 </div>
+
+
+

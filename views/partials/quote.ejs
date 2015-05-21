@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<div ng-controller="quoteCtrl" ng-init='customer=<%- JSON.stringify(customer) %>;quote=<%- JSON.stringify(quote) %>; products=<%- JSON.stringify(products) %>; addTable == false'>
+<div ng-controller="quoteCtrl" ng-init='customer=<%- JSON.stringify(customer) %>;quote=<%- JSON.stringify(quote) %>; products=<%- JSON.stringify(products) %>; materials=<%- JSON.stringify(materials) %>; addTable == false'>
 	<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
 	Customer: {{customer.lastName}}, {{customer.firstName}}
 	<br>QuoteID: {{quote.quoteID}}
@@ -12,7 +12,8 @@
 	<div ng-show="addTable == true">
 		<form>
 			Counter Shape: 
-			<select name="shape" ng-model="shape" id="shape">
+			<br>
+			<select name="shape" ng-model="shape" convert-to-number id="shape">
 				<option value="" selected='selected'>----Select----</option>
 				<option  value="rectangle">Rectangle</option>
 				<option value="circle">Circle</option>
@@ -25,8 +26,29 @@
 			<div ng-show="shape == 'rectangle'">
 				Length in inches: <input type="text" ng-model="counterLength" name="counterLength">
 			</div>
+			<div ng-show="shape == 'rectangle' || shape == 'circle'">
+				<br>
+				Choose a Colour Group: 
+				<select name="materialColourGroup" ng-model="materialColourGroup" ng-options="material.colourGroup for material in materials | orderBy:'colourGroup' | unique: 'colourGroup' track by material.colourGroup">
+					<option value="">----Select----</option>
+				</select>
+			</div>
 			<br>
-			<br>
+			<div ng-show="materialColourGroup">
+				<br>
+				Choose a Colour:
+				<select name="materialColour" ng-model="materialColour" ng-options="material.colour for material in materials | filter:{colourGroup: materialColourGroup.colourGroup} ">
+					<option value="">----Select----</option>
+				</select>
+			</div>
+			<div ng-show="materialColourGroup && materialColour">
+				<br>
+				<ul class="list-group"> 
+					<li class="list-group-item">	
+						Price/Sheet: {{materialColour.price}}<br>
+					</li>	
+				</ul>
+			</div>
 		</form>
 	</div>
 	<div ng-show="dropDown2 && dropDown1">
@@ -34,7 +56,7 @@
 	<br>
 	<div ng-show="addTable == true">
 		<button type="button" style="btn" ng-click="hideCounter()">Cancel</button>
-		<button type="button" style="btn" ng-click="saveTable(quote, counterWidth, counterLength, shape)">Save Table</button>
+		<button type="button" style="btn" ng-click="saveTable(quote, counterWidth, counterLength, shape, materialColour.colourGroup, materialColour.colour, materialColour.price)">Save Table</button>
 	</div>
 	<div ng-hide="addTable == true">
 		<button type="button" style="btn" ng-click="showCounter()">Add a table</button>
@@ -45,9 +67,13 @@
 	<div ng-repeat="counter in quote.counters">
   		<u>Counter {{$index + 1}}</u> <button type="button" style="btn" ng-click="deleteTable(quote, $index)">DELETE THIS TABLE</button>
   		<br>
+  		<br><br>
   		<br>Counter Shape: {{counter.counterShape}} 
-  		<br>counter Width: {{counter.counterWidth}}
-      	<br>counter Length: {{counter.counterLength}}
+  		<br>Counter Width: {{counter.counterWidth}}
+      	<br>Counter Length: {{counter.counterLength}}
+      	<br>Counter Colour Group: {{materialColour.colourGroup}}
+      	<br>Counter Material: {{materialColour.colour}}
+      	<br>Counter Price/Sheet: {{materialColour.price}}
       	<!--<br>counter Thickness: {{counter.counterThickness1}}
       	<br>counter Thickness 2: {{counter.counterThickness1}}-->
 		<br><u>Addons:</u> 

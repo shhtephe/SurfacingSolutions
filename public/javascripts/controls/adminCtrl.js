@@ -17,16 +17,21 @@ app.controller('adminCtrl', ['$scope', '$http', '$state', function ($scope, $htt
 
   $scope.hideNewMaterial = function(){
     $scope.newMaterial = false;
-    $scope.colourGroup = "";
-    $scope.materialName = "";
-    $scope.materialPrice = "";
   }
 
 	$scope.showNewMaterial = function(){
 		$scope.newMaterial = true;
+    $scope.newMaterialName = "";
+    $scope.newMaterialPrice = "";
+    $scope.newMaterialColourGroup = "";
 	}
 
   $scope.saveNewMaterial = function(group, colour, price){
+    
+    $scope.newMaterialColour = "";
+    $scope.newMaterialPrice = "";
+    $scope.newMaterialColourGroup = "";
+
     var newMaterial = {
       colourGroup: group,
       colour: colour,

@@ -139,19 +139,26 @@ router.param('quote', function(req, res, next, quoteID) {
 router.get('/customer/:customer/quote/:quote', function(req, res, next) {
   if (typeof req.quote[0]==="undefined") {
       mongoose.model("products").find(function(err, products){
-        res.render('partials/quote', { 
-          quote: req.quote,
-          customer: req.customer,
-          products: products
+        mongoose.model("materials").find(function(err, materials){
+          console.log(materials);
+          res.render('partials/quote', { 
+            quote: req.quote,
+            customer: req.customer,
+            products: products,
+            materials: materials
+          });
         });
     })
   }
   else{
     mongoose.model("products").find(function(err, products){
-      res.render('partials/quote', { 
-        quote: req.quote[0],
-        customer: req.customer,
-        products: products
+      mongoose.model("materials").find(function(err, materials){
+        res.render('partials/quote', { 
+          quote: req.quote[0],
+          customer: req.customer,
+          products: products,
+          materials: materials
+        });
       });
     })
   }
@@ -345,8 +352,6 @@ router.post('/savequote', function(req, res){
 
 router.get('/customers', function(req, res, next) {
   mongoose.model('customers').find(function(err, data) {
-      console.log(data);
-      console.log(data[0]._id.getTimestamp());
       res.render('partials/customers', { data: data });
   }); 
 });

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <div ng-controller="customersCtrl" ng-init='customers=<%- JSON.stringify(data) %>; init()'>
-	Search by Name: <input type="text" ng-model="filters.search"><br><br>
+	Search by Name: <input type="text" ng-model="filter.search"><br><br>
 	<ul>
-		<li ng-repeat="customer in customers | filter:filters.search">
+		<li ng-repeat="customer in customers | filter:filter.search">
 			<a ng-href="customer/{{customer.custCode}}">{{customer.firstName}} {{customer.lastName}} - {{customer.email}}</a>
 		</li>
 	</ul>

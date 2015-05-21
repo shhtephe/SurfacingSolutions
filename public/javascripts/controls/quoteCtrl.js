@@ -12,6 +12,10 @@ app.controller('quoteCtrl',
 
 	$scope.hideCounter = function() {  
 		$scope.addTable = false;
+		$scope.shape = "";
+		$scope.counterWidth = "";
+		$scope.counterLength = "";
+		$scope.materialColourGroup = "";
 	};
 
 	$scope.alerts = [
@@ -28,21 +32,25 @@ app.controller('quoteCtrl',
 	    $scope.alerts.splice(index, 1);
   	};
 
-	$scope.saveTable = function(quote, width, length, shape) {
+	$scope.saveTable = function(quote, width, length, shape, materialColourGroup, materialColour, materialPrice) {
 		if($scope.shape == "circle"){
 			length = 0;
 		}
+		console.log(width + "/" + length + "/" + shape + "/" + materialColourGroup + "/" + materialColour + "/" + materialPrice)
 		console.log("width: " + width + "length: " + length);
 		var pushObj = {
-			coutmongoonerShape: shape,
+			counterShape: shape,
 			counterLength: length,
 			counterWidth: width,
+			materialColourGroup: materialColourGroup,
+			materialColour: materialColour,
+			materialPrice: materialPrice,
 			addons: [{
 
 			}]
 		};
 		quote.counters.push(pushObj);
-		$scope.addTable = false;
+		$scope.hideCounter();
 
 		console.log(quote.counters);
 

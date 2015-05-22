@@ -58,33 +58,30 @@ app.controller('quoteCtrl',
 		updatePrice();
 	};
 
-	$scope.saveAddon = function(quote, index, name, product, quantity) {
+	$scope.saveAddon = function(quote, index, name, product, price, quantity) {
 		console.log(quote);
 		console.log(index);
 		console.log(name);
 		console.log(product);
+		console.log(price);
 		console.log(quantity);
 
-
-		console.log(quote.counters[index]);
 		var pushObj = {addons: {}};
 		if(typeof quote.counters[index].addons === 'undefined'){
-			quote.counters[index].push(pushobj)
-			/*
+			quote.counters[index].push(pushObj);
+		} else {
+			pushObj = {
 				name: name,
 				product: product,
 				quantity: quantity,
 				price: price
-			};*/
-			console.log("It's undefined, obviously");
+			};
+			quote.counters[index].addons.push(pushObj);
 			//quote.counters[index].addons.push(pushObj);
-		} else {
 			//quote.counters[index].addons[product].splice(index, index+1);
 			//quote.counters[index].addons[product].pop()
 		}
-		/*.quantity = {
-			quantity
-		}*/
+		//console.log(quote.counters[index]);
 
 		$scope.dropDown1 = "";
 		$scope.dropDown2 = "";

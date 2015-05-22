@@ -5,7 +5,6 @@ app.controller('customersCtrl',
   	$scope.alerts = [
   	];
 	$scope.init = function() {
-		console.log($scope.customers);
 		if (typeof $scope.customers === "undefined" || $scope.customers == "") {
 	    	$scope.alerts.push({
 				type: "warning",

@@ -104,14 +104,9 @@
 			</select>
 		</div>
 		<div ng-show="dropDown2 && dropDown1">
-			<br>
-			{{dropDown2.menuType}}
 			<ul class="list-group"> 
-				<li class="list-group-item">
-					Product Description: {{dropDown2.product}} <br>
-				</li>
 				<li class="list-group-item">	
-					Price: {{dropDown2.price}}<br>
+					Price/Inch: {{dropDown2.price}}<br>
 				</li>	
 				<li class="list-group-item" ng-show="dropDown2.menuType == 'textbox'">	
 					Quantity: <input type="text" ng-model="addonQuantity" name="addonQuantity">
@@ -120,23 +115,24 @@
 					Include: <input type="checkbox" ng-model="addonQuantity" name="addonQuantity">
 				</li>
 				<li class="list-group-item" ng-show="dropDown2.menuType == 'dropDown'">	
-					Size: <select name="product" ng-model="dropDown2" ng-options="product.product for product in products | filter:{category: dropDown1.category} track by product.product">
+					Size: <select name="productDropdown" ng-model="productDropdown" ng-options="dropdown.product for dropdown in dropDown2.dropDown">
 				<option value="">----Select----</option>
 			</select>
 				</li>
-			    <button type="button" class="btn btn-default" ng-click="saveAddon(quote, $index, dropDown2.name, dropDown2.product,  addonQuantity)">Add</button>
+			    <button type="button" class="btn btn-default" ng-click="saveAddon(quote, $index, dropDown2.name, dropDown2.product, dropDown2.price, addonQuantity)">Add</button>
 			</ul>
 		</div>
 		<br>
 		Mandatory charges:
 		<br>
 		<div ng-repeat="product in products | filter:{category: 'mandatory'}">
-			<br>{{product.product}} <input type="text" ng-model="mandatoryCharges"><br>
+			<br>{{product.product}} - {{product.price}}/item
+			<br>Quantity<input type="text" ng-model="mandatoryCharges">
 		</div>>
 		---------------------------------------------------------------------------------------------------------------------------------------------
 	</div>
 	<br>Total Price: {{quote.totalPrice}}
 	<br>Job Difficulty: {{quote.jobDifficulty}}
 	<br>
-	<button type="button" style="btn" ng-click="saveQuote(quote, quote.description)">Save Quote</button>
+	<button type="button" style="btn" ng-click="saveQuote(quote, quote.description)">Update/Save Quote</button>
 </div>

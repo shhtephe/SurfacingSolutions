@@ -23,4 +23,5 @@
 		)">Create new Customer</button>
 	</form>
 	<div ng-show="save">{{save}}</div>
+	<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
 </div>

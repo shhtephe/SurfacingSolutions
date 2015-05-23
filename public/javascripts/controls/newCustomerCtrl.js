@@ -23,20 +23,20 @@ app.controller('newCustomerCtrl',
         "companyName":c, 
         "email":d, 
         "addressLine1": e,
-		"postal":f,
-		"homePhone":g,
-		"mobilePhone":h
+		    "postal":f,
+		    "homePhone":g,
+		    "mobilePhone":h
       };
       $http.post('/newcustomer', data).
         success(function(data, status, headers, config) {
         // this callback will be called asynchronously
         // when the response is available
-        addAlert("success","New Customer has been saved!");
+        $scope.addAlert("success","New Customer has been saved!");
       }).
       error(function(data, status, headers, config) {
         // called asynchronously if an error occurs
         // or server returns response with an error status.
-        addAlert("danger","Error: New Customer could not be saved.");
+        $scope.addAlert("danger","Error: New Customer could not be saved.");
       });
     }
 }]);

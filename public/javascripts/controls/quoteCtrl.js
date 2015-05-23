@@ -5,7 +5,7 @@ app.controller('quoteCtrl',
   	function updatePrice() {
 
   	};
-  	
+
 	$scope.showCounter = function() {  
 		$scope.addTable = true;
 	};
@@ -18,8 +18,7 @@ app.controller('quoteCtrl',
 		$scope.materialColourGroup = "";
 	};
 
-	$scope.alerts = [
-  	];
+	$scope.alerts = [];
 
   	$scope.addAlert = function(type, msg) {
 	    $scope.alerts.push({
@@ -31,6 +30,46 @@ app.controller('quoteCtrl',
   	$scope.closeAlert = function(index) {
 	    $scope.alerts.splice(index, 1);
   	};
+
+	function arraySearch(nameKey, myArray){
+	    for (var i=0; i < myArray.length; i++) {
+	        if (myArray[i].product === nameKey) {
+	            return i;
+	        }
+	    }
+	}
+
+	$scope.saveAddon = function(quote, index, name, product, price, quantity) {
+		var addons = quote.counters[index].addons;
+		/*console.log(index);
+		console.log(name);
+		console.log(product);
+		console.log(price);
+		console.log(quantity);*/
+
+		var pushObj = {};
+		var result = $.grep(addons, function(e){ return e.product === product; });
+				
+		if (Object.keys(result).length === 0) {
+			//Couldn't find it, so add a new value
+			pushObj = {
+				name: name,
+				product: product,
+				quantity: quantity,
+				price: price
+			};
+			addons.push(pushObj);
+		}
+		else {
+			//Found it, so update the value
+			addons[arraySearch(product, addons)].quantity = quantity;
+		}
+
+		$scope.dropDown1 = "";
+		$scope.dropDown2 = "";
+		$scope.addonQuantity = "";
+		$scope.quote = quote;
+	};
 
 	$scope.saveTable = function(quote, width, length, shape, materialColourGroup, materialColour, materialPrice) {
 		if($scope.shape == "circle"){
@@ -45,9 +84,7 @@ app.controller('quoteCtrl',
 			materialColourGroup: materialColourGroup,
 			materialColour: materialColour,
 			materialPrice: materialPrice,
-			addons: [{
-
-			}]
+			addons: []
 		};
 		quote.counters.push(pushObj);
 		$scope.hideCounter();
@@ -58,45 +95,15 @@ app.controller('quoteCtrl',
 		updatePrice();
 	};
 
-	$scope.saveAddon = function(quote, index, name, product, price, quantity) {
-		console.log(quote);
-		console.log(index);
-		console.log(name);
-		console.log(product);
-		console.log(price);
-		console.log(quantity);
-
-		var pushObj = {addons: {}};
-		if(typeof quote.counters[index].addons === 'undefined'){
-			quote.counters[index].push(pushObj);
-		} else {
-			pushObj = {
-				name: name,
-				product: product,
-				quantity: quantity,
-				price: price
-			};
-			quote.counters[index].addons.push(pushObj);
-			//quote.counters[index].addons.push(pushObj);
-			//quote.counters[index].addons[product].splice(index, index+1);
-			//quote.counters[index].addons[product].pop()
-		}
-		//console.log(quote.counters[index]);
-
-		$scope.dropDown1 = "";
-		$scope.dropDown2 = "";
-		$scope.addonQuantity = "";
-	}
 	$scope.removeAddon = function(addon, index, quote){
 		console.log(quote);
-		quote.counters[index].addons[addon].quantity=0;
-	}
+		quote.counters[index].addons.splice(index, index+1);
+	};
 
 	$scope.deleteTable = function(quote, index) {
 		quote.counters.splice(index, index+1);
-
-	//I don't think I need a refresh		$state.go($state.current, {}, {reload: true}); //second parameter is for $stateParams
-	}
+//I don't think I need a refresh		$state.go($state.current, {}, {reload: true}); //second parameter is for $stateParams
+	};
 
 	$scope.saveQuote = function(quote, description) {
 		quote['description'] = description;
@@ -116,5 +123,5 @@ app.controller('quoteCtrl',
 		    // or server returns response with an error status.
 			$scope.addAlert("danger", "Error: Quote did not save");
   		});
-	}
+	};
 }]);

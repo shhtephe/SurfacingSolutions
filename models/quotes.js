@@ -18,7 +18,8 @@ var quote = new Schema({
 			product: String,
 			name: String,
 			price: Number,
-			itemType: String
+			itemType: String,
+			quantity: Number
 		}]
 	}],
 	description: String

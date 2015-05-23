@@ -78,18 +78,9 @@
       	<br>counter Thickness 2: {{counter.counterThickness1}}-->
 		<br><u>Addons:</u> 
 		<br>
-		{{counters.addons}}
-		<br>
-		<div ng-repeat="addon in counters.addons">
-			{{addon.name}}
+		<div ng-repeat="addon in counter.addons">
+			<br>{{addon.product}}: {{addon.quantity}} <a href="#" ng-click="removeAddon(addon.name, $index, quote)">remove</a>
 		</div>
-		<div ng-show="counter.addons.highGlossFinish.quantity > 0">High Gloss Finish: {{counter.addons.highGlossFinish.quantity}} <a href="#" ng-click="removeAddon('highGlossFinish', $index, quote)">remove</a></div>
-		<div ng-show="counter.addons.cuttingBoards.quantity > 0"><br>Cutting Boards: {{counter.addons.cuttingBoards.quantity}} <a href="#" ng-click="removeAddon('cuttingBoards', $index, quote)">remove</a></div>
-		<div ng-show="counter.addons.backBridgeForSlideInStove.quantity > 0"><br>Back Bridge for Slide in Stove: {{counter.addons.backBridgeForSlideInStove.quantity}} <a href="#" ng-click="removeAddon('backBridgeForSlideInStove', $index, quote)">remove</a></div>
-		<div ng-show="counter.addons.drainBoard.quantity > 0"><br>Drainboard: {{counter.addons.drainBoard.quantity}} <a href="#" ng-click="removeAddon('drainBoard', $index, quote)">remove</a></div>
-		<div ng-show="counter.addons.directionalMaterialFabrication.quantity > 0"><br>Directional Material Fabrication: {{counter.addons.directionalMaterialFabrication.quantity}} <a href="#" ng-click="removeAddon('directionalMaterialFabrication', $index, quote)">remove</a></div>
-		<div ng-show="counter.addons.adhesivePerLinerFoot.quantity > 0"><br>Adhesive Per Liner Foot: {{counter.addons.adhesivePerLinerFoot.quantity}} <a href="#" ng-click="removeAddon('adhesivePerLinerFoot', $index, quote)">remove</a></div>
-		<div ng-show="counter.addons.siteJoint.quantity > 0"><br>Adhesive Per Liner Foot: {{counter.addons.siteJoint.quantity}} <a href="#" ng-click="removeAddon('siteJoint', $index, quote)">remove</a></div>
 		<br>
 		<br>Addons: 
 		<select name="category" ng-model="dropDown1" ng-options="product.category for product in products | filter:{category: '!mandatory'} | unique: 'category' track by product.category">

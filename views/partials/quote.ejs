@@ -67,7 +67,6 @@
 	<div ng-repeat="counter in quote.counters">
   		<u>Counter {{$index + 1}}</u> <button type="button" style="btn" ng-click="deleteTable(quote, $index)">DELETE THIS TABLE</button>
   		<br>
-  		<br><br>
   		<br>Counter Shape: {{counter.counterShape}} 
   		<br>Counter Width: {{counter.counterWidth}}
       	<br>Counter Length: {{counter.counterLength}}
@@ -76,6 +75,7 @@
       	<br>Counter Price/Sheet: {{materialColour.price}}
       	<!--<br>counter Thickness: {{counter.counterThickness1}}
       	<br>counter Thickness 2: {{counter.counterThickness1}}-->
+		<br><br>
 		<br><u>Addons:</u> 
 		<br>
 		<div ng-repeat="addon in counter.addons">
@@ -117,7 +117,7 @@
 		Mandatory charges:
 		<br>
 		<div ng-repeat="product in products | filter:{category: 'mandatory'}">
-			<br>{{product.product}} - {{product.price}}/item
+			<br>{{product.product}} - {{product.price}}/{{product.unitOfMeasure}}
 			<br>Quantity<input type="text" ng-model="mandatoryCharges">
 		</div>>
 		---------------------------------------------------------------------------------------------------------------------------------------------

@@ -85,7 +85,7 @@ router.param('quote', function(req, res, next, quoteID) {
       //Instead of just hitting next, we replace the quote with a new one
       var query = {};
       query["custCode"] = req.customer.custCode;
-      search = mongoose.model("quote").findOne(query).sort({quoteID : "desc"}).exec(function(err, quote){
+      search = mongoose.model("quote").findOne().sort({quoteID : "desc"}).exec(function(err, quote){
       
       var quoteID 
 

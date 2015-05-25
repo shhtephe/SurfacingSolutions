@@ -41,43 +41,60 @@ app.controller('quoteCtrl',
 
 	$scope.saveAddon = function(quote, index, name, product, price, quantity) {
 		var addons = quote.counters[index].addons;
-		/*console.log(index);
-		console.log(name);
-		console.log(product);
-		console.log(price);
-		console.log(quantity);*/
-
 		var pushObj = {};
 		var result = $.grep(addons, function(e){ return e.product === product; });
-				
+		var totalPrice = quantity * price;
+		var oldPrice;
+
 		if (Object.keys(result).length === 0) {
 			//Couldn't find it, so add a new value
 			pushObj = {
 				name: name,
 				product: product,
 				quantity: quantity,
-				price: price
+				price: price,
+				totalPrice: totalPrice
 			};
 			addons.push(pushObj);
-		}
+			quote.counters[index].totalPrice += addons[addons.length-1].totalPrice;
+		}	
 		else {
 			//Found it, so update the value
 			addons[arraySearch(product, addons)].quantity = quantity;
+			addons[arraySearch(product, addons)].totalPrice = totalPrice;
+			quote.counters[index].totalPrice += addons[arraySearch(product, addons)].totalPrice;
 		}
 
 		$scope.dropDown1 = "";
 		$scope.dropDown2 = "";
 		$scope.addonQuantity = "";
+
+		quote.totalPrice += addons[arraySearch(product, addons)].totalPrice;
 		$scope.quote = quote;
+		//updatePrice(quantity, price, "addon"); - For use later
+	};	
+	
+	$scope.removeAddon = function(addon, counterIndex, addonIndex, quote){
+		var addonPrice = quote.counters[quote.counters.length-1].totalPrice;
+		//addonPrice = addonPrice - 
+		quote.totalPrice -= quote.counters[quote.counters.length-1].totalPrice;
+
+		quote.counters[counterIndex].addons.splice(addonIndex, addonIndex+1);		
+		updatePrice();
+		quote.counters[counterIndex].addons.
+		quote.totalPrice += quote.counters[quote.counters.length-1].totalPrice;
 	};
 
 	$scope.saveTable = function(quote, width, length, shape, materialColourGroup, materialColour, materialPrice) {
+		var squareFootage = 0;
+		var pushObj = {};
+		var sheets = 0;
 		if($scope.shape == "circle"){
 			length = 0;
 		}
 		console.log(width + "/" + length + "/" + shape + "/" + materialColourGroup + "/" + materialColour + "/" + materialPrice)
 		console.log("width: " + width + "length: " + length);
-		var pushObj = {
+		pushObj = {
 			counterShape: shape,
 			counterLength: length,
 			counterWidth: width,
@@ -90,17 +107,27 @@ app.controller('quoteCtrl',
 		$scope.hideCounter();
 
 		console.log(quote.counters);
-
+		
+		if(shape === "rectangle"){
+			squareFootage = length * width;
+		} else if(shape === "circle"){
+			squareFootage = (width*width) * Math.PI;
+			squareFootage = squareFootage.toFixed(2);
+		};
+		console.log(squareFootage);
 		//update total price
-		updatePrice();
-	};
+		sheets = squareFootage / 22500;
+		sheets = sheets.toFixed(0);
+		if(sheets ==="0"){sheets=1};
+		console.log("Sheets: " + sheets);
 
-	$scope.removeAddon = function(addon, index, quote){
-		console.log(quote);
-		quote.counters[index].addons.splice(index, index+1);
+		quote.counters[quote.counters.length-1].totalPrice = sheets * materialPrice;
+		quote.totalPrice = quote.totalPrice + quote.counters[quote.counters.length-1].totalPrice;
 	};
 
 	$scope.deleteTable = function(quote, index) {
+		quote.totalPrice = quote.totalPrice - quote.counters[quote.counters.length-1].totalPrice;
+
 		quote.counters.splice(index, index+1);
 //I don't think I need a refresh		$state.go($state.current, {}, {reload: true}); //second parameter is for $stateParams
 	};
@@ -110,7 +137,7 @@ app.controller('quoteCtrl',
 		//save the quote
 		//Need to declare that it's sending a json doc
 		$http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
-
+		
 		console.log(quote);
 		$http.post('/savequote', {"quote":quote}).
   		success(function(data, status, headers, config) {

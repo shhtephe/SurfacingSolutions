@@ -40,7 +40,9 @@ app.controller('adminCtrl', ['$scope', '$http', '$state', function ($scope, $htt
     $scope.materials.push(newMaterial);  
     console.log($scope.materials);
 
-    $http.post('/savenewmaterial', {"materials":newMaterial}).
+    $http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
+
+    $http.post('/savenewmaterial', {"materials":$scope.materials}).
     success(function(data, status, headers, config) {
       // this callback will be called asynchronously
       // when the response is available      
@@ -55,9 +57,13 @@ app.controller('adminCtrl', ['$scope', '$http', '$state', function ($scope, $htt
     });
   };
 
-	$scope.saveProducts = function(products){
+	$scope.saveProducts = function(products, index){
   	console.log(products);
-  	$http.post('/saveproduct', {"products":products}).
+    console.log(index);
+
+
+    $http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
+  	/*$http.post('/saveproduct', {"products":products, products[index]}, ).
   		success(function(data, status, headers, config) {
       	// this callback will be called asynchronously
       	// when the response is available
@@ -68,5 +74,6 @@ app.controller('adminCtrl', ['$scope', '$http', '$state', function ($scope, $htt
         // or server returns response with an error status.
         $scope.addAlert("danger", "Error: Changes did not save");
 		});
+*/
 	};
 }]);

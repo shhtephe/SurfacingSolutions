@@ -26,6 +26,7 @@
 			<div ng-show="shape == 'rectangle'">
 				Length in inches: <input type="text" ng-model="counterLength" name="counterLength">
 			</div>
+			<br>
 			<div ng-show="shape == 'rectangle' || shape == 'circle'">
 				<br>
 				Choose a Colour Group: 
@@ -69,17 +70,18 @@
   		<br>
   		<br>Counter Shape: {{counter.counterShape}} 
   		<br>Counter Width: {{counter.counterWidth}}
-      	<br>Counter Length: {{counter.counterLength}}
+  		<span ng-show="counter.counterShape==='rectangle'"><br>Counter Length: {{counter.counterLength}}</span>
       	<br>Counter Colour Group: {{materialColour.colourGroup}}
       	<br>Counter Material: {{materialColour.colour}}
       	<br>Counter Price/Sheet: {{materialColour.price}}
+      	{{$addonID}}
       	<!--<br>counter Thickness: {{counter.counterThickness1}}
       	<br>counter Thickness 2: {{counter.counterThickness1}}-->
 		<br><br>
 		<br><u>Addons:</u> 
 		<br>
 		<div ng-repeat="addon in counter.addons">
-			<br>{{addon.product}}: {{addon.quantity}} <a href="#" ng-click="removeAddon(addon.name, $index, quote)">remove</a>
+			<br>{{addon.product}}: {{addon.quantity}} <a href="#" ng-click="removeAddon(addon.name, $parent.$index, $index, quote)">remove</a>
 		</div>
 		<br>
 		<br>Addons: 

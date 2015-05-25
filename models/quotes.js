@@ -14,12 +14,14 @@ var quote = new Schema({
 		counterWidth: Number,
 		counterThickness1: Number,
 		counterThickness2: Number,
+		totalPrice: Number,
 		addons: [{
 			product: String,
 			name: String,
 			price: Number,
 			itemType: String,
-			quantity: Number
+			quantity: Number,
+			totalPrice: Number
 		}]
 	}],
 	description: String

@@ -267,8 +267,8 @@ router.post('/savematerial', function(req, res) {
 });
 
 router.post('/saveproduct', function(req, res) {
-  //res.send(req.body);
-  var conditions = { category: req.body.productCategory, product: req.body.productProduct }
+  console.log(req.body);
+  var conditions = {category: req.body.products.productCategory, product: req.body.productProduct }
     , update = {price: req.body.productPrice, unitOfMeasure: req.body.productUnitOfMeasure, chargeType: req.body.productChargeType}
     , options = { multi: false};
 
@@ -278,6 +278,7 @@ router.post('/saveproduct', function(req, res) {
     //numAffected is the number of updated documents
     if(err) {
       console.log("Errors: " + err);
+      res.sendStatus(500);
     }
     else {
       console.log("Number of rows Affected: " + numAffected);

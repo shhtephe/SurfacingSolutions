@@ -80,9 +80,22 @@
 				<li class="list-group-item">
 					Product ID: {{productDropDown2.id}}<br>
 				</li>
-				<li class="list-group-item">	
-					Price: <input type="text" name="productPrice" ng-model="productDropDown2.price"> <br>
-				</li>	
+				<span ng-hide="productDropDown2.dropDown">
+					<li class="list-group-item">	
+						Price: <input type="text" name="productPrice" ng-model="productDropDown2.price"> <br>
+					</li>	
+				</span>
+				<span ng-show="productDropDown2.dropDown">
+					<li class="list-group-item">
+						<select name="productProduct" ng-model="optionsDropDown" ng-options="product.product for product in productDropDown2.dropDown">
+							<option value="">----Select----</option>
+						</select>
+					</li>
+					<li class="list-group-item">	
+						Price: <input type="text" name="productPrice" ng-model="optionsDropDown.price"> <br>
+					</li>	
+				</span>
+				<!-- Removed to be coded later
 				<li class="list-group-item">	
 						Charge by: 
 						<select name="productUnitOfMeasure" ng-model="productDropDown2.unitOfMeasure">
@@ -97,8 +110,8 @@
 							<option value="Flat Rate">Flat Rate</option>
 							<option value="Per Unit">Per Unit</option>
 						</select> <br>
-				</li>
-			    <button type="button" ng-click="saveProducts(products)" class="btn btn-default">Save</button>
+				</li>-->
+			    <button type="button" ng-click="saveProducts(products, productDropDown2)" class="btn btn-default">Save</button>
 			</ul>
 		</div>
 	</form>

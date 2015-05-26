@@ -15,13 +15,19 @@ var quote = new Schema({
 		counterThickness1: Number,
 		counterThickness2: Number,
 		totalPrice: Number,
+		material:{
+			colourGroup: String,
+			colour: String,
+			price: Number
+		},
 		addons: [{
 			product: String,
 			name: String,
 			price: Number,
 			itemType: String,
 			quantity: Number,
-			totalPrice: Number
+			totalPrice: Number,
+			dropDown: String
 		}]
 	}],
 	description: String

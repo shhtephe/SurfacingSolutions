@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<div ng-controller="quoteCtrl" ng-init='customer=<%- JSON.stringify(customer) %>;quote=<%- JSON.stringify(quote) %>; products=<%- JSON.stringify(products) %>; materials=<%- JSON.stringify(materials) %>; addTable == false'>
+<div ng-controller="quoteCtrl" ng-init='customer=<%- JSON.stringify(customer) %>;quote=<%- JSON.stringify(quote) %>; products=<%- JSON.stringify(products) %>; materials=<%- JSON.stringify(materials) %>; addCounter == false'>
 	<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
 	Customer: {{customer.lastName}}, {{customer.firstName}}
 	<br>QuoteID: {{quote.quoteID}}
@@ -9,8 +9,8 @@
 	<br>
 	<textarea rows="4" columns="150" ng-model="quote.description"></textarea>
 	<br>
-	<div ng-show="addTable == true">
-		<form>
+	<div ng-show="addCounter == true">
+		<form name="addCounter">
 			Counter Shape: 
 			<br>
 			<select name="shape" ng-model="shape" convert-to-number id="shape">
@@ -55,11 +55,11 @@
 	<div ng-show="dropDown2 && dropDown1">
 	</div>
 	<br>
-	<div ng-show="addTable == true">
+	<div ng-show="addCounter == true">
 		<button type="button" style="btn" ng-click="hideCounter()">Cancel</button>
 		<button type="button" style="btn" ng-click="saveTable(quote, counterWidth, counterLength, shape, materialColour.colourGroup, materialColour.colour, materialColour.price)">Save Table</button>
 	</div>
-	<div ng-hide="addTable == true">
+	<div ng-hide="addCounter == true">
 		<button type="button" style="btn" ng-click="showCounter()">Add a table</button>
 	</div>
 	<br><br>
@@ -71,17 +71,16 @@
   		<br>Counter Shape: {{counter.counterShape}} 
   		<br>Counter Width: {{counter.counterWidth}}
   		<span ng-show="counter.counterShape==='rectangle'"><br>Counter Length: {{counter.counterLength}}</span>
-      	<br>Counter Colour Group: {{materialColour.colourGroup}}
-      	<br>Counter Material: {{materialColour.colour}}
-      	<br>Counter Price/Sheet: {{materialColour.price}}
-      	{{$addonID}}
+      	<br>Counter Colour Group: {{counter.material.colourGroup}}
+      	<br>Counter Material: {{counter.material.colour}}
+      	<br>Counter Price/Sheet: {{counter.material.price}}
       	<!--<br>counter Thickness: {{counter.counterThickness1}}
       	<br>counter Thickness 2: {{counter.counterThickness1}}-->
 		<br><br>
 		<br><u>Addons:</u> 
 		<br>
 		<div ng-repeat="addon in counter.addons">
-			<br>{{addon.product}}: {{addon.quantity}} <a href="#" ng-click="removeAddon(addon.name, $parent.$index, $index, quote)">remove</a>
+			<br>{{addon.product}}: <span ng-show="addon.dropDown">{{addon.dropDown.product}} - </span>{{addon.quantity}} <a href="#" ng-click="removeAddon(addon, $parent.$index, $index, quote)">remove</a>
 		</div>
 		<br>
 		<br>Addons: 
@@ -98,6 +97,11 @@
 		</div>
 		<div ng-show="dropDown2 && dropDown1">
 			<ul class="list-group"> 
+				<li class="list-group-item" ng-show="dropDown2.menuType == 'dropDown'">	
+					Size: <select name="productDropdown" ng-model="productDropdown" ng-options="dropdown.product for dropdown in dropDown2.dropDown">
+						<option value="">----Select----</option>
+					</select>
+				</li>
 				<li class="list-group-item">	
 					Price/Inch: {{dropDown2.price}}<br>
 				</li>	
@@ -107,12 +111,7 @@
 				<li class="list-group-item" ng-show="dropDown2.menuType == 'checkbox'">	
 					Include: <input type="checkbox" ng-model="addonQuantity" name="addonQuantity">
 				</li>
-				<li class="list-group-item" ng-show="dropDown2.menuType == 'dropDown'">	
-					Size: <select name="productDropdown" ng-model="productDropdown" ng-options="dropdown.product for dropdown in dropDown2.dropDown">
-				<option value="">----Select----</option>
-			</select>
-				</li>
-			    <button type="button" class="btn btn-default" ng-click="saveAddon(quote, $index, dropDown2.name, dropDown2.product, dropDown2.price, addonQuantity)">Add</button>
+			    <button type="button" class="btn btn-default" ng-click="saveAddon(quote, $index, dropDown2.name, dropDown2.product, dropDown2.price, addonQuantity, productDropdown)">Add</button>
 			</ul>
 		</div>
 		<br>
@@ -124,8 +123,8 @@
 		</div>>
 		---------------------------------------------------------------------------------------------------------------------------------------------
 	</div>
-	<br>Total Price: {{quote.totalPrice}}
-	<br>Job Difficulty: {{quote.jobDifficulty}}
+	<br>Job Difficulty: <input type="text" ng-model="quote.jobDifficulty" name="quote.jobDifficulty">
+	<br>Total Price: ${{quote.totalPrice * quote.jobDifficulty | number:2}}
 	<br>
 	<button type="button" style="btn" ng-click="saveQuote(quote, quote.description)">Update/Save Quote</button>
 </div>

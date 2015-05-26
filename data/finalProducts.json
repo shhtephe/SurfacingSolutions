@@ -108,7 +108,7 @@
 		category: "general",
 		id: 1,
 		name: "Backsplash",
-		product: "Radius",
+		product: "Backsplash",
 		price: 0,
 		unitOfMeasure: "Item",
 		menuType: "dropDown",

@@ -10,7 +10,12 @@ var products = new Schema({
 	price: Number,
 	unitOfMeasure: String,
 	chargeType: String,
-	menuType: String
+	menuType: String,
+	dropDown:[{
+		name: String,
+		product: String,
+		price: Number
+	}]
 });
 
 products.plugin(timestamps);

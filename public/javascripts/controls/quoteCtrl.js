@@ -7,11 +7,11 @@ app.controller('quoteCtrl',
   	};
 
 	$scope.showCounter = function() {  
-		$scope.addTable = true;
+		$scope.addCounter = true;
 	};
 
 	$scope.hideCounter = function() {  
-		$scope.addTable = false;
+		$scope.addCounter = false;
 		$scope.shape = "";
 		$scope.counterWidth = "";
 		$scope.counterLength = "";
@@ -39,13 +39,18 @@ app.controller('quoteCtrl',
 	    };
 	};
 
-	$scope.saveAddon = function(quote, index, name, product, price, quantity) {
+	$scope.saveAddon = function(quote, index, name, product, price, quantity, dropDown) {
 		var addons = quote.counters[index].addons;
 		var pushObj = {};
 		var result = $.grep(addons, function(e){ return e.product === product; });
-		var totalPrice = quantity * price;
-		var oldPrice;
-
+		var totalPrice = 0;
+		
+		if (typeof dropDown !== 'undefined') {
+			totalPrice = quote.counters[index].length * dropDown.price;
+		}else{
+			totalPrice = quantity * price;
+		};
+		
 		if (Object.keys(result).length === 0) {
 			//Couldn't find it, so add a new value
 			pushObj = {
@@ -53,36 +58,33 @@ app.controller('quoteCtrl',
 				product: product,
 				quantity: quantity,
 				price: price,
-				totalPrice: totalPrice
+				totalPrice: totalPrice,
+				dropDown: dropDown
 			};
 			addons.push(pushObj);
+			console.log(addons);
 			quote.counters[index].totalPrice += addons[addons.length-1].totalPrice;
-		}	
-		else {
+		} else {
 			//Found it, so update the value
 			addons[arraySearch(product, addons)].quantity = quantity;
 			addons[arraySearch(product, addons)].totalPrice = totalPrice;
 			quote.counters[index].totalPrice += addons[arraySearch(product, addons)].totalPrice;
-		}
+		};
 
 		$scope.dropDown1 = "";
 		$scope.dropDown2 = "";
 		$scope.addonQuantity = "";
 
-		quote.totalPrice += addons[arraySearch(product, addons)].totalPrice;
-		$scope.quote = quote;
+//		quote.totalPrice += addons[arraySearch(product, addons)].totalPrice;
+//		$scope.quote = quote;
 		//updatePrice(quantity, price, "addon"); - For use later
+		
 	};	
 	
-	$scope.removeAddon = function(addon, counterIndex, addonIndex, quote){
-		var addonPrice = quote.counters[quote.counters.length-1].totalPrice;
-		//addonPrice = addonPrice - 
-		quote.totalPrice -= quote.counters[quote.counters.length-1].totalPrice;
-
-		quote.counters[counterIndex].addons.splice(addonIndex, addonIndex+1);		
-		updatePrice();
-		quote.counters[counterIndex].addons.
-		quote.totalPrice += quote.counters[quote.counters.length-1].totalPrice;
+	$scope.removeAddon = function(addon, counterIndex, addonIndex, quote){		
+		quote.totalPrice -= addon.totalPrice;
+		quote.counters[counterIndex].totalPrice -= addon.totalPrice;
+		quote.counters[counterIndex].addons.splice(addonIndex, addonIndex+1);
 	};
 
 	$scope.saveTable = function(quote, width, length, shape, materialColourGroup, materialColour, materialPrice) {
@@ -98,15 +100,16 @@ app.controller('quoteCtrl',
 			counterShape: shape,
 			counterLength: length,
 			counterWidth: width,
-			materialColourGroup: materialColourGroup,
-			materialColour: materialColour,
-			materialPrice: materialPrice,
+			totalPrice: 0,
+			material:{
+				colourGroup: materialColourGroup,
+				colour: materialColour,
+				price: materialPrice
+			},
 			addons: []
 		};
 		quote.counters.push(pushObj);
 		$scope.hideCounter();
-
-		console.log(quote.counters);
 		
 		if(shape === "rectangle"){
 			squareFootage = length * width;
@@ -123,6 +126,7 @@ app.controller('quoteCtrl',
 
 		quote.counters[quote.counters.length-1].totalPrice = sheets * materialPrice;
 		quote.totalPrice = quote.totalPrice + quote.counters[quote.counters.length-1].totalPrice;
+		$scope.quote = quote;
 	};
 
 	$scope.deleteTable = function(quote, index) {
@@ -133,6 +137,11 @@ app.controller('quoteCtrl',
 	};
 
 	$scope.saveQuote = function(quote, description) {
+		//console.log(quote.jobDifficulty.$dirty);
+		if(quote.jobDifficulty.$dirty === true){
+			console.log("value has changed");
+		}
+
 		quote['description'] = description;
 		//save the quote
 		//Need to declare that it's sending a json doc

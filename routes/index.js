@@ -62,6 +62,7 @@ router.get('/customer/:customer', function(req, res, next) {
     if (err) { return next(err); }
     if (!quotes) { return next(new Error('can\'t find Quotes')); }
       req.customer = customer;
+      console.log(quotes);
       res.render('partials/customer', { 
       customer: customer,
       quotes: quotes
@@ -107,7 +108,7 @@ router.param('quote', function(req, res, next, quoteID) {
           quoteID: quoteID,
           custCode: custCode,
           totalPrice: totalPrice,
-          jobDifficulty: jobDifficulty,
+          jobDifficulty: 1,
           counters: []
         });
 
@@ -242,24 +243,23 @@ router.post('/newcustomer', function(req, res) {
 });
 
 router.post('/savenewmaterial', function(req, res) {
-
-
-
-  var update = req.body.materials
-    , options = { multi: false};
-
-  mongoose.model('materials').update(conditions, update, options, callback);
-  function callback (err, numAffected) {
-    //numAffected is the number of updated documents
-    if(err) {
+  console.log(req.body);
+  var newMaterial = new materials({
+    colourGroup: req.body.materials.colourGroup,
+    colour: req.body.materials.colour,
+    price: req.body.materials.price
+  });
+  newMaterial.save(function (err, materials) {
+    if (err) {
       console.log("Errors: " + err);
       res.sendStatus(500);
     }
     else {
-      console.log("Number of rows Affected: " + numAffected);
-        res.sendStatus(200);
-    };
-  };
+      // saved!
+      console.log("Saved!")
+      res.send();
+    }
+  });
 });
 
 router.post('/savematerial', function(req, res) {
@@ -287,10 +287,17 @@ router.post('/savematerial', function(req, res) {
 
 router.post('/saveproduct', function(req, res) {
   console.log(req.body);
+  console.log(req.body.product.dropDown);
 
-  var conditions = {category: req.body.products.productCategory, product: req.body.productProduct }
-    , update = {price: req.body.productPrice, unitOfMeasure: req.body.productUnitOfMeasure, chargeType: req.body.productChargeType}
+  if(req.body.product.dropDown === undefined){
+    var conditions = {category: req.body.product.category, name: req.body.product.name }
+    , update = {price: req.body.product.price}
     , options = { multi: false};
+  }else {
+    var conditions = {category: req.body.product.category, name: req.body.product.name }
+    , update = {dropDown: req.body.product.dropDown}
+    , options = { multi: false};
+  };
 
   mongoose.model('products').update(conditions, update, options, callback);
 
@@ -302,13 +309,7 @@ router.post('/saveproduct', function(req, res) {
     }
     else {
       console.log("Number of rows Affected: " + numAffected);
-      mongoose.model("products").find(function(err, products){
-        //blanked out until page refresh is figured out.
-        //res.render('partials/admin', { 
-        //products: products,
-        //save: ""
-      //});
-      });
+      res.sendStatus(200);
     };
   };
 });

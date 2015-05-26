@@ -35,9 +35,9 @@ app.controller('quoteCtrl',
 	    for (var i=0; i < myArray.length; i++) {
 	        if (myArray[i].product === nameKey) {
 	            return i;
-	        }
-	    }
-	}
+	        };
+	    };
+	};
 
 	$scope.saveAddon = function(quote, index, name, product, price, quantity) {
 		var addons = quote.counters[index].addons;

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <div ng-controller="adminCtrl" ng-init='products=<%- JSON.stringify(products) %>; materials=<%- JSON.stringify(materials) %>'>	
-	<br>
 	<u>Add New Materials</u>
 	<br>
 	<button ng-hide="newMaterial == true" type="button" ng-click="showNewMaterial()" class="btn btn-default">Add new Material</button>
@@ -26,7 +25,7 @@
 				Price per sheet: <input type="text" name="newMaterialPrice" ng-model="newMaterialPrice">
 			</li>
 		<br><br>
-		<button type="button" ng-click="saveNewMaterial(newMaterialColourGroup, newMaterialColour, newMaterialPrice)" class="btn btn-default">Save</button> 
+		<button type="button" ng-click="saveNewMaterial(materials, newMaterialColourGroup, newMaterialColour, newMaterialPrice)" class="btn btn-default">Save</button> 
 		<button type="button" ng-click="hideNewMaterial()" class="btn btn-default">Cancel</button> 
 	</div>
 	<br>
@@ -34,7 +33,7 @@
 	<br>
 	<u>Edit Materials</u>
 	<br>
-	Choose a Colour Group: <select name="editMaterialColourGroup" ng-model="editMaterialColourGroup" ng-options="material.colourGroup for material in materials | orderBy:'colourGroup' | unique: 'colourGroup' track by material.colourGroup">
+	Choose a Colour Group: <select name="editMaterialColourGroup" ng-model="editMaterialColourGroup" ng-options="material.colourGroup for material in materials | orderBy:'colourGroup' | unique: 'colourGroup'">
 	<option value="">----Select----</option>
 	</select>
 	<br>
@@ -47,16 +46,17 @@
 	</div>
 	<div ng-show="editMaterialColourGroup && editMaterialColour">
 		<br>
-		<ul> 
-			<li>	
+		<ul class="list-group"> 
+			<li class="list-group-item">	
 				Price: <input type="text" name="price" ng-model="editMaterialColour.price"> <br>
 			</li>	
-		    <button type="button" ng-click="saveNewMaterial(materials)" class="btn btn-default">Save</button>
+		    <button type="button" ng-click="saveMaterial(materials, editMaterialColour)" class="btn btn-default">Save</button>
 		</ul>
 	</div>
 	<br>
-	-------------------------------------------------------------------- 
-	<form>
+	--------------------------------------------------------------------
+	<br>
+	<form role="form">
 		<u>Edit Products</u>
 		<br>
 		Choose a Category:
@@ -98,7 +98,7 @@
 							<option value="Per Unit">Per Unit</option>
 						</select> <br>
 				</li>
-			    <button type="button" ng-click="saveProducts(products, $index)" class="btn btn-default">Save</button>{{}}
+			    <button type="button" ng-click="saveProducts(products)" class="btn btn-default">Save</button>
 			</ul>
 		</div>
 	</form>

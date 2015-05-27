@@ -75,8 +75,8 @@ app.controller('quoteCtrl',
 		$scope.dropDown2 = "";
 		$scope.addonQuantity = "";
 
-//		quote.totalPrice += addons[arraySearch(product, addons)].totalPrice;
-//		$scope.quote = quote;
+		quote.totalPrice += addons[arraySearch(product, addons)].totalPrice;
+		$scope.quote = quote;
 		//updatePrice(quantity, price, "addon"); - For use later
 		
 	};	
@@ -106,7 +106,8 @@ app.controller('quoteCtrl',
 				colour: materialColour,
 				price: materialPrice
 			},
-			addons: []
+			addons: [],
+			mandatoryCharges: [];
 		};
 		quote.counters.push(pushObj);
 		$scope.hideCounter();
@@ -137,10 +138,13 @@ app.controller('quoteCtrl',
 	};
 
 	$scope.saveQuote = function(quote, description) {
+		
+		console.log($scope);
+
 		//console.log(quote.jobDifficulty.$dirty);
 		if(quote.jobDifficulty.$dirty === true){
 			console.log("value has changed");
-		}
+		};
 
 		quote['description'] = description;
 		//save the quote

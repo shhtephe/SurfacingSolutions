@@ -28,6 +28,15 @@ var quote = new Schema({
 			quantity: Number,
 			totalPrice: Number,
 			dropDown: String
+		}],
+		mandatoryCharges: [{
+			product: String,
+			name: String,
+			price: Number,
+			itemType: String,
+			quantity: Number,
+			totalPrice: Number,
+			dropDown: String
 		}]
 	}],
 	description: String

@@ -10,6 +10,8 @@ var customerSchema = require('../models/customers');
 var materials = require('../models/materials');
 //mongoose
 var mongoose = require('mongoose');
+//express-mailer
+mailer = require('express-mailer');
 //Recieve JSON from Angular
 var http = require('http');
 

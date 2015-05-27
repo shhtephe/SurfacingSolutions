@@ -45,6 +45,8 @@ app.controller('quoteCtrl',
 		var result = $.grep(addons, function(e){ return e.product === product; });
 		var totalPrice = 0;
 		
+		console.log();
+
 		if (typeof dropDown !== 'undefined') {
 			totalPrice = quote.counters[index].length * dropDown.price;
 		}else{
@@ -64,6 +66,7 @@ app.controller('quoteCtrl',
 			addons.push(pushObj);
 			console.log(addons);
 			quote.counters[index].totalPrice += addons[addons.length-1].totalPrice;
+			quote.totalPrice =+ quote.counters[index].totalPrice;
 		} else {
 			//Found it, so update the value
 			addons[arraySearch(product, addons)].quantity = quantity;

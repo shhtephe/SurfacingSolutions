@@ -80,12 +80,12 @@
 				<li class="list-group-item">
 					Product ID: {{productDropDown2.id}}<br>
 				</li>
-				<span ng-hide="productDropDown2.dropDown">
+				<span ng-show="productDropDown2.dropDown==''">
 					<li class="list-group-item">	
 						Price: <input type="text" name="productPrice" ng-model="productDropDown2.price"> <br>
 					</li>	
 				</span>
-				<span ng-show="productDropDown2.dropDown">
+				<span ng-hide="productDropDown2.dropDown==''">
 					<li class="list-group-item">
 						<select name="productProduct" ng-model="optionsDropDown" ng-options="product.product for product in productDropDown2.dropDown">
 							<option value="">----Select----</option>
@@ -111,7 +111,9 @@
 							<option value="Per Unit">Per Unit</option>
 						</select> <br>
 				</li>-->
-			    <button type="button" ng-click="saveProducts(products, productDropDown2)" class="btn btn-default">Save</button>
+			    <button align="left" type="button" ng-click="saveProducts(products, productDropDown2)" class="btn btn-default">Save</button>
+
+			    <button align="right" type="button" ui-sref="invoice" class="btn btn-default">Invoice</button>
 			</ul>
 		</div>
 	</form>

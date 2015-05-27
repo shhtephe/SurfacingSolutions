@@ -287,9 +287,9 @@ router.post('/savematerial', function(req, res) {
 
 router.post('/saveproduct', function(req, res) {
   console.log(req.body);
-  console.log(req.body.product.dropDown);
+  console.log(req.body.product.dropDown[0]);
 
-  if(req.body.product.dropDown === undefined){
+  if(req.body.product.dropDown[0] === undefined){
     var conditions = {category: req.body.product.category, name: req.body.product.name }
     , update = {price: req.body.product.price}
     , options = { multi: false};

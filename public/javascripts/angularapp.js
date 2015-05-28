@@ -57,6 +57,16 @@ function($stateProvider, $urlRouterProvider, $locationProvider) {
       },
       controller: 'quoteCtrl'
   })
+    .state('invoice', {
+      url: '/customer/{custCode}/quote/{quoteID}/invoice',
+      templateUrl: function(stateParams){
+        return '/customer/' + stateParams.custCode + '/quote/' + stateParams.quoteID + '/invoice';
+      },
+      data: {
+        requireLogin: true
+      },
+      controller: 'invoiceCtrl'
+  })
     .state('customers', {
       url: '/customers',
       templateUrl: '/customers',

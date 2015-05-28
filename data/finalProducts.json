@@ -251,7 +251,7 @@
 	},
 	{
 		category: "sink",
-		id: 3,
+		id: 1,
 		name: "supplyOfSink",
 		product: "Supply of Sink",
 		price: 0,
@@ -259,18 +259,92 @@
 		menuType: "dropDown",
 		dropDown: [{
 			name: "singleUndermountSS",
-			product: 'Waterfall - 0 to 26',
+			product: "Single Undermount SS",
 			price: 0
 		},
 		{
-			name: "27-36",
-			product: 'Waterfall - 27 to 36',
+			name: "doubleUndermountSinkSS",
+			product: "Double Undermount Sink SS",
 			price: 0
 		},
 		{
-			name: "37+",
-			product: 'Waterfall - >37',
+			name: "singleSolidSurface",
+			product: "Single Solid Surface",
+			price: 0
+		},
+		{
+			name: "doubleSolidSurface",
+			product: "Double Solid Surface",
+			price: 0
+		},
+		{
+			name: "singleDropInSinkSS",
+			product: "Single Drop-in Sink SS",
+			price: 0
+		},
+		{
+			name: "doubleDropInSinkSS",
+			product: "Double Drop-in Sink SS",
 			price: 0
 		}]
-	}
+	},
+	{
+		category: "sink",
+		id: 2,
+		name: "sinkCutOut",
+		product: "Sink Cut-Out",
+		price: 0,
+		unitOfMeasure: "Item",
+		menuType: "dropDown",
+		dropDown: [{
+			name: "singleUndermountSink",
+			product: "Single Undermount Sink",
+			price: 0
+		},
+		{
+			name: "doubleUndermountSink",
+			product: "Double Undermount Sink",
+			price: 0
+		},
+		{
+			name: "SingleDropInSink",
+			product: "Single Drop-in Sink",
+			price: 0
+		},
+		{
+			name: "doubleDropInSink",
+			product: "Double Drop-in Sink",
+			price: 0
+		}]
+	}, 
+	{
+		category: "sink",
+		id: 3,
+		name: "sinkInstallation",
+		product: "Sink Installation",
+		price: 0,
+		unitOfMeasure: "Item",
+		menuType: "dropDown",
+		dropDown: [{
+			name: "customerProvidedDropIn",
+			product: "Customer Provided Drop-in",
+			price: 0
+		},
+		{
+			name: "customerProvidedUndermount",
+			product: "Customer Provided Undermount",
+			price: 0
+		},
+		{
+			name: "suppliedDropInSink",
+			product: "Supplied Drop-in Sink",
+			price: 0
+		},
+		{
+			name: "suppliedUndermount",
+			product: "Supplied Undermount",
+			price: 0
+		}]
+	}, 
+
 ]

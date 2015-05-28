@@ -5,6 +5,19 @@ app.controller('quoteCtrl',
   	function updatePrice() {
 
   	};
+	$scope.mandatoryChargeChange = function(product, price, quantity, quote, counter, parentIndex, index){
+		var charges = quote.counters[parentIndex].mandatoryCharges[index];
+ 		var oldPrice = 0;
+ 		if(charges.totalPrice !== undefined){
+ 			oldPrice = charges.totalPrice;	
+ 		};
+ 		charges.totalPrice = quantity * price;
+ 		quote.counters[parentIndex].totalPrice += - oldPrice + charges.totalPrice;
+ 		quote.totalPrice += - oldPrice + charges.totalPrice;
+ 		console.log(quote.counters[parentIndex].mandatoryCharges[index]);
+ 		$scope.quote = quote;
+
+	};
 
 	$scope.showCounter = function() {  
 		$scope.addCounter = true;
@@ -45,14 +58,14 @@ app.controller('quoteCtrl',
 		var result = $.grep(addons, function(e){ return e.product === product; });
 		var totalPrice = 0;
 		
-		console.log();
+		console.log(price, quantity);
 
 		if (typeof dropDown !== 'undefined') {
 			totalPrice = quote.counters[index].length * dropDown.price;
 		}else{
 			totalPrice = quantity * price;
 		};
-		
+
 		if (Object.keys(result).length === 0) {
 			//Couldn't find it, so add a new value
 			pushObj = {
@@ -66,7 +79,6 @@ app.controller('quoteCtrl',
 			addons.push(pushObj);
 			console.log(addons);
 			quote.counters[index].totalPrice += addons[addons.length-1].totalPrice;
-			quote.totalPrice =+ quote.counters[index].totalPrice;
 		} else {
 			//Found it, so update the value
 			addons[arraySearch(product, addons)].quantity = quantity;

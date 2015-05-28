@@ -166,6 +166,34 @@ router.get('/customer/:customer/quote/:quote', function(req, res, next) {
   }
 });
 
+router.get('/customer/:customer/quote/:quote/invoice', function(req, res, next) {
+  if (typeof req.quote[0]==="undefined") {
+      mongoose.model("products").find(function(err, products){
+        mongoose.model("materials").find(function(err, materials){
+          console.log(materials);
+          res.render('partials/invoice', { 
+            quote: req.quote,
+            customer: req.customer,
+            products: products,
+            materials: materials
+          });
+        });
+    })
+  }
+  else{
+    mongoose.model("products").find(function(err, products){
+      mongoose.model("materials").find(function(err, materials){
+        res.render('partials/invoice', { 
+          quote: req.quote[0],
+          customer: req.customer,
+          products: products,
+          materials: materials
+        });
+      });
+    })
+  }
+};
+
 router.get('/admin', function(req, res, next) {
   mongoose.model("products").find(function(err, products){
     mongoose.model("materials").find(function(err, materials){

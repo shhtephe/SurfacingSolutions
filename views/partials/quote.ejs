@@ -88,7 +88,7 @@
 						Price/Inch: {{dropDown2.price}}<br>
 					</li>	
 					<li class="list-group-item" ng-show="dropDown2.menuType == 'textbox'">	
-						Quantity: <input type="text" ng-model="addonQuantity" name="addonQuantity">
+						Quantity: <input type="number" ng-model="addonQuantity" name="addonQuantity">
 					</li>
 					<li class="list-group-item" ng-show="dropDown2.menuType == 'checkbox'">	
 						Include: <input type="checkbox" ng-model="addonQuantity" name="addonQuantity">
@@ -102,7 +102,7 @@
 			<div ng-repeat="charge in counter.mandatoryCharges">
 				<ng-form name="mandatoryProductsForm">
 					<br>{{charge.product}} - ${{charge.price | number:2}}/{{charge.unitOfMeasure}}
-					<br>Quantity: <input type="text" ng-model="charge.quantity">
+					<br>Quantity: <input ng-change="mandatoryChargeChange(charge.product, charge.price, charge.quantity, quote, counter, $parent.$index, $index)" type="number" ng-model="charge.quantity"> Total: ${{charge.totalPrice |number:2}}
 				</ng-form>
 			</div>
 			<u>Summary</u>: 
@@ -127,10 +127,11 @@
 	      	<br>
 	      	<!--<br>counter Thickness: {{counter.counterThickness1}}
 	      	<br>counter Thickness 2: {{counter.counterThickness1}}-->
+	      	<hr style="background:#FFFFFF; border:0; height:7px" />
 		</div>
-		<hr style="background:#FFFFFF; border:0; height:7px" /><br>
-		<br>Job Difficulty: <input type="text" ng-model="quote.jobDifficulty" name="quote.jobDifficulty">
-		<br><span style="float: left;">Total Price: ${{quote.totalPrice * quote.jobDifficulty | number:2}}</span>
+		<br>Job Difficulty: <input type="number" ng-model="quote.jobDifficulty" name="quote.jobDifficulty"><br>
+		<span style="float: left;">Total Price: ${{quote.totalPrice * quote.jobDifficulty | number:2}}</span>
 		<span style="float: right;"><button type="button" style="btn" ng-click="saveQuote(quote, quote.description)">Update/Save Quote</button></span>
 	</form>
+	<button type="button" style="btn" ui-sref="invoice">Generate Invoice</button>
 </div>

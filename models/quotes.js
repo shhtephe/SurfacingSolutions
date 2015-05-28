@@ -40,7 +40,8 @@ var quote = new Schema({
 			dropDown: [{
 				price: Number,
 				product: String,
-				name: String
+				name: String,
+				quantity: Number
 			}]
 		}]
 	}],

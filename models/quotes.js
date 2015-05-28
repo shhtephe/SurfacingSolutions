@@ -33,10 +33,15 @@ var quote = new Schema({
 			product: String,
 			name: String,
 			price: Number,
-			itemType: String,
+			unitOfMeasure: String,
+			menuType: String,
 			quantity: Number,
 			totalPrice: Number,
-			dropDown: String
+			dropDown: [{
+				price: Number,
+				product: String,
+				name: String
+			}]
 		}]
 	}],
 	description: String

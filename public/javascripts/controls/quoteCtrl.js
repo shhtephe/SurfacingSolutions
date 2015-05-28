@@ -90,9 +90,11 @@ app.controller('quoteCtrl',
 		quote.counters[counterIndex].addons.splice(addonIndex, addonIndex+1);
 	};
 
-	$scope.saveTable = function(quote, width, length, shape, materialColourGroup, materialColour, materialPrice) {
+	$scope.saveTable = function(quote, width, length, shape, materialColourGroup, materialColour, materialPrice, products) {
 		var squareFootage = 0;
 		var pushObj = {};
+		var pushMandatory = {};
+		var pushMandatoryDropDown = {};
 		var sheets = 0;
 		if($scope.shape == "circle"){
 			length = 0;
@@ -110,9 +112,38 @@ app.controller('quoteCtrl',
 				price: materialPrice
 			},
 			addons: [],
-			mandatoryCharges: [];
+			mandatoryCharges: []
 		};
+		console.log(products);
+		for (var i = products.length - 1; i >= 0; i--) {
+			if(products[i].category === "mandatory"){
+				console.log(products[i].category);
+				pushMandatory = {
+					product: products[i].product,
+					name: products[i].name,
+					price: products[i].price,
+					unitOfMeasure: products[i].unitOfMeasure,
+					menuType: products[i].menuType,
+					quantity: products[i].quantity,
+					totalPrice: products[i].totalPrice,
+					dropDown:[]
+				};
+				if(products[i].dropDown[0] !== undefined ){
+					for (var j = products[i].dropDown.length - 1; j >= 0; j--) {
+						pushMandatoryDropDown = {
+							price: products[i].dropDown[j].price,
+							product: products[i].dropDown[j].product,
+							name: products[i].dropDown[j].name
+						}; 	
+						pushMandatory.dropDown.push(pushMandatoryDropDown);
+					}; 
+				}
+				pushObj.mandatoryCharges.push(pushMandatory);
+			}
+		};
+		console.log(pushObj);
 		quote.counters.push(pushObj);
+		console.log(quote.counters);
 		$scope.hideCounter();
 		
 		if(shape === "rectangle"){

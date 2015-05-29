@@ -1,122 +1,127 @@
 <!DOCTYPE html>
-<div ng-controller="adminCtrl" ng-init='products=<%- JSON.stringify(products) %>; materials=<%- JSON.stringify(materials) %>'>	
-	<u>Add New Materials</u>
-	<br>
-	<button ng-hide="newMaterial == true" type="button" ng-click="showNewMaterial()" class="btn btn-default">Add new Material</button>
-	<br>
-	<div ng-show="newMaterial == true">
-		<ul class="list-group"> 
-			<li>
-				Colour Group <select name="newMaterialColourGroup" ng-model="newMaterialColourGroup">
-				<option selected="selected" value="">----Select----</option>
-							<option value="A">A</option>
-							<option value="B">B</option>
-							<option value="C">C</option>
-							<option value="D">D</option>
-							<option value="E">E</option>
-						</select> <br>
-			</li>
-			<br>
-			<li>
-				Material Colour: <input type="text" name="newMaterialColour" ng-model="newMaterialColour">
-			</li>
-			<br>
-			<li>
-				Price per sheet: <input type="text" name="newMaterialPrice" ng-model="newMaterialPrice">
-			</li>
-		<br><br>
-		<button type="button" ng-click="saveNewMaterial(materials, newMaterialColourGroup, newMaterialColour, newMaterialPrice)" class="btn btn-default">Save</button> 
-		<button type="button" ng-click="hideNewMaterial()" class="btn btn-default">Cancel</button> 
-	</div>
-	<br>
-	--------------------------------------------------------------------
-	<br>
-	<u>Edit Materials</u>
-	<br>
-	Choose a Colour Group: <select name="editMaterialColourGroup" ng-model="editMaterialColourGroup" ng-options="material.colourGroup for material in materials | orderBy:'colourGroup' | unique: 'colourGroup'">
-	<option value="">----Select----</option>
-	</select>
-	<br>
-	<div ng-show="editMaterialColourGroup">
-		<br>
-		Choose a Colour:
-		<select name="editMaterialColour" ng-model="editMaterialColour" ng-options="material.colour for material in materials | filter:{colourGroup: editMaterialColourGroup.colourGroup} ">
-			<option value="">----Select----</option>
-		</select>
-	</div>
-	<div ng-show="editMaterialColourGroup && editMaterialColour">
-		<br>
-		<ul class="list-group"> 
-			<li class="list-group-item">	
-				Price: <input type="text" name="price" ng-model="editMaterialColour.price"> <br>
-			</li>	
-		    <button type="button" ng-click="saveMaterial(materials, editMaterialColour)" class="btn btn-default">Save</button>
-		</ul>
-	</div>
-	<br>
-	--------------------------------------------------------------------
-	<br>
-	<form role="form">
-		<u>Edit Products</u>
-		<br>
-		Choose a Category:
-		<select name="productCategory" ng-model="productDropDown1" ng-options="product.category for product in products | unique: 'category' track by product.category">
-			<option value="">----Select----</option>
-		</select>
-		<br>
-		<div ng-show="productDropDown1">
-			<br>
-			Choose a Product:
-			<select name="productProduct" ng-model="productDropDown2" ng-options="product.product for product in products | filter:{category: productDropDown1.category} track by product.product">
+<div class="jumbotron">
+        <div class="container">
+            <div class="col-xs-offset-2 col-xs-8">
+			<div ng-controller="adminCtrl" ng-init='products=<%- JSON.stringify(products) %>; materials=<%- JSON.stringify(materials) %>'>	
+				<u>Add New Materials</u>
+				<br>
+				<button ng-hide="newMaterial == true" type="button" ng-click="showNewMaterial()" class="btn btn-default">Add new Material</button>
+				<br>
+				<div ng-show="newMaterial == true">
+					<ul class="list-group"> 
+						<li>
+							Colour Group <select name="newMaterialColourGroup" ng-model="newMaterialColourGroup">
+							<option selected="selected" value="">----Select----</option>
+										<option value="A">A</option>
+										<option value="B">B</option>
+										<option value="C">C</option>
+										<option value="D">D</option>
+										<option value="E">E</option>
+									</select> <br>
+						</li>
+						<br>
+						<li>
+							Material Colour: <input type="text" name="newMaterialColour" ng-model="newMaterialColour">
+						</li>
+						<br>
+						<li>
+							Price per sheet: <input type="text" name="newMaterialPrice" ng-model="newMaterialPrice">
+						</li>
+					<br><br>
+					<button type="button" ng-click="saveNewMaterial(materials, newMaterialColourGroup, newMaterialColour, newMaterialPrice)" class="btn btn-default">Save</button> 
+					<button type="button" ng-click="hideNewMaterial()" class="btn btn-default">Cancel</button> 
+				</div>
+				<br>
+				--------------------------------------------------------------------
+				<br>
+				<u>Edit Materials</u>
+				<br>
+				Choose a Colour Group: <select name="editMaterialColourGroup" ng-model="editMaterialColourGroup" ng-options="material.colourGroup for material in materials | orderBy:'colourGroup' | unique: 'colourGroup'">
 				<option value="">----Select----</option>
-			</select>
-		</div>
-		<div ng-show="productDropDown2 && productDropDown1">
-			<br>
-			<ul class="list-group"> 
-				<li class="list-group-item">
-					Product Description: {{productDropDown2.product}} <br>
-				</li>
-				<li class="list-group-item">
-					Product ID: {{productDropDown2.id}}<br>
-				</li>
-				<span ng-show="productDropDown2.dropDown==''">
-					<li class="list-group-item">	
-						Price: <input type="text" name="productPrice" ng-model="productDropDown2.price"> <br>
-					</li>	
-				</span>
-				<span ng-hide="productDropDown2.dropDown==''">
-					<li class="list-group-item">
-						<select name="productProduct" ng-model="optionsDropDown" ng-options="product.product for product in productDropDown2.dropDown">
+				</select>
+				<br>
+				<div ng-show="editMaterialColourGroup">
+					<br>
+					Choose a Colour:
+					<select name="editMaterialColour" ng-model="editMaterialColour" ng-options="material.colour for material in materials | filter:{colourGroup: editMaterialColourGroup.colourGroup} ">
+						<option value="">----Select----</option>
+					</select>
+				</div>
+				<div ng-show="editMaterialColourGroup && editMaterialColour">
+					<br>
+					<ul class="list-group"> 
+						<li class="list-group-item">	
+							Price: <input type="text" name="price" ng-model="editMaterialColour.price"> <br>
+						</li>	
+					    <button type="button" ng-click="saveMaterial(materials, editMaterialColour)" class="btn btn-default">Save</button>
+					</ul>
+				</div>
+				<br>
+				--------------------------------------------------------------------
+				<br>
+				<form role="form">
+					<u>Edit Products</u>
+					<br>
+					Choose a Category:
+					<select name="productCategory" ng-model="productDropDown1" ng-options="product.category for product in products | unique: 'category' track by product.category">
+						<option value="">----Select----</option>
+					</select>
+					<br>
+					<div ng-show="productDropDown1">
+						<br>
+						Choose a Product:
+						<select name="productProduct" ng-model="productDropDown2" ng-options="product.product for product in products | filter:{category: productDropDown1.category} track by product.product">
 							<option value="">----Select----</option>
 						</select>
-					</li>
-					<li class="list-group-item">	
-						Price: <input type="text" name="productPrice" ng-model="optionsDropDown.price"> <br>
-					</li>	
-				</span>
-				<!-- Removed to be coded later
-				<li class="list-group-item">	
-						Charge by: 
-						<select name="productUnitOfMeasure" ng-model="productDropDown2.unitOfMeasure">
-							<option value="Inch">Inch</option>
-							<option value="Foot">Foot</option>
-							<option value="Per Unit">Per Unit</option>
-						</select> <br>
-				</li>
-				<li class="list-group-item">	
-						Charge Type: 
-						<select name="productChargeType" ng-model="productDropDown2.chargeType">
-							<option value="Flat Rate">Flat Rate</option>
-							<option value="Per Unit">Per Unit</option>
-						</select> <br>
-				</li>-->
-			    <button align="left" type="button" ng-click="saveProducts(products, productDropDown2)" class="btn btn-default">Save</button>
+					</div>
+					<div ng-show="productDropDown2 && productDropDown1">
+						<br>
+						<ul class="list-group"> 
+							<li class="list-group-item">
+								Product Description: {{productDropDown2.product}} <br>
+							</li>
+							<li class="list-group-item">
+								Product ID: {{productDropDown2.id}}<br>
+							</li>
+							<span ng-show="productDropDown2.dropDown==''">
+								<li class="list-group-item">	
+									Price: <input type="text" name="productPrice" ng-model="productDropDown2.price"> <br>
+								</li>	
+							</span>
+							<span ng-hide="productDropDown2.dropDown==''">
+								<li class="list-group-item">
+									<select name="productProduct" ng-model="optionsDropDown" ng-options="product.product for product in productDropDown2.dropDown">
+										<option value="">----Select----</option>
+									</select>
+								</li>
+								<li class="list-group-item">	
+									Price: <input type="text" name="productPrice" ng-model="optionsDropDown.price"> <br>
+								</li>	
+							</span>
+							<!-- Removed to be coded later
+							<li class="list-group-item">	
+									Charge by: 
+									<select name="productUnitOfMeasure" ng-model="productDropDown2.unitOfMeasure">
+										<option value="Inch">Inch</option>
+										<option value="Foot">Foot</option>
+										<option value="Per Unit">Per Unit</option>
+									</select> <br>
+							</li>
+							<li class="list-group-item">	
+									Charge Type: 
+									<select name="productChargeType" ng-model="productDropDown2.chargeType">
+										<option value="Flat Rate">Flat Rate</option>
+										<option value="Per Unit">Per Unit</option>
+									</select> <br>
+							</li>-->
+						    <button align="left" type="button" ng-click="saveProducts(products, productDropDown2)" class="btn btn-default">Save</button>
 
-			    <button align="right" type="button" ui-sref="invoice" class="btn btn-default">Invoice</button>
-			</ul>
-		</div>
-	</form>
-	<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+						    <button align="right" type="button" ui-sref="invoice" class="btn btn-default">Invoice</button>
+						</ul>
+					</div>
+				</form>
+				<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+			</div>
+        </div>
+    </div>
 </div>
-

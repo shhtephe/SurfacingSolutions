@@ -16,17 +16,20 @@ app.controller('newCustomerCtrl',
       $scope.alerts.splice(index, 1);
     };
 
-    $scope.newCustomer = function(a, b, c, d, e, f, g, h) {  
+    $scope.newCustomer = function(a, b, c, d, e, f, g, h, i, j) {  
       var data = {
         "firstName":a, 
         "lastName":b, 
         "companyName":c, 
         "email":d, 
         "addressLine1": e,
-		    "postal":f,
-		    "homePhone":g,
-		    "mobilePhone":h
+        "addressLine2": f,
+		    "postal":g,
+        "city": h,
+		    "homePhone":i,
+		    "mobilePhone":j
       };
+
       $http.post('/newcustomer', data).
         success(function(data, status, headers, config) {
         // this callback will be called asynchronously

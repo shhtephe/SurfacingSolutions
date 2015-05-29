@@ -1,10 +1,16 @@
 <!DOCTYPE=html>
-<div ng-controller="customerCtrl" ng-init='customer=<%- JSON.stringify(customer) %>;
-quotes=<%- JSON.stringify(quotes) %>'>
-  <br>Customer:<br>{{customer.firstName}} {{customer.lastName}}<br><br>Quotes:<br>
-	<div ng-repeat="quote in quotes">
-    	<a ng-href="/customer/{{customer.custCode}}/quote/{{quote.quoteID}}">{{quote.quoteID}} - {{quote.createdAt | limitTo: 10}}</a> - {{quote.description}}
-  	</div>
-	<br>
-<button type="button" class="btn" ng-click="newQuote(quotes, customer.custCode)">New Quote</button>
-</div>
+    <div class="jumbotron">
+        <div class="container">
+            <div class="col-xs-offset-2 col-xs-8">
+                <div ng-controller="customerCtrl" ng-init='customer=<%- JSON.stringify(customer) %>;
+				quotes=<%- JSON.stringify(quotes) %>'>
+				  <br>Customer:<br>{{customer.firstName}} {{customer.lastName}}<br><br>Quotes:<br>
+					<div ng-repeat="quote in quotes">
+				    	<a ng-href="/customer/{{customer.custCode}}/quote/{{quote.quoteID}}">{{quote.quoteID}} - {{quote.createdAt | limitTo: 10}}</a> - {{quote.description}}
+				  	</div>
+					<br>
+				<button type="button" class="btn" ng-click="newQuote(quotes, customer.custCode)">New Quote</button>
+				</div>
+            </div>
+        </div>
+    </div>

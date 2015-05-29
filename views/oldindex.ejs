@@ -23,7 +23,6 @@
     <script src="/javascripts/controls/customersCtrl.js"></script>
     <script src="/javascripts/controls/customerCtrl.js"></script>
     <script src="/javascripts/controls/searchCtrl.js"></script>
-    <script src="/javascripts/controls/invoiceCtrl.js"></script>
     
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel='stylesheet' href='/stylesheets/style.css'/>
@@ -46,7 +45,7 @@
         </div>
         <div class="collapse navbar-collapse" id="js-navbar-collapse">
           <ul class="nav navbar-nav">
-            <li ng-hide="currentUser == false" class=""><a ui-sref="home">Home</a></li>
+            <li ng-hide="currentUser == false" class="active"><a ui-sref="home">Home</a></li>
             <li class="nav nav-tabs">
               <li ng-hide="currentUser == false" role="presentation" class="dropdown">
                   <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-  expanded="false">
@@ -91,6 +90,12 @@
       </div>
     </div>
   </div>
-      <div><ui-view></ui-view></div>
+    <div class="jumbotron">
+        <div class="container">
+            <div class="col-xs-offset-2 col-xs-8">
+                <div><ui-view></ui-view></div>
+            </div>
+        </div>
+    </div>
   </body>
 </html>

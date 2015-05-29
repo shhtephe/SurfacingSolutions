@@ -192,7 +192,7 @@ router.get('/customer/:customer/quote/:quote/invoice', function(req, res, next) 
       });
     })
   }
-};
+});
 
 router.get('/admin', function(req, res, next) {
   mongoose.model("products").find(function(err, products){
@@ -210,8 +210,6 @@ router.get('/newcustomer', function(req, res, next) {
 });
 
 router.post('/newcustomer', function(req, res) {
-
-
   var highCode=0;
   //find customer with highest id and make new one with increment of one
   highCode = mongoose.model("customers").findOne().sort({custCode : "desc"}).exec(function(err, customer){

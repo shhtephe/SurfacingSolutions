@@ -223,7 +223,7 @@ router.post('/newcustomer', function(req, res) {
       highCode = customer.custCode + 1;
       console.log("Customer code:" + customer.custCode); 
     }
-
+    console.log(req.body.companyName);
     console.log("New Customer number: " + highCode);  
 
     var firstName = req.body.firstName,

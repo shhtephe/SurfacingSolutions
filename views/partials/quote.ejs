@@ -3,13 +3,12 @@
     <div class="container">
         <div class="col-xs-offset-2 col-xs-8">
 			<div ng-controller="quoteCtrl" ng-init='customer=<%- JSON.stringify(customer) %>;quote=<%- JSON.stringify(quote) %>; products=<%- JSON.stringify(products) %>; materials=<%- JSON.stringify(materials) %>; addCounter == false'>
-				<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
 				<form name="quoteForm">
 					Customer: {{customer.lastName}}, {{customer.firstName}}
 					<br>QuoteID: {{quote.quoteID}}
 					<br>
 					<br>
-					Description:
+				Quote Description:
 					<br>
 					<textarea rows="4" columns="150" ng-model="quote.description"></textarea>
 					<br>
@@ -68,6 +67,9 @@
 					<div ng-repeat="counter in quote.counters">
 				  		<u>Counter {{$index + 1}}</u> <button type="button" style="btn" ng-click="deleteTable(quote, $index)">DELETE THIS COUNTER</button>
 						<br><br>
+						Counter Description:
+						<br><textarea rows="4" columns="150" ng-model="counter.description"></textarea>
+						<br>
 						<br>Addons: 
 						<select name="category" ng-model="dropDown1" ng-options="product.category for product in products | filter:{category: '!mandatory'} | unique: 'category' track by product.category">
 							<option value="">----Select----</option>
@@ -91,12 +93,12 @@
 									Price/Inch: {{dropDown2.price}}<br>
 								</li>	
 								<li class="list-group-item" ng-show="dropDown2.menuType == 'textbox'">	
-									Quantity: <input type="number" ng-model="addonQuantity" name="addonQuantity">
+									Quantity: <input type="text" ng-model="addonQuantity" name="addonQuantity">
 								</li>
 								<li class="list-group-item" ng-show="dropDown2.menuType == 'checkbox'">	
 									Include: <input type="checkbox" ng-model="addonQuantity" name="addonQuantity">
 								</li>
-							    <button type="button" class="btn btn-default" ng-click="saveAddon(quote, $index, dropDown2.name, dropDown2.product, dropDown2.price, addonQuantity, productDropdown)">Add</button>
+							    <button type="button" class="btn btn-default" ng-click="saveAddon(quote, $index, dropDown2.name, dropDown2.product, dropDown2.price, addonQuantity, productDropdown, dropDown1.category)">Add</button>
 							</ul>
 						</div>
 						<br>----------
@@ -104,10 +106,11 @@
 						<br>
 						<div ng-repeat="charge in counter.mandatoryCharges">
 							<ng-form name="mandatoryProductsForm">
-								<br>{{charge.product}} - ${{charge.price | number:2}}/{{charge.unitOfMeasure}}
-								<br>Quantity: <input ng-change="mandatoryChargeChange(charge.product, charge.price, charge.quantity, quote, counter, $parent.$index, $index)" type="number" ng-model="charge.quantity"> Total: ${{charge.totalPrice |number:2}}
+								<br>{{charge.product}} - {{charge.price | currency:$}}/{{charge.unitOfMeasure}}
+								<br>Quantity: <input ng-change="mandatoryChargeChange(charge.product, charge.price, charge.quantity, quote, counter, $parent.$index, $index)" type="number" ng-model="charge.quantity"> Total: {{charge.totalPrice |currency:$}}
 							</ng-form>
 						</div>
+						<br>
 						<u>Summary</u>: 
 				  		<br>
 				  		<br>Counter Shape: {{counter.counterShape}} 
@@ -115,29 +118,31 @@
 				  		<span ng-show="counter.counterShape==='rectangle'"><br>Counter Length: {{counter.counterLength}}</span>
 				      	<br>Counter Colour Group: {{counter.material.colourGroup}}
 				      	<br>Counter Material: {{counter.material.colour}}
-				      	<br>Counter Price/Sheet: ${{counter.material.price | number:2}}
-
+				      	<br>Counter Price/Sheet: {{counter.material.price | currency:$}}
 				      	<br>
 				      	<br><u>Addons:</u> 
 						<br>
 						<div ng-repeat="addon in counter.addons">
-							<br>{{addon.product}}: <span ng-show="addon.dropDown">{{addon.dropDown.product}} - </span>{{addon.quantity}}@${{addon.price | number:2}} <a href="#" ng-click="removeAddon(addon, $parent.$index, $index, quote)">remove</a>
+							<br>{{addon.product}}: <span ng-show="addon.dropDown">{{addon.dropDown.product}} - </span>{{addon.quantity}}@{{addon.price | currency:$}} <a href="#" ng-click="removeAddon(addon, $parent.$index, $index, quote)">remove</a>
 						</div>
 
 				      	<br><hr style="background:#000000; border:0; height:7px" />
 
-				      	<span style="float: left;">Counter Subtotal - ${{counter.totalPrice |number:2}}</span><span style="float: right;"><button type="button" style="btn" ng-click="saveQuote(quote, quote.description)">Update/Save Quote</button></span>
+				      	<span style="float: left;">Counter Subtotal - {{counter.totalPrice |currency:$}}</span><span style="float: right;"><button type="button" style="btn" ng-click="saveQuote(quote, quote.description)">Update/Save Quote</button></span>
 				      	<br>
 				      	<!--<br>counter Thickness: {{counter.counterThickness1}}
 				      	<br>counter Thickness 2: {{counter.counterThickness1}}-->
 				      	<hr style="background:#FFFFFF; border:0; height:7px" />
 					</div>
 					<br>Job Difficulty: <input type="number" ng-model="quote.jobDifficulty" name="quote.jobDifficulty"><br>
-					<span style="float: left;">Total Price: ${{quote.totalPrice * quote.jobDifficulty | number:2}}</span>
+					<span style="float: left;">Total Price: {{quote.totalPrice * quote.jobDifficulty | currency:$}}</span>
 					<span style="float: right;"><button type="button" style="btn" ng-click="saveQuote(quote, quote.description)">Update/Save Quote</button></span>
 				</form>
 				<br><br>
 				Please click <a ng-href="/customer/{{customer.custCode}}/quote/{{quote.quoteID}}/invoice">here</a> to view the invoice.
+				<br>
+				<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+				<br><br><br>
 			</div>
         </div>
     </div>

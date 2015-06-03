@@ -16,7 +16,7 @@ app.controller('newCustomerCtrl',
       $scope.alerts.splice(index, 1);
     };
 
-    $scope.newCustomer = function(a, b, c, d, e, f, g, h, i, j) {  
+    $scope.newCustomer = function(a, b, c, d, e, f, g, h, i, j, k) {  
       var data = {
         "firstName":a, 
         "lastName":b, 
@@ -24,8 +24,9 @@ app.controller('newCustomerCtrl',
         "email":d, 
         "addressLine1": e,
         "addressLine2": f,
-		    "postal":g,
         "city": h,
+		    "postal":g,
+        "province":k,
 		    "homePhone":i,
 		    "mobilePhone":j
       };

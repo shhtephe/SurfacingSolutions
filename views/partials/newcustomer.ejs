@@ -11,8 +11,9 @@
 					Email Address <br> <input type='text' ng-model="email" name='email'><br>
 					Address <br> <input type='text' ng-model="addressLine1" name='addressLine1'><br>
 					Address Line 2 <br> <input type='text' ng-model="addressLine2" name='addressLine2'><br>
-					Postal Code <br> <input type='text' ng-model="postal" name='postal'><br>
 					City <br> <input type='text' ng-model="city" name='city'><br>					
+					Postal Code <br> <input type='text' ng-model="postal" name='postal'><br>
+					Province/State <br> <input type='text' ng-model="province" name='province'><br>
 					Home Phone <br> <input type='text' ng-model="homePhone" name='homePhone'><br>
 					Cellphone <br> <input type='text' ng-model="mobilePhone" name='mobilePhone'><br>
 					<button type="button" style='btn' ng-click= "newCustomer(
@@ -24,6 +25,7 @@
 						addressLine2,
 						city,
 						postal,
+						province,
 						homePhone,
 						mobilePhone
 					)">Create new Customer</button>

@@ -52,18 +52,36 @@ app.controller('quoteCtrl',
 	    };
 	};
 
-	$scope.saveAddon = function(quote, index, name, product, price, quantity, dropDown) {
+	$scope.saveAddon = function(quote, index, name, product, price, quantity, dropDown, category) {
 		var addons = quote.counters[index].addons;
 		var pushObj = {};
+		var shape = quote.counters[index].counterShape;
 		var result = $.grep(addons, function(e){ return e.product === product; });
 		var totalPrice = 0;
-		
-		console.log(price, quantity);
+		var length = quote.counters[index].counterLength;
+		var width = quote.counters[index].counterWidth;
+		var squareFootage = 0;
+		console.log(category);
 
 		if (typeof dropDown !== 'undefined') {
-			totalPrice = quote.counters[index].length * dropDown.price;
+			totalPrice = quote.counters[index].counterLength * dropDown.price;
 		}else{
-			totalPrice = quantity * price;
+			if(name === "highGlossFinish" || name === "thermalForming"){
+				console.log(quote.counters[index]);
+				if(shape === "rectangle"){
+					squareFootage = length * width;
+					totalPrice = price * squareFootage;
+					console.log(length, width, squareFootage, totalPrice, price);
+				} else if(shape === "circle"){
+					squareFootage = (width*width) * Math.PI;
+					squareFootage = squareFootage.toFixed(2);
+					totalPrice = price * qsquareFootage;
+				}
+			} else if(category === 'edging'){	
+				totalPrice = length * price;
+			} else {
+				totalPrice = quantity * price;
+			};
 		};
 
 		if (Object.keys(result).length === 0) {
@@ -114,6 +132,7 @@ app.controller('quoteCtrl',
 		console.log(width + "/" + length + "/" + shape + "/" + materialColourGroup + "/" + materialColour + "/" + materialPrice)
 		console.log("width: " + width + "length: " + length);
 		pushObj = {
+			description: "",
 			counterShape: shape,
 			counterLength: length,
 			counterWidth: width,
@@ -196,12 +215,11 @@ app.controller('quoteCtrl',
 		//save the quote
 		//Need to declare that it's sending a json doc
 		$http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
-		
-		console.log(quote);
 		$http.post('/savequote', {"quote":quote}).
   		success(function(data, status, headers, config) {
 	    	// this callback will be called asynchronously
 	    	// when the response is available
+			console.log(quote);
 	    	$scope.addAlert("success", "Quote saved Successfully");
 	  	}).
   		error(function(data, status, headers, config) {

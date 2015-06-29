@@ -188,11 +188,11 @@ router.get('/customer/:customer/quote/:quote/invoice', function(req, res, next) 
           customer: req.customer,
           products: products,
           materials: materials
-        });
-      });
+        })
+      })
     })
   }
-};
+});
 
 router.get('/admin', function(req, res, next) {
   mongoose.model("products").find(function(err, products){

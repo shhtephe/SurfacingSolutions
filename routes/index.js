@@ -210,8 +210,6 @@ router.get('/newcustomer', function(req, res, next) {
 });
 
 router.post('/newcustomer', function(req, res) {
-
-
   var highCode=0;
   //find customer with highest id and make new one with increment of one
   highCode = mongoose.model("customers").findOne().sort({custCode : "desc"}).exec(function(err, customer){
@@ -225,7 +223,7 @@ router.post('/newcustomer', function(req, res) {
       highCode = customer.custCode + 1;
       console.log("Customer code:" + customer.custCode); 
     }
-
+    console.log(req.body.companyName);
     console.log("New Customer number: " + highCode);  
 
     var firstName = req.body.firstName,

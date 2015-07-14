@@ -4,9 +4,18 @@ var Schema = mongoose.Schema;
 
 
 var materials = new Schema({
+	manufacturer: String,
+	distributor: String,
+	description: String,
+	itemCode: String,
 	colourGroup: String,
-	colour: String,
-	price: Number
+	thickness: Number,
+	length: Number,
+	width: Number,
+	fullSheet1: Number,
+	halfSheet: Number,
+	fullSheet5: Number,
+	fullSheet21: Number
 });
 
 materials.plugin(timestamps);

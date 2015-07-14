@@ -117,7 +117,7 @@ app.controller('quoteCtrl',
 	$scope.removeAddon = function(addon, counterIndex, addonIndex, quote){		
 		quote.totalPrice -= addon.totalPrice;
 		quote.counters[counterIndex].totalPrice -= addon.totalPrice;
-		quote.counters[counterIndex].addons.splice(addonIndex, addonIndex+1);
+		quote.counters[counterIndex].addons.splice(addonIndex, 1);
 	};
 
 	$scope.saveTable = function(quote, width, length, shape, materialColourGroup, materialColour, materialPrice, products) {

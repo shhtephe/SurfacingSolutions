@@ -4,6 +4,14 @@ app.controller('adminCtrl', ['$scope', '$http', '$state', function ($scope, $htt
 	$scope.alerts = [
   	];
 
+  function arraySearch(nameKey, myArray){
+      for (var i=0; i < myArray.length; i++) {
+          if (myArray[i]._id === nameKey) {
+              return i;
+          };
+      };
+  };
+
   $scope.addAlert = function(type, msg) {
     $scope.alerts.push({
       type: type,
@@ -19,6 +27,14 @@ app.controller('adminCtrl', ['$scope', '$http', '$state', function ($scope, $htt
     $scope.newMaterial = false;
   }
 
+  $scope.showEditMaterial = function(){
+    $scope.newEditMaterial = true;
+    $scope.editDistributor = "";
+    $scope.editManufacturer = "";
+    $scope.editColourGroup = "";
+    $scope.editDescription = "";
+  }
+
 	$scope.showNewMaterial = function(){
 		$scope.newMaterial = true;
     $scope.newMaterialName = "";
@@ -26,14 +42,33 @@ app.controller('adminCtrl', ['$scope', '$http', '$state', function ($scope, $htt
     $scope.newMaterialColourGroup = "";
 	}
 
-  $scope.saveNewMaterial = function(materials, group, colour, price){
+  $scope.cancelSaveMaterial = function(){
+    $scope.newEditMaterial = false;
+    $scope.editDistributor = "";
+    $scope.editManufacturer = "";
+    $scope.editColourGroup = "";
+    $scope.editDescription = "";
+  }
+
+
+  $scope.saveNewMaterial = function(materials, tempMaterials, newDescription){
 
     var material = {
-      colourGroup:group,
-      colour:colour,
-      price:price
+      manufacturer : newDescription.manufacturer,
+      distributor : newDescription.distributor,
+      description : newDescription.description,
+      itemCode : newDescription.itemCode,
+      colourGroup : newDescription.colourGroup,
+      thickness : newDescription.thickness,
+      length : newDescription.length,
+      width : newDescription.width,
+      fullSheet1 : newDescription.fullSheet1,
+      halfSheet : newDescription.halfSheet,
+      fullSheet5 : newDescription.fullSheet5,
+      fullSheet21 : newDescription.fullSheet21
     };
     materials.push(material);
+    tempMaterials = materials;
     console.log(materials);
     console.log(material);
 
@@ -58,12 +93,22 @@ app.controller('adminCtrl', ['$scope', '$http', '$state', function ($scope, $htt
     $scope.newMaterialColourGroup = "";
   };
 
-  $scope.saveMaterial = function(materials, materialColour){
+  $scope.deleteMaterial = function(materials, editDescription){
+    var spliceIndex = arraySearch(editDescription._id, materials)
+    //delete item
+    materials.splice(spliceIndex, 1);
+    $scope.editDistributor = "";
+    $scope.editManufacturer = "";
+    $scope.editColourGroup = "";
+    $scope.editDescription = "";
+  };
+
+  $scope.saveMaterial = function(materials, editDescription){
     console.log(materials);
-    console.log(materialColour);
+    console.log(editDescription);
     //declaring json data
     $http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
-    $http.post('/savematerial', {"materials":materials, "material":materialColour}).
+    $http.post('/savematerial', {"materials":materials, "material":editDescription}).
       success(function(data, status, headers, config) {
         // this callback will be called asynchronously
         // when the response is available

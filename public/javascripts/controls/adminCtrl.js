@@ -103,7 +103,7 @@ app.controller('adminCtrl', ['$scope', '$http', '$state', function ($scope, $htt
     $scope.editDescription = "";
   };
 
-  $scope.saveMaterial = function(materials, editDescription){
+  $scope.saveMaterial = function(materials, tempMaterials, editDescription){
     console.log(materials);
     console.log(editDescription);
     //declaring json data

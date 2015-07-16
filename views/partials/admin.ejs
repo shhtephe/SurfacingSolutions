@@ -81,6 +81,18 @@
 				<div ng-show="newMaterial == true">
 						<ul class="list-group"> 
 							<li class="list-group-item">	
+								Distributor: <input type="text" name="newDistributor" ng-model="newDescription.Distributor"> <br> 
+							</li>
+							<li class="list-group-item">	
+								Manufacturer: <input type="text" name="newManufacturer" ng-model="newDescription.manufacturer"> <br> 
+							</li>
+							<li class="list-group-item">	
+								Colour Group: <input type="text" name="newColourGroup" ng-model="newDescription.colourGroup"> <br> 
+							</li>
+							<li class="list-group-item">	
+								Colour Description: <input type="text" name="newDescription" ng-model="newDescription.description"> <br> 
+							</li>
+							<li class="list-group-item">	
 								Item Code: <input type="text" name="newItemCode" ng-model="newDescription.itemCode"> <br> 
 							</li>	
 							<li class="list-group-item">	
@@ -113,6 +125,7 @@
 					<button type="button" ng-click="hideNewMaterial()" class="btn btn-default">Cancel</button> 
 					<button type="button" ng-click="saveNewMaterial(materials, tempMaterials, newDescription)" class="btn btn-default">Save</button> 
 				</div>
+					
 				<br>
 			</div>
         </div>

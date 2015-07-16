@@ -271,8 +271,8 @@ router.post('/newcustomer', function(req, res) {
 });
 
 router.post('/savenewmaterial', function(req, res) {
-  console.log(req.body);
-  var newMaterial = new materials({
+  console.log(req.body.materials);
+  /*var newMaterial = new materials({
     colourGroup: req.body.materials.colourGroup,
     colour: req.body.materials.colour,
     price: req.body.materials.price
@@ -287,7 +287,7 @@ router.post('/savenewmaterial', function(req, res) {
       console.log("Saved!")
       res.send();
     }
-  });
+  });*/
 });
 
 router.post('/savematerial', function(req, res) {

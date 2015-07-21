@@ -25,9 +25,12 @@ app.controller('quoteCtrl',
 
 	$scope.hideCounter = function() {  
 		$scope.addCounter = false;
-		$scope.shape = "";
-		$scope.counterWidth = "";
-		$scope.counterLength = "";
+		$scope.shape = "",
+		$scope.counterWidth = "",
+		$scope.counterLength = "",
+		$scope.materialColourGroup = "",
+		$scope.materialDistributor = "", 
+		$scope.materialManufacturer = "",
 		$scope.materialColourGroup = "";
 	};
 
@@ -120,7 +123,7 @@ app.controller('quoteCtrl',
 		quote.counters[counterIndex].addons.splice(addonIndex, 1);
 	};
 
-	$scope.saveTable = function(quote, width, length, shape, materialColourGroup, materialColour, materialPrice, products) {
+	$scope.saveCounter = function(quote, width, length, shape, materialDescription, products) {
 		var squareFootage = 0;
 		var pushObj = {};
 		var pushMandatory = {};
@@ -129,7 +132,7 @@ app.controller('quoteCtrl',
 		if($scope.shape == "circle"){
 			length = 0;
 		}
-		console.log(width + "/" + length + "/" + shape + "/" + materialColourGroup + "/" + materialColour + "/" + materialPrice)
+		console.log(width + "/" + length + "/" + shape + "/" + materialDescription.colourGroup + "/" + materialDescription.description + "/" + materialDescription.fullSheet1)
 		console.log("width: " + width + "length: " + length);
 		pushObj = {
 			description: "",
@@ -138,9 +141,19 @@ app.controller('quoteCtrl',
 			counterWidth: width,
 			totalPrice: 0,
 			material:{
-				colourGroup: materialColourGroup,
-				colour: materialColour,
-				price: materialPrice
+				itemCode: materialDescription.itemCode,
+				thickness: materialDescription.thickness,
+				width: materialDescription.width,
+				length: materialDescription.length,
+				fullsheet1: materialDescription.fullSheet1,
+				halfSheet: materialDescription.halfSheet,
+				fullSheet5: materialDescription.fullSheet5,
+				fullSheet21: materialDescription.fullSheet21,
+				isa: materialDescription.isa,
+				distributor: materialDescription.distributor,
+				manufacturer: materialDescription.manufacturer,
+				colourGroup: materialDescription.colourGroup,
+				description: materialDescription.description
 			},
 			addons: [],
 			mandatoryCharges: []

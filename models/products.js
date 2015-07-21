@@ -3,11 +3,11 @@ var timestamps = require('mongoose-timestamp');
 var Schema = mongoose.Schema;
 
 var products = new Schema({
-	manufacturer: String,
 	distributor: String,
-	itemCode: String,
+	manufacturer: String,
 	type: String,
 	description: String,
+	itemCode: String,
 	price: String,
 	chargeType: String,
 	menuType: String,

@@ -3,10 +3,10 @@ var router = express.Router();
 var passport = require('passport');
 //mongoose schemas
 var account = require('../models/account'); 
-var product = require('../models/products'); 
 var quotes = require('../models/quotes'); 
 var customers = require('../models/customers'); 
 var customerSchema = require('../models/customers');
+var products = require('../models/products'); 
 var materials = require('../models/materials');
 //mongoose
 var mongoose = require('mongoose');
@@ -270,76 +270,196 @@ router.post('/newcustomer', function(req, res) {
   });
 });
 
-router.post('/savenewmaterial', function(req, res) {
-  console.log(req.body.materials);
-  /*var newMaterial = new materials({
-    colourGroup: req.body.materials.colourGroup,
-    colour: req.body.materials.colour,
-    price: req.body.materials.price
-  });
-  newMaterial.save(function (err, materials) {
-    if (err) {
-      console.log("Errors: " + err);
-      res.sendStatus(500);
-    }
-    else {
-      // saved!
-      console.log("Saved!")
-      res.send();
-    }
-  });*/
-});
-
-router.post('/savematerial', function(req, res) {
+router.post('/savematerials', function(req, res, next) {
   console.log(req.body.material);
-  console.log(req.body.material.colourGroup);
-  console.log(req.body.material.colour);
+  console.log(req.body.action);
+  console.log(req.body.parameter);
 
-  var conditions = {colourGroup: req.body.material.colourGroup, colour: req.body.material.colour}
-    , update = {price: req.body.material.price}
-    , options = { multi: false};
 
-  mongoose.model('materials').update(conditions, update, options, callback);
-  function callback (err, numAffected) {
-    //numAffected is the number of updated documents
-    if(err) {
-      console.log("Errors: " + err);
-      res.sendStatus(500);
-    }
-    else {
-      console.log("Number of rows Affected: " + numAffected);
-        res.sendStatus(200);
+  if(req.body.action === "update"){
+    console.log(req.body.material.distributor);
+    console.log(req.body.material.manufacturer);
+    console.log(req.body.material.colourGroup);
+    console.log(req.body.material.description);
+    var material = req.body.material;
+
+    var conditions = {distributor: req.body.material.distributor, manufacturer: req.body.material.manufacturer, colourGroup: req.body.material.colourGroup, description: req.body.material.description}
+      , update = {
+        itemCode : material.itemCode,
+        thickness : material.thickness,
+        length : material.length,
+        width : material.width,
+        fullSheet1 : material.fullSheet1,
+        halfSheet : material.halfSheet,
+        fullSheet5 : material.fullSheet5,
+        fullSheet21 : material.fullSheet21,
+        isa : material.isa,
+        collection : material.collection
+      }
+      , options = { multi: false};
+
+    mongoose.model('materials').update(conditions, update, options, callback);
+    function callback (err, numAffected) {
+      //numAffected is the number of updated documents
+      if(err) {
+        console.log("Errors: " + err);
+        res.sendStatus(500);
+      }
+      else {
+        console.log("Number of rows Affected: " + numAffected);
+          res.sendStatus(200);
+      };
     };
-  };
+  } else if(req.body.action === "delete"){
+    var ObjectId = require('mongoose').Types.ObjectId; 
+    var query = { _id: new ObjectId(req.body.parameter)};
+  console.log(query);
+    var search = mongoose.model("materials").find(query);
+
+    search.remove().exec(function (err, searchMaterial){
+      if (err) { return next(err); }
+      if (!searchMaterial) { return next(new Error('can\'t find Material')); }
+      console.log("Entry Deleted");
+      res.sendStatus(200);
+    });
+  } else if(req.body.action === "add"){
+    bodyMaterials = req.body.material;
+    console.log(bodyMaterials);
+
+    console.log(bodyMaterials.manufacturer);
+    //I didn't need to do this part, it's a bit redundant.
+    var manufacturer = bodyMaterials.manufacturer,
+        distributor = bodyMaterials.distributor,
+        description = bodyMaterials.description,
+        itemCode = bodyMaterials.itemCode,
+        colourGroup = bodyMaterials.colourGroup,
+        thickness = bodyMaterials.thickness,
+        length = bodyMaterials.length,
+        width = bodyMaterials.width,
+        fullSheet1 = bodyMaterials.fullSheet1,
+        halfSheet = bodyMaterials.halfSheet,
+        fullSheet5 = bodyMaterials.fullSheet5,
+        fullSheet21 = bodyMaterials.fullSheet21,
+        isa = bodyMaterials.isa,
+        matCollection = bodyMaterials.matCollection;
+
+    var newMaterial = new materials({
+        manufacturer : manufacturer,
+        distributor : distributor,
+        description : description,
+        itemCode : itemCode,
+        colourGroup : colourGroup,
+        thickness : thickness,
+        length : length,
+        width : width,
+        fullSheet1 : fullSheet1,
+        halfSheet : halfSheet,
+        fullSheet5 : fullSheet5,
+        fullSheet21 : fullSheet21,
+        isa : isa,
+        matCollection : matCollection
+    });
+
+    newMaterial.save(function (err, materials) {
+      if (err) {
+        console.log("Errors: " + err);
+        res.sendStatus(500);
+      }
+      else {
+        // saved!
+        console.log("Saved!")
+        res.sendStatus(200);
+      }
+    });
+  }
 });
 
-router.post('/saveproduct', function(req, res) {
-  console.log(req.body);
-  console.log(req.body.product.dropDown[0]);
+router.post('/saveproducts', function(req, res, next) {
+  console.log(req.body.product);
+  console.log(req.body.action);
+  console.log(req.body.parameter);
 
-  if(req.body.product.dropDown[0] === undefined){
-    var conditions = {category: req.body.product.category, name: req.body.product.name }
-    , update = {price: req.body.product.price}
-    , options = { multi: false};
-  }else {
-    var conditions = {category: req.body.product.category, name: req.body.product.name }
-    , update = {dropDown: req.body.product.dropDown}
-    , options = { multi: false};
-  };
 
-  mongoose.model('products').update(conditions, update, options, callback);
+  if(req.body.action === "update"){
+    console.log(req.body.product.distributor);
+    console.log(req.body.product.manufacturer);
+    console.log(req.body.product.type);
+    console.log(req.body.product.price);
+    var product = req.body.product;
 
-  function callback (err, numAffected) {
-    //numAffected is the number of updated documents
-    if(err) {
-      console.log("Errors: " + err);
-      res.sendStatus(500);
-    }
-    else {
-      console.log("Number of rows Affected: " + numAffected);
-      res.sendStatus(200);
+    var conditions = {distributor: req.body.product.distributor, manufacturer: req.body.product.manufacturer, type: req.body.product.type, description: req.body.product.description}
+      , update = {
+        itemCode : product.itemCode,
+        thickness : product.thickness,
+        length : product.length,
+        width : product.width,
+        fullSheet1 : product.fullSheet1,
+        halfSheet : product.halfSheet,
+        fullSheet5 : product.fullSheet5,
+        fullSheet21 : product.fullSheet21,
+        isa : product.isa,
+        collection : product.collection
+      }
+      , options = { multi: false};
+
+    mongoose.model('product').update(conditions, update, options, callback);
+    function callback (err, numAffected) {
+      //numAffected is the number of updated documents
+      if(err) {
+        console.log("Errors: " + err);
+        res.sendStatus(500);
+      }
+      else {
+        console.log("Number of rows Affected: " + numAffected);
+          res.sendStatus(200);
+      };
     };
-  };
+  } else if(req.body.action === "delete"){
+    var ObjectId = require('mongoose').Types.ObjectId; 
+    var query = { _id: new ObjectId(req.body.parameter)};
+  console.log(query);
+    var search = mongoose.model("products").find(query);
+
+    search.remove().exec(function (err, searchProduct){
+      if (err) { return next(err); }
+      if (!searchProduct) { return next(new Error('can\'t find Product')); }
+      console.log("Entry Deleted");
+      res.sendStatus(200);
+    });
+  } else if(req.body.action === "add"){
+    bodyProducts = req.body.product;
+    console.log(bodyProducts);
+
+    console.log(bodyProducts.manufacturer);
+    //I didn't need to do this part, it's a bit redundant.
+    var distributor = bodyProducts.distributor,
+      manufacturer = bodyProducts.manufacturer,
+      type = bodyProducts.type,
+      description = bodyProducts.description,
+      itemCode = bodyProducts.itemCode,
+      price = bodyProducts.price;
+
+    var newProduct = new products({
+      distributor : distributor,
+      manufacturer : manufacturer,
+      type : type,
+      description : description,
+      itemCode : itemCode,
+      price : price
+    });
+
+    newProduct.save(function (err, products) {
+      if (err) {
+        console.log("Errors: " + err);
+        res.sendStatus(500);
+      }
+      else {
+        // saved!
+        console.log("Saved!")
+        res.sendStatus(200);
+      }
+    });
+  }
 });
 
 router.post('/savequote', function(req, res){

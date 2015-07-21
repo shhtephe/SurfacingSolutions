@@ -2,7 +2,7 @@
 <div class="jumbotron">
     <div class="container">
         <div class="col-xs-offset-2 col-xs-8">
-			<div ng-controller="quoteCtrl" ng-init='customer=<%- JSON.stringify(customer) %>;quote=<%- JSON.stringify(quote) %>; products=<%- JSON.stringify(products) %>; materials=<%- JSON.stringify(materials) %>; addCounter == false'>
+			<div ng-controller="quoteCtrl" ng-init='customer=<%- JSON.stringify(customer) %>;quote=<%- JSON.stringify(quote) %>; materials=<%- JSON.stringify(materials) %>; products=<%- JSON.stringify(products) %>; addCounter == false'>
 				<form name="quoteForm">
 					Customer: {{customer.lastName}}, {{customer.firstName}}
 					<br>QuoteID: {{quote.quoteID}}
@@ -32,33 +32,73 @@
 							<br>
 							<div ng-show="shape == 'rectangle' || shape == 'circle'">
 								<br>
-								Choose a Colour Group: 
-								<select name="materialColourGroup" ng-model="materialColourGroup" ng-options="material.colourGroup for material in materials | orderBy:'colourGroup' | unique: 'colourGroup' track by material.colourGroup">
-									<option value="">----Select----</option>
+								Choose a Distributor: <select name="materialDistributor" ng-model="materialDistributor" ng-options="material.distributor for material in materials | orderBy:'distributor' | unique: 'distributor'">
+								<option value="">----Select----</option>
 								</select>
-							</div>
-							<br>
-							<div ng-show="materialColourGroup">
 								<br>
-								Choose a Colour:
-								<select name="materialColour" ng-model="materialColour" ng-options="material.colour for material in materials | filter:{colourGroup: materialColourGroup.colourGroup} ">
-									<option value="">----Select----</option>
-								</select>
-							</div>
-							<div ng-show="materialColourGroup && materialColour">
+								<div ng-show="materialDistributor">
+									<br>
+									Choose a Manufacturer:
+									<select name="materialManufacturer" ng-model="materialManufacturer" ng-options="material.manufacturer for material in materials | filter:{distributor:materialDistributor.distributor} | unique: 'manufacturer' | orderBy:'manufacturer'">
+										<option value="">----Select----</option>
+									</select>
+								</div>
+								<div ng-show="materialDistributor && materialManufacturer">
+									<br>
+									Choose a Colour Group:
+									<select name="materialColourGroup" ng-model="materialColourGroup" ng-options="material.colourGroup for material in materials | filter:{distributor:materialDistributor.distributor, manufacturer:materialManufacturer.manufacturer} | unique: 'colourGroup' | orderBy:'colourGroup'">
+										<option value="">----Select----</option>
+									</select>
+								</div>
+								<div ng-show="materialDistributor && materialManufacturer && materialColourGroup">
+									<br>
+									Choose a Colour Description:
+									<select name="materialDescription" ng-model="materialDescription" ng-options="material.description for material in materials | filter:{distributor:materialDistributor.distributor, manufacturer:materialManufacturer.manufacturer, colourGroup:materialColourGroup.colourGroup} | unique: 'description' | orderBy:'description'">
+										<option value="">----Select----</option>
+									</select>
+								</div>
+								<div ng-show="materialDistributor && materialManufacturer && materialColourGroup && materialDescription">
 								<br>
 								<ul class="list-group"> 
 									<li class="list-group-item">	
-										Price/Sheet: {{materialColour.price}}<br>
+										Item Code: {{materialDescription.itemCode}} <br> 
 									</li>	
+									<li class="list-group-item">	
+										Thickness: {{materialDescription.thickness}} <br> 
+									</li>	
+									<li class="list-group-item">	
+										Width (In.): {{materialDescription.width}} <br> 
+									</li>				
+									<li class="list-group-item">	
+										Length (In.): {{materialDescription.length}} <br> 
+									</li>	
+									<li class="list-group-item">	
+										Full Sheet 1-5: {{materialDescription.fullSheet1}} <br> 
+									</li>	
+									<li class="list-group-item">	
+										Half Sheet: {{materialDescription.halfSheet}} <br> 
+									</li>
+									<li class="list-group-item">	
+										Full Sheet 5-20:{{materialDescription.fullSheet5}} <br> 
+									</li>
+									<li class="list-group-item">	
+										Full Sheet 21+: {{materialDescription.fullSheet21}} <br> 
+									</li>
+									<li class="list-group-item">	
+										ISA: {{materialDescription.isa}} <br> 
+									</li>
+									<li class="list-group-item">	
+										Collection: {{materialDescription.matCollection}} <br> 
+									</li>
 								</ul>
 							</div>
+						</div>
 						</ng-form>
 					</div>
 					<br>
 					<div ng-show="addCounter == true">
 						<button type="button" style="btn" ng-click="hideCounter()">Cancel</button>
-						<button type="button" style="btn" ng-click="saveTable(quote, counterWidth, counterLength, shape, materialColour.colourGroup, materialColour.colour, materialColour.price, products)">Save Table</button>
+						<button type="button" style="btn" ng-click="saveCounter(quote, counterWidth, counterLength, shape, materialDescription, materials)">Save Table</button>
 					</div>
 					<div ng-hide="addCounter == true">
 						<button type="button" style="btn" ng-click="showCounter()">Add a Counter</button>
@@ -71,21 +111,21 @@
 						<br><textarea rows="4" columns="150" ng-model="counter.description"></textarea>
 						<br>
 						<br>Addons: 
-						<select name="category" ng-model="dropDown1" ng-options="product.category for product in products | filter:{category: '!mandatory'} | unique: 'category' track by product.category">
+						<select name="category" ng-model="dropDown1" ng-options="material.category for material in materials | filter:{category: '!mandatory'} | unique: 'category' track by material.category">
 							<option value="">----Select----</option>
 						</select>
 						<br>
 						<div ng-show="dropDown1">
 							<br>
 							Choose a Product:
-							<select name="product" ng-model="dropDown2" ng-options="product.product for product in products | filter:{category: dropDown1.category} track by product.product">
+							<!--<select name="material" ng-model="dropDown2" ng-options="material.material for material in materials | filter:{category: dropDown1.category} track by material.material">
 								<option value="">----Select----</option>
-							</select>
+							</select>-->
 						</div>
 						<div ng-show="dropDown2 && dropDown1">
 							<ul class="list-group"> 
 								<li class="list-group-item" ng-show="dropDown2.menuType == 'dropDown'">	
-									Size: <select name="productDropdown" ng-model="productDropdown" ng-options="dropdown.product for dropdown in dropDown2.dropDown">
+									Size: <select name="materialDropdown" ng-model="materialDropdown" ng-options="dropdown.material for dropdown in dropDown2.dropDown">
 										<option value="">----Select----</option>
 									</select>
 								</li>
@@ -98,21 +138,22 @@
 								<li class="list-group-item" ng-show="dropDown2.menuType == 'checkbox'">	
 									Include: <input type="checkbox" ng-model="addonQuantity" name="addonQuantity">
 								</li>
-							    <button type="button" class="btn btn-default" ng-click="saveAddon(quote, $index, dropDown2.name, dropDown2.product, dropDown2.price, addonQuantity, productDropdown, dropDown1.category)">Add</button>
+							    <button type="button" class="btn btn-default" ng-click="saveAddon(quote, $index, dropDown2.name, dropDown2.material, dropDown2.price, addonQuantity, materialDropdown, dropDown1.category)">Add</button>
 							</ul>
 						</div>
 						<br>----------
 						<br>Mandatory charges:
 						<br>
 						<div ng-repeat="charge in counter.mandatoryCharges">
-							<ng-form name="mandatoryProductsForm">
-								<br>{{charge.product}} - {{charge.price | currency:$}}/{{charge.unitOfMeasure}}
-								<br>Quantity: <input ng-change="mandatoryChargeChange(charge.product, charge.price, charge.quantity, quote, counter, $parent.$index, $index)" type="number" ng-model="charge.quantity"> Total: {{charge.totalPrice |currency:$}}
+							<ng-form name="mandatoryMaterialsForm">
+								<br>{{charge.material}} - {{charge.price | currency:$}}/{{charge.unitOfMeasure}}
+								<br>Quantity: <input ng-change="mandatoryChargeChange(charge.material, charge.price, charge.quantity, quote, counter, $parent.$index, $index)" type="number" ng-model="charge.quantity"> Total: {{charge.totalPrice |currency:$}}
 							</ng-form>
 						</div>
 						<br>
 						<u>Summary</u>: 
 				  		<br>
+				  		<br>{{counter.material}}
 				  		<br>Counter Shape: {{counter.counterShape}} 
 				  		<br>Counter Width: {{counter.counterWidth}}
 				  		<span ng-show="counter.counterShape==='rectangle'"><br>Counter Length: {{counter.counterLength}}</span>
@@ -123,7 +164,7 @@
 				      	<br><u>Addons:</u> 
 						<br>
 						<div ng-repeat="addon in counter.addons">
-							<br>{{addon.product}}: <span ng-show="addon.dropDown">{{addon.dropDown.product}} - </span>{{addon.quantity}}@{{addon.price | currency:$}} <a href="#" ng-click="removeAddon(addon, $parent.$index, $index, quote)">remove</a>
+							<br>{{addon.material}}: <span ng-show="addon.dropDown">{{addon.dropDown.material}} - </span>{{addon.quantity}}@{{addon.price | currency:$}} <a href="#" ng-click="removeAddon(addon, $parent.$index, $index, quote)">remove</a>
 						</div>
 
 				      	<br><hr style="background:#000000; border:0; height:7px" />

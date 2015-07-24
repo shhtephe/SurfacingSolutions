@@ -398,7 +398,8 @@ router.post('/saveproducts', function(req, res, next) {
         fullSheet5 : product.fullSheet5,
         fullSheet21 : product.fullSheet21,
         isa : product.isa,
-        collection : product.collection
+        collection : product.collection,
+        formula : product.formula 
       }
       , options = { multi: false};
 

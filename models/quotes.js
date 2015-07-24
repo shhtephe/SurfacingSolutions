@@ -17,18 +17,27 @@ var quote = new Schema({
 		counterThickness2: Number,
 		totalPrice: Number,
 		material:{
+			itemCode: String,
+			thickness: Number,
+			width: Number,
+			length: Number,
+			fullsheet1: Number,
+			halfSheet: Number,
+			fullSheet5: Number,
+			fullSheet21: Number,
+			isa: Number,
+			distributor: String,
+			manufacturer: String,
 			colourGroup: String,
-			colour: String,
-			price: Number
+			description: String
 		},
 		addons: [{
 			product: String,
 			name: String,
 			price: Number,
-			itemType: String,
+			formula: String,
 			quantity: Number,
 			totalPrice: Number,
-			dropDown: String
 		}],
 		mandatoryCharges: [{
 			product: String,

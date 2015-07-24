@@ -159,7 +159,8 @@ app.controller('adminCtrl', ['$scope', '$http', '$state', function ($scope, $htt
     materials[index].fullSheet5 = editMaterialDescription.fullSheet5,
     materials[index].fullSheet21 = editMaterialDescription.fullSheet21,
     materials[index].isa = editMaterialDescription.isa,
-    materials[index].matCollection = editMaterialDescription.matCollection;
+    materials[index].matCollection = editMaterialDescription.matCollection,
+    materials[index].formula = editMaterialDescription.formula;
 
     //commit changes to database
     $scope.saveMaterials(materials, materials[index], "update", index);

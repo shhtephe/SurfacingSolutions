@@ -9,13 +9,11 @@ var products = new Schema({
 	description: String,
 	itemCode: String,
 	price: String,
-	chargeType: String,
-	menuType: String,
-	dropDown:[{
-		name: String,
-		product: String,
-		price: Number
-	}]
+	formula: String,
+	add: function(total) {
+	},
+	subtract: function(total) {
+	}
 });
 
 products.plugin(timestamps);

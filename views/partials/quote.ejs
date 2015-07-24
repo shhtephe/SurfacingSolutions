@@ -98,7 +98,7 @@
 					<br>
 					<div ng-show="addCounter == true">
 						<button type="button" style="btn" ng-click="hideCounter()">Cancel</button>
-						<button type="button" style="btn" ng-click="saveCounter(quote, counterWidth, counterLength, shape, materialDescription, materials)">Save Table</button>
+						<span ng-show="materialDistributor && materialManufacturer && materialColourGroup && materialDescription"><button type="button" style="btn" ng-click="saveCounter(quote, counterWidth, counterLength, shape, materialDescription, materials)">Save Table</button></span>
 					</div>
 					<div ng-hide="addCounter == true">
 						<button type="button" style="btn" ng-click="showCounter()">Add a Counter</button>
@@ -111,36 +111,55 @@
 						<br><textarea rows="4" columns="150" ng-model="counter.description"></textarea>
 						<br>
 						<br>Addons: 
-						<select name="category" ng-model="dropDown1" ng-options="material.category for material in materials | filter:{category: '!mandatory'} | unique: 'category' track by material.category">
+						<br>Choose a Distributor:
+						<select name="counterAddonDistributor" ng-model="counterAddonDistributor" ng-options="product.distributor for product in products | filter:{category: '!mandatory'} | unique: 'distributor' track by product.distributor">
 							<option value="">----Select----</option>
 						</select>
 						<br>
-						<div ng-show="dropDown1">
+						<div ng-show="counterAddonDistributor">
 							<br>
-							Choose a Product:
-							<!--<select name="material" ng-model="dropDown2" ng-options="material.material for material in materials | filter:{category: dropDown1.category} track by material.material">
+							Choose a Manufacturer:
+							<select name="counterAddonManufacturer" ng-model="counterAddonManufacturer" ng-options="product.manufacturer for product in products | filter:{distributor:counterAddonDistributor.distributor} | unique: 'manufacturer' | orderBy:'manufacturer'">
 								<option value="">----Select----</option>
-							</select>-->
+							</select>
 						</div>
-						<div ng-show="dropDown2 && dropDown1">
+						<div ng-show="counterAddonDistributor && counterAddonManufacturer">
+							<br>
+							Choose a Product Type:
+							<select name="counterAddonType" ng-model="counterAddonType" ng-options="product.type for product in products | filter:{distributor:counterAddonDistributor.distributor, manufacturer:counterAddonManufacturer.manufacturer} | unique: 'type' | orderBy:'type'">
+								<option value="">----Select----</option>
+							</select>
+						</div>
+						<div ng-show="counterAddonDistributor && counterAddonManufacturer && counterAddonType">
+							<br>
+							Choose a Description:
+							<select name="counterAddonDescription" ng-model="counterAddonDescription" ng-options="product.description for product in products | filter:{distributor:counterAddonDistributor.distributor, manufacturer:counterAddonManufacturer.manufacturer, type:counterAddonType.type} | unique: 'description' | orderBy:'description'">
+								<option value="">----Select----</option>
+							</select>
+						</div>
+						<div ng-show="counterAddonDistributor && counterAddonManufacturer && counterAddonType && counterAddonDescription">
+							<br>
 							<ul class="list-group"> 
-								<li class="list-group-item" ng-show="dropDown2.menuType == 'dropDown'">	
-									Size: <select name="materialDropdown" ng-model="materialDropdown" ng-options="dropdown.material for dropdown in dropDown2.dropDown">
-										<option value="">----Select----</option>
-									</select>
+								<li class="list-group-item">	
+									Item Code: {{counterAddonDescription.itemCode}}<br> 
+								</li>	
+								<li class="list-group-item">	
+									Price: {{counterAddonDescription.price}}<br> 
+								</li>	
+								<li class="list-group-item">	
+									Formula: {{counterAddonDescription.formula}}
 								</li>
 								<li class="list-group-item">	
-									Price/Inch: {{dropDown2.price}}<br>
-								</li>	
-								<li class="list-group-item" ng-show="dropDown2.menuType == 'textbox'">	
-									Quantity: <input type="text" ng-model="addonQuantity" name="addonQuantity">
+									Quantity: <input type="text" ng-model="counterAddonDescription.quantity">
+									<br>
 								</li>
-								<li class="list-group-item" ng-show="dropDown2.menuType == 'checkbox'">	
-									Include: <input type="checkbox" ng-model="addonQuantity" name="addonQuantity">
-								</li>
-							    <button type="button" class="btn btn-default" ng-click="saveAddon(quote, $index, dropDown2.name, dropDown2.material, dropDown2.price, addonQuantity, materialDropdown, dropDown1.category)">Add</button>
+								
 							</ul>
+						    <button type="button" ng-click="saveAddon(quote, counterAddonDescription, $index)" class="btn btn-default">Add</button>
+						    <button type="button" ng-click="deleteProduct(products, tempProducts, editProductDescription)" class="btn btn-danger">Cancel</button> 
 						</div>
+					</div>
+					<div>
 						<br>----------
 						<br>Mandatory charges:
 						<br>
@@ -153,7 +172,6 @@
 						<br>
 						<u>Summary</u>: 
 				  		<br>
-				  		<br>{{counter.material}}
 				  		<br>Counter Shape: {{counter.counterShape}} 
 				  		<br>Counter Width: {{counter.counterWidth}}
 				  		<span ng-show="counter.counterShape==='rectangle'"><br>Counter Length: {{counter.counterLength}}</span>
@@ -184,7 +202,13 @@
 				<br>
 				<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
 				<br><br><br>
+				{{products}}
 			</div>
         </div>
     </div>
 </div>
+<!--
+List of things I would like to add:
+Dynamic ul's for item code, thickness, etc. if they're empty, they don't show up
+
+-->

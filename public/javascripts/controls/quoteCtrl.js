@@ -55,19 +55,20 @@ app.controller('quoteCtrl',
 	    };
 	};
 
-	$scope.saveAddon = function(quote, index, name, product, price, quantity, dropDown, category) {
+	$scope.saveAddon = function(quote, addon, index) {
 		var addons = quote.counters[index].addons;
 		var pushObj = {};
 		var shape = quote.counters[index].counterShape;
+		//Not sure what this does.
 		var result = $.grep(addons, function(e){ return e.product === product; });
+		console.log("This is the result: " + result);
 		var totalPrice = 0;
-		var length = quote.counters[index].counterLength;
-		var width = quote.counters[index].counterWidth;
+		var counterLength = quote.counters[index].counterLength;
+		var counterWidth = quote.counters[index].counterWidth;
 		var squareFootage = 0;
-		console.log(category);
 
-		if (typeof dropDown !== 'undefined') {
-			totalPrice = quote.counters[index].counterLength * dropDown.price;
+		if (typeof addon.formula === 'item') {
+			totalPrice =  addon.quantity * addon.price;
 		}else{
 			if(name === "highGlossFinish" || name === "thermalForming"){
 				console.log(quote.counters[index]);
@@ -159,6 +160,7 @@ app.controller('quoteCtrl',
 			mandatoryCharges: []
 		};
 		console.log(products);
+		// adds up all mandatory charges for the counter
 		for (var i = products.length - 1; i >= 0; i--) {
 			if(products[i].category === "mandatory"){
 				console.log(products[i].category);
@@ -181,13 +183,14 @@ app.controller('quoteCtrl',
 						}; 	
 						pushMandatory.dropDown.push(pushMandatoryDropDown);
 					}; 
-				}
+				};
 				pushObj.mandatoryCharges.push(pushMandatory);
-			}
+			};
 		};
 		console.log(pushObj);
 		quote.counters.push(pushObj);
 		console.log(quote.counters);
+
 		$scope.hideCounter();
 		
 		if(shape === "rectangle"){

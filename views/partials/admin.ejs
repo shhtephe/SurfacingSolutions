@@ -167,6 +167,13 @@
 							<li class="list-group-item">	
 								Price: <input type="text" name="productPrice" ng-model="editProductDescription.price"> <br> 
 							</li>	
+							<li class="list-group-item">	
+								Formula: <select name="newProductFormula" ng-model="editProductDescription.formula"><option value="">----Select----</option>
+								<option value="item">Item</option>
+								<option value="linear">Linear</option>
+								<option value="square">Square Footage</option>
+								</select>
+							</li>
 						</ul>
 					    <button type="button" ng-click="updateProduct(products, tempProducts, editProductDescription)" class="btn btn-default">Update</button>
 					    <button type="button" ng-click="deleteProduct(products, tempProducts, editProductDescription)" class="btn btn-danger">Delete</button> 
@@ -199,6 +206,16 @@
 							<li class="list-group-item">	
 								Price: <input type="text" name="newProductPrice" ng-model="productDescription.price"> <br> 
 							</li>	
+							<li class="list-group-item">	
+								Formula: <select name="newProductFormula" ng-model="productDescription.formula"><option value="">----Select----</option>
+								<option value="item">Item</option>
+								<option value="linear">Linear</option>
+								<option value="square">Square Footage</option>
+								</select>
+							</li>	
+							<!--<li>
+								<input type="checkbox" name="newProductMandatory" ng-model="productDescription.mandatory" value="mandatory">Mandatory?
+							</li>-->
 						</ul>
 					<button type="button" ng-click="hideNewProduct()" class="btn btn-default">Cancel</button> 
 					<button type="button" ng-click="addNewProduct(products, tempProducts, productDescription)" class="btn btn-default">Add</button> 

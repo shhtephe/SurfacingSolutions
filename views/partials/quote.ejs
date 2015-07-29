@@ -105,7 +105,7 @@
 					</div>
 					<br><br>
 					<div ng-repeat="counter in quote.counters">
-				  		<u>Counter {{$index + 1}}</u> <button type="button" style="btn" ng-click="deleteTable(quote, $index)">DELETE THIS COUNTER</button>
+				  		<u>Counter {{$index + 1}}</u> <button type="button" style="btn btn-danger" ng-click="deleteTable(quote, $index)">DELETE THIS COUNTER</button>
 						<br><br>
 						Counter Description:
 						<br><textarea rows="4" columns="150" ng-model="counter.description"></textarea>
@@ -149,7 +149,7 @@
 								<li class="list-group-item">	
 									Formula: {{counterAddonDescription.formula}}
 								</li>
-								<li class="list-group-item">	
+								<li ng-show="counterAddonDescription.formula=='item'" class="list-group-item">	
 									Quantity: <input type="text" ng-model="counterAddonDescription.quantity">
 									<br>
 								</li>
@@ -158,8 +158,6 @@
 						    <button type="button" ng-click="saveAddon(quote, counterAddonDescription, $index)" class="btn btn-default">Add</button>
 						    <button type="button" ng-click="deleteProduct(products, tempProducts, editProductDescription)" class="btn btn-danger">Cancel</button> 
 						</div>
-					</div>
-					<div>
 						<br>----------
 						<br>Mandatory charges:
 						<br>
@@ -176,7 +174,7 @@
 				  		<br>Counter Width: {{counter.counterWidth}}
 				  		<span ng-show="counter.counterShape==='rectangle'"><br>Counter Length: {{counter.counterLength}}</span>
 				      	<br>Counter Colour Group: {{counter.material.colourGroup}}
-				      	<br>Counter Material: {{counter.material.colour}}
+				      	<br>Counter Material: {{counter.material.description}}
 				      	<br>Counter Price/Sheet: {{counter.material.price | currency:$}}
 				      	<br>
 				      	<br><u>Addons:</u> 
@@ -187,7 +185,7 @@
 
 				      	<br><hr style="background:#000000; border:0; height:7px" />
 
-				      	<span style="float: left;">Counter Subtotal - {{counter.totalPrice |currency:$}}</span><span style="float: right;"><button type="button" style="btn" ng-click="saveQuote(quote, quote.description)">Update/Save Quote</button></span>
+				      	<span style="float: left;">Counter Subtotal: {{counter.totalPrice |currency:$}}</span><span style="float: right;"><button type="button" style="btn" ng-click="saveQuote(quote, quote.description)">Update/Save Quote</button></span>
 				      	<br>
 				      	<!--<br>counter Thickness: {{counter.counterThickness1}}
 				      	<br>counter Thickness 2: {{counter.counterThickness1}}-->
@@ -202,7 +200,7 @@
 				<br>
 				<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
 				<br><br><br>
-				{{products}}
+				{{quote}}
 			</div>
         </div>
     </div>

@@ -8,12 +8,8 @@ var products = new Schema({
 	type: String,
 	description: String,
 	itemCode: String,
-	price: String,
-	formula: String,
-	add: function(total) {
-	},
-	subtract: function(total) {
-	}
+	price: Number,
+	formula: String
 });
 
 products.plugin(timestamps);

@@ -60,14 +60,13 @@ app.controller('quoteCtrl',
 		var pushObj = {};
 		var shape = quote.counters[index].counterShape;
 		console.log(addon);
-		//Not sure what this does.
-		var result = $.grep(addons, function(e){ return e.product === product; });
-		//console.log("This is the result: " + result);
+
 		var totalPrice = 0;
 		var counterLength = quote.counters[index].counterLength;
 		var counterWidth = quote.counters[index].counterWidth;
 		var squareFootage = 0;
 
+		console.log(addon.formula, addon.quantity, addon.price);
 		if (addon.formula === "item") {
 			totalPrice =  addon.quantity * addon.price;
 		}else if(addon.formula === "square"){
@@ -79,13 +78,17 @@ app.controller('quoteCtrl',
 			} else if(shape === "circle"){
 				squareFootage = (width*width) * Math.PI;
 				squareFootage = squareFootage.toFixed(2);
-				totalPrice = price * qsquareFootage;
+				totalPrice = price * squareFootage;
 			};
 		}else if(addon.formula === "linear"){	
 				totalPrice = addon.linear * price;
-			} else {
-				totalPrice = quantity * price;
-			};
+		}else{
+			totalPrice = quantity * price;
+		};
+
+		//Searches for the item by going through the list
+		var result = $.grep(addons, function(e){ return e.itemCode === addons.itemCode; });
+		console.log("This is the result: " + result);
 
 		if (Object.keys(result).length === 0) {
 			//Couldn't find it, so add a new value
@@ -97,6 +100,7 @@ app.controller('quoteCtrl',
 				itemCode: addon.itemCode,
 				price: addon.price,
 				formula: addon.formula,
+				quantity: addon.quantity,
 				totalPrice: totalPrice,
 			};
 			addons.push(pushObj);
@@ -112,11 +116,9 @@ app.controller('quoteCtrl',
 		$scope.dropDown1 = "";
 		$scope.dropDown2 = "";
 		$scope.addonQuantity = "";
-
-		quote.totalPrice += addons[arraySearch(addon.description, addons)].totalPrice;
+		quote.totalPrice += quote.counters[index].totalPrice;
 		$scope.quote = quote;
 		//updatePrice(quantity, price, "addon"); - For use later
-		
 	};	
 	
 	$scope.removeAddon = function(addon, counterIndex, addonIndex, quote){		
@@ -135,7 +137,7 @@ app.controller('quoteCtrl',
 			length = 0;
 		}
 		console.log(width + "/" + length + "/" + shape + "/" + material.colourGroup + "/" + material.description + "/" + material.fullSheet1)
-		console.log("width: " + width + "length: " + length);
+		console.log("width: " + width + "/length: " + length);
 		pushObj = {
 			description: "",
 			counterShape: shape,
@@ -221,7 +223,7 @@ app.controller('quoteCtrl',
 			quote.counters[quote.counters.length-1].totalPrice = sheets * material.fullSheet21;
 		} else {
 		console.log("This ran 5");
-			console.log(quote.counters[quote.counters.length-1].totalPrice, sheets, material.fullSheet1);
+			//console.log(quote.counters[quote.counters.length-1].totalPrice, sheets, material.fullSheet1);
 			quote.counters[quote.counters.length-1].totalPrice = sheets * material.fullSheet1;
 		}
 		console.log(quote.counters[quote.counters.length-1].totalPrice);

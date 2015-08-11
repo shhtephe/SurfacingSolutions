@@ -180,7 +180,7 @@
 				      	<br><u>Addons:</u> 
 						<br>
 						<div ng-repeat="addon in counter.addons">
-							<br>{{addon.material}}: <span ng-show="addon.dropDown">{{addon.dropDown.material}} - </span>{{addon.quantity}}@{{addon.price | currency:$}} <a href="#" ng-click="removeAddon(addon, $parent.$index, $index, quote)">remove</a>
+							<br>{{addon.type}} - {{addon.description}} : {{addon.quantity}}@{{addon.price | currency:$}} <a href="#" ng-click="removeAddon(addon, $parent.$index, $index, quote)">remove</a>
 						</div>
 
 				      	<br><hr style="background:#000000; border:0; height:7px" />

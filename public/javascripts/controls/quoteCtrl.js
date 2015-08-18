@@ -19,6 +19,15 @@ app.controller('quoteCtrl',
 
 	};
 
+	$scope.hideAddons = function(index) {  
+		console.log($scope);
+		/*$scope.counterAddonDistributor = "";
+		$scope.counterAddonManufacturer = "";
+		$scope.counterAddonType = "";
+		$scope.counterAddonDescription = "";*/
+		//$scope.counterAddonDescription.quantity = "";
+	};
+
 	$scope.showCounter = function() {  
 		$scope.addCounter = true;
 	};
@@ -119,6 +128,7 @@ app.controller('quoteCtrl',
 		quote.totalPrice += quote.counters[index].totalPrice;
 		$scope.quote = quote;
 		//updatePrice(quantity, price, "addon"); - For use later
+		$scope.hideAddons();
 	};	
 	
 	$scope.removeAddon = function(addon, counterIndex, addonIndex, quote){		

@@ -25,7 +25,7 @@ app.controller('quoteCtrl',
 		$scope.counterAddonManufacturer = "";
 		$scope.counterAddonType = "";
 		$scope.counterAddonDescription = "";*/
-		//$scope.counterAddonDescription.quantity = "";
+		$scope.quoteForm.counterAddonDescription.quantity = "";
 	};
 
 	$scope.showCounter = function() {  

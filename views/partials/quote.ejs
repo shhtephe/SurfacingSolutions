@@ -177,7 +177,7 @@
 				      	<br>Counter Material: {{counter.material.description}}
 				      	<br>Counter Price/Sheet: {{counter.material.price | currency:$}}
 				      	<br>
-				      	<br><u>Addons:</u> 
+				      	<br><u>Select Addons:</u> 
 						<br>
 						<div ng-repeat="addon in counter.addons">
 							<br>{{addon.type}} - {{addon.description}} : {{addon.quantity}}@{{addon.price | currency:$}} <a href="#" ng-click="removeAddon(addon, $parent.$index, $index, quote)">remove</a>
@@ -200,7 +200,6 @@
 				<br>
 				<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
 				<br><br><br>
-				{{quote}}
 			</div>
         </div>
     </div>

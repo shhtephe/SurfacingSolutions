@@ -24,8 +24,7 @@ function errorHandler(err, req, res, next) {
 }
 
 //html5 refresh fix
-/*router.all("/*", function(req, res) {
-    console.log("Router Get all ran");
+/*router.all("/*", function(req, res, next) {
     res.render("index", { user : req.user });
 });*/
 

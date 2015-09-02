@@ -48,7 +48,7 @@ function($stateProvider, $urlRouterProvider, $locationProvider) {
   		controller: 'searchCtrl'
 	})
     .state('quote', {
-      url: '/#/customer/{custCode}/quote/{quoteID}',
+      url: '/customer/{custCode}/quote/{quoteID}',
       templateUrl: function(stateParams){
         return '/customer/' + stateParams.custCode + '/quote/' + stateParams.quoteID;
       },
@@ -58,7 +58,7 @@ function($stateProvider, $urlRouterProvider, $locationProvider) {
       controller: 'quoteCtrl'
   })
     .state('invoice', {
-      url: '/#/customer/{custCode}/quote/{quoteID}/invoice',
+      url: '/customer/{custCode}/quote/{quoteID}/invoice',
       templateUrl: function(stateParams){
         return '/customer/' + stateParams.custCode + '/quote/' + stateParams.quoteID + '/invoice';
       },

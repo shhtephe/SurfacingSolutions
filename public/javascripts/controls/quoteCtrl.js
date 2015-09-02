@@ -242,9 +242,9 @@ app.controller('quoteCtrl',
 		$scope.quote = quote;
 	};
 
-	$scope.deleteTable = function(quote, index) {
-		quote.totalPrice = quote.totalPrice - quote.counters[quote.counters.length-1].totalPrice;
-
+	$scope.deleteCounter = function(quote, index) {
+		quote.totalPrice -= quote.counters[index].totalPrice;
+		console.log(quote.counters[index].totalPrice);
 		quote.counters.splice(index, index+1);
 //I don't think I need a refresh		$state.go($state.current, {}, {reload: true}); //second parameter is for $stateParams
 	};

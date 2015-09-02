@@ -105,7 +105,7 @@
 					</div>
 					<br><br>
 					<div ng-repeat="counter in quote.counters">
-				  		<u>Counter {{$index + 1}}</u> <button type="button" style="btn btn-danger" ng-click="deleteTable(quote, $index)">DELETE THIS COUNTER</button>
+				  		<u>Counter {{$index + 1}}</u> <button type="button" style="btn btn-danger" ng-click="deleteCounter(quote, $index)">DELETE THIS COUNTER</button>
 						<br><br>
 						Counter Description:
 						<br><textarea rows="4" columns="150" ng-model="counter.description"></textarea>

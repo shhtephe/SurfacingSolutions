@@ -32,12 +32,15 @@ var quote = new Schema({
 			description: String
 		},
 		addons: [{
-			product: String,
-			name: String,
+			distributor: String,
+			manufactuer: String,
+			type: String,
+			description: String,
+			itemCode: String,
 			price: Number,
 			formula: String,
 			quantity: Number,
-			totalPrice: Number,
+			totalPrice: Number
 		}],
 		mandatoryCharges: [{
 			product: String,

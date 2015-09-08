@@ -104,7 +104,7 @@
 						<button type="button" style="btn" ng-click="showCounter()">Add a Counter</button>
 					</div>
 					<br><br>
-					<div ng-repeat="counter in quote.counters">
+					<div ng-repeat="counter in quote.counters track by $index">
 				  		<u>Counter {{$index + 1}}</u> <button type="button" style="btn btn-danger" ng-click="deleteCounter(quote, $index)">DELETE THIS COUNTER</button>
 						<br><br>
 						Counter Description:
@@ -161,7 +161,7 @@
 						<br>----------
 						<br>Mandatory charges:
 						<br>
-						<div ng-repeat="charge in counter.mandatoryCharges">
+						<div ng-repeat="charge in counter.mandatoryCharges track by $index">
 							<ng-form name="mandatoryMaterialsForm">
 								<br>{{charge.material}} - {{charge.price | currency:$}}/{{charge.unitOfMeasure}}
 								<br>Quantity: <input ng-change="mandatoryChargeChange(charge.material, charge.price, charge.quantity, quote, counter, $parent.$index, $index)" type="number" ng-model="charge.quantity"> Total: {{charge.totalPrice |currency:$}}
@@ -177,11 +177,13 @@
 				      	<br>Counter Material: {{counter.material.description}}
 				      	<br>Counter Price/Sheet: {{counter.material.price | currency:$}}
 				      	<br>
-				      	<br><u>Select Addons:</u> 
+				      	<br><u>Selected Addons:</u> 
 						<br>
-						<div ng-repeat="addon in counter.addons">
-							<br>{{addon.type}} - {{addon.description}} : {{addon.quantity}}@{{addon.price | currency:$}} <a href="#" ng-click="removeAddon(addon, $parent.$index, $index, quote)">remove</a>
+						<div ng-repeat="addon in counter.addons track by $index">
+							<br>{{addon.type}} - {{addon.description}} : {{addon.quantity}}@{{addon.price | currency:$}} <a ng-click="removeAddon(addon, $parent.$index, $index, quote)">remove</a>
 						</div>
+						
+						{{counter.addons}}
 
 				      	<br><hr style="background:#000000; border:0; height:7px" />
 

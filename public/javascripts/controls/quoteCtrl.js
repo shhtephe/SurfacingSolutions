@@ -97,8 +97,8 @@ app.controller('quoteCtrl',
 
 		//Searches for the item by going through the list
 		var result = $.grep(addons, function(e){ return e.itemCode === addons.itemCode; });
-		console.log("This is the result: " + result);
-
+		console.log("This is the result: ", result);
+		console.log(Object.keys(result).length)
 		if (Object.keys(result).length === 0) {
 			//Couldn't find it, so add a new value
 			pushObj = {
@@ -115,9 +115,10 @@ app.controller('quoteCtrl',
 			addons.push(pushObj);
 			console.log(addons);
 			quote.counters[index].totalPrice += addons[addons.length-1].totalPrice;
+			console.log(pushObj);
 		} else {
 			//Found it, so update the value
-			addons[arraySearch(addon.description, addons)].quantity = quantity;
+			addons[arraySearch(addon.description, addons)].quantity = addon.quantity;
 			addons[arraySearch(addon.description, addons)].totalPrice = totalPrice;
 			quote.counters[index].totalPrice += addons[arraySearch(addon.description, addons)].totalPrice;
 		};

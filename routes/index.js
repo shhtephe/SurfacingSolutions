@@ -463,8 +463,8 @@ router.post('/saveproducts', function(req, res, next) {
 });
 
 router.post('/savequote', function(req, res){
-  console.log(req.body.quote);
-
+  //console.log(req.body.quote);
+  console.log("addons", req.body.quote.counters[0].addons[0]);
   var conditions = {quoteID: req.body.quote.quoteID, custCode: req.body.quote.custCode}
   , update = req.body.quote
   , options = { multi: false};

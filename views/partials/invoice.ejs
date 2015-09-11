@@ -23,6 +23,7 @@ function idrLoad() {
 <body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
 
 <div ng-controller="invoiceCtrl" ng-init='customer=<%- JSON.stringify(customer) %>;quote=<%- JSON.stringify(quote) %>; products=<%- JSON.stringify(products) %>; materials=<%- JSON.stringify(materials) %>'>
+		{{quote}}
 	<div id="left">
 	<div id="leftNav">
 		<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn inactive"></div>
@@ -288,7 +289,7 @@ function idrLoad() {
 	<div id="t7_1" class="t s3_1">{{customer.companyName}}</div>
 	<div id="t8_1" class="t s3_1">{{customer.addressLine1}}, {{customer.addressLine2}}</div>
 	<div id="t9_1" class="t s3_1">{{customer.city}}, Ontario</div>
-	<div id="ta_1" class="t s3_1">{{customer.postalCode}}</div>
+	<div id="ta_1" class="t s3_1">{{customer.postal}}</div>
 	<div id="tb_1" class="t s2_1">Project Name</div>
 	<div id="tc_1" class="t s3_1">{{quote.description}}</div>
 	<div id="td_1" class="t s3_1"><!--100 Milverton Drive--></div>
@@ -316,10 +317,10 @@ function idrLoad() {
 	<div id="tz_1" class="t s2_1">Item</div>
 	<div id="t10_1" class="t s2_1">Project Description</div>
 	<div id="t11_1" class="t s2_1">Amount ($)</div>
-	<div id="t12_1" class="t s3_1">{{quote.counters[0].material.colour}}</div>
+	<div id="t12_1" class="t s3_1">{{quote.counters[0].material.manufacturer}}-{{quote.counters[0].material.description}}</div>
 	<div id="t13_1" class="t s3_1">{{quote.counters[0].description}}</div>
-	<div id="t14_1" class="t s3_1">{{quote.counters[0].addons[0].product}} - {{quote.counters[0].addons[0].quantity}}</div>
-	<div id="t15_1" class="t s3_1">{{quote.counters[0].totalPrice | currency:$}}</div>
+	<div id="t14_1" class="t s3_1">{{quote.counters[0].addons[0].description}} - {{quote.counters[0].addons[0].quantity}} @ {{quote.counters[0].addons[0].price | currency:$}}</div>
+	<div id="t15_1" class="t s3_1">{{quote.counters[0].material.price | currency:$}}</div>
 	<div id="t16_1" class="t s3_1">{{quote.counters[1].material.colour}}</div>
 	<div id="t17_1" class="t s3_1">Extra Site Vist for Installation</div>
 	<div id="t18_1" class="t s3_1">{{quote.counters[1].totalPrice | currency:$}}</div>

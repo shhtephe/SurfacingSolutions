@@ -141,7 +141,7 @@ router.get('/customer/:customer/quote/:quote', function(req, res, next) {
   if (typeof req.quote[0]==="undefined") {
       mongoose.model("products").find(function(err, products){
         mongoose.model("materials").find(function(err, materials){
-          console.log(materials);
+          //console.log(materials);
           res.render('partials/quote', { 
             quote: req.quote,
             customer: req.customer,
@@ -231,8 +231,9 @@ router.post('/newcustomer', function(req, res) {
     email = req.body.email,
     addressLine1 = req.body.addressLine1,
     addressLine2 = req.body.addressLine2,
-    postalCode = req.body.postalCode,
     city = req.body.city,
+    postal = req.body.postal,
+    province = req.body.province,
     homePhone = req.body.homePhone,
     mobilePhone = req.body.mobilePhone;
     
@@ -243,8 +244,9 @@ router.post('/newcustomer', function(req, res) {
       email: email,
       addressLine1: addressLine1,
       addressLine2: addressLine2,
-      postalCode: postalCode,
       city: city,
+      postal: postal,
+      province: province,
       homePhone: homePhone,
       mobilePhone: mobilePhone,
       custCode: highCode
@@ -463,7 +465,7 @@ router.post('/saveproducts', function(req, res, next) {
 });
 
 router.post('/savequote', function(req, res){
-  //console.log(req.body.quote);
+  console.log(req.body.quote.counters[0].material);
   console.log("addons", req.body.quote.counters[0].addons[0]);
   var conditions = {quoteID: req.body.quote.quoteID, custCode: req.body.quote.custCode}
   , update = req.body.quote

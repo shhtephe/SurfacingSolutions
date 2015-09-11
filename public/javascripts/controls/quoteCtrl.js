@@ -20,12 +20,12 @@ app.controller('quoteCtrl',
 	};
 
 	$scope.hideAddons = function(index) {  
-		//console.log($scope);
-		/*$scope.counterAddonDistributor = "";
-		$scope.counterAddonManufacturer = "";
-		$scope.counterAddonType = "";
-		$scope.counterAddonDescription = "";*/
-		$scope.quoteForm.counterAddonDescription.quantity = "";
+		console.log($scope.counterAddonDistributor);
+		$scope.counterAddonDistributor = "",
+		$scope.counterAddonManufacturer = "",
+		$scope.counterAddonType = "",
+		$scope.counterAddonDescription = "",
+		$scope.counterAddonDescription.quantity = "";
 	};
 
 	$scope.showCounter = function() {  
@@ -33,6 +33,7 @@ app.controller('quoteCtrl',
 	};
 
 	$scope.hideCounter = function() {  
+		console.log($scope.materialColourGroup);
 		$scope.addCounter = false;
 		$scope.shape = "",
 		$scope.counterWidth = "",
@@ -92,7 +93,8 @@ app.controller('quoteCtrl',
 		}else if(addon.formula === "linear"){	
 				totalPrice = addon.linear * price;
 		}else{
-			totalPrice = quantity * price;
+			console.log("This shouldn't ever run, I think!");
+			totalPrice = addon.quantity * addon.price;
 		};
 
 		//Searches for the item by going through the list
@@ -126,10 +128,11 @@ app.controller('quoteCtrl',
 		$scope.dropDown1 = "";
 		$scope.dropDown2 = "";
 		$scope.addonQuantity = "";
-		quote.totalPrice += quote.counters[index].totalPrice;
+		console.log(quote.totalPrice, totalPrice);
+		quote.totalPrice += totalPrice;
 		$scope.quote = quote;
 		//updatePrice(quantity, price, "addon"); - For use later
-		$scope.hideAddons();
+		//$scope.hideAddons();
 	};	
 	
 	$scope.removeAddon = function(addon, counterIndex, addonIndex, quote){		
@@ -144,6 +147,7 @@ app.controller('quoteCtrl',
 		var pushMandatory = {};
 		var pushMandatoryDropDown = {};
 		var sheets = 0;
+
 		if($scope.shape == "circle"){
 			length = 0;
 		}
@@ -160,6 +164,7 @@ app.controller('quoteCtrl',
 				thickness: material.thickness,
 				width: material.width,
 				length: material.length,
+				price: 0,
 				fullSheet1: material.fullSheet1,
 				halfSheet: material.halfSheet,
 				fullSheet5: material.fullSheet5,
@@ -237,9 +242,10 @@ app.controller('quoteCtrl',
 			//console.log(quote.counters[quote.counters.length-1].totalPrice, sheets, material.fullSheet1);
 			quote.counters[quote.counters.length-1].totalPrice = sheets * material.fullSheet1;
 		}
-		console.log(quote.counters[quote.counters.length-1].totalPrice);
-		
-		quote.totalPrice = quote.totalPrice + quote.counters[quote.counters.length-1].totalPrice;
+
+		quote.counters[quote.counters.length-1].material.price = quote.counters[quote.counters.length-1].totalPrice;
+		console.log("Counter Price w/o addons", quote.counters[quote.counters.length-1].material.price);
+		quote.totalPrice += quote.counters[quote.counters.length-1].totalPrice;
 		$scope.quote = quote;
 	};
 

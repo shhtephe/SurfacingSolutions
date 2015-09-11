@@ -20,7 +20,7 @@ app.controller('quoteCtrl',
 	};
 
 	$scope.hideAddons = function(index) {  
-		console.log($scope);
+		//console.log($scope);
 		/*$scope.counterAddonDistributor = "";
 		$scope.counterAddonManufacturer = "";
 		$scope.counterAddonType = "";
@@ -99,12 +99,12 @@ app.controller('quoteCtrl',
 		var result = $.grep(addons, function(e){ return e.itemCode === addons.itemCode; });
 		console.log("This is the result: ", result);
 		console.log(Object.keys(result).length)
-		if (Object.keys(result).length === 0) {
+		if (Object.keys(result).length == 0) {
 			//Couldn't find it, so add a new value
 			pushObj = {
 				distributor: addon.distributor,
 				manufacturer: addon.manufacturer,
-				type: addon.type,
+				productType: addon.type,
 				description: addon.description,
 				itemCode: addon.itemCode,
 				price: addon.price,
@@ -113,9 +113,9 @@ app.controller('quoteCtrl',
 				totalPrice: totalPrice,
 			};
 			addons.push(pushObj);
-			console.log(addons);
+			console.log("Addons:", addons);
+			console.log("pushObj", pushObj);
 			quote.counters[index].totalPrice += addons[addons.length-1].totalPrice;
-			console.log(pushObj);
 		} else {
 			//Found it, so update the value
 			addons[arraySearch(addon.description, addons)].quantity = addon.quantity;
@@ -251,8 +251,6 @@ app.controller('quoteCtrl',
 	};
 
 	$scope.saveQuote = function(quote, description) {
-		
-		console.log($scope);
 
 		//console.log(quote.jobDifficulty.$dirty);
 		if(quote.jobDifficulty.$dirty === true){

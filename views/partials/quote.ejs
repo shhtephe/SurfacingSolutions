@@ -180,10 +180,8 @@
 				      	<br><u>Selected Addons:</u> 
 						<br>
 						<div ng-repeat="addon in counter.addons track by $index">
-							<br>{{addon.type}} - {{addon.description}} : {{addon.quantity}}@{{addon.price | currency:$}} <a ng-click="removeAddon(addon, $parent.$index, $index, quote)">remove</a>
+							<br>{{addon.productType}} - {{addon.description}} : {{addon.quantity}}@{{addon.price | currency:$}} <a ng-click="removeAddon(addon, $parent.$index, $index, quote)">remove</a>
 						</div>
-						
-						{{counter.addons}}
 
 				      	<br><hr style="background:#000000; border:0; height:7px" />
 

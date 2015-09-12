@@ -216,7 +216,7 @@ app.controller('quoteCtrl',
 		console.log(squareFootage, length, width);
 		//update total price
 		sheets = squareFootage / (material.length * material.width);
-		sheets = sheets.toFixed(0);
+		sheets = sheets.toFixed(1);
 		console.log("Sheets: " + sheets);
 		console.log(material);
 

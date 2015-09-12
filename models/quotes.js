@@ -21,6 +21,7 @@ var quote = new Schema({
 			thickness: Number,
 			width: Number,
 			length: Number,
+			price: Number,
 			fullsheet1: Number,
 			halfSheet: Number,
 			fullSheet5: Number,

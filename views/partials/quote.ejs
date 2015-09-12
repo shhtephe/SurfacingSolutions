@@ -58,41 +58,41 @@
 									</select>
 								</div>
 								<div ng-show="materialDistributor && materialManufacturer && materialColourGroup && materialDescription">
-								<br>
-								<ul class="list-group"> 
-									<li class="list-group-item">	
-										Item Code: {{materialDescription.itemCode}} <br> 
-									</li>	
-									<li class="list-group-item">	
-										Thickness: {{materialDescription.thickness}} <br> 
-									</li>	
-									<li class="list-group-item">	
-										Width (In.): {{materialDescription.width}} <br> 
-									</li>				
-									<li class="list-group-item">	
-										Length (In.): {{materialDescription.length}} <br> 
-									</li>	
-									<li class="list-group-item">	
-										Full Sheet 1-5: {{materialDescription.fullSheet1}} <br> 
-									</li>	
-									<li class="list-group-item">	
-										Half Sheet: {{materialDescription.halfSheet}} <br> 
-									</li>
-									<li class="list-group-item">	
-										Full Sheet 5-20:{{materialDescription.fullSheet5}} <br> 
-									</li>
-									<li class="list-group-item">	
-										Full Sheet 21+: {{materialDescription.fullSheet21}} <br> 
-									</li>
-									<li class="list-group-item">	
-										ISA: {{materialDescription.isa}} <br> 
-									</li>
-									<li class="list-group-item">	
-										Collection: {{materialDescription.matCollection}} <br> 
-									</li>
-								</ul>
+									<br>
+									<ul class="list-group"> 
+										<li class="list-group-item">	
+											Item Code: {{materialDescription.itemCode}} <br> 
+										</li>	
+										<li class="list-group-item">	
+											Thickness: {{materialDescription.thickness}} <br> 
+										</li>	
+										<li class="list-group-item">	
+											Width (In.): {{materialDescription.width}} <br> 
+										</li>				
+										<li class="list-group-item">	
+											Length (In.): {{materialDescription.length}} <br> 
+										</li>	
+										<li class="list-group-item">	
+											Full Sheet 1-5: {{materialDescription.fullSheet1}} <br> 
+										</li>	
+										<li class="list-group-item">	
+											Half Sheet: {{materialDescription.halfSheet}} <br> 
+										</li>
+										<li class="list-group-item">	
+											Full Sheet 5-20:{{materialDescription.fullSheet5}} <br> 
+										</li>
+										<li class="list-group-item">	
+											Full Sheet 21+: {{materialDescription.fullSheet21}} <br> 
+										</li>
+										<li class="list-group-item">	
+											ISA: {{materialDescription.isa}} <br> 
+										</li>
+										<li class="list-group-item">	
+											Collection: {{materialDescription.matCollection}} <br> 
+										</li>
+									</ul>
+								</div>
 							</div>
-						</div>
 						</ng-form>
 					</div>
 					<br>
@@ -196,7 +196,7 @@
 					<span style="float: right;"><button type="button" style="btn" ng-click="saveQuote(quote, quote.description)">Update/Save Quote</button></span>
 				</form>
 				<br><br>
-				Please click <a ng-href="/customer/{{customer.custCode}}/quote/{{quote.quoteID}}/invoice">here</a> to view the invoice.
+				Please click <a ng-href="/#/customer/{{customer.custCode}}/quote/{{quote.quoteID}}/invoice">here</a> to view the invoice.
 				<br>
 				<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
 				<br><br><br>

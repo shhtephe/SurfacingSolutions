@@ -24,12 +24,13 @@ app.controller('newCustomerCtrl',
         "email":d, 
         "addressLine1": e,
         "addressLine2": f,
-        "city": h,
-		    "postal":g,
-        "province":k,
-		    "homePhone":i,
-		    "mobilePhone":j
+        "city": g,
+		    "postal":h,
+        "province":i,
+		    "homePhone":j,
+		    "mobilePhone":k
       };
+      console.log(data);
 
       $http.post('/newcustomer', data).
         success(function(data, status, headers, config) {

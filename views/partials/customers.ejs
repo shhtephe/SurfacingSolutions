@@ -6,7 +6,7 @@
 				Search by Name: <input type="text" ng-model="filter.search"><br><br>
 				<ul>
 					<li ng-repeat="customer in customers | filter:filter.search">
-						<a ng-href="/#/customer/{{customer.custCode}}">{{customer.firstName}} {{customer.lastName}} - {{customer.email}}</a>
+						<a ng-href="/#/customer/{{customer.custCode}}">{{customer.companyName}} - {{customer.lastName}}, {{customer.firstName}} - {{customer.email}}</a>
 					</li>
 				</ul>
 				<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>

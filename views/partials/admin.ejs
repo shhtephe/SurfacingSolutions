@@ -132,32 +132,31 @@
 				<br>
 				<button ng-hide="newEditProduct == true" type="button" ng-click="showEditProduct()" class="btn btn-default">Edit Product</button>
 				<div ng-show="newEditProduct == true">
-					Choose a Distributor: <select name="editProductDistributor" ng-model="editProductDistributor" ng-options="product.distributor for product in tempProducts | orderBy:'distributor' | unique: 'distributor'">
-					<option value="">----Select----</option>
+					Choose a Product Type:
+					<select name="editProductType" ng-model="editProductType" ng-options="product.type for product in tempProducts | unique: 'type' | orderBy:'type'">
+						<option value="">----Select----</option>
 					</select>
-					<br>
-					<div ng-show="editProductDistributor">
+					<div ng-show="editProductType">
 						<br>
 						Choose a Manufacturer:
-						<select name="editManufacturer" ng-model="editProductManufacturer" ng-options="product.manufacturer for product in tempProducts | filter:{distributor:editProductDistributor.distributor} | unique: 'manufacturer' | orderBy:'manufacturer'">
+						<select name="editProductManufacturer" ng-model="editProductManufacturer" ng-options="product.manufacturer for product in tempProducts | filter:{type:editProductType.type} | unique: 'manufacturer' | orderBy:'manufacturer'">
 							<option value="">----Select----</option>
 						</select>
 					</div>
-					<div ng-show="editProductDistributor && editProductManufacturer">
-						<br>
-						Choose a Product Type:
-						<select name="editProductType" ng-model="editProductType" ng-options="product.type for product in tempProducts | filter:{distributor:editProductDistributor.distributor, manufacturer:editProductManufacturer.manufacturer} | unique: 'type' | orderBy:'type'">
-							<option value="">----Select----</option>
-						</select>
-					</div>
-					<div ng-show="editProductDistributor && editProductManufacturer && editProductType">
+					<div ng-show="editProductType && editProductManufacturer">
 						<br>
 						Choose a Description:
-						<select name="editProductDescription" ng-model="editProductDescription" ng-options="product.description for product in tempProducts | filter:{distributor:editProductDistributor.distributor, manufacturer:editProductManufacturer.manufacturer, type:editProductType.type} | unique: 'description' | orderBy:'description'">
+						<select name="editProductDescription" ng-model="editProductDescription" ng-options="product.description for product in tempProducts | filter:{manufacturer:editProductManufacturer.manufacturer, type:editProductType.type} | unique: 'description' | orderBy:'description'">
 							<option value="">----Select----</option>
 						</select>
 					</div>
-
+					<div ng-show="editProductDescription && editProductManufacturer && editProductType">
+						<br>
+						Choose a Distributor: <select name="editProductDistributor" ng-model="editProductDistributor" ng-options="product.distributor for product in tempProducts | orderBy:'distributor' | filter:{manufacturer:editProductManufacturer.manufacturer, type:editProductType.type, description:editProductDescription.description} | unique: 'distributor'">
+						<option value="">----Select----</option>
+						</select>
+						<br>
+					</div>
 					<div ng-show="editProductDistributor && editProductManufacturer && editProductType && editProductDescription">
 						<br>
 						<ul class="list-group"> 

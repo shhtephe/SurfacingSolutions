@@ -23,7 +23,7 @@ function idrLoad() {
 <body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
 
 <div ng-controller="invoiceCtrl" ng-init='customer=<%- JSON.stringify(customer) %>;quote=<%- JSON.stringify(quote) %>; products=<%- JSON.stringify(products) %>; materials=<%- JSON.stringify(materials) %>'>
-		{{quote}}
+		<!--{{quote}}-->
 	<div id="left">
 	<div id="leftNav">
 		<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn inactive"></div>
@@ -67,8 +67,6 @@ function idrLoad() {
 	<div id="mainContent">
 
 	<div id="contentContainer">
-
-
 
 	<div id="jpedal" style="position:relative; width: 935px; height: 1210px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
 
@@ -198,7 +196,7 @@ function idrLoad() {
 	#tx_1{left:60px;top:148px;}
 	#ty_1{left:60px;top:164px;}
 	#tz_1{left:130px;top:503px;}
-	#t10_1{left:409px;top:503px;}
+	#t10_1{left:380px;top:503px;}
 	#t11_1{left:757px;top:503px;}
 	#t12_1{left:60px;top:531px;}
 	#t13_1{left:236px;top:531px;}
@@ -315,7 +313,7 @@ function idrLoad() {
 	<div id="tx_1" class="t s3_1">Website: www.surfacingsolutions.ca</div>
 	<div id="ty_1" class="t s3_1">Email: psmith45@bell.net</div>
 	<div id="tz_1" class="t s2_1">Item</div>
-	<div id="t10_1" class="t s2_1">Project Description</div>
+	<div id="t10_1" class="t s2_1">Services/Products Description</div>
 	<div id="t11_1" class="t s2_1">Amount ($)</div>
 	<div id="t12_1" class="t s3_1">{{quote.counters[0].material.manufacturer}}-{{quote.counters[0].material.description}}</div>
 	<div id="t13_1" class="t s3_1">{{quote.counters[0].description}}</div>

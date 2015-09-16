@@ -4,7 +4,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>ssi_sample_invoice Page1</title>
+<title>ssi_sample_Quote Page1</title>
 <link rel="stylesheet" type="text/css" href="assets/IDRViewer.css">
 <script type="text/javascript">
 var extLoaded = false;
@@ -23,7 +23,7 @@ function idrLoad() {
 <body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
 
 <div ng-controller="invoiceCtrl" ng-init='customer=<%- JSON.stringify(customer) %>;quote=<%- JSON.stringify(quote) %>; products=<%- JSON.stringify(products) %>; materials=<%- JSON.stringify(materials) %>'>
-		<!--{{quote}}-->
+		{{quote.counters[1]}}
 	<div id="left">
 	<div id="leftNav">
 		<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn inactive"></div>
@@ -157,9 +157,20 @@ function idrLoad() {
 	</script>
 	<!-- End shared JS -->
 
-	<input type="text" ng-value="A"/>
+
 	<!-- Begin inline CSS -->
-	<style type="text/css" >
+	<style type="text/css">
+	#line1{left:60px;top:531px;}
+	#line2{left:60px;top:547px;}
+	#line3{left:60px;top:563px;}
+	#line4{left:60px;top:579px;}
+	#line5{left:60px;top:595px;}
+	#line6{left:60px;top:611px;}
+	#line7{left:60px;top:627px;}
+	#line8{left:60px;top:547px;}
+	#line9{left:60px;top:563px;}
+	#line10{left:60px;top:579px;}
+	#line11{left:60px;top:595px;}
 
 	#t1_1{left:710px;top:56px;}
 	#t2_1{left:700px;top:111px;}
@@ -186,7 +197,7 @@ function idrLoad() {
 	#tn_1{left:610px;top:958px;}
 	#to_1{left:610px;top:1013px;}
 	#tp_1{left:705px;top:1013px;}
-	#tq_1{left:{{A}}px;top:1033px;}
+	#tq_1{left:60px;top:1033px;}
 	#tr_1{left:60px;top:1049px;}
 	#ts_1{left:60px;top:1065px;}
 	#tt_1{left:60px;top:99px;}
@@ -198,8 +209,8 @@ function idrLoad() {
 	#tz_1{left:130px;top:503px;}
 	#t10_1{left:380px;top:503px;}
 	#t11_1{left:757px;top:503px;}
-	#t12_1{left:60px;top:531px;}
-	#t13_1{left:236px;top:531px;}
+	/*#t12_1{left:60px;top:531px;}*/
+	#t13_1{left:236px;top:528px;}
 	#t14_1{left:236px;top:547px;}
 	#t15_1{left:767px;top:531px;}
 	#t16_1{left:60px;top:563px;}
@@ -278,20 +289,28 @@ function idrLoad() {
 	<!-- End embedded font definitions -->
 
 	<!-- Begin text definitions (Positioned/styled in CSS) -->
-	<div id="t1_1" class="t s1_1">Invoice</div>
+	<div id="t1_1" class="t s1_1">Quote</div>
 	<div id="t2_1" class="t s2_1">Date</div>
 	<div id="t3_1" class="t s3_1">{{quote.createdAt | limitTo: 10}}</div>
-	<div id="t4_1" class="t s2_1">Invoice #</div>
+	<div id="t4_1" class="t s2_1">Quote #</div>
 	<div id="t5_1" class="t s3_1">{{quote.quoteID}}</div>
-	<div id="t6_1" class="t s4_1">Invoice To</div>
+	<div id="t6_1" class="t s4_1">Quote To</div>
 	<div id="t7_1" class="t s3_1">{{customer.companyName}}</div>
 	<div id="t8_1" class="t s3_1">{{customer.addressLine1}}, {{customer.addressLine2}}</div>
+	
+
+	<span ng-repeat="counter in quote.counters track by $index">
+		<div id="line{{$index+1}}" class="t s3_1">{{counter.material.description}}</div>
+	</span>
+	<!--TEST STUFF -->
+
+	<!--TEST STUFF-->
 	<div id="t9_1" class="t s3_1">{{customer.city}}, Ontario</div>
 	<div id="ta_1" class="t s3_1">{{customer.postal}}</div>
 	<div id="tb_1" class="t s2_1">Project Name</div>
 	<div id="tc_1" class="t s3_1">{{quote.description}}</div>
 	<div id="td_1" class="t s3_1"><!--100 Milverton Drive--></div>
-	<div id="te_1" class="t s3_1"><!--{{customer.city}}, Ontario--></div>
+	<div id="te_1" class="t s3_1"><!--MORE PROJECT STUFF--></div>
 	<div id="tf_1" class="t s5_1">Surfacing Solutions 2010 Ltd.</div>
 	<div id="tg_1" class="t s2_1">P.O. No./ Job No.</div>
 	<div id="th_1" class="t s3_1">63820</div>
@@ -305,7 +324,7 @@ function idrLoad() {
 	<div id="tp_1" class="t s6_1">Total</div>
 	<div id="tq_1" class="t s3_1">All product remains the property of Surfacing Solutions 2010 Ltd until paid in full.</div>
 	<div id="tr_1" class="t s3_1">Interest charged at 2% per month on all past due accounts.</div>
-	<div id="ts_1" class="t s3_1">We now accept VISA and MasterCard at time of invoice only</div>
+	<div id="ts_1" class="t s3_1">We now accept VISA and MasterCard at time of quote only</div>
 	<div id="tt_1" class="t s3_1">34-160 Wilkinson Road</div>
 	<div id="tu_1" class="t s3_1">Brampton, Ontario L6T 4Z4</div>
 	<div id="tv_1" class="t s3_1">P: 905-874-1814 </div>
@@ -315,7 +334,8 @@ function idrLoad() {
 	<div id="tz_1" class="t s2_1">Item</div>
 	<div id="t10_1" class="t s2_1">Services/Products Description</div>
 	<div id="t11_1" class="t s2_1">Amount ($)</div>
-	<div id="t12_1" class="t s3_1">{{quote.counters[0].material.manufacturer}}-{{quote.counters[0].material.description}}</div>
+
+	<!--<div id="t12_1" class="t s3_1">{{quote.counters[0].material.manufacturer}}-{{quote.counters[0].material.description}}</div>-->
 	<div id="t13_1" class="t s3_1">{{quote.counters[0].description}}</div>
 	<div id="t14_1" class="t s3_1">{{quote.counters[0].addons[0].description}} - {{quote.counters[0].addons[0].quantity}} @ {{quote.counters[0].addons[0].price | currency:$}}</div>
 	<div id="t15_1" class="t s3_1">{{quote.counters[0].material.price | currency:$}}</div>

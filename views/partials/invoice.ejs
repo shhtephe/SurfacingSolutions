@@ -22,7 +22,7 @@ function idrLoad() {
 <!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
 <body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
 
-<div ng-controller="invoiceCtrl" ng-init='customer=<%- JSON.stringify(customer) %>;quote=<%- JSON.stringify(quote) %>; products=<%- JSON.stringify(products) %>; materials=<%- JSON.stringify(materials) %>'>
+<div ng-controller="finalQuoteCtrl" ng-init='customer=<%- JSON.stringify(customer) %>;quote=<%- JSON.stringify(quote) %>; products=<%- JSON.stringify(products) %>; materials=<%- JSON.stringify(materials) %>'>
 		{{quote.counters[1]}}
 	<div id="left">
 	<div id="leftNav">

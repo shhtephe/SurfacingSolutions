@@ -196,7 +196,7 @@
 					<span style="float: right;"><button type="button" style="btn" ng-click="saveQuote(quote, quote.description)">Update/Save Quote</button></span>
 				</form>
 				<br><br>
-				Please click <a ng-href="/#/customer/{{customer.custCode}}/quote/{{quote.quoteID}}/invoice">here</a> to view the invoice.
+				Please click <a ng-href="/#/customer/{{customer.custCode}}/quote/{{quote.quoteID}}/quotefinal" target="">here</a> to view the invoice.
 				<br>
 				<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
 				<br><br><br>

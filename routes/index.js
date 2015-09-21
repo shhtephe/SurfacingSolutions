@@ -164,6 +164,35 @@ router.get('/customer/:customer/quote/:quote', function(req, res, next) {
     })
   }
 });
+/*THIS IS FUCKIN TEST CODE FOR NOW*/
+router.get('/customer/:customer/quote/:quote/quotefinal', function(req, res, next) {
+  if (typeof req.quote[0]==="undefined") {
+      mongoose.model("products").find(function(err, products){
+        mongoose.model("materials").find(function(err, materials){
+          console.log(materials);
+          res.render('partials/quotefinal', { 
+            quote: req.quote,
+            customer: req.customer,
+            products: products,
+            materials: materials
+          });
+        });
+    })
+  }
+  else{
+    mongoose.model("products").find(function(err, products){
+      mongoose.model("materials").find(function(err, materials){
+        res.render('partials/quotefinal', { 
+          quote: req.quote[0],
+          customer: req.customer,
+          products: products,
+          materials: materials
+        })
+      })
+    })
+  }
+})
+/*SERIOUSLY, JUST TEST STUFF UNTIL I GET IT GOING*/
 
 router.get('/customer/:customer/quote/:quote/invoice', function(req, res, next) {
   if (typeof req.quote[0]==="undefined") {

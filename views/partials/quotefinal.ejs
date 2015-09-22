@@ -1,5 +1,6 @@
+<!DOCTYPE html>
 <div ng-controller="finalQuoteCtrl" ng-init='customer=<%- JSON.stringify(customer) %>;quote=<%- JSON.stringify(quote) %>; products=<%- JSON.stringify(products) %>; materials=<%- JSON.stringify(materials) %>'>
-{{quote}}
+{{quote.counters[0]}}
 <br>
 <br>
 {{customer}}
@@ -47,17 +48,17 @@ Phone: {{customer.homePhone}}</textarea>
             <table id="meta">
                 <tr>
                     <td class="meta-head">Invoice #</td>
-                    <td><textarea>000123</textarea></td>
+                    <td><textarea>{{quote.quoteID}}</textarea></td>
                 </tr>
                 <tr>
 
                     <td class="meta-head">Date</td>
                     <td><textarea id="date">{{quote.createdAt | limitTo: 10}}</textarea></td>
                 </tr>
-                <tr>
+                <!--<tr>
                     <td class="meta-head">Amount Due</td>
                     <td><div class="due">$875.00</div></td>
-                </tr>
+                </tr>-->
 
             </table>
 		
@@ -72,24 +73,15 @@ Phone: {{customer.homePhone}}</textarea>
 		      <th>Quantity</th>
 		      <th>Price</th>
 		  </tr>
-		  
-		  <tr class="item-row">
-		      <td class="item-name"><div class="delete-wpr"><textarea>Web Updates</textarea><a class="delete" href="javascript:;" title="Remove row">X</a></div></td>
-		      <td class="description"><textarea>Monthly web updates for http://widgetcorp.com (Nov. 1 - Nov. 30, 2009)</textarea></td>
-		      <td><textarea class="cost">$650.00</textarea></td>
-		      <td><textarea class="qty">1</textarea></td>
-		      <td><span class="price">$650.00</span></td>
-		  </tr>
-		  
-		  <tr class="item-row">
-		      <td class="item-name"><div class="delete-wpr"><textarea>SSL Renewals</textarea><a class="delete" href="javascript:;" title="Remove row">X</a></div></td>
+		<tr ng-repeat="counter in quote.counters track by $index" class="item-row">
+			      <td class="item-name"><div class="delete-wpr"><textarea>{{counter.material.description}}</textarea></div></td>
 
-		      <td class="description"><textarea>Yearly renewals of SSL certificates on main domain and several subdomains</textarea></td>
-		      <td><textarea class="cost">$75.00</textarea></td>
-		      <td><textarea class="qty">3</textarea></td>
-		      <td><span class="price">$225.00</span></td>
-		  </tr>
-		  
+			      <td class="description"><textarea>{{counter.description}}</textarea></td>
+			      <td><textarea class="cost"></textarea></td>
+			      <td><textarea class="qty">{{counter.quantity}}</textarea></td>
+			      <td><span class="price">{{counter.totalPrice | currency: $}}</span></td>
+		</tr>
+		  </div>
 		  <tr id="hiderow">
 		    <td colspan="5"><a id="addrow" href="javascript:;" title="Add a row">Add a row</a></td>
 		  </tr>

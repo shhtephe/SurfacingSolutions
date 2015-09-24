@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <div ng-controller="finalQuoteCtrl" ng-init='customer=<%- JSON.stringify(customer) %>;quote=<%- JSON.stringify(quote) %>; products=<%- JSON.stringify(products) %>; materials=<%- JSON.stringify(materials) %>'>
-{{quote.counters[0]}}
+{{quote}}
 <br>
 <br>
 {{customer}}
@@ -64,16 +64,25 @@ Phone: {{customer.homePhone}}</textarea>
 		
 		</div>
 		
-		<table id="items">
-		
-		  <tr>
+		<quote-table rows='rows'><quote-table>
+
+		<br>
+
+		<table class="table table-striped table-hover table-bordered">
+		  	<thead id="items">
 		      <th>Item</th>
 		      <th>Description</th>
 		      <th>Unit Cost</th>
 		      <th>Quantity</th>
 		      <th>Price</th>
-		  </tr>
-		<tr ng-repeat="counter in quote.counters track by $index" class="item-row">
+		  </thead>
+		    <tbody>
+		    	<tr ng-repeat="counter in counters | flattenRows">{{counter}}
+			        <td>{{counter.description}}<span class="label label-info" ng-show="row.subrow">subrow!</span></td>
+		    	</tr>
+		    </tbody>
+
+<!--		<tr ng-repeat="counter in quote.counters track by $index" class="item-row">
 			      <td class="item-name"><div class="delete-wpr"><textarea>{{counter.material.description}}</textarea></div></td>
 
 			      <td class="description"><textarea>{{counter.description}}</textarea></td>
@@ -107,7 +116,7 @@ Phone: {{customer.homePhone}}</textarea>
 		      <td colspan="2" class="blank"> </td>
 		      <td colspan="2" class="total-line balance">Balance Due</td>
 		      <td class="total-value balance"><div class="due">$875.00</div></td>
-		  </tr>
+		  </tr>-->
 		
 		</table>
 		

@@ -9,7 +9,7 @@ app.filter('flattenRows', function() {
     return function(counters) {
       var flatten = [];
       angular.forEach(counters, function(counter) {
-        addons = counter.addons;
+        var addons = counter.addons;
         flatten.push(counter);
         if (addons) {
           angular.forEach(addons, function(addon) {

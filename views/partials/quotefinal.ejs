@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 <div ng-controller="finalQuoteCtrl" ng-init='customer=<%- JSON.stringify(customer) %>;quote=<%- JSON.stringify(quote) %>; products=<%- JSON.stringify(products) %>; materials=<%- JSON.stringify(materials) %>'>
+{{quote.counters[0]}}
+<br>
+<br>
+{{customer}}
+<br>
+<br>
 	<div id="page-wrap">
 
 		<textarea id="header">INVOICE</textarea
@@ -58,53 +64,17 @@ Phone: {{customer.homePhone}}</textarea>
 		
 		</div>
 		
-		<quote-table rows='rows'><quote-table>
-
-		<br>
-
-		<table class="table table-hover table-bordered">
-		  	<thead id="items">
+		<table id="items">
+		
+		  <tr>
 		      <th>Item</th>
 		      <th>Description</th>
 		      <th>Unit Cost</th>
 		      <th>Quantity</th>
 		      <th>Price</th>
-		  </thead>
-		    <tbody>
-		    <tr ng-repeat="counter in quote.counters | flattenRows">
-				<td class="item-name">{{counter.material.description}}<span class="label label-info" ng-show="counter.addon">Addon</span></td>
-			    <td class="description"><textarea>{{counter.description}}</textarea></td>
-			    <td><textarea class="cost"></textarea></td>
-			    <td><textarea class="qty">{{counter.quantity}}</textarea></td>
-			    <td><span class="price">{{counter.totalPrice | currency: $}}</span></td>
-			</tr>
-			<tr>
-		    	<td colspan="3" class="blank"> </td>
-		    	<td colspan="1" class="total-line">Subtotal</td>
-		    	<td class="total-value"><div id="subtotal">$875.00</div></td>
-		  	</tr>
-		  <tr>
-
-		      <td colspan="3" class="blank"> </td>
-		      <td colspan="1" class="total-line">Total</td>
-		      <td class="total-value"><div id="total">$875.00</div></td>
 		  </tr>
-		  <tr>
-		      <td colspan="3" class="blank"> </td>
-		      <td colspan="1" class="total-line">Amount Paid</td>
-
-		      <td class="total-value"><textarea id="paid">$0.00</textarea></td>
-		  </tr>
-		  <tr>
-		      <td colspan="3" class="blank"> </td>
-		      <td colspan="1" class="total-line balance">Balance Due</td>
-		      <td class="total-value balance"><div class="due">$875.00</div></td>
-		  </tr>
-		    </tbody>
-
-<!--		<tr ng-repeat="counter in quote.counters track by $index" class="item-row">
+		<tr ng-repeat="counter in quote.counters track by $index" class="item-row">
 			      <td class="item-name"><div class="delete-wpr"><textarea>{{counter.material.description}}</textarea></div></td>
-
 			      <td class="description"><textarea>{{counter.description}}</textarea></td>
 			      <td><textarea class="cost"></textarea></td>
 			      <td><textarea class="qty">{{counter.quantity}}</textarea></td>
@@ -113,7 +83,30 @@ Phone: {{customer.homePhone}}</textarea>
 		  </div>
 		  <tr id="hiderow">
 		    <td colspan="5"><a id="addrow" href="javascript:;" title="Add a row">Add a row</a></td>
-		  </tr>-->
+		  </tr>
+		  
+		  <tr>
+		      <td colspan="2" class="blank"> </td>
+		      <td colspan="2" class="total-line">Subtotal</td>
+		      <td class="total-value"><div id="subtotal">$875.00</div></td>
+		  </tr>
+		  <tr>
+
+		      <td colspan="2" class="blank"> </td>
+		      <td colspan="2" class="total-line">Total</td>
+		      <td class="total-value"><div id="total">$875.00</div></td>
+		  </tr>
+		  <tr>
+		      <td colspan="2" class="blank"> </td>
+		      <td colspan="2" class="total-line">Amount Paid</td>
+
+		      <td class="total-value"><textarea id="paid">$0.00</textarea></td>
+		  </tr>
+		  <tr>
+		      <td colspan="2" class="blank"> </td>
+		      <td colspan="2" class="total-line balance">Balance Due</td>
+		      <td class="total-value balance"><div class="due">$875.00</div></td>
+		  </tr>
 		
 		</table>
 		

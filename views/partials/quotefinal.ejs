@@ -81,24 +81,17 @@ Phone: {{customer.homePhone}}</textarea>
 			<tr>
 		    	<td colspan="3" class="blank"> </td>
 		    	<td colspan="1" class="total-line">Subtotal</td>
-		    	<td class="total-value"><div id="subtotal">$875.00</div></td>
+		    	<td class="total-value"><div id="subtotal">{{quote.totalPrice | currency:$}}</div></td>
 		  	</tr>
 		  <tr>
-
+		      <td colspan="3" class="blank"> </td>
+		      <td colspan="1" class="total-line">HST (13%)</td>
+		      <td class="total-value"><div id="total">{{quote.totalPrice * 0.13 | currency:$}}</div></td>
+		  </tr>
+		  <tr>
 		      <td colspan="3" class="blank"> </td>
 		      <td colspan="1" class="total-line">Total</td>
-		      <td class="total-value"><div id="total">$875.00</div></td>
-		  </tr>
-		  <tr>
-		      <td colspan="3" class="blank"> </td>
-		      <td colspan="1" class="total-line">Amount Paid</td>
-
-		      <td class="total-value"><textarea id="paid">$0.00</textarea></td>
-		  </tr>
-		  <tr>
-		      <td colspan="3" class="blank"> </td>
-		      <td colspan="1" class="total-line balance">Balance Due</td>
-		      <td class="total-value balance"><div class="due">$875.00</div></td>
+		      <td class="total-value"><div id="total">{{quote.totalPrice * 1.13 | currency:$}}</div></td>
 		  </tr>
 		    </tbody>
 

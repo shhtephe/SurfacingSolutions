@@ -32,8 +32,12 @@ app.controller('quoteCtrl',
 		$scope.addCounter = true;
 	};
 
+	$scope.showMandatory = function() {  
+		$scope.divMandatory = true;
+		console.log($scope.mandatoryForm);
+	};
+
 	$scope.hideCounter = function() {  
-		console.log($scope.materialColourGroup);
 		$scope.addCounter = false;
 		$scope.shape = "",
 		$scope.counterWidth = "",

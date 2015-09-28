@@ -2,8 +2,14 @@
 <div class="jumbotron">
     <div class="container">
         <div class="col-xs-offset-2 col-xs-8">
-			<div ng-controller="quoteCtrl" ng-init='customer=<%- JSON.stringify(customer) %>;quote=<%- JSON.stringify(quote) %>; materials=<%- JSON.stringify(materials) %>; products=<%- JSON.stringify(products) %>; addCounter == false'>
+			<div ng-controller="quoteCtrl" ng-init='customer=<%- JSON.stringify(customer) %>;quote=<%- JSON.stringify(quote) %>; materials=<%- JSON.stringify(materials) %>; products=<%- JSON.stringify(products) %>; addCounter == false; divMandatory = false; divAddon = false;'>
 				<form name="quoteForm">
+					<br>
+					<br>
+					{{products[30]}}
+					<br>
+					<br>
+
 					Customer: {{customer.lastName}}, {{customer.firstName}}
 					<br>QuoteID: {{quote.quoteID}}
 					<br>
@@ -109,64 +115,75 @@
 						<br><br>
 						Counter Description:
 						<br><textarea rows="4" columns="150" ng-model="counter.description"></textarea>
-						<br>
-						<br>Addons: 
-						<br>Choose a Distributor:
-						<select name="counterAddonDistributor" ng-model="counterAddonDistributor" ng-options="product.distributor for product in products | filter:{category: '!mandatory'} | unique: 'distributor' track by product.distributor">
-							<option value="">----Select----</option>
-						</select>
-						<br>
-						<div ng-show="counterAddonDistributor">
-							<br>
-							Choose a Manufacturer:
-							<select name="counterAddonManufacturer" ng-model="counterAddonManufacturer" ng-options="product.manufacturer for product in products | filter:{distributor:counterAddonDistributor.distributor} | unique: 'manufacturer' | orderBy:'manufacturer'">
-								<option value="">----Select----</option>
-							</select>
-						</div>
-						<div ng-show="counterAddonDistributor && counterAddonManufacturer">
-							<br>
-							Choose a Product Type:
-							<select name="counterAddonType" ng-model="counterAddonType" ng-options="product.type for product in products | filter:{distributor:counterAddonDistributor.distributor, manufacturer:counterAddonManufacturer.manufacturer} | unique: 'type' | orderBy:'type'">
-								<option value="">----Select----</option>
-							</select>
-						</div>
-						<div ng-show="counterAddonDistributor && counterAddonManufacturer && counterAddonType">
-							<br>
-							Choose a Description:
-							<select name="counterAddonDescription" ng-model="counterAddonDescription" ng-options="product.description for product in products | filter:{distributor:counterAddonDistributor.distributor, manufacturer:counterAddonManufacturer.manufacturer, type:counterAddonType.type} | unique: 'description' | orderBy:'description'">
-								<option value="">----Select----</option>
-							</select>
-						</div>
-						<div ng-show="counterAddonDistributor && counterAddonManufacturer && counterAddonType && counterAddonDescription">
-							<br>
-							<ul class="list-group"> 
-								<li class="list-group-item">	
-									Item Code: {{counterAddonDescription.itemCode}}<br> 
-								</li>	
-								<li class="list-group-item">	
-									Price: {{counterAddonDescription.price}}<br> 
-								</li>	
-								<li class="list-group-item">	
-									Formula: {{counterAddonDescription.formula}}
-								</li>
-								<li ng-show="counterAddonDescription.formula=='item'" class="list-group-item">	
-									Quantity: <input type="text" ng-model="counterAddonDescription.quantity">
-									<br>
-								</li>
-								
-							</ul>
-						    <button type="button" ng-click="saveAddon(quote, counterAddonDescription, $index)" class="btn btn-default">Add</button>
-						    <button type="button" ng-click="hideAddons($index)" class="btn btn-danger">Cancel</button> 
-						</div>
 						<br>----------
-						<br>Mandatory charges:
 						<br>
-						<div ng-repeat="charge in counter.mandatoryCharges track by $index">
-							<ng-form name="mandatoryMaterialsForm">
-								<br>{{charge.material}} - {{charge.price | currency:$}}/{{charge.unitOfMeasure}}
+						<button type="button" ng-click="divAddons = true">Add Addons</button>
+						<div ng-show="divAddons">
+							<br>Addons: 
+							<br>Choose a Distributor:
+							<select name="counterAddonDistributor" ng-model="counterAddonDistributor" ng-options="product.distributor for product in products | filter:{category: '!mandatory'} | unique: 'distributor' track by product.distributor">
+								<option value="">----Select----</option>
+							</select>
+							<br>
+							<div ng-show="counterAddonDistributor">
+								<br>
+								Choose a Manufacturer:
+								<select name="counterAddonManufacturer" ng-model="counterAddonManufacturer" ng-options="product.manufacturer for product in products | filter:{distributor:counterAddonDistributor.distributor} | unique: 'manufacturer' | orderBy:'manufacturer'">
+									<option value="">----Select----</option>
+								</select>
+							</div>
+							<div ng-show="counterAddonDistributor && counterAddonManufacturer">
+								<br>
+								Choose a Product Type:
+								<select name="counterAddonType" ng-model="counterAddonType" ng-options="product.type for product in products | filter:{distributor:counterAddonDistributor.distributor, manufacturer:counterAddonManufacturer.manufacturer} | unique: 'type' | orderBy:'type'">
+									<option value="">----Select----</option>
+								</select>
+							</div>
+							<div ng-show="counterAddonDistributor && counterAddonManufacturer && counterAddonType">
+								<br>
+								Choose a Description:
+								<select name="counterAddonDescription" ng-model="counterAddonDescription" ng-options="product.description for product in products | filter:{distributor:counterAddonDistributor.distributor, manufacturer:counterAddonManufacturer.manufacturer, type:counterAddonType.type} | unique: 'description' | orderBy:'description'">
+									<option value="">----Select----</option>
+								</select>
+							</div>
+							<div ng-show="counterAddonDistributor && counterAddonManufacturer && counterAddonType && counterAddonDescription">
+								<br>
+								<ul class="list-group"> 
+									<li class="list-group-item">	
+										Item Code: {{counterAddonDescription.itemCode}}<br> 
+									</li>	
+									<li class="list-group-item">	
+										Price: {{counterAddonDescription.price}}<br> 
+									</li>	
+									<li class="list-group-item">	
+										Formula: {{counterAddonDescription.formula}}
+									</li>
+									<li ng-show="counterAddonDescription.formula=='item'" class="list-group-item">	
+										Quantity: <input type="text" ng-model="counterAddonDescription.quantity">
+										<br>
+									</li>
+									
+								</ul>
+							    <button type="button" ng-click="saveAddon(quote, counterAddonDescription, $index)" class="btn btn-default">Add</button>
+							</div>
+							<button type="button" ng-click="hideAddons($index)" class="btn btn-danger">Cancel</button> 
+						</div>
+						<br>
+						<br><button type="button" ng-click="divMandatory = true; showMandatory($index)" ng-show="divMandatory == false">Add Mandatory Charges</button>
+						<div ng-show="divMandatory == true">
+							<br>Mandatory charges: 
+							<br> Choose a Type:
+							<select name="mandatoryCharges" ng-model="mandatoryCharges" ng-options="charge.description for charge in products | filter:{type:'mandatory'}">
+								<option value="">----Select----</option>
+							</select>
+							<ng-form name="mandatoryForm">
+								<br>{{charge.type}} - {{charge.price | currency:$}}/{{charge.unitOfMeasure}}
 								<br>Quantity: <input ng-change="mandatoryChargeChange(charge.material, charge.price, charge.quantity, quote, counter, $parent.$index, $index)" type="number" ng-model="charge.quantity"> Total: {{charge.totalPrice |currency:$}}
 							</ng-form>
+							<button type="button" ng-click="divMandatory = false">Cancel</button>
 						</div>
+
+
 						<br>
 						<u>Summary</u>: 
 				  		<br>
@@ -183,15 +200,15 @@
 						<div ng-repeat="addon in counter.addons track by $index">
 							<br>{{addon.productType}} - {{addon.description}} : {{addon.quantity}}@{{addon.price | currency:$}} <a ng-click="removeAddon(addon, $parent.$index, $index, quote)">remove</a>
 						</div>
-
 				      	<br><hr style="background:#000000; border:0; height:7px" />
-
 				      	<span style="float: left;">Counter Subtotal: {{counter.totalPrice |currency:$}}</span><span style="float: right;"><button type="button" style="btn" ng-click="saveQuote(quote, quote.description)">Update/Save Quote</button></span>
 				      	<br>
 				      	<!--<br>counter Thickness: {{counter.counterThickness1}}
 				      	<br>counter Thickness 2: {{counter.counterThickness1}}-->
 				      	<hr style="background:#FFFFFF; border:0; height:7px" />
 					</div>
+
+
 					<br>Job Difficulty: <input type="number" ng-model="quote.jobDifficulty" name="quote.jobDifficulty"><br>
 					<span style="float: left;">Total Price: {{quote.totalPrice * quote.jobDifficulty | currency:$}}</span>
 					<span style="float: right;"><button type="button" style="btn" ng-click="saveQuote(quote, quote.description)">Update/Save Quote</button></span>

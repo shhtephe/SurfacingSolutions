@@ -75,9 +75,9 @@ Phone: {{customer.homePhone}}</textarea>
 		  </thead>
 		    <tbody>
 		    <tr ng-repeat="counter in quote.counters | flattenRows">
-				<td class="item-name">{{counter.material.description}}<span class="label label-info" ng-show="counter.addon">Addon</span></td>
+				<td class="item-name"><span ng-hide="counter.addon">{{counter.material.manufacturer}} - {{counter.material.description}}</span><span class="label label-info" ng-show="counter.addon">Addon</span></td>
 			    <td class="description"><textarea>{{counter.description}}</textarea></td>
-			    <td><textarea class="cost"></textarea></td>
+			    <td><textarea class="cost">{{counter.price | currency:$}}</textarea></td>
 			    <td><textarea class="qty">{{counter.quantity}}</textarea></td>
 			    <td><span class="price">{{counter.totalPrice | currency: $}}</span></td>
 			</tr>
@@ -101,7 +101,7 @@ Phone: {{customer.homePhone}}</textarea>
 		
 		<div id="terms">
 		  <h5>Terms</h5>
-		  <textarea>NET 30 Days. Finance Charge of 1.5% will be made on unpaid balances after 30 days.</textarea>
+		  <textarea>All product remains the property of Surfacing Solutions 2010 Ltd until paid in full.Interest charged at 2% per month on all past due accounts.We now accept VISA and MasterCard at time of quote only</textarea>
 		</div>
 	
 	</div>

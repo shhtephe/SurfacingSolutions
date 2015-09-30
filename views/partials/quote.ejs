@@ -115,7 +115,26 @@
 						<br><br>
 						Counter Description:
 						<br><textarea rows="4" columns="150" ng-model="counter.description"></textarea>
-						<br>----------
+						<br>
+						<u>Summary</u>: 
+				  		<br>
+				  		<br>Counter Shape: {{counter.counterShape}} 
+				  		<br>Counter Width: {{counter.counterWidth}}
+				  		<span ng-show="counter.counterShape==='rectangle'"><br>Counter Length: {{counter.counterLength}}</span>
+				      	<br>Counter Colour Group: {{counter.material.colourGroup}}
+				      	<br>Counter Material: {{counter.material.description}}
+				      	<br>Counter Price: {{counter.material.price | currency:$}}
+				      	<br><button type="button" ng-click="editCounter(quote, counterAddonDescription, $index)" class="btn btn-default">Edit this Counter</button>
+						<br>
+						<br><u>Selected Addons:</u> 
+						<br>
+						<div ng-repeat="addon in counter.addons track by $index">
+							<br>{{addon.productType}} - {{addon.description}} : 
+							<span ng-show="addon.formula =='item' || addon.formula == 'linear'">{{addon.quantity}}</span>
+							<span ng-show="addon.formula =='square'">{{counter.counterWidth * counter.counterLength}}</span>
+							@{{addon.price | currency:$}} <a ng-click="removeAddon(addon, $parent.$index, $index, quote)">remove</a>
+						</div>
+						----------
 						<br>
 						<button type="button" ng-click="divAddons = true">Add Addons</button>
 						<div ng-show="divAddons">
@@ -153,7 +172,9 @@
 										Item Code: {{counterAddonDescription.itemCode}}<br> 
 									</li>	
 									<li class="list-group-item">	
-										Price: {{counterAddonDescription.price}}<br> 
+										Price /<span ng-show="counterAddonDescription.formula=='item'">Item</span>
+										<span ng-show="counterAddonDescription.formula=='square'">Square Foot</span>
+										<span ng-show="counterAddonDescription.formula=='linear'">Linear Foot</span>: {{counterAddonDescription.price}}<br> 
 									</li>	
 									<li class="list-group-item">	
 										Formula: {{counterAddonDescription.formula}}
@@ -162,44 +183,35 @@
 										Quantity: <input type="text" ng-model="counterAddonDescription.quantity">
 										<br>
 									</li>
+									<li ng-show="counterAddonDescription.formula=='square'" class="list-group-item">
+										Square Footage: {{counter.counterWidth * counter.counterLength}} 
+										<br>Price: {{counter.counterWidth * counter.counterLength * counterAddonDescription.price}}
+									</li>
+
 									
 								</ul>
 							    <button type="button" ng-click="saveAddon(quote, counterAddonDescription, $index)" class="btn btn-default">Add</button>
 							</div>
-							<button type="button" ng-click="hideAddons($index)" class="btn btn-danger">Cancel</button> 
+							<button type="button" ng-click="divAddons=false; counterAddonDistributor = ''" class="btn btn-danger">Cancel</button> 
 						</div>
 						<br>
 						<br><button type="button" ng-click="divMandatory = true; showMandatory($index)" ng-show="divMandatory == false">Add Mandatory Charges</button>
 						<div ng-show="divMandatory == true">
 							<br>Mandatory charges: 
 							<br> Choose a Type:
-							<select name="mandatoryCharges" ng-model="mandatoryCharges" ng-options="charge.description for charge in products | filter:{type:'mandatory'}">
+							<select name="mandatoryType" ng-model="mandatoryType" ng-options="charge.description for charge in products | filter:{type:'mandatory'}">
 								<option value="">----Select----</option>
 							</select>
-							<ng-form name="mandatoryForm">
-								<br>{{charge.type}} - {{charge.price | currency:$}}/{{charge.unitOfMeasure}}
-								<br>Quantity: <input ng-change="mandatoryChargeChange(charge.material, charge.price, charge.quantity, quote, counter, $parent.$index, $index)" type="number" ng-model="charge.quantity"> Total: {{charge.totalPrice |currency:$}}
-							</ng-form>
-							<button type="button" ng-click="divMandatory = false">Cancel</button>
+							<div ng-show="mandatoryType">
+								<br>Choose a Product<select name="mandatoryCharges" ng-model="mandatoryCharges" ng-options="charge.description for charge in products | filter:{type:'mandatory'}">
+								<option value="">----Select----</option>
+								</select>
+							</div>
+							<br>{{charge.type}} - {{charge.price | currency:$}}/{{charge.unitOfMeasure}}
+							<br>Quantity: <input ng-change="mandatoryChargeChange(charge.material, charge.price, charge.quantity, quote, counter, $parent.$index, $index)" type="number" ng-model="charge.quantity"> Total: {{charge.totalPrice |currency:$}}
+							<br><br> <button type="button" ng-click="divMandatory = false" class="btn btn-danger">Cancel</button>
 						</div>
-
-
-						<br>
-						<u>Summary</u>: 
-				  		<br>
-				  		<br>Counter Shape: {{counter.counterShape}} 
-				  		<br>Counter Width: {{counter.counterWidth}}
-				  		<span ng-show="counter.counterShape==='rectangle'"><br>Counter Length: {{counter.counterLength}}</span>
-				      	<br>Counter Colour Group: {{counter.material.colourGroup}}
-				      	<br>Counter Material: {{counter.material.description}}
-				      	<br>Counter Price: {{counter.material.price | currency:$}}
-				      	<br><button type="button" ng-click="editCounter(quote, counterAddonDescription, $index)" class="btn btn-default">Edit this Counter</button>
 				      	<br>
-				      	<br><u>Selected Addons:</u> 
-						<br>
-						<div ng-repeat="addon in counter.addons track by $index">
-							<br>{{addon.productType}} - {{addon.description}} : {{addon.quantity}}@{{addon.price | currency:$}} <a ng-click="removeAddon(addon, $parent.$index, $index, quote)">remove</a>
-						</div>
 				      	<br><hr style="background:#000000; border:0; height:7px" />
 				      	<span style="float: left;">Counter Subtotal: {{counter.totalPrice |currency:$}}</span><span style="float: right;"><button type="button" style="btn" ng-click="saveQuote(quote, quote.description)">Update/Save Quote</button></span>
 				      	<br>

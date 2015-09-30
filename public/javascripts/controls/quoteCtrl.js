@@ -24,8 +24,7 @@ app.controller('quoteCtrl',
 		$scope.counterAddonDistributor = "",
 		$scope.counterAddonManufacturer = "",
 		$scope.counterAddonType = "",
-		$scope.counterAddonDescription = "",
-		$scope.counterAddonDescription.quantity = "";
+		$scope.counterAddonDescription = ""
 	};
 
 	$scope.showCounter = function() {  
@@ -86,13 +85,13 @@ app.controller('quoteCtrl',
 		}else if(addon.formula === "square"){
 			console.log(quote.counters[index]);
 			if(shape === "rectangle"){
-				squareFootage = length * width;
-				totalPrice = price * squareFootage;
-				console.log(length, width, squareFootage, totalPrice, price);
+				squareFootage = counterLength * counterWidth;
+				totalPrice = addon.price * squareFootage;
+				console.log(counterLength, counterWidth, squareFootage, totalPrice, addon.price);
 			} else if(shape === "circle"){
-				squareFootage = (width*width) * Math.PI;
+				squareFootage = (counterWidth*counterWidth) * Math.PI;
 				squareFootage = squareFootage.toFixed(2);
-				totalPrice = price * squareFootage;
+				totalPrice = addon.price * squareFootage;
 			};
 		}else if(addon.formula === "linear"){	
 				totalPrice = addon.linear * price;
@@ -153,7 +152,7 @@ app.controller('quoteCtrl',
 		var sheets = 0;
 
 		if($scope.shape == "circle"){
-			length = 0;
+			length = width;
 		}
 		console.log(width + "/" + length + "/" + shape + "/" + material.colourGroup + "/" + material.description + "/" + material.fullSheet1)
 		console.log("width: " + width + "/length: " + length);

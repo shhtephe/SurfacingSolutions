@@ -154,7 +154,7 @@
 							<div ng-show="counterAddonDistributor && counterAddonManufacturer">
 								<br>
 								Choose a Product Type:
-								<select name="counterAddonType" ng-model="counterAddonType" ng-options="product.type for product in products | filter:{distributor:counterAddonDistributor.distributor, manufacturer:counterAddonManufacturer.manufacturer} | unique: 'type' | orderBy:'type'">
+								<select name="counterAddonType" ng-model="counterAddonType" ng-options="product.type for product in products | filter:{distributor:counterAddonDistributor.distributor, manufacturer:counterAddonManufacturer.manufacturer, type:'!mandatory'} | unique: 'type' | orderBy:'type'">
 									<option value="">----Select----</option>
 								</select>
 							</div>

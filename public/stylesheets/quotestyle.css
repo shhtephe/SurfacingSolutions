@@ -14,7 +14,10 @@ table td, table th { border: 1px solid black; padding: 5px; }
 
 #header { height: 35px; width: 100%; margin: 20px 0; background: #222; text-align: center; color: white; font: bold 15px Helvetica, Sans-Serif; text-decoration: uppercase; letter-spacing: 20px; padding: 8px 0px; }
 
-#address { width: 250px; height: 150px; float: left; }
+#surfacingInfo { width: 250px; height: 25px; float: left; }
+#customerInfo { font-size: 15px; width: 250px; height: 150px; float: left; }
+#surfacingAddress { font-size: 15px; width: 400px; height: 150px; float: left; }
+
 #customer { overflow: hidden; }
 
 #logo { text-align: right; float: right; position: relative; margin-top: 25px; border: 1px solid #fff; max-width: 540px; max-height: 100px; overflow: hidden; }

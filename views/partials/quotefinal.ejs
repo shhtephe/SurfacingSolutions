@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<div ng-controller="finalQuoteCtrl" ng-init='customer=<%- JSON.stringify(customer) %>;quote=<%- JSON.stringify(quote) %>; products=<%- JSON.stringify(products) %>; materials=<%- JSON.stringify(materials) %>'>
+<div ng-controller="finalQuoteCtrl" ng-init='customer=<%- JSON.stringify(customer) %>;quote=<%- JSON.stringify(quote) %>;'>
 <!--{{quote.counters[0]}}
 <br>
 <br>
@@ -8,19 +8,13 @@
 <br>-->
 	<div id="page-wrap">
 
-		<textarea id="header">Final Quote</textarea
-}
-}
->		
-		<div id="identity">
-		
-            <textarea id="address">{{customer.lastName}}, {{customer.firstName}}
-{{customer.addressLine1}} {{customer.addressLine2}}
-{{customer.city}}, {{customer.province}} {{customer.postal}}
+		<textarea id="header">Final Quote</textarea>	
+		<div id="surfacingIdentity">
 
-Phone: {{customer.homePhone}}</textarea>
-
-            <div id="logo">
+			<textarea id="surfacingInfo">Surfacing Solutions 2010 Ltd.</textarea>
+			<br> <br>
+			<textarea id="surfacingAddress">34-160 Wilkinson Road &#13;Brampton, Ontario&#13;L6T 4Z4&#13;P: 905-874-1814 F: 905-874-8083&#13;Website: www.surfacingsolutions.ca&#13;Email: psmith45@bell.net</textarea>
+			<div id="logo">
 
               <div id="logoctr">
                 <a href="javascript:;" id="change-logo" title="Change logo">Change Logo</a>
@@ -36,14 +30,19 @@ Phone: {{customer.homePhone}}</textarea>
               </div>
               <img id="image" src="images/logo.png" alt="logo" />
             </div>
-		
 		</div>
+
 		
 		<div style="clear:both"></div>
 		
+		<textarea id="customer-title">{{customer.companyName}}</textarea>
+		<br> <br> <br> 
 		<div id="customer">
+            <textarea id="customerInfo">{{customer.lastName}}, {{customer.firstName}}
+{{customer.addressLine1}} {{customer.addressLine2}}
+{{customer.city}}, {{customer.province}} {{customer.postal}}
 
-            <textarea id="customer-title">{{customer.companyName}}</textarea>
+Phone: {{customer.homePhone}}</textarea>
 
             <table id="meta">
                 <tr>
@@ -55,10 +54,14 @@ Phone: {{customer.homePhone}}</textarea>
                     <td class="meta-head">Date</td>
                     <td><textarea id="date">{{quote.createdAt | limitTo: 10}}</textarea></td>
                 </tr>
-                <!--<tr>
-                    <td class="meta-head">Amount Due</td>
-                    <td><div class="due">$875.00</div></td>
-                </tr>-->
+                <tr>
+                    <td class="meta-head">P.O. No./ Job No.</td>
+                    <td><div class="due">Payment Terms</div></td>
+                </tr>
+                <tr>
+                    <td class="meta-head">63820</td>
+                    <td><div class="due">Net 30</div></td>
+                </tr>
 
             </table>
 		

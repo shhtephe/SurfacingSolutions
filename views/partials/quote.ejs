@@ -2,7 +2,7 @@
 <div class="jumbotron">
     <div class="container">
         <div class="col-xs-offset-2 col-xs-8">
-			<div ng-controller="quoteCtrl" ng-init='customer=<%- JSON.stringify(customer) %>;quote=<%- JSON.stringify(quote) %>; materials=<%- JSON.stringify(materials) %>; products=<%- JSON.stringify(products) %>; addCounter == false; divMandatory = false; divAddon = false;'>
+			<div ng-controller="quoteCtrl" ng-init='customer=<%- JSON.stringify(customer) %>;quote=<%- JSON.stringify(quote) %>; materials=<%- JSON.stringify(materials) %>; products=<%- JSON.stringify(products) %>; addCounter == false; divMandatory = false; divAddon = false; editCounter = false;'>
 				<form name="quoteForm">
 					<!--<br>
 					<br>
@@ -118,13 +118,104 @@
 						<br>
 						<u>Summary</u>: 
 				  		<br>
-				  		<br>Counter Shape: {{counter.counterShape}} 
-				  		<br>Counter Width: {{counter.counterWidth}}
-				  		<span ng-show="counter.counterShape==='rectangle'"><br>Counter Length: {{counter.counterLength}}</span>
-				      	<br>Counter Colour Group: {{counter.material.colourGroup}}
-				      	<br>Counter Material: {{counter.material.description}}
-				      	<br>Counter Price: {{counter.material.price | currency:$}}
-				      	<br><button type="button" ng-click="editCounter(quote, counterAddonDescription, $index)" class="btn btn-default">Edit this Counter</button>
+				  		<br>Counter Shape: 
+				  		<span ng-show="editCounter">
+				  			<input type="text" ng-model="counter.counterShape">
+				  		</span>
+				  		<span ng-hide="editCounter">
+				  			{{counter.counterShape}}
+				  		</span> 
+				  		<br>Counter Width: 
+				  		<span ng-show="editCounter">
+				  			<input type="text" ng-model="counter.counterWidth">
+				  		</span>
+				  		<span ng-hide="editCounter">
+				  			{{counter.counterWidth}}
+				  		</span> 
+				  		<span ng-show="counter.counterShape==='rectangle'">
+				  			<br>Counter Length:
+							<span ng-show="editCounter">
+				  				<input type="text" ng-model="counter.counterLength">
+				  			</span>
+				  			<span ng-hide="editCounter">
+				  				{{counter.counterLength}}
+				  			</span> 
+				  		</span>
+				  		<span ng-show="editCounter">
+				  				<input type="text" ng-model="counter.counterLength">
+				  			</span>
+				  			<span ng-hide="editCounter">
+				  				{{counter.counterLength}}
+			  			</span> 
+			  			<span ng-hide="editCounter">
+					      	<br>Counter Colour Group: {{counter.material.colourGroup}}
+					      	<br>Counter Material: {{counter.material.description}}
+					      	<br>Counter Price: {{counter.material.price | currency:$}}
+				      	</span>
+				      	<span ng-show="editCounter">
+							<br>
+							Choose a Distributor: <select name="materialDistributor" ng-model="materialDistributor" ng-options="material.distributor for material in materials | orderBy:'distributor' | unique: 'distributor'">
+							<option value="">----Select----</option>
+							</select>
+							<br>
+							<div ng-show="materialDistributor">
+								<br>
+								Choose a Manufacturer:
+								<select name="materialManufacturer" ng-model="materialManufacturer" ng-options="material.manufacturer for material in materials | filter:{distributor:materialDistributor.distributor} | unique: 'manufacturer' | orderBy:'manufacturer'">
+									<option value="">----Select----</option>
+								</select>
+							</div>
+							<div ng-show="materialDistributor && materialManufacturer">
+								<br>
+								Choose a Colour Group:
+								<select name="materialColourGroup" ng-model="materialColourGroup" ng-options="material.colourGroup for material in materials | filter:{distributor:materialDistributor.distributor, manufacturer:materialManufacturer.manufacturer} | unique: 'colourGroup' | orderBy:'colourGroup'">
+									<option value="">----Select----</option>
+								</select>
+							</div>
+							<div ng-show="materialDistributor && materialManufacturer && materialColourGroup">
+								<br>
+								Choose a Colour Description:
+								<select name="materialDescription" ng-model="materialDescription" ng-options="material.description for material in materials | filter:{distributor:materialDistributor.distributor, manufacturer:materialManufacturer.manufacturer, colourGroup:materialColourGroup.colourGroup} | unique: 'description' | orderBy:'description'">
+									<option value="">----Select----</option>
+								</select>
+							</div>
+							<div ng-show="materialDistributor && materialManufacturer && materialColourGroup && materialDescription">
+								<br>
+								<ul class="list-group"> 
+									<li class="list-group-item">	
+										Item Code: {{materialDescription.itemCode}} <br> 
+									</li>	
+									<li class="list-group-item">	
+										Thickness: {{materialDescription.thickness}} <br> 
+									</li>	
+									<li class="list-group-item">	
+										Width (In.): {{materialDescription.width}} <br> 
+									</li>				
+									<li class="list-group-item">	
+										Length (In.): {{materialDescription.length}} <br> 
+									</li>	
+									<li class="list-group-item">	
+										Full Sheet 1-5: {{materialDescription.fullSheet1}} <br> 
+									</li>	
+									<li class="list-group-item">	
+										Half Sheet: {{materialDescription.halfSheet}} <br> 
+									</li>
+									<li class="list-group-item">	
+										Full Sheet 5-20:{{materialDescription.fullSheet5}} <br> 
+									</li>
+									<li class="list-group-item">	
+										Full Sheet 21+: {{materialDescription.fullSheet21}} <br> 
+									</li>
+									<li class="list-group-item">	
+										ISA: {{materialDescription.isa}} <br> 
+									</li>
+									<li class="list-group-item">	
+										Collection: {{materialDescription.matCollection}} <br> 
+									</li>
+								</ul>
+							</div>	
+			      		</span>
+				      	<br><button type="button" ng-click="editCounter = true" class="btn btn-default">Edit this Counter</button>
 						<br>
 						<br><u>Selected Addons:</u> 
 						<br>
@@ -140,7 +231,7 @@
 						<div ng-show="divAddons">
 							<br>Addons: 
 							<br>Choose a Distributor:
-							<select name="counterAddonDistributor" ng-model="counterAddonDistributor" ng-options="product.distributor for product in products | filter:{category: '!mandatory'} | unique: 'distributor' track by product.distributor">
+							<select name="counterAddonDistributor" ng-model="counterAddonDistributor" ng-options="product.distributor for product in products | unique: 'distributor' track by product.distributor">
 								<option value="">----Select----</option>
 							</select>
 							<br>
@@ -154,10 +245,11 @@
 							<div ng-show="counterAddonDistributor && counterAddonManufacturer">
 								<br>
 								Choose a Product Type:
-								<select name="counterAddonType" ng-model="counterAddonType" ng-options="product.type for product in products | filter:{distributor:counterAddonDistributor.distributor, manufacturer:counterAddonManufacturer.manufacturer, type:'!mandatory'} | unique: 'type' | orderBy:'type'">
+								<select name="counterAddonType" ng-model="counterAddonType" ng-options="product.type for product in products | filter:{distributor:counterAddonDistributor.distributor, manufacturer:counterAddonManufacturer.manufacturer} | unique: 'type' | orderBy:'type'">
 									<option value="">----Select----</option>
 								</select>
 							</div>
+
 							<div ng-show="counterAddonDistributor && counterAddonManufacturer && counterAddonType">
 								<br>
 								Choose a Description:
@@ -195,7 +287,7 @@
 							<button type="button" ng-click="divAddons=false; counterAddonDistributor = ''" class="btn btn-danger">Cancel</button> 
 						</div>
 						<br>
-						<br><button type="button" ng-click="divMandatory = true; showMandatory($index)" ng-show="divMandatory == false">Add Mandatory Charges</button>
+						<!--<br><button type="button" ng-click="divMandatory = true; showMandatory($index)" ng-show="divMandatory == false">Add Mandatory Charges</button>
 						<div ng-show="divMandatory == true">
 							<br>Mandatory charges: 
 							<br> Choose a Type:
@@ -210,7 +302,7 @@
 							<br>{{charge.type}} - {{charge.price | currency:$}}/{{charge.unitOfMeasure}}
 							<br>Quantity: <input ng-change="mandatoryChargeChange(charge.material, charge.price, charge.quantity, quote, counter, $parent.$index, $index)" type="number" ng-model="charge.quantity"> Total: {{charge.totalPrice |currency:$}}
 							<br><br> <button type="button" ng-click="divMandatory = false" class="btn btn-danger">Cancel</button>
-						</div>
+						</div>-->
 				      	<br>
 				      	<br><hr style="background:#000000; border:0; height:7px" />
 				      	<span style="float: left;">Counter Subtotal: {{counter.totalPrice |currency:$}}</span><span style="float: right;"><button type="button" style="btn" ng-click="saveQuote(quote, quote.description)">Update/Save Quote</button></span>

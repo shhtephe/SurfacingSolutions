@@ -120,7 +120,11 @@
 				  		<br>
 				  		<br>Counter Shape: 
 				  		<span ng-show="editCounter">
-				  			<input type="text" ng-model="counter.counterShape">
+				  			<select name="shape" ng-model="counter.counterShape" convert-to-number id="shape">
+								<option value="" selected='selected'>----Select----</option>
+								<option  value="rectangle">Rectangle</option>
+								<option value="circle">Circle (use radius)</option>
+							</select>
 				  		</span>
 				  		<span ng-hide="editCounter">
 				  			{{counter.counterShape}}
@@ -141,27 +145,23 @@
 				  				{{counter.counterLength}}
 				  			</span> 
 				  		</span>
-				  		<span ng-show="editCounter">
-				  				<input type="text" ng-model="counter.counterLength">
-				  			</span>
-				  			<span ng-hide="editCounter">
-				  				{{counter.counterLength}}
-			  			</span> 
 			  			<span ng-hide="editCounter">
 					      	<br>Counter Colour Group: {{counter.material.colourGroup}}
 					      	<br>Counter Material: {{counter.material.description}}
 					      	<br>Counter Price: {{counter.material.price | currency:$}}
 				      	</span>
+				      	<!--<br> {{counter.material | json}} <br>-->
 				      	<span ng-show="editCounter">
 							<br>
-							Choose a Distributor: <select name="materialDistributor" ng-model="materialDistributor" ng-options="material.distributor for material in materials | orderBy:'distributor' | unique: 'distributor'">
+							Choose a Distributor: 
+							<select name="materialDistributor" ng-model="counter.material.distributor" ng-options="material as material.distributor for material in materials | orderBy:'distributor' | unique: 'distributor'">
 							<option value="">----Select----</option>
 							</select>
 							<br>
-							<div ng-show="materialDistributor">
+							<div ng-show="counter.material.distributor">
 								<br>
 								Choose a Manufacturer:
-								<select name="materialManufacturer" ng-model="materialManufacturer" ng-options="material.manufacturer for material in materials | filter:{distributor:materialDistributor.distributor} | unique: 'manufacturer' | orderBy:'manufacturer'">
+								<select name="materialManufacturer" ng-model="counter.material.manufacturer" ng-options="material.manufacturer for material in materials | filter:{distributor:counter.material.distributor} | unique: 'manufacturer' | orderBy:'manufacturer'">
 									<option value="">----Select----</option>
 								</select>
 							</div>
@@ -215,7 +215,7 @@
 								</ul>
 							</div>	
 			      		</span>
-				      	<br><button type="button" ng-click="editCounter = true" class="btn btn-default">Edit this Counter</button>
+				      	<br><button type="button" ng-click="editCounter = true; $scope.counter.material.distributor = $scope.counter.material[0]" ng-hide="editCounter" class="btn btn-default">Edit this Counter</button>
 						<br>
 						<br><u>Selected Addons:</u> 
 						<br>

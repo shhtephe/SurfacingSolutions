@@ -104,7 +104,9 @@
 					<br>
 					<div ng-show="addCounter == true">
 						<button type="button" style="btn" ng-click="hideCounter()">Cancel</button>
-						<span ng-show="materialDistributor && materialManufacturer && materialColourGroup && materialDescription"><button type="button" style="btn" ng-click="saveCounter(quote, counterWidth, counterLength, shape, materialDescription, materials)">Save Table</button></span>
+						<span ng-show="materialDistributor && materialManufacturer && materialColourGroup && materialDescription">
+							<button type="button" style="btn" ng-click="saveCounter(quote, counterWidth, counterLength, shape, materialDescription, materials)">Save Table</button>
+						</span>
 					</div>
 					<div ng-hide="addCounter == true">
 						<button type="button" style="btn" ng-click="showCounter()">Add a Counter</button>
@@ -116,59 +118,69 @@
 						Counter Description:
 						<br><textarea rows="4" columns="150" ng-model="counter.description"></textarea>
 						<br>
-						<u>Summary</u>: 
-				  		<br>
-				  		<br>Counter Shape: 
-				  		<span ng-show="editCounter">
-				  			<select name="shape" ng-model="counter.counterShape" convert-to-number id="shape">
-								<option value="" selected='selected'>----Select----</option>
-								<option  value="rectangle">Rectangle</option>
-								<option value="circle">Circle (use radius)</option>
-							</select>
-				  		</span>
-				  		<span ng-hide="editCounter">
-				  			{{counter.counterShape}}
-				  		</span> 
-				  		<br>Counter Width: 
-				  		<span ng-show="editCounter">
-				  			<input type="text" ng-model="counter.counterWidth">
-				  		</span>
-				  		<span ng-hide="editCounter">
-				  			{{counter.counterWidth}}
-				  		</span> 
-				  		<span ng-show="counter.counterShape==='rectangle'">
-				  			<br>Counter Length:
-							<span ng-show="editCounter">
-				  				<input type="text" ng-model="counter.counterLength">
-				  			</span>
-				  			<span ng-hide="editCounter">
-				  				{{counter.counterLength}}
-				  			</span> 
-				  		</span>
-			  			<span ng-hide="editCounter">
-					      	<br>Counter Colour Group: {{counter.material.colourGroup}}
-					      	<br>Counter Material: {{counter.material.description}}
-					      	<br>Counter Price: {{counter.material.price | currency:$}}
-				      	</span>
+				  		<table class="table table-hover table-bordered">
+				  			<caption><u>Summary</u></caption>
+				  			<tbody>
+					  			<tr>
+					  				<td>
+					  					Shape: 
+								  		<span ng-show="editCounter">
+								  			<select name="shape" ng-model="counter.counterShape" convert-to-number id="shape">
+												<option value="" selected='selected'>----Select----</option>
+												<option  value="rectangle">Rectangle</option>
+												<option value="circle">Circle (use radius)</option>
+											</select>
+								  		</span>
+								  		<span ng-hide="editCounter">
+						  					{{counter.counterShape}}
+					  					</span>
+				  						<br>Width: 
+					  					<span ng-show="editCounter">
+						  					<input type="text" ng-model="counter.counterWidth">
+						  				</span>
+						  				<span ng-hide="editCounter">
+						  					{{counter.counterWidth}}
+						  				</span> 
+										<span ng-show="counter.counterShape==='rectangle'">
+						  					<br>Length:
+											<span ng-show="editCounter">
+								  				<input type="text" ng-model="counter.counterLength">
+						  					</span>
+							  				<span ng-hide="editCounter">
+							  				{{counter.counterLength}}
+						  					</span> 
+						  				</span>
+						  			</td>	
+					  				<span ng-hide="editCounter">
+								      	<td>
+							      			Distributor: {{counter.material.distributor}}
+							      			<br>Manufacturer: {{counter.material.manufacturer}}
+							      			<br>Colour Group: {{counter.material.colourGroup}}
+								      		<br>Material: {{counter.material.description}}
+								      		<br>Price: {{counter.material.price | currency:$}}
+								      	</td>
+					      			</span>
+						  		</tr>
+					  		</tbody>
+				    	</table>
 				      	<!--<br> {{counter.material | json}} <br>-->
 				      	<span ng-show="editCounter">
-							<br>
 							Choose a Distributor: 
-							<select name="materialDistributor" ng-model="counter.material.distributor" ng-options="material as material.distributor for material in materials | orderBy:'distributor' | unique: 'distributor'">
+							<select name="materialDistributor" ng-model="materialDistributor" ng-options="material as material.distributor for material in materials | orderBy:'distributor' | unique: 'distributor'">
 							<option value="">----Select----</option>
 							</select>
 							<br>
-							<div ng-show="counter.material.distributor">
+							<div ng-show="materialDistributor">
 								<br>
 								Choose a Manufacturer:
-								<select name="materialManufacturer" ng-model="counter.material.manufacturer" ng-options="material.manufacturer for material in materials | filter:{distributor:counter.material.distributor} | unique: 'manufacturer' | orderBy:'manufacturer'">
+								<select name="materialManufacturer" ng-model="materialManufacturer" ng-options="material.manufacturer for material in materials | filter: {distributor: materialDistributor.distributor} | unique: 'manufacturer' | orderBy:'manufacturer'">
 									<option value="">----Select----</option>
 								</select>
 							</div>
 							<div ng-show="materialDistributor && materialManufacturer">
 								<br>
 								Choose a Colour Group:
-								<select name="materialColourGroup" ng-model="materialColourGroup" ng-options="material.colourGroup for material in materials | filter:{distributor:materialDistributor.distributor, manufacturer:materialManufacturer.manufacturer} | unique: 'colourGroup' | orderBy:'colourGroup'">
+								<select name="materialColourGroup" ng-model="materialColourGroup" ng-options="material.colourGroup for material in materials | filter:{distributor:materialDistributor.distributor, manufacturer: materialManufacturer.manufacturer} | unique: 'colourGroup' | orderBy:'colourGroup'">
 									<option value="">----Select----</option>
 								</select>
 							</div>
@@ -213,7 +225,11 @@
 										Collection: {{materialDescription.matCollection}} <br> 
 									</li>
 								</ul>
+								{{materialDescription | json}}
+								<button type="button" ng-click="saveCounter(quote, counter.counterWidth, counter.counterLength, counter.counterShape, materialDescription, products, $index)" ng-show="editCounter" class="btn btn-default">Save Edit</button>
+								<br>
 							</div>	
+							<button type="button" ng-click="editCounter = false; $scope.counter.mmaterialDistributor = ''" ng-show="editCounter" class="btn btn-danger">Cancel</button>
 			      		</span>
 				      	<br><button type="button" ng-click="editCounter = true; $scope.counter.material.distributor = $scope.counter.material[0]" ng-hide="editCounter" class="btn btn-default">Edit this Counter</button>
 						<br>

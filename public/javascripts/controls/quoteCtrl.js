@@ -162,7 +162,7 @@ app.controller('quoteCtrl',
 		var pushMandatoryDropDown = {};
 
 		//Makes doing math later down easier.
-		if($scope.shape == "circle"){
+		if(shape === "circle"){
 			length = width;
 		};
 
@@ -230,10 +230,9 @@ app.controller('quoteCtrl',
 		if(shape === "rectangle"){
 			squareFootage = length * width;
 		} else if(shape === "circle"){
-			squareFootage = (width*width) * Math.PI;
+			squareFootage = (length*width) * Math.PI;
 			squareFootage = squareFootage.toFixed(2);
 		};
-
 		//console.log(squareFootage, length, width);
 
 //Calculate how many sheets are needed. Will need to revamp this: check width and length of sheets as well as square footage
@@ -242,7 +241,7 @@ app.controller('quoteCtrl',
 		//console.log("Sheets: " + sheets);
 		//console.log(material);
 //for edit, remember last price and 
-console.log(material)		;
+//console.log(material);
 //Chooses the best match for pricing. Will need to make this user selectable later.
 		if(sheets <=.5 && material.halfSheet){
 		console.log("This ran 1", sheets, material.halfSheet);
@@ -275,17 +274,15 @@ console.log(material)		;
 		}
 		else{
 //Replace the existing addons into the new array :)
-
-			quote.counters[index].totalPrice = 0;
 			for (var i = quote.counters[index].addons.length - 1; i >= 0; i--) {
 				pushObj.addons.push(quote.counters[index].addons[i]);6
 				pushObj.totalPrice += quote.counters[index].addons[i].totalPrice;
 			};
 //Replace counter total.
 			pushObj.material.price = counterPrice;
-			pushObj.totalPrice =+ counterPrice;
-//Add Quote total with new counter price.
-console.log(pushObj.totalPrice, counterPrice);			
+			pushObj.totalPrice += counterPrice;
+//Add Quote total with new counter price but first replace old price.		
+			quote.totalPrice -= quote.counters[index].totalPrice;
 			quote.totalPrice += pushObj.totalPrice;
 //replace the counter object with the edited one.
 			quote.counters.splice(index, 1, pushObj);

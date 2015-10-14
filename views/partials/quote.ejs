@@ -227,7 +227,7 @@
 								</ul>
 								<!--{{materialDescription | json}}-->
 								<button type="button" ng-click="saveCounter(quote, counter.counterWidth, counter.counterLength, counter.counterShape, materialDescription, products, $index)" ng-show="editCounter" class="btn btn-default">Save Edit</button>
-								<br>
+								<br> <br>
 							</div>	
 							<button type="button" ng-click="editCounter = false; $scope.counter.mmaterialDistributor = ''" ng-show="editCounter" class="btn btn-danger">Cancel</button>
 			      		</span>
@@ -298,7 +298,7 @@
 
 									
 								</ul>
-							    <button type="button" ng-click="saveAddon(quote, counterAddonDescription, $index)" class="btn btn-default">Add</button>
+							    <button type="button" ng-click="saveAddon(quote, counterAddonDescription, $index); editCounter = false;" class="btn btn-default">Add</button>
 							</div>
 							<button type="button" ng-click="divAddons=false; counterAddonDistributor = ''" class="btn btn-danger">Cancel</button> 
 						</div>
@@ -338,6 +338,7 @@
 				<br>
 				<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
 				<br><br><br>
+				<!--<pre>{{quote | json}}</pre>-->
 			</div>
         </div>
     </div>

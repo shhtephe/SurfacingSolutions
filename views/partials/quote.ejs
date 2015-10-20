@@ -215,7 +215,8 @@
 								</ul>
 							</div>	
 			      		</span>
-				      	<br><button type="button" ng-click="editCounter = true; $scope.counter.material.distributor = $scope.counter.material[0]" ng-hide="editCounter" class="btn btn-default">Edit this Counter</button>
+			      		<span ng-show="editCounter"><button ng-click="editCounter = false" class="btn btn-danger">Cancel</button></span>
+				      	<br><button type="button" ng-click="editCounter = true" ng-hide="editCounter" class="btn btn-default">Edit this Counter</button>
 						<br>
 						<br><u>Selected Addons:</u> 
 						<br>

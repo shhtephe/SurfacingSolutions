@@ -87,8 +87,8 @@ function($stateProvider, $urlRouterProvider, $locationProvider) {
       controller: 'customersCtrl'
   })
   .state('newCustomer', {
-      url: '/newcustomer',
-      templateUrl: '/newcustomer',
+      url: '/customers/create',
+      templateUrl: '/customers/create',
             data: {
         requireLogin: true
       },

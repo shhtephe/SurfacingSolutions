@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<div class="jumbotron">
+    <div class="container">
+        <div class="col-xs-offset-2 col-xs-8">
+			<div ng-controller="newCustomerCtrl" ng-init="save = <%if (save) {%><%= save %><%}else{%><%= false %><%}%>">
+				<form method="post">
+					New Customer: <br>	
+					First name <br> <input type='text' id="firstName" name='firstName' required value="{{input.firstName}}"><br>
+					Last name <br> <input type='text' id="lastName" name='lastName'required value="{{input.lastName}}"><br>
+					Company <br> <input type='text'  id="companyName" name='companyName' required value="{{input.companyName}}"><br>
+					Email Address <br> <input type='email' id="email" name='email' required value="{{input.email}}"><br>
+					Address <br> <input type='text' id="addressLine1" name='addressLine1' required value="{{input.addressLine1}}"><br>
+					Address Line 2 <br> <input type='text' id="addressLine2" name='addressLine2' required value="{{input.addressLine2}}"><br>
+					City <br> <input type='text' id="city" name='city' required value="{{input.city}}"><br>					
+					Province/State <br> <input type='text' id="province" name='province' required value="{{input.province}}"><br>
+					Postal Code <br> <input type='text' id="postal" name='postal' required value="{{input.postal}}"><br>
+					Home Phone <br> <input type='text' id="homePhone" name='homePhone' required value="{{input.homePhone}}"><br>
+					Cellphone <br> <input type='text' id="mobilePhone" name='mobilePhone' required value="{{input.mobilePhone}}"><br>
+					<!--<button type="button" style='btn' ng-click= "newCustomer(
+						firstName,
+						lastName,
+						companyName,
+						email,
+						addressLine1,
+						addressLine2,
+						city,
+						postal,
+						province,
+						homePhone,
+						mobilePhone
+					)">Create new Customer</button>
+					<div class="form-submit">-->
+				<div>
+					<input type="submit" value="Create New Customer" />
+				</div>
+				</form>
+				<div ng-show="save">{{save}}</div>
+				<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+			</div>
+        </div>
+    </div>
+</div>

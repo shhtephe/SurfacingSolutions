@@ -10,13 +10,13 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
+var customers = require('./routes/customers');
 
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.set('view engine', 'hbs');
 
 app.set('port', process.env.PORT || 3000);
 
@@ -24,7 +24,7 @@ app.set('port', process.env.PORT || 3000);
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json({limit:'50mb'}));
-app.use(bodyParser.urlencoded({limit:'50mb', extended: true }));
+app.use(bodyParser.urlencoded({limit:'50mb', extended: false }));
 app.use(cookieParser());
 app.use(require('express-session')({
     secret: 'Super Secret Session',
@@ -36,6 +36,7 @@ app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
+app.use('/customers', customers);
 
 // passport config
 var Account = require('./models/account');

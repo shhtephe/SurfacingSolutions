@@ -21,6 +21,7 @@ router.get('/create', function(req, res, next) {
 module.exports = router;
 
 router.post('/create', function(req, res) {
+  console.log("This has ran correctly :)");
   /*var highCode=0;
   //find customer with highest id and make new one with increment of one
   highCode = mongoose.model("customers").findOne().sort({custCode : "desc"}).exec(function(err, customer){
@@ -84,5 +85,5 @@ router.post('/create', function(req, res) {
   });
   res.render('partials/newcustomer', {
     save: "User has been created!"
-  });
+  });*/
 });

@@ -32,11 +32,12 @@
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel='stylesheet' href='/stylesheets/style.css'/>
   </head>
-  <body ng-app="surfacingSolutions"  ng-init="currentUser = <%if (user) {%><%= true %><%}else{%><%= false %><%}%>">
+  <!--put this in ng-init: currentUser = <%if (user) {%><%= true %><%}else{%><%= false %><%}%> -->
+  <body ng-app="surfacingSolutions"  ng-init="">
   <div class="header">
-    <%if (user) { %>
+    <!--<%if (user) { %>
       Welcome, <%= user.username %>!
-    <%} %>
+    <%} %>-->
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">

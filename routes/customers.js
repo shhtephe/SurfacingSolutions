@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 
-//var config = require('../config');
 
 /* GET customers listing. */
 router.get('/', function(req, res, next) {
@@ -12,6 +11,7 @@ router.get('/', function(req, res, next) {
 
 // GET /customer/create
 router.get('/create', function(req, res, next) {
+  console.log("this has been a successs");
   var vm = {
     title:'Add a customer'
   };
@@ -20,7 +20,7 @@ router.get('/create', function(req, res, next) {
 
 module.exports = router;
 
-router.post('/create', function(req, res) {
+router.post('/create', function(req, res, next) {
   console.log("This has ran correctly :)");
   /*var highCode=0;
   //find customer with highest id and make new one with increment of one

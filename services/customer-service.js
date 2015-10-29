@@ -1,0 +1,1 @@
+var customers = require('../models/customers');

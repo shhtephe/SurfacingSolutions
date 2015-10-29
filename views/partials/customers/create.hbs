@@ -3,7 +3,7 @@
     <div class="container">
         <div class="col-xs-offset-2 col-xs-8">
 			<div ng-controller="newCustomerCtrl">
-				<form method="post">
+				<form method="post" id="createCustomerForm" name="createCustomerForm">
 					New Customer: <br>	
 					First name <br> <input type='text' id="firstName" name='firstName' required value="{{input.firstName}}"><br>
 					Last name <br> <input type='text' id="lastName" name='lastName'required value="{{input.lastName}}"><br>
@@ -30,9 +30,7 @@
 						mobilePhone
 					)">Create new Customer</button>
 					<div class="form-submit">-->
-				<div>
 					<input type="submit" value="Create New Customer" />
-				</div>
 				</form>
 				<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
 			</div>

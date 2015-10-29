@@ -233,9 +233,10 @@ router.get('/admin', function(req, res, next) {
   });
 });
 
-router.get('/newcustomer', function(req, res, next) {
-  res.render('partials/newcustomer', { save: false });
-});
+//Making this modular so it can go inside customers.js route
+/*router.get('/customers/create', function(req, res, next) {
+  res.render('partials/customers/create', { save: false });
+});*/
 
 router.post('/newcustomer', function(req, res) {
   var highCode=0;

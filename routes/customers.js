@@ -18,7 +18,6 @@ router.get('/create', function(req, res, next) {
 });
 
 router.post('/create', function(req, res, next) {
-  console.log("Customer post worked");
   customerService.createCustomer(req.body, function(err){
     if (err) {
       var vm = {
@@ -28,8 +27,8 @@ router.post('/create', function(req, res, next) {
       };
       return res.render('partials/customers/create', vm);
     };
-    res.json(vm);
-  }); 
+    res.render('partials/customers');
+  });
 });
 
 module.exports = router;

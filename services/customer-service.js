@@ -2,18 +2,16 @@ var Customer = require('../models/customers').Customer;
 var mongoose = require('mongoose');
 
 exports.createCustomer = function(customer, next){
-	highCode = mongoose.model("Customer").findOne().sort({custCode : "desc"}).exec(function(err, customer){
+  console.log(customer);
+	highCode = mongoose.model("Customer").findOne().sort({custCode : "desc"}).exec(function(err, oldCustomer){
     console.log("Latest Customer:");
-    console.log(typeof customer);
-    console.log(customer);
+    console.log(oldCustomer);
 
-    if (customer == null) {
+    if (oldCustomer == null) {
       highCode = 1;
     } else {
-      highCode = customer.custCode + 1;
-      console.log("Customer code:" + customer.custCode); 
+      highCode = oldCustomer.custCode + 1;
     }
-    console.log(customer.companyName);
     console.log("New Customer number: " + highCode);  
     
 	var newCustomer = new Customer({
@@ -30,7 +28,7 @@ exports.createCustomer = function(customer, next){
       	mobilePhone: customer.mobilePhone,
       	custCode: highCode
 	});
-
+  console.log(newCustomer);
     newCustomer.save(function (err) {
       if (err) {
         return next(err);

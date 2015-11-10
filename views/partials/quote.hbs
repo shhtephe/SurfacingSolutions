@@ -2,21 +2,22 @@
 <div class="jumbotron">
     <div class="container">
         <div class="col-xs-offset-2 col-xs-8">
-			<div ng-controller="quoteCtrl" ng-init='customer=<%- JSON.stringify(customer) %>;quote=<%- JSON.stringify(quote) %>; materials=<%- JSON.stringify(materials) %>; products=<%- JSON.stringify(products) %>; addCounter == false; divMandatory = false; divAddon = false; editCounter = false;'>
+			<div ng-controller="quoteCtrl" ng-init='addCounter == false; divMandatory = false; divAddon = false; editCounter = false;'>
+			<!-- customer=<%- JSON.stringify(customer) %>;quote=<%- JSON.stringify(quote) %>; materials=<%- JSON.stringify(materials) %>; products=<%- JSON.stringify(products) %>; -->
 				<form name="quoteForm">
 					<!--<br>
 					<br>
-					{{products[30]}}
+					{/products[30]/}
 					<br>
 					<br>-->
 
-					Customer: {{customer.lastName}}, {{customer.firstName}}
-					<br>QuoteID: {{quote.quoteID}}
+					Customer: {/vm.customer.lastName/}, {/vm.customer.firstName/}
+					<br>QuoteID: {/vm.quote.quoteID/}
 					<br>
 					<br>
 				Quote Description:
 					<br>
-					<textarea rows="4" columns="150" ng-model="quote.description"></textarea>
+					<textarea rows="4" columns="150" ng-model="vm.quote.description"></textarea>
 					<br>
 					<div ng-show="addCounter == true">
 						<ng-form name="addCounterForm">
@@ -67,34 +68,34 @@
 									<br>
 									<ul class="list-group"> 
 										<li class="list-group-item">	
-											Item Code: {{materialDescription.itemCode}} <br> 
+											Item Code: {/materialDescription.itemCode/} <br> 
 										</li>	
 										<li class="list-group-item">	
-											Thickness: {{materialDescription.thickness}} <br> 
+											Thickness: {/materialDescription.thickness/} <br> 
 										</li>	
 										<li class="list-group-item">	
-											Width (In.): {{materialDescription.width}} <br> 
+											Width (In.): {/materialDescription.width/} <br> 
 										</li>				
 										<li class="list-group-item">	
-											Length (In.): {{materialDescription.length}} <br> 
+											Length (In.): {/materialDescription.length/} <br> 
 										</li>	
 										<li class="list-group-item">	
-											Full Sheet 1-5: {{materialDescription.fullSheet1}} <br> 
+											Full Sheet 1-5: {/materialDescription.fullSheet1/} <br> 
 										</li>	
 										<li class="list-group-item">	
-											Half Sheet: {{materialDescription.halfSheet}} <br> 
+											Half Sheet: {/materialDescription.halfSheet/} <br> 
 										</li>
 										<li class="list-group-item">	
-											Full Sheet 5-20:{{materialDescription.fullSheet5}} <br> 
+											Full Sheet 5-20:{/materialDescription.fullSheet5/} <br> 
 										</li>
 										<li class="list-group-item">	
-											Full Sheet 21+: {{materialDescription.fullSheet21}} <br> 
+											Full Sheet 21+: {/materialDescription.fullSheet21/} <br> 
 										</li>
 										<li class="list-group-item">	
-											ISA: {{materialDescription.isa}} <br> 
+											ISA: {/materialDescription.isa/} <br> 
 										</li>
 										<li class="list-group-item">	
-											Collection: {{materialDescription.matCollection}} <br> 
+											Collection: {/materialDescription.matCollection/} <br> 
 										</li>
 									</ul>
 								</div>
@@ -112,8 +113,8 @@
 						<button type="button" style="btn" ng-click="showCounter()">Add a Counter</button>
 					</div>
 					<br><br>
-					<div ng-repeat="counter in quote.counters track by $index">
-				  		<u>Counter {{$index + 1}}</u> <button type="button" style="btn btn-danger" ng-click="deleteCounter(quote, $index)">DELETE THIS COUNTER</button>
+					<div ng-repeat="counter in vm.quote.counters track by $index">
+				  		<u>Counter {/$index + 1/}</u> <button type="button" style="btn btn-danger" ng-click="deleteCounter(quote, $index)">DELETE THIS COUNTER</button>
 						<br><br>
 						Counter Description:
 						<br><textarea rows="4" columns="150" ng-model="counter.description"></textarea>
@@ -132,14 +133,14 @@
 											</select>
 								  		</span>
 								  		<span ng-hide="editCounter">
-						  					{{counter.counterShape}}
+						  					{/counter.counterShape/}
 					  					</span>
 				  						<br>Width: 
 					  					<span ng-show="editCounter">
 						  					<input type="text" ng-model="counter.counterWidth">
 						  				</span>
 						  				<span ng-hide="editCounter">
-						  					{{counter.counterWidth}}
+						  					{/counter.counterWidth/}
 						  				</span> 
 										<span ng-show="counter.counterShape==='rectangle'">
 						  					<br>Length:
@@ -147,23 +148,23 @@
 								  				<input type="text" ng-model="counter.counterLength">
 						  					</span>
 							  				<span ng-hide="editCounter">
-							  				{{counter.counterLength}}
+							  				{/counter.counterLength/}
 						  					</span> 
 						  				</span>
 						  			</td>	
 					  				<span ng-hide="editCounter">
 								      	<td>
-							      			Distributor: {{counter.material.distributor}}
-							      			<br>Manufacturer: {{counter.material.manufacturer}}
-							      			<br>Colour Group: {{counter.material.colourGroup}}
-								      		<br>Material: {{counter.material.description}}
-								      		<br>Price: {{counter.material.price | currency:$}}
+							      			Distributor: {/counter.material.distributor/}
+							      			<br>Manufacturer: {/counter.material.manufacturer/}
+							      			<br>Colour Group: {/counter.material.colourGroup/}
+								      		<br>Material: {/counter.material.description/}
+								      		<br>Price: {/counter.material.price | currency:$/}
 								      	</td>
 					      			</span>
 						  		</tr>
 					  		</tbody>
 				    	</table>
-				      	<!--<br> {{counter.material | json}} <br>-->
+				      	<!--<br> {/counter.material | json/} <br>-->
 				      	<span ng-show="editCounter">
 							Choose a Distributor: 
 							<select name="materialDistributor" ng-model="materialDistributor" ng-options="material as material.distributor for material in materials | orderBy:'distributor' | unique: 'distributor'">
@@ -195,52 +196,52 @@
 								<br>
 								<ul class="list-group"> 
 									<li class="list-group-item">	
-										Item Code: {{materialDescription.itemCode}} <br> 
+										Item Code: {/materialDescription.itemCode/} <br> 
 									</li>	
 									<li class="list-group-item">	
-										Thickness: {{materialDescription.thickness}} <br> 
+										Thickness: {/materialDescription.thickness/} <br> 
 									</li>	
 									<li class="list-group-item">	
-										Width (In.): {{materialDescription.width}} <br> 
+										Width (In.): {/materialDescription.width/} <br> 
 									</li>				
 									<li class="list-group-item">	
-										Length (In.): {{materialDescription.length}} <br> 
+										Length (In.): {/materialDescription.length/} <br> 
 									</li>	
 									<li class="list-group-item">	
-										Full Sheet 1-5: {{materialDescription.fullSheet1}} <br> 
+										Full Sheet 1-5: {/materialDescription.fullSheet1/} <br> 
 									</li>	
 									<li class="list-group-item">	
-										Half Sheet: {{materialDescription.halfSheet}} <br> 
+										Half Sheet: {/materialDescription.halfSheet/} <br> 
 									</li>
 									<li class="list-group-item">	
-										Full Sheet 5-20:{{materialDescription.fullSheet5}} <br> 
+										Full Sheet 5-20:{/materialDescription.fullSheet5/} <br> 
 									</li>
 									<li class="list-group-item">	
-										Full Sheet 21+: {{materialDescription.fullSheet21}} <br> 
+										Full Sheet 21+: {/materialDescription.fullSheet21/} <br> 
 									</li>
 									<li class="list-group-item">	
-										ISA: {{materialDescription.isa}} <br> 
+										ISA: {/materialDescription.isa/} <br> 
 									</li>
 									<li class="list-group-item">	
-										Collection: {{materialDescription.matCollection}} <br> 
+										Collection: {/materialDescription.matCollection/} <br> 
 									</li>
 								</ul>
-								<!--{{materialDescription | json}}-->
+								<!--{/materialDescription | json/}-->
 								<button type="button" ng-click="saveCounter(quote, counter.counterWidth, counter.counterLength, counter.counterShape, materialDescription, products, $index)" ng-show="editCounter" class="btn btn-default">Save Edit</button>
 								<br> <br>
 							</div>	
 							<button type="button" ng-click="editCounter = false; $scope.counter.mmaterialDistributor = ''" ng-show="editCounter" class="btn btn-danger">Cancel</button>
 			      		</span>
-			      		<span ng-show="editCounter"><button ng-click="editCounter = false" class="btn btn-danger">Cancel</button></span>
+			      		<span ng-show="editCounter"><button ng-click="editCounter = false" class="btn btn-danger">Save</button></span>
 				      	<br><button type="button" ng-click="editCounter = true" ng-hide="editCounter" class="btn btn-default">Edit this Counter</button>
 						<br>
 						<br><u>Selected Addons:</u> 
 						<br>
 						<div ng-repeat="addon in counter.addons track by $index">
-							<br>{{addon.productType}} - {{addon.description}} : 
-							<span ng-show="addon.formula =='item' || addon.formula == 'linear'">{{addon.quantity}}</span>
-							<span ng-show="addon.formula =='square'">{{counter.counterWidth * counter.counterLength}}</span>
-							@{{addon.price | currency:$}} <a ng-click="removeAddon(addon, $parent.$index, $index, quote)">remove</a>
+							<br>{/addon.productType/} - {/addon.description/} : 
+							<span ng-show="addon.formula =='item' || addon.formula == 'linear'">{/addon.quantity/}</span>
+							<span ng-show="addon.formula =='square'">{/counter.counterWidth * counter.counterLength/}</span>
+							@{/addon.price | currency:$/} <a ng-click="removeAddon(addon, $parent.$index, $index, quote)">remove</a>
 						</div>
 						----------
 						<br>
@@ -278,23 +279,23 @@
 								<br>
 								<ul class="list-group"> 
 									<li class="list-group-item">	
-										Item Code: {{counterAddonDescription.itemCode}}<br> 
+										Item Code: {/counterAddonDescription.itemCode/}<br> 
 									</li>	
 									<li class="list-group-item">	
 										Price /<span ng-show="counterAddonDescription.formula=='item'">Item</span>
 										<span ng-show="counterAddonDescription.formula=='square'">Square Foot</span>
-										<span ng-show="counterAddonDescription.formula=='linear'">Linear Foot</span>: {{counterAddonDescription.price}}<br> 
+										<span ng-show="counterAddonDescription.formula=='linear'">Linear Foot</span>: {/counterAddonDescription.price/}<br> 
 									</li>	
 									<li class="list-group-item">	
-										Formula: {{counterAddonDescription.formula}}
+										Formula: {/counterAddonDescription.formula/}
 									</li>
 									<li ng-show="counterAddonDescription.formula=='item'" class="list-group-item">	
 										Quantity: <input type="text" ng-model="counterAddonDescription.quantity">
 										<br>
 									</li>
 									<li ng-show="counterAddonDescription.formula=='square'" class="list-group-item">
-										Square Footage: {{counter.counterWidth * counter.counterLength}} 
-										<br>Price: {{counter.counterWidth * counter.counterLength * counterAddonDescription.price}}
+										Square Footage: {/counter.counterWidth * counter.counterLength/} 
+										<br>Price: {/counter.counterWidth * counter.counterLength * counterAddonDescription.price/}
 									</li>
 
 									
@@ -316,30 +317,30 @@
 								<option value="">----Select----</option>
 								</select>
 							</div>
-							<br>{{charge.type}} - {{charge.price | currency:$}}/{{charge.unitOfMeasure}}
-							<br>Quantity: <input ng-change="mandatoryChargeChange(charge.material, charge.price, charge.quantity, quote, counter, $parent.$index, $index)" type="number" ng-model="charge.quantity"> Total: {{charge.totalPrice |currency:$}}
+							<br>{/charge.type/} - {/charge.price | currency:$/}/{/charge.unitOfMeasure/}
+							<br>Quantity: <input ng-change="mandatoryChargeChange(charge.material, charge.price, charge.quantity, quote, counter, $parent.$index, $index)" type="number" ng-model="charge.quantity"> Total: {/charge.totalPrice |currency:$/}
 							<br><br> <button type="button" ng-click="divMandatory = false" class="btn btn-danger">Cancel</button>
 						</div>-->
 				      	<br>
 				      	<br><hr style="background:#000000; border:0; height:7px" />
-				      	<span style="float: left;">Counter Subtotal: {{counter.totalPrice |currency:$}}</span><span style="float: right;"><button type="button" style="btn" ng-click="saveQuote(quote, quote.description)">Update/Save Quote</button></span>
+				      	<span style="float: left;">Counter Subtotal: {/counter.totalPrice |currency:$/}</span><span style="float: right;"><button type="button" style="btn" ng-click="saveQuote(quote, vm.quote.description)">Update/Save Quote</button></span>
 				      	<br>
-				      	<!--<br>counter Thickness: {{counter.counterThickness1}}
-				      	<br>counter Thickness 2: {{counter.counterThickness1}}-->
+				      	<!--<br>counter Thickness: {/counter.counterThickness1/}
+				      	<br>counter Thickness 2: {/counter.counterThickness1/}-->
 				      	<hr style="background:#FFFFFF; border:0; height:7px" />
 					</div>
 
 
-					<br>Job Difficulty: <input type="number" ng-model="quote.jobDifficulty" name="quote.jobDifficulty"><br>
-					<span style="float: left;">Total Price: {{quote.totalPrice * quote.jobDifficulty | currency:$}}</span>
-					<span style="float: right;"><button type="button" style="btn" ng-click="saveQuote(quote, quote.description)">Update/Save Quote</button></span>
+					<br>Job Difficulty: <input type="number" ng-model="vm.quote.jobDifficulty" name="vm.quote.jobDifficulty"><br>
+					<span style="float: left;">Total Price: {/vm.quote.totalPrice * vm.quote.jobDifficulty | currency:$/}</span>
+					<span style="float: right;"><button type="button" style="btn" ng-click="saveQuote(quote, vm.quote.description)">Update/Save Quote</button></span>
 				</form>
 				<br><br>
-				Please click <a ng-href="/#/customer/{{customer.custCode}}/quote/{{quote.quoteID}}/quotefinal" target="">here</a> to view the invoice.
+				Please click <a ng-href="/#/customer/{/vm.customer.custCode/}/quote/{/vm.quote.quoteID/}/quotefinal" target="">here</a> to view the invoice.
 				<br>
-				<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+				<alert ng-repeat="alert in alerts" type="{/vm.alert.type/}" close="closeAlert($index)">{/vm.alert.msg/}</alert>
 				<br><br><br>
-				<!--<pre>{{quote | json}}</pre>-->
+				<!--<pre>{/quote | json/}</pre>-->
 			</div>
         </div>
     </div>

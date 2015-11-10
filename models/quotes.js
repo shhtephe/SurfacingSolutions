@@ -8,6 +8,7 @@ var quote = new Schema({
 	custCode: Number,
 	totalPrice: Number,
 	jobDifficulty: Number,
+	description: String,
 	counters: [{
 		quantity: Number,
 		description: String,
@@ -59,8 +60,7 @@ var quote = new Schema({
 				quantity: Number
 			}]
 		}]
-	}],
-	description: String
+	}]
 });
 
 quote.plugin(timestamps);

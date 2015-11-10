@@ -33,6 +33,7 @@ router.get('/home', function(req, res, next) {
   res.render('partials/home', { title: 'Express' });
 });
 
+//If route starts with 'customer', this will grab customer data and store it in req.customer, and pass it on to the next function
 router.param('customer', function(req, res, next, custCode) {
   var query = {};
       query["custCode"] = custCode;
@@ -50,8 +51,8 @@ router.param('customer', function(req, res, next, custCode) {
   });
 });
 
-router.get('/customer/:customer', function(req, res, next) {
 
+router.get('/customerdata/:customer', function(req, res, next) {
   req.customer.populate('customer', function(err, customer) {
     if (err) { return next(err); }
     var query = {};
@@ -64,17 +65,22 @@ router.get('/customer/:customer', function(req, res, next) {
     if (!quotes) { return next(new Error('can\'t find Quotes')); }
       req.customer = customer;
       console.log(quotes);
-      res.render('partials/customer', { 
-      customer: customer,
-      quotes: quotes
+      var vm = {
+        customer: customer,
+        quotes: quotes
+      }
+      res.json(vm); 
     });
   });
-  });
+});
+
+router.get('/customer/:customer', function(req, res, next) {
+  res.render('partials/customer');
 });
 
 /*apparently will save me work, but I don't think it will.
 Supposed to run every time there's 'quote' in a url*/
-router.param('quote', function(req, res, next, quoteID) {
+router.param('quotedata', function(req, res, next, quoteID) {
   var query = {};
   query["quoteID"] = quoteID;
   query["custCode"] = req.customer.custCode;
@@ -119,7 +125,7 @@ router.param('quote', function(req, res, next, quoteID) {
           else {
           // saved!
           console.log(quote);
-          console.log("Quote saved");
+          console.log("New quote saved");
           req.quote = quote;
           console.log("Param Quote");
           console.log(req.quote);
@@ -137,33 +143,40 @@ router.param('quote', function(req, res, next, quoteID) {
   });
 });
 
-router.get('/customer/:customer/quote/:quote', function(req, res, next) {
+router.get('/customer/:customer/quotedata/:quotedata', function(req, res, next) {
+console.log(req.quote);
   if (typeof req.quote[0]==="undefined") {
       mongoose.model("products").find(function(err, products){
         mongoose.model("materials").find(function(err, materials){
-          //console.log(materials);
-          res.render('partials/quote', { 
+          var vm = { 
             quote: req.quote,
             customer: req.customer,
             products: products,
             materials: materials
-          });
+          };
+          res.json(vm)
         });
     })
   }
   else{
     mongoose.model("products").find(function(err, products){
       mongoose.model("materials").find(function(err, materials){
-        res.render('partials/quote', { 
+        var vm = { 
           quote: req.quote[0],
           customer: req.customer,
           products: products,
           materials: materials
-        });
+        };
+        res.json(vm);
       });
     })
   }
 });
+
+router.get('/customer/:customer/quote/:quote', function(req, res, next) {
+  res.render('partials/quote');
+});
+
 /*THIS IS FUCKIN TEST CODE FOR NOW*/
 router.get('/customer/:customer/quote/:quote/quotefinal', function(req, res, next) {
   if (typeof req.quote[0]==="undefined") {
@@ -191,7 +204,7 @@ router.get('/customer/:customer/quote/:quote/quotefinal', function(req, res, nex
       })
     })
   }
-})
+});
 /*SERIOUSLY, JUST TEST STUFF UNTIL I GET IT GOING*/
 
 router.get('/customer/:customer/quote/:quote/invoice', function(req, res, next) {
@@ -485,10 +498,16 @@ router.post('/savequote', function(req, res){
   });*/
 
 router.get('/customers', function(req, res, next) {
-  mongoose.model('Customer').find(function(err, data) {
-      res.render('partials/customers', { data: data });
+      res.render('partials/customers');
+});
+
+router.get('/custdata', function(req, res, next) {
+  mongoose.model('customer').find(function(err, data) {
+      res.json(data);
   }); 
 });
+
+
 
 router.get('/', function (req, res) {
     res.render('index', { user : req.user });

@@ -19,8 +19,8 @@ var customerSchema = new Schema({
 });
 
 customerSchema.plugin(timestamps);
-var Customer = mongoose.model('Customer', customerSchema);
+var customer = mongoose.model('customer', customerSchema);
 
 module.exports = {
-	Customer: Customer
+	customer: customer
 };

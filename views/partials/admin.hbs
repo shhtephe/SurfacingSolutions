@@ -2,7 +2,8 @@
 <div class="jumbotron">
         <div class="container">
             <div class="col-xs-offset-2 col-xs-8">
-			<div ng-controller="adminCtrl" ng-init='products=<%- JSON.stringify(products) %>; tempProducts=<%- JSON.stringify(products) %>; materials=<%- JSON.stringify(materials) %>; tempMaterials=<%- JSON.stringify(materials) %>'>
+			<div ng-controller="adminCtrl">
+				<!--ng-init='products=<%- JSON.stringify(products) %>; tempProducts=<%- JSON.stringify(products) %>; materials=<%- JSON.stringify(materials) %>; tempMaterials=<%- JSON.stringify(materials) %>'-->
 				<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
 				<u>Edit Materials</u>
 				<br>

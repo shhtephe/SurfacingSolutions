@@ -19,8 +19,8 @@ var http = require('http');
 //I might have to ditch the error handler. Currently used in router.param(quote)
 function errorHandler(err, req, res, next) {
   console.log(err);
-  //res.status(500);
-  //res.render('error', { error: err });
+  res.status(500);
+  res.render('error', { error: err });
 }
 
 //html5 refresh fix
@@ -235,15 +235,20 @@ router.get('/customer/:customer/quote/:quote/invoice', function(req, res, next) 
   }
 });
 
-router.get('/admin', function(req, res, next) {
+router.get('/admindata', function(req, res, next) {
   mongoose.model("products").find(function(err, products){
     mongoose.model("materials").find(function(err, materials){
-      res.render('partials/admin', { 
+      var vm = { 
         products: products,
         materials: materials
-      });
+      };
+      res.json(vm);
     });
   });
+});
+
+router.get('/admin', function(req, res, next) {
+  res.render('partials/admin');
 });
 
 router.post('/savematerials', function(req, res, next) {
@@ -440,8 +445,8 @@ router.post('/saveproducts', function(req, res, next) {
 });
 
 router.post('/savequote', function(req, res){
-  console.log(req.body.quote.counters[0].material);
-  console.log("addons", req.body.quote.counters[0].addons[0]);
+  //console.log(req.body.quote.counters[0].material);
+  //console.log("addons", req.body.quote.counters[0].addons[0]);
   var conditions = {quoteID: req.body.quote.quoteID, custCode: req.body.quote.custCode}
   , update = req.body.quote
   , options = { multi: false};
@@ -501,7 +506,7 @@ router.get('/customers', function(req, res, next) {
       res.render('partials/customers');
 });
 
-router.get('/custdata', function(req, res, next) {
+router.get('/customersdata', function(req, res, next) {
   mongoose.model('customer').find(function(err, data) {
       res.json(data);
   }); 

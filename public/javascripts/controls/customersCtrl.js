@@ -9,7 +9,6 @@ angular
 
 	function customersCtrl(dataFactory) {
 	  	var vm = this;
-		console.log();
 	  	dataFactory.getCustomers()
 	  		.then(function(data) {
 	  			vm.customers = data;
@@ -17,7 +16,6 @@ angular
 	  		function(reason) {
   				console.log(reason);
 	  		});
-
 
 	  	vm.alerts = [
 	  	];

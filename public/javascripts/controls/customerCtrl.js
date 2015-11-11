@@ -4,9 +4,9 @@
 	.module('surfacingSolutions')
 	.controller('customerCtrl', customerCtrl);
 
-	customerCtrl.$inject = ['dataFactory', '$stateParams'];
+	customerCtrl.$inject = ['dataFactory', '$stateParams', '$location'];
 
-	function customerCtrl(dataFactory, $stateParams) {
+	function customerCtrl(dataFactory, $stateParams, $location) {
 		var vm = this;
 		var custCode = $stateParams.custCode;
 
@@ -18,9 +18,9 @@
 			function(reason) {
 				console.log(reason);
 			});
-		//I think this was originally to create a new quote through angular. Might not use it.
-		/*vm.newQuote = function(quotes, custCode){
-			var max = Math.max.apply(null, quotes.map(function(item){
+		//I think this was originally to create a new quote through angular.
+		vm.newQuote = function(){
+			var max = Math.max.apply(null, vm.quotes.map(function(item){
 			   return item["quoteID"];
 			}));
 
@@ -31,11 +31,10 @@
 				max = 1;
 			}
 			console.log(max);
-			console.log(custCode);
-			var path = "/customer/" + custCode + "/quote/" + max;
+			console.log($stateParams.custCode);
+			var path = "/customer/" + $stateParams.custCode + "/quote/" + max;
 
 			$location.path( path );
-			};
-		}; */  
-	};
+		};
+	}; 
 }());

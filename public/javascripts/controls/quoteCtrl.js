@@ -4,39 +4,40 @@
 	angular.module('surfacingSolutions')
 	.controller('quoteCtrl', quoteCtrl);
 
-	quoteCtrl.$inject = ['dataFactory', '$stateParams'];
+	quoteCtrl.$inject = ['dataFactory', '$stateParams', '$http', '$scope'];
 
-	function quoteCtrl(dataFactory, $stateParams) {
+	function quoteCtrl(dataFactory, $stateParams, $http, $scope) {
 		//'this' replaces $scope
 		var vm = this;
 
 		var custCode = $stateParams.custCode;
 		var quoteID = $stateParams.quoteID;
 
+
 		dataFactory.getQuote(custCode, quoteID)
 			.then(function(data) {
 				vm.quote = data.quote;
 				vm.customer = data.customer;
-				vm.products = data.products,
-				vm.materials = data.materials
+				vm.products = data.products;
+				vm.materials = data.materials;
 			},
 			function(reason) {
 				console.log(reason);
-			});
-				
+			});		
 
+			//console.log(vm.quote, customer, vm.products, materials);
 
-		vm.mandatoryChargeChange = function(product, price, quantity, quote, counter, parentIndex, index){
-			var charges = quote.counters[parentIndex].mandatoryCharges[index];
+		vm.mandatoryChargeChange = function(product, price, quantity, counter, parentIndex, index){
+			var charges = vm.quote.counters[parentIndex].mandatoryCharges[index];
 	 		var oldPrice = 0;
 	 		if(charges.totalPrice !== undefined){
 	 			oldPrice = charges.totalPrice;	
 	 		};
 	 		charges.totalPrice = quantity * price;
-	 		quote.counters[parentIndex].totalPrice += - oldPrice + charges.totalPrice;
-	 		quote.totalPrice += - oldPrice + charges.totalPrice;
-	 		console.log(quote.counters[parentIndex].mandatoryCharges[index]);
-	 		vm.quote = quote;
+	 		vm.quote.counters[parentIndex].totalPrice += - oldPrice + charges.totalPrice;
+	 		vm.quote.totalPrice += - oldPrice + charges.totalPrice;
+	 		console.log(vm.quote.counters[parentIndex].mandatoryCharges[index]);
+	 		vm.vm.quote = vm.quote;
 
 		};
 
@@ -89,22 +90,22 @@
 		    };
 		};
 
-		vm.saveAddon = function(quote, addon, index) {
-			var addons = quote.counters[index].addons;
+		vm.saveAddon = function(addon, index) {
+			var addons = vm.quote.counters[index].addons;
 			var pushObj = {};
-			var shape = quote.counters[index].counterShape;
+			var shape = vm.quote.counters[index].counterShape;
 			console.log(addon);
 
 			var totalPrice = 0;
-			var counterLength = quote.counters[index].counterLength;
-			var counterWidth = quote.counters[index].counterWidth;
+			var counterLength = vm.quote.counters[index].counterLength;
+			var counterWidth = vm.quote.counters[index].counterWidth;
 			var squareFootage = 0;
 
 			console.log(addon.formula, addon.quantity, addon.price);
 			if (addon.formula === "item") {
 				totalPrice =  addon.quantity * addon.price;
 			}else if(addon.formula === "square"){
-				console.log(quote.counters[index]);
+				console.log(vm.quote.counters[index]);
 				if(shape === "rectangle"){
 					squareFootage = counterLength * counterWidth;
 					totalPrice = addon.price * squareFootage;
@@ -141,35 +142,35 @@
 				addons.push(pushObj);
 				console.log("Addons:", addons);
 				console.log("pushObj", pushObj);
-				quote.counters[index].totalPrice += addons[addons.length-1].totalPrice;
+				vm.quote.counters[index].totalPrice += addons[addons.length-1].totalPrice;
 			} else {
 				//Found it, so update the value
 				addons[arraySearch(addon.description, addons)].quantity = addon.quantity;
 				addons[arraySearch(addon.description, addons)].totalPrice = totalPrice;
-				quote.counters[index].totalPrice += addons[arraySearch(addon.description, addons)].totalPrice;
+				vm.quote.counters[index].totalPrice += addons[arraySearch(addon.description, addons)].totalPrice;
 			};
 
 			vm.dropDown1 = "";
 			vm.dropDown2 = "";
 			vm.addonQuantity = "";
-			console.log(quote.totalPrice, totalPrice);
-			quote.totalPrice += totalPrice;
-			vm.quote = quote;
+			console.log(vm.quote.totalPrice, totalPrice);
+			vm.quote.totalPrice += totalPrice;
+			vm.vm.quote = vm.quote;
 			//updatePrice(quantity, price, "addon"); - For use later
 			//vm.hideAddons();
 		};	
 		
-		vm.removeAddon = function(addon, counterIndex, addonIndex, quote){		
-			quote.totalPrice -= addon.totalPrice;
-			quote.counters[counterIndex].totalPrice -= addon.totalPrice;
-			quote.counters[counterIndex].addons.splice(addonIndex, 1);
+		vm.removeAddon = function(addon, counterIndex, addonIndex){		
+			vm.quote.totalPrice -= addon.totalPrice;
+			vm.quote.counters[counterIndex].totalPrice -= addon.totalPrice;
+			vm.quote.counters[counterIndex].addons.splice(addonIndex, 1);
 		};
 
 		vm.saveEditCounter = function(index){
-			console.log(vm.quote.counters[index], index);
+			console.log(vm.vm.quote.counters[index], index);
 		};
 
-		vm.saveCounter = function(quote, width, length, shape, material, products, index) {
+		vm.saveCounter = function(width, length, shape, material, index) {
 	//console.log("Width", width, "Length", length, "Shape", shape, "Material", material, "Index", index);
 
 	//Obviously, we set some variables. 
@@ -218,25 +219,25 @@
 			};
 
 	// adds up all mandatory charges for the counter - this might not be used.
-			for (var i = products.length - 1; i >= 0; i--) {
-				if(products[i].category === "mandatory"){
-					//console.log(products[i].category);
+			for (var i = vm.products.length - 1; i >= 0; i--) {
+				if(vm.products[i].category === "mandatory"){
+					//console.log(vm.products[i].category);
 					pushMandatory = {
-						product: products[i].product,
-						name: products[i].name,
-						price: products[i].price,
-						unitOfMeasure: products[i].unitOfMeasure,
-						menuType: products[i].menuType,
-						quantity: products[i].quantity,
-						totalPrice: products[i].totalPrice,
+						product: vm.products[i].product,
+						name: vm.products[i].name,
+						price: vm.products[i].price,
+						unitOfMeasure: vm.products[i].unitOfMeasure,
+						menuType: vm.products[i].menuType,
+						quantity: vm.products[i].quantity,
+						totalPrice: vm.products[i].totalPrice,
 						dropDown:[]
 					};
-					if(products[i].dropDown[0] !== undefined ){
-						for (var j = products[i].dropDown.length - 1; j >= 0; j--) {
+					if(vm.products[i].dropDown[0] !== undefined ){
+						for (var j = vm.products[i].dropDown.length - 1; j >= 0; j--) {
 							pushMandatoryDropDown = {
-								price: products[i].dropDown[j].price,
-								product: products[i].dropDown[j].product,
-								name: products[i].dropDown[j].name
+								price: vm.products[i].dropDown[j].price,
+								product: vm.products[i].dropDown[j].product,
+								name: vm.products[i].dropDown[j].name
 							}; 	
 							pushMandatory.dropDown.push(pushMandatoryDropDown);
 						}; 
@@ -277,72 +278,73 @@
 			console.log("This ran 4");
 				counterPrice = sheets * material.fullSheet21;
 			} else {
-			console.log("This ran 5", sheets, material.fullSheet1);
+			console.log("Loop 5 | Sheets: " + sheets + " | Price: " + material.fullSheet1);
 				counterPrice = sheets * material.fullSheet1;
 			}
 
 	//Commits data to arrays depending on whether it's an edit or a new save.
 			if(typeof index === "undefined"){
+	//Add object to counter array
+				vm.quote.counters.push(pushObj);
 	//Set price of counter minues addons
-				quote.counters[quote.counters.length-1].totalPrice = counterPrice;
+				vm.quote.counters[vm.quote.counters.length-1].totalPrice = counterPrice;
 
-				quote.counters.push(pushObj);
 	//Hides the counter add button at the top of the page.
 				vm.hideCounter();
-	//Save the price of the counter, and the total price of the quote. Save it to the $Scope.quote variable.
-				quote.counters[quote.counters.length-1].material.price = quote.counters[quote.counters.length-1].totalPrice;		
-				quote.totalPrice += quote.counters[quote.counters.length-1].totalPrice;
+	//Save the price of the counter, and the total price of the vm.quote. Save it to the vm.vm.quote variable.
+				vm.quote.counters[vm.quote.counters.length-1].material.price = vm.quote.counters[vm.quote.counters.length-1].totalPrice;		
+				vm.quote.totalPrice += vm.quote.counters[vm.quote.counters.length-1].totalPrice;
 			}
 			else{
 	//Replace the existing addons into the new array :)
-				for (var i = quote.counters[index].addons.length - 1; i >= 0; i--) {
-					pushObj.addons.push(quote.counters[index].addons[i]);6
-					pushObj.totalPrice += quote.counters[index].addons[i].totalPrice;
+console.log(vm.quote.counters[index].addons.length);
+			if(typeof vm.quote.counters[index].addons.length !== undefined) {
+				for (var i = vm.quote.counters[index].addons.length - 1; i >= 0; i--) {
+					pushObj.addons.push(vm.quote.counters[index].addons[i]);6
+					pushObj.totalPrice += vm.quote.counters[index].addons[i].totalPrice;
 				};
+			};
 	//Replace counter total.
 				pushObj.material.price = counterPrice;
 				pushObj.totalPrice += counterPrice;
-	//Add Quote total with new counter price but first replace old price.		
-				quote.totalPrice -= quote.counters[index].totalPrice;
-				quote.totalPrice += pushObj.totalPrice;
+	//Add vm.quote total with new counter price but first replace old price.		
+				vm.quote.totalPrice -= vm.quote.counters[index].totalPrice;
+				vm.quote.totalPrice += pushObj.totalPrice;
 	//replace the counter object with the edited one.
-				quote.counters.splice(index, 1, pushObj);
+				vm.quote.counters.splice(index, 1, pushObj);
 			};
 
-			vm.quote = quote;
+			//vm.vm.quote = vm.quote; - I don't think this is needed anymore, since VM is the view model and is already bound.
 
-			//console.log("Counter Price w/o addons", quote.counters[quote.counters.length-1].material.price);
+			//console.log("Counter Price w/o addons", vm.quote.counters[vm.quote.counters.length-1].material.price);
 		};
 
-		vm.deleteCounter = function(quote, index) {
-			quote.totalPrice -= quote.counters[index].totalPrice;
-			console.log(quote.counters[index].totalPrice);
-			quote.counters.splice(index, index+1);
-	//I don't think I need a refresh		$state.go($state.current, {}, {reload: true}); //second parameter is for $stateParams
+		vm.deleteCounter = function(index) {
+			vm.quote.totalPrice -= vm.quote.counters[index].totalPrice;
+			console.log(vm.quote.counters[index].totalPrice);
+			vm.quote.counters.splice(index, index+1);
+			//I don't think I need a refresh		$state.go($state.current, {}, {reload: true}); //second parameter is for $stateParams
 		};
 
-		vm.saveQuote = function(quote, description) {
-
-			//console.log(quote.jobDifficulty.$dirty);
-			if(quote.jobDifficulty.$dirty === true){
+		vm.saveQuote = function(description) {
+			//console.log(vm.quote.jobDifficulty.$dirty);
+			/*if(vm.quote.jobDifficulty.$dirty === true){
 				console.log("value has changed");
-			};
+			};*/
 
-			quote['description'] = description;
 			//save the quote
 			//Need to declare that it's sending a json doc
 			$http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
-			$http.post('/savequote', {"quote":quote}).
+			$http.post('/savequote', {"quote":vm.quote}).
 	  		success(function(data, status, headers, config) {
 		    	// this callback will be called asynchronously
 		    	// when the response is available
-				console.log(quote);
-		    	vm.addAlert("success", "Quote saved Successfully");
+		    	vm.addAlert("success", "vm.quote saved Successfully");
 		  	}).
 	  		error(function(data, status, headers, config) {
 			    // called asynchronously if an error occurs
 			    // or server returns response with an error status.
-				vm.addAlert("danger", "Error: Quote did not save");
+				vm.addAlert("danger", "Error: vm.quote did not save");
 	  		});
 		};
 	};

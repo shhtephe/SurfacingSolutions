@@ -9,7 +9,7 @@
 				    	<a ng-href="/#/customer/{/vm.customer.custCode/}/quote/{/quote.quoteID/}">{/quote.quoteID/} - {/quote.createdAt | limitTo: 10/}</a> - {/quote.description/}
 				  	</div>
 					<br>
-				<button type="button" class="btn" ng-click="newQuote(quotes, customer.custCode)">New Quote</button>
+				<button type="button" class="btn" ng-click="vm.newQuote()">New Quote</button>
 				</div>
             </div>
         </div>

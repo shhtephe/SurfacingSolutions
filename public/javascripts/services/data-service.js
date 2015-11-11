@@ -8,13 +8,12 @@
 		return {
 			getCustomers: getCustomers,
 			getCustomer: getCustomer,
-			getProducts: getProducts,
-			getMaterials: getMaterials,
+			getProductsMaterials: getProductsMaterials,
 			getQuote: getQuote
 		};
 
 		function getCustomers() {
-			return $http.get('/custdata')
+			return $http.get('/customersdata')
 			.then(function(response) {
 				return response.data;
 			});
@@ -26,14 +25,8 @@
 				return response.data;
 			});
 		};
-		function getProducts() {
-			return $http.get('/singlecustdata')
-			.then(function(response) {
-				return response.data;
-			});
-		};
-		function getMaterials() {
-			return $http.get('/singlecustdata')
+		function getProductsMaterials() {
+			return $http.get('/admindata')
 			.then(function(response) {
 				return response.data;
 			});

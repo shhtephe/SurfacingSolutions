@@ -17,10 +17,6 @@
           vm.products = data.products;
           vm.materials = data.materials;
         })
-
-      var 
-        products = vm.products,
-        materials = vm.materials;
       
       vm.alerts = [];
 
@@ -122,7 +118,7 @@
       }
 
 
-      vm.addNewMaterial = function(materials, tempMaterials, materialDescription){
+      vm.addNewMaterial = function(materialDescription){
         console.log(materialDescription);
         var material = {
           manufacturer : materialDescription.manufacturer,
@@ -140,20 +136,19 @@
           isa : materialDescription.isa,
           matCollection : materialDescription.matCollection
         };
-        materials.push(material);
-        vm.tempMaterials = materials;
-        console.log(materials);
+        vm.materials.push(material);
+        console.log(vm.materials);
         console.log(material);
 
-        vm.saveMaterials(materials, material, "add");
+        vm.saveMaterials("add", material);
       };
 
-      vm.deleteMaterial = function(materials, tempMaterials, editMaterialDescription){
+      vm.deleteMaterial = function(editMaterialDescription){
         console.log(editMaterialDescription);
 
-        var index = arraySearch(editMaterialDescription._id, materials)
+        var index = arraySearch(editMaterialDescription._id, vm.materials)
         //delete item
-        materials.splice(index, 1);
+        vm.materials.splice(index, 1);
 
         vm.editMaterialDistributor = "";
         vm.editMaterialManufacturer = "";
@@ -161,44 +156,48 @@
         vm.editMaterialDescription = "";
         
         //commit changes to database
-        vm.saveMaterials(materials, "", "delete", editMaterialDescription._id);
+        vm.saveMaterials("delete", editMaterialDescription._id);
       };
 
       vm.updateMaterial = function(editMaterialDescription){
-        console.log(materials);
+        //console.log(vm.materials);
         console.log(editMaterialDescription);
 
-        var index = arraySearch(editMaterialDescription._id, materials);
+        var index = arraySearch(editMaterialDescription._id, vm.materials);
         console.log(index);
 
-        materials[index].itemCode = editMaterialDescription.itemCode,
-        materials[index].thickness = editMaterialDescription.thickness,
-        materials[index].length = editMaterialDescription.length,
-        materials[index].width = editMaterialDescription.width,
-        materials[index].fullSheet1 = editMaterialDescription.fullSheet1,
-        materials[index].halfSheet = editMaterialDescription.halfSheet,
-        materials[index].fullSheet5 = editMaterialDescription.fullSheet5,
-        materials[index].fullSheet21 = editMaterialDescription.fullSheet21,
-        materials[index].isa = editMaterialDescription.isa,
-        materials[index].matCollection = editMaterialDescription.matCollection,
-        materials[index].formula = editMaterialDescription.formula;
+        vm.materials[index].itemCode = editMaterialDescription.itemCode,
+        vm.materials[index].thickness = editMaterialDescription.thickness,
+        vm.materials[index].length = editMaterialDescription.length,
+        vm.materials[index].width = editMaterialDescription.width,
+        vm.materials[index].fullSheet1 = editMaterialDescription.fullSheet1,
+        vm.materials[index].halfSheet = editMaterialDescription.halfSheet,
+        vm.materials[index].fullSheet5 = editMaterialDescription.fullSheet5,
+        vm.materials[index].fullSheet21 = editMaterialDescription.fullSheet21,
+        vm.materials[index].isa = editMaterialDescription.isa,
+        vm.materials[index].matCollection = editMaterialDescription.matCollection,
+        vm.materials[index].formula = editMaterialDescription.formula;
 
         //commit changes to database
-        vm.saveMaterials(materials[index], "update", index);
+        vm.saveMaterials("update", index);
       };
 
-      vm.saveMaterials = function(material, action, parameter){
-      console.log(material, action, parameter)
+      vm.saveMaterials = function(action, parameter){
+      console.log(action, parameter)
 
       //declaring json data
         $http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
-        $http.post('/savematerials', {"materials":materials, "material": material, "action": action, "parameter": parameter}).
+        $http.post('/savematerials', {"material":vm.materials[parameter], "action": action, "parameter": parameter}).
           success(function(data, status, headers, config) {
             // this callback will be called asynchronously
             // when the response is available
-            vm.addAlert("success", "Material " + action + "'d Successfully");
-          }).
-          error(function(data, status, headers, config) {
+            if(action == 'add'){
+              vm.addAlert("success", "Material " + action + "ed Successfully");
+            } else {
+              vm.addAlert("success", "Material " + action + "d Successfully");
+            };
+          })
+          .error(function(data, status, headers, config) {
             // called asynchronously if an error occurs
             // or server returns response with an error status.
             vm.addAlert("danger", "Error: Material did not " + action);
@@ -214,22 +213,22 @@
           type : productDescription.type,
           description : productDescription.description,
           itemCode : productDescription.itemCode,
-          price : productDescription.price
+          price : productDescription.price,
+          formula : productDescription.formula
         };
-        products.push(product);
-        vm.tempProducts = products;
-        console.log(products);
-        console.log(product);
+        vm.products.push(product);
+        console.log(vm.products);
+        console.log(vm.product);
 
-        vm.saveProducts( product, "add");
+        vm.saveProducts("add", product);
       };
 
       vm.deleteProduct = function(editProductDescription){
         console.log(editProductDescription);
 
-        var index = arraySearch(editProductDescription._id, products)
+        var index = arraySearch(editProductDescription._id, vm.products)
         //delete item
-        products.splice(index, 1);
+        vm.products.splice(index, 1);
 
         vm.editProductDistributor = "";
         vm.editProductManufacturer = "";
@@ -239,41 +238,43 @@
         vm.editProductPrice = "";
         
         //commit changes to database
-        vm.saveProducts(products, "", "delete", editProductDescription._id);
+        vm.saveProducts("delete", editProductDescription._id);
       };
 
       vm.updateProduct = function(editProductDescription){
-        console.log(products);
+        //console.log(vm.products);
         console.log(editProductDescription);
 
-        var index = arraySearch(editProductDescription._id, tempProducts);
+        var index = arraySearch(editProductDescription._id, vm.products);
         console.log(index);
 
-        products[index].itemCode = editProductDescription.itemCode,
-        products[index].price = editProductDescription.price,
+        vm.products[index].itemCode = editProductDescription.itemCode,
+        vm.products[index].price = editProductDescription.price,
      
         //commit changes to database
-        vm.saveProducts(products, products[index], "update", index);
+        vm.saveProducts("update", index);
       };
 
       //I don't think I use this one either.
-    	vm.saveProducts = function(product, action, parameter){
-        console.log(product, action, parameter);
+    	vm.saveProducts = function(action, parameter){
+        console.log(action, parameter);
 
-      //Make the real match the temp.
-        vm.tempProducts = products;
       //declaring json data
         $http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
-        $http.post('/saveproducts', {"products":products, "product": product, "action": action, "parameter": parameter}).
+        $http.post('/saveproducts', {"product": vm.products[parameter], "action": action, "parameter": parameter}).
           success(function(data, status, headers, config) {
             // this callback will be called asynchronously
             // when the response is available
-            vm.addAlert("success", "Material " + action + "'d Successfully");
+            if(action == 'add'){
+              vm.addAlert("success", "Product " + action + "ed Successfully");
+            } else {
+              vm.addAlert("success", "Product " + action + "d Successfully");
+            };
           }).
           error(function(data, status, headers, config) {
             // called asynchronously if an error occurs
             // or server returns response with an error status.
-            vm.addAlert("danger", "Error: Material did not " + action);
+            vm.addAlert("danger", "Error: Product did not " + action);
             console.log("Nope.jpg");
           });
       };

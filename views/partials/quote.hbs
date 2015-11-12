@@ -114,7 +114,7 @@
 					</div>
 					<br><br>
 					<div ng-repeat="counter in vm.quote.counters track by $index">
-				  		<u>Counter {/$index + 1/}</u> <button type="button" style="btn btn-danger" ng-click="vm.deleteCounter(quote, $index)">DELETE THIS COUNTER</button>
+				  		<u>Counter {/$index + 1/}</u> <button type="button" style="btn btn-danger" ng-click="vm.deleteCounter($index)">DELETE THIS COUNTER</button>
 						<br><br>
 						Counter Description:
 						<br><textarea rows="4" columns="150" ng-model="counter.description"></textarea>
@@ -227,13 +227,13 @@
 									</li>
 								</ul>
 								<!--{/materialDescription | json/}-->
-								<button type="button" ng-click="vm.saveCounter(counter.counterWidth, counter.counterLength, counter.counterShape, materialDescription, products, $index), " ng-show="vm.editCounter" class="btn btn-default">Save Edit</button>
+								<button type="button" ng-click="vm.saveCounter(counter.counterWidth, counter.counterLength, counter.counterShape, materialDescription, $index); vm.editCounter = false" ng-show="vm.editCounter" class="btn btn-default">Save Edit</button>
 								<br> <br>
 							</div>	
 							<button type="button" ng-click="vm.editCounter = false; $scope.counter.materialDistributor = ''" ng-show="vm.editCounter" class="btn btn-danger">Cancel</button>
 			      		</span>
 			      		<span ng-show="vm.editCounter"><button ng-click="vm.editCounter = false" ng-hide="vm.editCounter"class="btn btn-danger">Save</button></span>
-				      	<br><button type="button" ng-click="vm.editCounter" ng-hide="vm.editCounter" class="btn btn-default">Edit this Counter</button>
+				      	<br><button type="button" ng-click="vm.editCounter = true" ng-hide="vm.editCounter" class="btn btn-default">Edit this Counter</button>
 						<br>
 						<br><u>Selected Addons:</u> 
 						<br>
@@ -241,7 +241,7 @@
 							<br>{/addon.productType/} - {/addon.description/} : 
 							<span ng-show="addon.formula =='item' || addon.formula == 'linear'">{/addon.quantity/}</span>
 							<span ng-show="addon.formula =='square'">{/counter.counterWidth * counter.counterLength/}</span>
-							@{/addon.price | currency:$/} <a ng-click="removeAddon(addon, $parent.$index, $index, quote)">remove</a>
+							@{/addon.price | currency:$/} <a ng-click="vm.removeAddon(addon, $parent.$index, $index)">remove</a>
 						</div>
 						----------
 						<br>
@@ -249,21 +249,21 @@
 						<div ng-show="vm.divAddons">
 							<br>Addons: 
 							<br>Choose a Distributor:
-							<select name="counterAddonDistributor" ng-model="counterAddonDistributor" ng-options="product.distributor for product in products | unique: 'distributor' track by product.distributor">
+							<select name="counterAddonDistributor" ng-model="counterAddonDistributor" ng-options="product.distributor for product in vm.products | unique: 'distributor' track by product.distributor">
 								<option value="">----Select----</option>
 							</select>
 							<br>
 							<div ng-show="counterAddonDistributor">
 								<br>
 								Choose a Manufacturer:
-								<select name="counterAddonManufacturer" ng-model="counterAddonManufacturer" ng-options="product.manufacturer for product in products | filter:{distributor:counterAddonDistributor.distributor} | unique: 'manufacturer' | orderBy:'manufacturer'">
+								<select name="counterAddonManufacturer" ng-model="counterAddonManufacturer" ng-options="product.manufacturer for product in vm.products | filter:{distributor:counterAddonDistributor.distributor} | unique: 'manufacturer' | orderBy:'manufacturer'">
 									<option value="">----Select----</option>
 								</select>
 							</div>
 							<div ng-show="counterAddonDistributor && counterAddonManufacturer">
 								<br>
 								Choose a Product Type:
-								<select name="counterAddonType" ng-model="counterAddonType" ng-options="product.type for product in products | filter:{distributor:counterAddonDistributor.distributor, manufacturer:counterAddonManufacturer.manufacturer} | unique: 'type' | orderBy:'type'">
+								<select name="counterAddonType" ng-model="counterAddonType" ng-options="product.type for product in vm.products | filter:{distributor:counterAddonDistributor.distributor, manufacturer:counterAddonManufacturer.manufacturer} | unique: 'type' | orderBy:'type'">
 									<option value="">----Select----</option>
 								</select>
 							</div>
@@ -271,7 +271,7 @@
 							<div ng-show="counterAddonDistributor && counterAddonManufacturer && counterAddonType">
 								<br>
 								Choose a Description:
-								<select name="counterAddonDescription" ng-model="counterAddonDescription" ng-options="product.description for product in products | filter:{distributor:counterAddonDistributor.distributor, manufacturer:counterAddonManufacturer.manufacturer, type:counterAddonType.type} | unique: 'description' | orderBy:'description'">
+								<select name="counterAddonDescription" ng-model="counterAddonDescription" ng-options="product.description for product in vm.products | filter:{distributor:counterAddonDistributor.distributor, manufacturer:counterAddonManufacturer.manufacturer, type:counterAddonType.type} | unique: 'description' | orderBy:'description'">
 									<option value="">----Select----</option>
 								</select>
 							</div>
@@ -300,7 +300,7 @@
 
 									
 								</ul>
-							    <button type="button" ng-click="saveAddon(counterAddonDescription, $index); vm.editCounter = false;" class="btn btn-default">Add</button>
+							    <button type="button" ng-click="vm.saveAddon(counterAddonDescription, $index); vm.editCounter = false;" class="btn btn-default">Add</button>
 							</div>
 							<button type="button" ng-click="vm.divAddons=false; counterAddonDistributor = ''" class="btn btn-danger">Cancel</button> 
 						</div>
@@ -333,7 +333,7 @@
 
 					<br>Job Difficulty: <input type="number" ng-model="vm.quote.jobDifficulty" name="vm.quote.jobDifficulty"><br>
 					<span style="float: left;">Total Price: {/vm.quote.totalPrice * vm.quote.jobDifficulty | currency:$/}</span>
-					<span style="float: right;"><button type="button" style="btn" ng-click="vm.saveQuote(quote, vm.quote.description)">Update/Save Quote</button></span>
+					<span style="float: right;"><button type="button" style="btn" ng-click="vm.saveQuote(vm.quote.description)">Update/Save Quote</button></span>
 				</form>
 				<br><br>
 				Please click <a ng-href="/#/customer/{/vm.customer.custCode/}/quote/{/vm.quote.quoteID/}/quotefinal" target="">here</a> to view the invoice.

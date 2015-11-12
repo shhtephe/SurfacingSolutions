@@ -4,7 +4,7 @@
             <div class="col-xs-offset-2 col-xs-8">
 			<div ng-controller="adminCtrl">
 				<!--ng-init='products=<%- JSON.stringify(products) %>; tempProducts=<%- JSON.stringify(products) %>; materials=<%- JSON.stringify(materials) %>; tempMaterials=<%- JSON.stringify(materials) %>'-->
-				<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+				<alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</alert>
 				<u>Edit Materials</u>
 				<br>
 				<button ng-hide="vm.newEditMaterial == true" type="button" ng-click="vm.showEditMaterial()" class="btn btn-default">Edit Material</button>
@@ -70,18 +70,18 @@
 							</li>
 						</ul>
 					    <button type="button" ng-click="vm.updateMaterial(editMaterialDescription)" class="btn btn-default">Update</button>
-					    <button type="button" ng-click="vm.deleteMaterial(editMaterialDescription)" class="btn btn-danger">Delete</button> 
+					    <button type="button" ng-click="vm.deleteMaterial(editMaterialDescription); vm.newEditMaterial = false" class="btn btn-danger">Delete</button> 
 					</div>
 				    <br>
-				    <button type="button" ng-click="vm.vm.cancelSaveMaterial()" class="btn btn-default">Cancel</button> 
+				    <button type="button" ng-click="vm.cancelSaveMaterial()" class="btn btn-default">Cancel</button> 
 				</div>
 				<br>
 				<br>
 				<u>Add New Material</u>
 				<br>
-				<button ng-hide="newMaterial == true" type="button" ng-click="vm.vm.showNewMaterial()" class="btn btn-default">Add new Material</button>
+				<button ng-hide="vm.newMaterial == true" type="button" ng-click="vm.showNewMaterial()" class="btn btn-default">Add new Material</button>
 				<br>
-				<div ng-show="newMaterial == true">
+				<div ng-show="vm.newMaterial == true">
 						<ul class="list-group"> 
 							<li class="list-group-item">	
 								Distributor: <input type="text" name="newDistributor" ng-model="materialDescription.distributor"> <br> 
@@ -127,34 +127,34 @@
 							</li>
 						</ul>
 					<button type="button" ng-click="vm.hideNewMaterial()" class="btn btn-default">Cancel</button> 
-					<button type="button" ng-click="vm.addNewMaterial(materials, tempMaterials, materialDescription)" class="btn btn-default">Add</button> 
+					<button type="button" ng-click="vm.addNewMaterial(materialDescription)" class="btn btn-default">Add</button> 
 				</div>
 				<br>
 				<u>Edit Products</u>
 				<br>
-				<button ng-hide="newEditProduct == true" type="button" ng-click="vm.showEditProduct()" class="btn btn-default">Edit Product</button>
-				<div ng-show="newEditProduct == true">
+				<button ng-hide="vm.newEditProduct == true" type="button" ng-click="vm.showEditProduct()" class="btn btn-default">Edit Product</button>
+				<div ng-show="vm.newEditProduct == true">
 					Choose a Product Type:
-					<select name="editProductType" ng-model="editProductType" ng-options="product.type for product in tempProducts | unique: 'type' | orderBy:'type'">
+					<select name="editProductType" ng-model="editProductType" ng-options="product.type for product in vm.products | unique: 'type' | orderBy:'type'">
 						<option value="">----Select----</option>
 					</select>
 					<div ng-show="editProductType">
 						<br>
 						Choose a Manufacturer:
-						<select name="editProductManufacturer" ng-model="editProductManufacturer" ng-options="product.manufacturer for product in tempProducts | filter:{type:editProductType.type} | unique: 'manufacturer' | orderBy:'manufacturer'">
+						<select name="editProductManufacturer" ng-model="editProductManufacturer" ng-options="product.manufacturer for product in vm.products | filter:{type:editProductType.type} | unique: 'manufacturer' | orderBy:'manufacturer'">
 							<option value="">----Select----</option>
 						</select>
 					</div>
 					<div ng-show="editProductType && editProductManufacturer">
 						<br>
 						Choose a Description:
-						<select name="editProductDescription" ng-model="editProductDescription" ng-options="product.description for product in tempProducts | filter:{manufacturer:editProductManufacturer.manufacturer, type:editProductType.type} | unique: 'description' | orderBy:'description'">
+						<select name="editProductDescription" ng-model="editProductDescription" ng-options="product.description for product in vm.products | filter:{manufacturer:editProductManufacturer.manufacturer, type:editProductType.type} | unique: 'description' | orderBy:'description'">
 							<option value="">----Select----</option>
 						</select>
 					</div>
 					<div ng-show="editProductDescription && editProductManufacturer && editProductType">
 						<br>
-						Choose a Distributor: <select name="editProductDistributor" ng-model="editProductDistributor" ng-options="product.distributor for product in tempProducts | orderBy:'distributor' | filter:{manufacturer:editProductManufacturer.manufacturer, type:editProductType.type, description:editProductDescription.description} | unique: 'distributor'">
+						Choose a Distributor: <select name="editProductDistributor" ng-model="editProductDistributor" ng-options="product.distributor for product in vm.products | orderBy:'distributor' | filter:{manufacturer:editProductManufacturer.manufacturer, type:editProductType.type, description:editProductDescription.description} | unique: 'distributor'">
 						<option value="">----Select----</option>
 						</select>
 						<br>
@@ -176,8 +176,8 @@
 								</select>
 							</li>
 						</ul>
-					    <button type="button" ng-click="vm.updateProduct(products, tempProducts, editProductDescription)" class="btn btn-default">Update</button>
-					    <button type="button" ng-click="vm.deleteProduct(products, tempProducts, editProductDescription)" class="btn btn-danger">Delete</button> 
+					    <button type="button" ng-click="vm.updateProduct(editProductDescription)" class="btn btn-default">Update</button>
+					    <button type="button" ng-click="vm.deleteProduct(editProductDescription)" class="btn btn-danger">Delete</button> 
 					</div>
 				    <br>
 				    <button type="button" ng-click="vm.cancelSaveProduct()" class="btn btn-default">Cancel</button>
@@ -186,9 +186,9 @@
 				<br>
 				<u>Add New Product</u>
 				<br>
-				<button ng-hide="newMaterial == true" type="button" ng-click="vm.showNewProduct()" class="btn btn-default">Add New Product</button>
+				<button ng-hide="vm.newMaterial == true" type="button" ng-click="vm.showNewProduct()" class="btn btn-default">Add New Product</button>
 				<br>
-				<div ng-show="newProduct == true">
+				<div ng-show="vm.newProduct == true">
 						<ul class="list-group"> 
 							<li class="list-group-item">	
 								Distributor: <input type="text" name="newProductDistributor" ng-model="productDescription.distributor"> <br> 
@@ -220,7 +220,7 @@
 							</li>-->
 						</ul>
 					<button type="button" ng-click="vm.hideNewProduct()" class="btn btn-default">Cancel</button> 
-					<button type="button" ng-click="vm.addNewProduct(products, tempProducts, productDescription)" class="btn btn-default">Add</button> 
+					<button type="button" ng-click="vm.addNewProduct(productDescription)" class="btn btn-default">Add</button> 
 				</div>
 			</div>
         </div>

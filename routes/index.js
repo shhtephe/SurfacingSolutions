@@ -38,7 +38,7 @@ router.param('customer', function(req, res, next, custCode) {
   var query = {};
       query["custCode"] = custCode;
 
-  var search = mongoose.model("customer").findOne(query);
+  var search = mongoose.model('customer').findOne(query);
 
   search.exec(function (err, customer){
     if (err) { return next(err); }
@@ -58,7 +58,7 @@ router.get('/customerdata/:customer', function(req, res, next) {
     var query = {};
     query["custCode"] = customer.custCode;
 
-    var search = mongoose.model("quote").find(query);
+    var search = mongoose.model('quote').find(query);
 
     search.exec(function (err, quotes){
     if (err) { return next(err); }
@@ -85,14 +85,14 @@ router.param('quotedata', function(req, res, next, quoteID) {
   query["quoteID"] = quoteID;
   query["custCode"] = req.customer.custCode;
 
-  var search = mongoose.model("quote").find(query);
+  var search = mongoose.model('quote').find(query);
   search.exec(function (err, quote){
     if (err) {return next(err); }
     if (typeof quote[0]==="undefined") {
       //Instead of just hitting next, we replace the quote with a new one
       var query = {};
       query["custCode"] = req.customer.custCode;
-      search = mongoose.model("quote").findOne().sort({quoteID : "desc"}).exec(function(err, quote){
+      search = mongoose.model('quote').findOne().sort({quoteID : "desc"}).exec(function(err, quote){
       
       var quoteID 
 
@@ -146,8 +146,8 @@ router.param('quotedata', function(req, res, next, quoteID) {
 router.get('/customer/:customer/quotedata/:quotedata', function(req, res, next) {
 console.log(req.quote);
   if (typeof req.quote[0]==="undefined") {
-      mongoose.model("products").find(function(err, products){
-        mongoose.model("materials").find(function(err, materials){
+      mongoose.model('products').find(function(err, products){
+        mongoose.model('materials').find(function(err, materials){
           var vm = { 
             quote: req.quote,
             customer: req.customer,
@@ -159,8 +159,8 @@ console.log(req.quote);
     })
   }
   else{
-    mongoose.model("products").find(function(err, products){
-      mongoose.model("materials").find(function(err, materials){
+    mongoose.model('products').find(function(err, products){
+      mongoose.model('materials').find(function(err, materials){
         var vm = { 
           quote: req.quote[0],
           customer: req.customer,
@@ -178,10 +178,16 @@ router.get('/customer/:customer/quote/:quote', function(req, res, next) {
 });
 
 /*THIS IS FUCKIN TEST CODE FOR NOW*/
+
 router.get('/customer/:customer/quote/:quote/quotefinal', function(req, res, next) {
+  res.render('partials/quotefinal');
+});
+
+router.get('/customer/:customer/quote/:quote/quotefinaldata', function(req, res, next) {
+  console.log(req.quote);
   if (typeof req.quote[0]==="undefined") {
-      mongoose.model("products").find(function(err, products){
-        mongoose.model("materials").find(function(err, materials){
+      mongoose.model('products').find(function(err, products){
+        mongoose.model('materials').find(function(err, materials){
           console.log(materials);
           res.render('partials/quotefinal', { 
             quote: req.quote,
@@ -193,8 +199,8 @@ router.get('/customer/:customer/quote/:quote/quotefinal', function(req, res, nex
     })
   }
   else{
-    mongoose.model("products").find(function(err, products){
-      mongoose.model("materials").find(function(err, materials){
+    mongoose.model('products').find(function(err, products){
+      mongoose.model('materials').find(function(err, materials){
         res.render('partials/quotefinal', { 
           quote: req.quote[0],
           customer: req.customer,
@@ -207,37 +213,9 @@ router.get('/customer/:customer/quote/:quote/quotefinal', function(req, res, nex
 });
 /*SERIOUSLY, JUST TEST STUFF UNTIL I GET IT GOING*/
 
-router.get('/customer/:customer/quote/:quote/invoice', function(req, res, next) {
-  if (typeof req.quote[0]==="undefined") {
-      mongoose.model("products").find(function(err, products){
-        mongoose.model("materials").find(function(err, materials){
-          console.log(materials);
-          res.render('partials/invoice', { 
-            quote: req.quote,
-            customer: req.customer,
-            products: products,
-            materials: materials
-          });
-        });
-    })
-  }
-  else{
-    mongoose.model("products").find(function(err, products){
-      mongoose.model("materials").find(function(err, materials){
-        res.render('partials/invoice', { 
-          quote: req.quote[0],
-          customer: req.customer,
-          products: products,
-          materials: materials
-        })
-      })
-    })
-  }
-});
-
 router.get('/admindata', function(req, res, next) {
-  mongoose.model("products").find(function(err, products){
-    mongoose.model("materials").find(function(err, materials){
+  mongoose.model('products').find(function(err, products){
+    mongoose.model('materials').find(function(err, materials){
       var vm = { 
         products: products,
         materials: materials
@@ -252,17 +230,17 @@ router.get('/admin', function(req, res, next) {
 });
 
 router.post('/savematerials', function(req, res, next) {
-  console.log(req.body.material);
-  console.log(req.body.action);
-  console.log(req.body.parameter);
+  console.log('Material',req.body.material);
+  //console.log(req.body.action);
+  //console.log(req.body.parameter);
 
 
   if(req.body.action === "update"){
-    console.log(req.body.material.distributor);
+    /*console.log(req.body.material.distributor);
     console.log(req.body.material.manufacturer);
-    console.log(req.body.material.colourGroup);
-    console.log(req.body.material.description);
+    console.log(req.body.material.colourGroup);*/
     var material = req.body.material;
+    console.log("Mat Colleciton", material.matCollection);
 
     var conditions = {distributor: req.body.material.distributor, manufacturer: req.body.material.manufacturer, colourGroup: req.body.material.colourGroup, description: req.body.material.description}
       , update = {
@@ -275,7 +253,7 @@ router.post('/savematerials', function(req, res, next) {
         fullSheet5 : material.fullSheet5,
         fullSheet21 : material.fullSheet21,
         isa : material.isa,
-        collection : material.collection
+        matCollection : material.matCollection
       }
       , options = { multi: false};
 
@@ -292,10 +270,11 @@ router.post('/savematerials', function(req, res, next) {
       };
     };
   } else if(req.body.action === "delete"){
+    console.log("Parameter:", req.body.parameter);
     var ObjectId = require('mongoose').Types.ObjectId; 
     var query = { _id: new ObjectId(req.body.parameter)};
-  console.log(query);
-    var search = mongoose.model("materials").find(query);
+  console.log('Query', query);
+    var search = mongoose.model('materials').find(query);
 
     search.remove().exec(function (err, searchMaterial){
       if (err) { return next(err); }
@@ -304,10 +283,10 @@ router.post('/savematerials', function(req, res, next) {
       res.sendStatus(200);
     });
   } else if(req.body.action === "add"){
-    bodyMaterials = req.body.material;
-    console.log(bodyMaterials);
+    bodyMaterials = req.body.parameter;
+    console.log('Body Materials', bodyMaterials);
 
-    console.log(bodyMaterials.manufacturer);
+    console.log('Manufaturer', bodyMaterials.manufacturer);
     //I didn't need to do this part, it's a bit redundant.
     var manufacturer = bodyMaterials.manufacturer,
         distributor = bodyMaterials.distributor,
@@ -356,16 +335,16 @@ router.post('/savematerials', function(req, res, next) {
 });
 
 router.post('/saveproducts', function(req, res, next) {
-  console.log(req.body.product);
-  console.log(req.body.action);
-  console.log(req.body.parameter);
+  //console.log(req.body.product);
+  console.log("Action: ", req.body.action);
+  //console.log(req.body.parameter);
 
 
   if(req.body.action === "update"){
-    console.log(req.body.product.distributor);
-    console.log(req.body.product.manufacturer);
-    console.log(req.body.product.type);
-    console.log(req.body.product.price);
+    //console.log(req.body.product.distributor);
+    //console.log(req.body.product.manufacturer);
+    //console.log(req.body.product.type);
+    console.log("Product: ", req.body.product);
     var product = req.body.product;
 
     var conditions = {distributor: req.body.product.distributor, manufacturer: req.body.product.manufacturer, type: req.body.product.type, description: req.body.product.description}
@@ -379,12 +358,13 @@ router.post('/saveproducts', function(req, res, next) {
         fullSheet5 : product.fullSheet5,
         fullSheet21 : product.fullSheet21,
         isa : product.isa,
-        collection : product.collection,
-        formula : product.formula 
+        matCollection : product.matCollection,
+        formula : product.formula,
+        price: product.price
       }
       , options = { multi: false};
 
-    mongoose.model('product').update(conditions, update, options, callback);
+    mongoose.model('products').update(conditions, update, options, callback);
     function callback (err, numAffected) {
       //numAffected is the number of updated documents
       if(err) {
@@ -399,8 +379,8 @@ router.post('/saveproducts', function(req, res, next) {
   } else if(req.body.action === "delete"){
     var ObjectId = require('mongoose').Types.ObjectId; 
     var query = { _id: new ObjectId(req.body.parameter)};
-  console.log(query);
-    var search = mongoose.model("products").find(query);
+  console.log("Query ", query);
+    var search = mongoose.model('products').find(query);
 
     search.remove().exec(function (err, searchProduct){
       if (err) { return next(err); }
@@ -409,17 +389,18 @@ router.post('/saveproducts', function(req, res, next) {
       res.sendStatus(200);
     });
   } else if(req.body.action === "add"){
-    bodyProducts = req.body.product;
-    console.log(bodyProducts);
+    bodyProducts = req.body.parameter;
+    console.log("Body Products: ", bodyProducts);
 
-    console.log(bodyProducts.manufacturer);
+    console.log("Manufacturer: ", bodyProducts.manufacturer);
     //I didn't need to do this part, it's a bit redundant.
     var distributor = bodyProducts.distributor,
       manufacturer = bodyProducts.manufacturer,
       type = bodyProducts.type,
       description = bodyProducts.description,
       itemCode = bodyProducts.itemCode,
-      price = bodyProducts.price;
+      price = bodyProducts.price,
+      formula = bodyProducts.formula;
 
     var newProduct = new products({
       distributor : distributor,
@@ -427,9 +408,10 @@ router.post('/saveproducts', function(req, res, next) {
       type : type,
       description : description,
       itemCode : itemCode,
-      price : price
+      price : price,
+      formula: formula
     });
-
+console.log("New Product: ", newProduct);
     newProduct.save(function (err, products) {
       if (err) {
         console.log("Errors: " + err);

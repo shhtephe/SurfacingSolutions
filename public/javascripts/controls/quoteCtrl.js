@@ -4,9 +4,9 @@
 	angular.module('surfacingSolutions')
 	.controller('quoteCtrl', quoteCtrl);
 
-	quoteCtrl.$inject = ['dataFactory', '$stateParams', '$http', '$scope'];
+	quoteCtrl.$inject = ['dataFactory', '$stateParams', '$http'];
 
-	function quoteCtrl(dataFactory, $stateParams, $http, $scope) {
+	function quoteCtrl(dataFactory, $stateParams, $http) {
 		//'this' replaces $scope
 		var vm = this;
 
@@ -37,7 +37,7 @@
 	 		vm.quote.counters[parentIndex].totalPrice += - oldPrice + charges.totalPrice;
 	 		vm.quote.totalPrice += - oldPrice + charges.totalPrice;
 	 		console.log(vm.quote.counters[parentIndex].mandatoryCharges[index]);
-	 		vm.vm.quote = vm.quote;
+	 		vm.quote = vm.quote;
 
 		};
 
@@ -155,7 +155,6 @@
 			vm.addonQuantity = "";
 			console.log(vm.quote.totalPrice, totalPrice);
 			vm.quote.totalPrice += totalPrice;
-			vm.vm.quote = vm.quote;
 			//updatePrice(quantity, price, "addon"); - For use later
 			//vm.hideAddons();
 		};	
@@ -167,11 +166,11 @@
 		};
 
 		vm.saveEditCounter = function(index){
-			console.log(vm.vm.quote.counters[index], index);
+			console.log(vm.quote.counters[index], index);
 		};
 
 		vm.saveCounter = function(width, length, shape, material, index) {
-	//console.log("Width", width, "Length", length, "Shape", shape, "Material", material, "Index", index);
+	console.log("Width", width, "Length", length, "Shape", shape, "Material", material, "Index", index);
 
 	//Obviously, we set some variables. 
 			var squareFootage = 0;
@@ -291,13 +290,13 @@
 
 	//Hides the counter add button at the top of the page.
 				vm.hideCounter();
-	//Save the price of the counter, and the total price of the vm.quote. Save it to the vm.vm.quote variable.
+	//Save the price of the counter, and the total price of the vm.quote. Save it to the vm.quote variable.
 				vm.quote.counters[vm.quote.counters.length-1].material.price = vm.quote.counters[vm.quote.counters.length-1].totalPrice;		
 				vm.quote.totalPrice += vm.quote.counters[vm.quote.counters.length-1].totalPrice;
 			}
 			else{
 	//Replace the existing addons into the new array :)
-console.log(vm.quote.counters[index].addons.length);
+	//console.log(vm.quote.counters[index].addons.length);
 			if(typeof vm.quote.counters[index].addons.length !== undefined) {
 				for (var i = vm.quote.counters[index].addons.length - 1; i >= 0; i--) {
 					pushObj.addons.push(vm.quote.counters[index].addons[i]);6
@@ -312,9 +311,11 @@ console.log(vm.quote.counters[index].addons.length);
 				vm.quote.totalPrice += pushObj.totalPrice;
 	//replace the counter object with the edited one.
 				vm.quote.counters.splice(index, 1, pushObj);
+
+				console.log(vm.quote.counter);
 			};
 
-			//vm.vm.quote = vm.quote; - I don't think this is needed anymore, since VM is the view model and is already bound.
+			//vm.quote = vm.quote; - I don't think this is needed anymore, since VM is the view model and is already bound.
 
 			//console.log("Counter Price w/o addons", vm.quote.counters[vm.quote.counters.length-1].material.price);
 		};
@@ -339,12 +340,12 @@ console.log(vm.quote.counters[index].addons.length);
 	  		success(function(data, status, headers, config) {
 		    	// this callback will be called asynchronously
 		    	// when the response is available
-		    	vm.addAlert("success", "vm.quote saved Successfully");
+		    	vm.addAlert("success", "Quote saved Successfully");
 		  	}).
 	  		error(function(data, status, headers, config) {
 			    // called asynchronously if an error occurs
 			    // or server returns response with an error status.
-				vm.addAlert("danger", "Error: vm.quote did not save");
+				vm.addAlert("danger", "Error: Quote did not save");
 	  		});
 		};
 	};

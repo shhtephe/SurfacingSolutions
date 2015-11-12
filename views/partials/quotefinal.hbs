@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<div ng-controller="finalQuoteCtrl">
+<div ng-controller="quoteCtrl">
 <!-- ng-init='customer=<%- JSON.stringify(customer) %>;quote=<%- JSON.stringify(quote) %>;' no longer needed -->
-<!--{{quote.counters[0]}}
+<!--{/vm.quote.counters[0]/}
 <br>
 <br>
-{{customer}}
+{/vm.customer/}
 <br>
 <br>-->
 	<div id="page-wrap">
-	<a href="/#/customer/{{customer.custCode}}/quote/{{quote.quoteID}}"><button type="button" style="btn">Back</button>
+	<a href="/#/customer/{/vm.customer.custCode/}/quote/{/vm.quote.quoteID/}"><button type="button" style="btn">Back</button>
 
 		<textarea id="header">Final Quote</textarea>	
 		<div id="surfacingIdentity">
@@ -37,24 +37,24 @@
 		
 		<div style="clear:both"></div>
 		
-		<textarea id="customer-title">{{customer.companyName}}</textarea>
+		<textarea id="customer-title">{/vm.customer.companyName/}</textarea>
 		<br> <br> <br> 
 		<div id="customer">
-            <textarea id="customerInfo">{{customer.lastName}}, {{customer.firstName}}
-{{customer.addressLine1}} {{customer.addressLine2}}
-{{customer.city}}, {{customer.province}} {{customer.postal}}
+            <textarea id="customerInfo">{/vm.customer.lastName/}, {/vm.customer.firstName/}
+{/vm.customer.addressLine1/} {/vm.customer.addressLine2/}
+{/vm.customer.city/}, {/vm.customer.province/} {/vm.customer.postal/}
 
-Phone: {{customer.homePhone}}</textarea>
+Phone: {/vm.customer.homePhone/}</textarea>
 
             <table id="meta">
                 <tr>
                     <td class="meta-head">Quote #</td>
-                    <td><textarea>{{quote.quoteID}}</textarea></td>
+                    <td><textarea>{/vm.quote.quoteID/}</textarea></td>
                 </tr>
                 <tr>
 
                     <td class="meta-head">Date</td>
-                    <td><textarea id="date">{{quote.createdAt | limitTo: 10}}</textarea></td>
+                    <td><textarea id="date">{/vm.quote.createdAt | limitTo: 10/}</textarea></td>
                 </tr>
                 <tr>
                     <td class="meta-head">P.O. No./ Job No.</td>
@@ -79,27 +79,27 @@ Phone: {{customer.homePhone}}</textarea>
 		      <th>Price</th>
 		  </thead>
 		    <tbody>
-		    <tr ng-repeat="counter in quote.counters | flattenRows">
-				<td class="item-name"><span ng-hide="counter.addon">{{counter.material.manufacturer}} - {{counter.material.description}}</span><span class="label label-info" ng-show="counter.addon">Addon</span></td>
-			    <td class="description"><textarea>{{counter.description}}</textarea></td>
-			    <td><textarea class="cost">{{counter.price | currency:$}}</textarea></td>
-			    <td><textarea class="qty">{{counter.quantity}}</textarea></td>
-			    <td><span class="price">{{counter.totalPrice | currency: $}}</span></td>
+		    <tr ng-repeat="counter in vm.quote.counters | flattenRows">
+				<td class="item-name"><span ng-hide="counter.addon">{/counter.material.manufacturer/} - {/counter.material.description/}</span><span class="label label-info" ng-show="counter.addon">Addon</span></td>
+			    <td class="description"><textarea>{/counter.description/}</textarea></td>
+			    <td><textarea class="cost">{/counter.price | currency:$/}</textarea></td>
+			    <td><textarea class="qty">{/counter.quantity/}</textarea></td>
+			    <td><span class="price">{/counter.totalPrice | currency: $/}</span></td>
 			</tr>
 			<tr>
 		    	<td colspan="3" class="blank"> </td>
 		    	<td colspan="1" class="total-line">Subtotal</td>
-		    	<td class="total-value"><div id="subtotal">{{quote.totalPrice | currency:$}}</div></td>
+		    	<td class="total-value"><div id="subtotal">{/vm.quote.totalPrice | currency:$/}</div></td>
 		  	</tr>
 		  <tr>
 		      <td colspan="3" class="blank"> </td>
 		      <td colspan="1" class="total-line">HST (13%)</td>
-		      <td class="total-value"><div id="total">{{quote.totalPrice * 0.13 | currency:$}}</div></td>
+		      <td class="total-value"><div id="total">{/vm.quote.totalPrice * 0.13 | currency:$/}</div></td>
 		  </tr>
 		  <tr>
 		      <td colspan="3" class="blank"> </td>
 		      <td colspan="1" class="total-line">Total</td>
-		      <td class="total-value"><div id="total">{{quote.totalPrice * 1.13 | currency:$}}</div></td>
+		      <td class="total-value"><div id="total">{/vm.quote.totalPrice * 1.13 | currency:$/}</div></td>
 		  </tr>
 		
 		</table>

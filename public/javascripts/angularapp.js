@@ -62,17 +62,17 @@ function($interpolateProvider, $stateProvider, $urlRouterProvider, $locationProv
       controller: 'quoteCtrl',
       controllerAs: 'vm'
   })
-    .state('finalquote', {
+    .state('quotefinal', {
       url: '/customer/{custCode}/quote/{quoteID}/quotefinal',
       templateUrl: function(stateParams){
         return '/customer/' + stateParams.custCode + '/quote/' + stateParams.quoteID + '/quotefinal';
       },
       data: {
-        requireLogin: true
+        requireLogin: true,
       },
-      controller: 'finalQuoteCtrl',
-      css: ['stylesheets/quoteprint.css','stylesheets/quotestyle.css'],
-      controllerAs: 'vm'
+      controller: 'quoteCtrl',
+      controllerAs: 'vm',
+      css: ['stylesheets/quoteprint.css','stylesheets/quotestyle.css']
   })
     .state('customers', {
       url: '/customers',

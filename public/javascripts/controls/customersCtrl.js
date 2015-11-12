@@ -1,9 +1,9 @@
 (function() {
-'use strict';
+	'use strict';
 
-angular
-	.module('surfacingSolutions')
-	.controller('customersCtrl', customersCtrl);
+	angular
+		.module('surfacingSolutions')
+		.controller('customersCtrl', customersCtrl);
 
 	customersCtrl.$inject = ['dataFactory'];
 

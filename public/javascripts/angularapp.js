@@ -13,10 +13,7 @@ function($interpolateProvider, $stateProvider, $urlRouterProvider, $locationProv
       templateUrl: '/home',
       data: {
         requireLogin: false
-      },
-      controller: 'homeCtrl',
-      controllerAs: 'vm'
-
+      }
     })
     .state('login', {
   		url: '/login',

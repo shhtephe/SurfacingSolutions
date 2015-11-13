@@ -89,7 +89,8 @@ function($interpolateProvider, $stateProvider, $urlRouterProvider, $locationProv
             data: {
         requireLogin: true
       },
-      controller: 'newCustomerCtrl'
+      controller: 'newCustomerCtrl',
+      controllerAs: 'vm'
   })
     .state('logout', {
       url: '/logout',

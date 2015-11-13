@@ -25,9 +25,13 @@ router.post('/create', function(req, res, next) {
         input: req.body,
         error: 'Something went wrong'
       };
-      return res.render('partials/customers/create', vm);
+    } else {
+      var vm = {
+        title: 'Create a New User',
+        input: req.body
+      }
     };
-    res.render('partials/customers');
+    return res.json(vm);
   });
 });
 

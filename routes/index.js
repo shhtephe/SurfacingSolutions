@@ -37,7 +37,7 @@ router.param('customer', function(req, res, next, custCode) {
   var query = {};
       query["custCode"] = custCode;
 
-  var search = mongoose.model('customer').findOne(query);
+  var search = mongoose.model('customers').findOne(query);
 
   search.exec(function (err, customer){
     if (err) { return next(err); }
@@ -52,7 +52,7 @@ router.param('customer', function(req, res, next, custCode) {
 
 
 router.get('/customerdata/:customer', function(req, res, next) {
-  req.customer.populate('customer', function(err, customer) {
+  req.customer.populate('customers', function(err, customer) {
     if (err) { return next(err); }
     var query = {};
     query["custCode"] = customer.custCode;
@@ -88,7 +88,7 @@ router.param('quotedata', function(req, res, next, quoteID) {
   search.exec(function (err, quote){
     if (err) {return next(err); }
     if (typeof quote[0]==="undefined") {
-      //Instead of just hitting next, we replace the quote with a new one
+      //Instead of just hitting next, create a new quote
       var query = {};
       query["custCode"] = req.customer.custCode;
       search = mongoose.model('quote').findOne().sort({quoteID : "desc"}).exec(function(err, quote){
@@ -486,7 +486,7 @@ router.get('/customers', function(req, res, next) {
 });
 
 router.get('/customersdata', function(req, res, next) {
-  mongoose.model('customer').find(function(err, data) {
+  mongoose.model('customers').find(function(err, data) {
       res.json(data);
   }); 
 });

@@ -3,7 +3,7 @@
         <div class="container">
             <div class="col-xs-offset-2 col-xs-8">
 			<div ng-controller="customersCtrl">
-			<!--ng-init='customers=<%- JSON.stringify(data) %>; init()'-->
+			<ng-init='init()'>
 				Search by Name: <input type="text" ng-model="filter.search"><br><br>
 				<ul>
 					<li ng-repeat="customer in vm.customers | filter:filter.search">

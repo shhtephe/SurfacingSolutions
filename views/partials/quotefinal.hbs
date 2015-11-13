@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <div ng-controller="quoteCtrl">
-<!-- ng-init='customer=<%- JSON.stringify(customer) %>;quote=<%- JSON.stringify(quote) %>;' no longer needed -->
+
 <!--{/vm.quote.counters[0]/}
 <br>
 <br>
@@ -9,7 +9,7 @@
 <br>-->
 	<div id="page-wrap">
 	<a href="/#/customer/{/vm.customer.custCode/}/quote/{/vm.quote.quoteID/}"><button type="button" style="btn">Back</button>
-	<button type="button" style="btn" ng-click="vm.email()">Email PDF</button>button>
+	<!--<button type="button" style="btn" ng-click="vm.email()">Email PDF</button>-->
 		<textarea id="header">Final Quote</textarea>	
 		<div id="surfacingIdentity">
 

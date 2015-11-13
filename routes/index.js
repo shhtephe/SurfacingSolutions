@@ -4,8 +4,7 @@ var passport = require('passport');
 //mongoose schemas
 var account = require('../models/account'); 
 var quotes = require('../models/quotes'); 
-var customer = require('../models/customers'); 
-var customerSchema = require('../models/customers');
+var customers = require('../models/customers'); 
 var products = require('../models/products'); 
 var materials = require('../models/materials');
 //mongoose
@@ -124,17 +123,15 @@ router.param('quotedata', function(req, res, next, quoteID) {
           }
           else {
           // saved!
-          console.log(quote);
           console.log("New quote saved");
           req.quote = quote;
           console.log("Param Quote");
           console.log(req.quote);
           return next();
-          }
+          };
         });
       });
-    }
-    else{
+    } else {
       req.quote = quote;
       console.log("Param Quote");
       console.log(req.quote);

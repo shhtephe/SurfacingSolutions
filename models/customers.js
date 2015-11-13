@@ -3,7 +3,7 @@ var timestamps = require('mongoose-timestamp');
 var Schema = mongoose.Schema;
 
 
-var customerSchema = new Schema({
+var customers = new Schema({
 	firstName: String,
 	lastName: String,
 	companyName: String,
@@ -18,9 +18,5 @@ var customerSchema = new Schema({
 	custCode: Number
 });
 
-customerSchema.plugin(timestamps);
-var customer = mongoose.model('customer', customerSchema);
-
-module.exports = {
-	customer: customer
-};
+customers.plugin(timestamps);
+module.exports = mongoose.model('customers', customers);

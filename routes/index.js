@@ -9,6 +9,8 @@ var products = require('../models/products');
 var materials = require('../models/materials');
 //mongoose
 var mongoose = require('mongoose');
+//Phantom JS to Render pages as PDF
+var phantomjs = require('phantomjs');
 //express-mailer
 mailer = require('express-mailer');
 //Recieve JSON from Angular

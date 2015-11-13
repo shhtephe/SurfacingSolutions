@@ -22,7 +22,8 @@
 	  	];
 
 		vm.init = function(customers) {
-			if (typeof customers === "undefined" || customers === "") {
+			//console.log("customers: ", customers[0]);
+			if (typeof customers === undefined || customers[0] === undefined) {
 		    	vm.alerts.push({
 					type: "warning",
 			    	msg: "There are no customers. Head to Quote-->New Customers to add a new customer"

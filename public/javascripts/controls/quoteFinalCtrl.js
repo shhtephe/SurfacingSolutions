@@ -1,14 +1,27 @@
 (function() {
 	'use strict';
+ 
+	angular.module('surfacingSolutions')
+	.controller('quoteFinalCtrl', quoteFinalCtrl);
 
-	angular
-		.module('surfacingSolutions')
-		.controller('quoteFinalCtrl', quoteFinalCtrl);
+	quoteFinalCtrl.$inject = ['dataFactory', '$stateParams', '$http'];
 
-	quoteFinalCtrl.$inject = ['dataFactory', '$stateParams'];
+	function quoteFinalCtrl(dataFactory, $stateParams, $http) {
 
-	function quoteFinalCtrl (dataFactory, $stateParams) {
 		var vm = this;
+		vm.alerts = [];
+
+	  	vm.addAlert = function(type, msg) {
+		    vm.alerts.push({
+		    	type: type,
+		    	msg: msg
+		    });
+	  	};
+
+	  	vm.closeAlert = function(index) {
+		    vm.alerts.splice(index, 1);
+	  	};
+
 		var custCode = $stateParams.custCode;
 		var quoteID = $stateParams.quoteID;
 
@@ -16,43 +29,55 @@
 			.then(function(data) {
 				vm.quote = data.quote;
 				vm.customer = data.customer;
+				vm.products = data.products;
+				vm.materials = data.materials;
 			},
 			function(reason) {
 				console.log(reason);
-			});
+			});	
 
 		vm.email = function() {
 			vm.render();
-			
+
 		};
 
 		vm.render = function() {
-			var done = false; //flag that tells us if we're done rendering
+			var data = {
+				userID : custCode,
+				quoteID : quoteID
+			};
 
-			var page = require('webpage').create();
-			page.open('http://google.com', function (status) {
-			    //If the page loaded successfully...
-			    if(status === "success") {
-			        //Render the page
-			        page.render('google.png');
-			        console.log("Site rendered...");
-
-			        //Set the flag to true
-			        done = true;
-			    }
-			});
-
-			//Start polling every 100ms to see if we are done
-			var intervalId = setInterval(function() {
-			    if(done) {
-			        //If we are done, let's say so and exit.
-			        console.log("Done.");
-			        phantom.exit();
-			    } else {
-			        //If we're not done we're just going to say that we're polling
-			        console.log("Polling...");
-			    }
-			}, 100);
+			//Need to declare that it's sending a json doc
+			$http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
+			$http.post('/emailrender', {"data":data}).
+	  		success(function(data, status, headers, config) {
+		    	// this callback will be called asynchronously
+		    	// when the response is available
+		    	vm.addAlert("success", "Page Rendered successfully.");
+		    	console.log("Success!");
+		  	}).
+	  		error(function(data, status, headers, config) {
+			    // called asynchronously if an error occurs
+			    // or server returns response with an error status.
+				vm.addAlert("danger", "Error: Page not rendered.");
+	  			console.log("Failure!");
+	  		});
 		};
 	};
+	angular.module('surfacingSolutions')
+	.filter('flattenRows', function() {
+    return function(counters) {
+      var flatten = [];
+      angular.forEach(counters, function(counter) {
+        var addons = counter.addons;
+        flatten.push(counter);
+        if (addons) {
+          angular.forEach(addons, function(addon) {
+            flatten.push(angular.extend(addon, {addon: true}));
+          });
+        }
+      });
+      return flatten;
+    }
+  });
 }());

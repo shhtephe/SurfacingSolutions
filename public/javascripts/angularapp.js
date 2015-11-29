@@ -69,7 +69,7 @@ function($interpolateProvider, $stateProvider, $urlRouterProvider, $locationProv
       data: {
         requireLogin: true,
       },
-      controller: 'quoteCtrl',
+      controller: 'quoteFinalCtrl',
       controllerAs: 'vm',
       css: ['stylesheets/quoteprint.css','stylesheets/quotestyle.css']
   })

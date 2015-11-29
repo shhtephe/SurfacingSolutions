@@ -108,14 +108,17 @@
 				console.log(vm.quote.counters[index]);
 				if(shape === "rectangle"){
 					squareFootage = counterLength * counterWidth;
+					addon.quantity = squareFootage;
 					totalPrice = addon.price * squareFootage;
 					console.log(counterLength, counterWidth, squareFootage, totalPrice, addon.price);
 				} else if(shape === "circle"){
 					squareFootage = (counterWidth*counterWidth) * Math.PI;
 					squareFootage = squareFootage.toFixed(2);
+					addon.quantity = squareFootage;
 					totalPrice = addon.price * squareFootage;
 				};
 			}else if(addon.formula === "linear"){	
+					addon.quantity = squareFootage;
 					totalPrice = addon.linear * price;
 			}else{
 				console.log("This shouldn't ever run, I think!");

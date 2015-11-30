@@ -245,8 +245,8 @@
 						</div>
 						----------
 						<br>
-						<button type="button" ng-click="vm.divAddons = true">Add Addons</button>
-						<div ng-show="vm.divAddons">
+						<button type="button" ng-click="vm.divAddons[$index] = true">Add Addons</button>
+						<div ng-show="vm.divAddons[$index]">
 							<br>Addons: 
 							<br>Choose a Distributor:
 							<select name="counterAddonDistributor" ng-model="counterAddonDistributor" ng-options="product.distributor for product in vm.products | unique: 'distributor' track by product.distributor">
@@ -300,9 +300,9 @@
 
 									
 								</ul>
-							    <button type="button" ng-click="vm.saveAddon(counterAddonDescription, $index); vm.editCounter = false;" class="btn btn-default">Add</button>
+							    <button type="button" ng-click="vm.saveAddon(counterAddonDescription, $index); vm.divAddons[$index]=false;" class="btn btn-default">Add</button>
 							</div>
-							<button type="button" ng-click="vm.divAddons=false; counterAddonDistributor = ''" class="btn btn-danger">Cancel</button> 
+							<button type="button" ng-click="vm.divAddons[$index]=false; counterAddonDistributor = ''" class="btn btn-danger">Cancel</button> 
 						</div>
 						<br>
 						<!--<br><button type="button" ng-click="vm.divMandatory = true; showMandatory($index)" ng-show="vm.divMandatory == false">Add Mandatory Charges</button>

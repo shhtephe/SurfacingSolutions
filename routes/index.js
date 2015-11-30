@@ -1,3 +1,15 @@
+(function() {
+    var childProcess = require("child_process");
+    var oldSpawn = childProcess.spawn;
+    function mySpawn() {
+        console.log('spawn called');
+        console.log(arguments);
+        var result = oldSpawn.apply(this, arguments);
+        return result;
+    }
+    childProcess.spawn = mySpawn;
+})();
+
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
@@ -13,7 +25,6 @@ var mongoose = require('mongoose');
 mailer = require('express-mailer');
 //Recieve JSON from Angular
 var http = require('http');
-
 
 //I might have to ditch the error handler. Currently used in router.param(quote)
 function errorHandler(err, req, res, next) {
@@ -174,8 +185,6 @@ router.get('/customer/:customer/quote/:quote', function(req, res, next) {
   res.render('partials/quote');
 });
 
-/*THIS IS FUCKIN TEST CODE FOR NOW*/
-
 router.get('/customer/:customer/quote/:quote/quotefinal', function(req, res, next) {
   res.render('partials/quotefinal');
 });
@@ -208,7 +217,89 @@ router.get('/customer/:customer/quote/:quote/quotefinaldata', function(req, res,
     })
   }
 });
-/*SERIOUSLY, JUST TEST STUFF UNTIL I GET IT GOING*/
+
+router.post('/emailrender', function(req, res) {
+
+var wkhtmltopdf = require('wkhtmltopdf');
+var fs = require('fs');
+
+wkhtmltopdf('http://google.com/', { pageSize: 'letter' })
+  .pipe(fs.createWriteStream('out.pdf'));
+
+res.sendStatus(200);
+
+  /*var userID = req.body.data.userID;
+  var quoteID = req.body.data.quoteID;
+  
+  // get url to process
+  var url_to_process = "/#/customer/" + userID + "/quote/" + quoteID + "/quotefinal";
+
+  if (userID === undefined || userID == '' || quoteID === undefined || quoteID == '') {
+    res.writeHead(404, {'Content-Type': 'text/plain'});
+    res.end("404 Not Found");
+  };
+
+  // phantomjs screenshot
+  var phantom = require('phantom');
+  console.log('Var created');
+  phantom.create(function(ph){
+    console.log('Phantom.create initialised');
+    ph.createPage(function(page){
+      console.log('ph.createpage initialised'); 
+      page.open(url_to_process, function(status){
+        console.log('page.open initialised');
+        if (status == "success") {
+          // put images in public directory
+          var image_file_name = url_to_process.replace(/\W/g, '_') + ".png"
+          var image_path = public_dir + "/" + image_file_name
+          page.render(image_path, function(){
+            // redirect to static image
+            res.redirect('/'+image_file_name);
+          });
+        }
+        else {
+          res.writeHead(404, {'Content-Type': 'text/plain'});
+          res.end("404 Not Found");
+        };
+        page.close();
+        ph.exit();
+      });
+    });
+  });
+*/
+  /*
+  var done = false; //flag that tells us if we're done rendering
+  var userID = req.body.data.userID;
+  var quoteID = req.body.data.quoteID;
+  var page = require('webpage').create();
+  page.open('http://google.com', function (status) {
+      //If the page loaded successfully...
+      if(status === "success") {
+          //Render the page
+          page.render('google.pdf');
+          console.log("Site rendered...");
+
+          //Set the flag to true
+          done = true;
+      } else {
+        console.log('Site did not render');
+      };
+  });
+
+  //Start polling every 100ms to see if we are done
+  var intervalId = setInterval(function() {
+      if(done) {
+          //If we are done, let's say so and exit.
+          console.log("Done.");
+          phantom.exit();
+          res.sendStatus(200);
+      } else {
+          //If we're not done we're just going to say that we're polling
+          console.log("Polling...");
+      }
+  }, 100);
+*/
+});
 
 router.get('/admindata', function(req, res, next) {
   mongoose.model('products').find(function(err, products){

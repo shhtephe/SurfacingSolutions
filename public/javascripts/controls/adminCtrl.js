@@ -183,8 +183,7 @@
       };
 
       vm.saveMaterials = function(action, parameter){
-      console.log(action, parameter)
-
+      console.log(action, parameter, vm.materials[parameter]);
       //declaring json data
         $http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
         $http.post('/savematerials', {"material":vm.materials[parameter], "action": action, "parameter": parameter}).

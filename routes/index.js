@@ -341,9 +341,10 @@ router.post('/savematerials', function(req, res, next) {
   if(req.body.action === "update"){
     /*console.log(req.body.material.distributor);
     console.log(req.body.material.manufacturer);
-    console.log(req.body.material.colourGroup);*/
+    console.log(req.body.material.colourGroup);
+    console.log("Mat Colleciton", material.matCollection);*/
     var material = req.body.material;
-    console.log("Mat Colleciton", material.matCollection);
+    
 
     var conditions = {distributor: req.body.material.distributor, manufacturer: req.body.material.manufacturer, colourGroup: req.body.material.colourGroup, description: req.body.material.description}
       , update = {

@@ -4,10 +4,10 @@
 	angular.module('surfacingSolutions')
 	.controller('quoteFinalCtrl', quoteFinalCtrl);
 
-	quoteFinalCtrl.$inject = ['dataFactory', '$stateParams', '$http'];
+	quoteFinalCtrl.$inject = ['dataFactory', '$stateParams', '$http', '$window'];
 
-	function quoteFinalCtrl(dataFactory, $stateParams, $http) {
-
+	function quoteFinalCtrl(dataFactory, $stateParams, $http, $window) {
+		console.log($window.status);
 		var vm = this;
 		vm.alerts = [];
 
@@ -43,6 +43,7 @@
 
 		vm.render = function() {
 			var data = {
+				url: '/#/customer/' + custCode + '/quote/' + quoteID + '/quotefinal',
 				userID : custCode,
 				quoteID : quoteID
 			};
@@ -63,6 +64,8 @@
 	  			console.log("Failure!");
 	  		});
 		};
+
+		$window.status = "ready";	
 	};
 	angular.module('surfacingSolutions')
 	.filter('flattenRows', function() {

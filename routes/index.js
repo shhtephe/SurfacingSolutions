@@ -219,14 +219,29 @@ router.get('/customer/:customer/quote/:quote/quotefinaldata', function(req, res,
 });
 
 router.post('/emailrender', function(req, res) {
+  var wkhtmltopdf = require('wkhtmltopdf');
+  var fs = require('fs');
 
-var wkhtmltopdf = require('wkhtmltopdf');
-var fs = require('fs');
+  console.log(req.cookies);
 
-wkhtmltopdf('http://google.com/', { pageSize: 'letter' })
-  .pipe(fs.createWriteStream('out.pdf'));
+  wkhtmltopdf.command = 'C:/wkhtmltopdf/bin/wkhtmltopdf.exe';
 
-res.sendStatus(200);
+  pageURL = "http://" + req.hostname + ":3000" + req.body.data.url;
+  console.log(pageURL);
+
+wkhtmltopdf( pageURL, { 
+    pageSize: 'letter',  
+    'window-status': 'ready',
+    
+  })
+  .pipe(fs.createWriteStream('out.pdf'))
+    .on('error', function( err ){ throw err })
+    .on('finish', function(){
+      console.log("Success");
+      res.sendStatus(200);
+    });
+
+
 
   /*var userID = req.body.data.userID;
   var quoteID = req.body.data.quoteID;

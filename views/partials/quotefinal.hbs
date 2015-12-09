@@ -10,7 +10,7 @@
 <alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</alert>
 	<div id="page-wrap">
 	<a href="/#/customer/{/vm.customer.custCode/}/quote/{/vm.quote.quoteID/}"><button type="button" style="btn">Back</button></a>
-	<button type="button" style="btn" ng-click="vm.email()">Email PDF</button>
+	<!--<button type="button" style="btn" ng-click="vm.email()">Email PDF</button>-->
 		<textarea id="header">Final Quote</textarea>	
 		<div id="surfacingIdentity">
 
@@ -59,10 +59,10 @@ Phone: {/vm.customer.homePhone/}</textarea>
                 </tr>
                 <tr>
                     <td class="meta-head">P.O. No./ Job No.</td>
-                    <td><div class="due">Payment Terms</div></td>
+                    <td><div class="due">63820</div></td>
                 </tr>
                 <tr>
-                    <td class="meta-head">63820</td>
+                    <td class="meta-head">Payment Terms</td>
                     <td><div class="due">Net 30</div></td>
                 </tr>
 

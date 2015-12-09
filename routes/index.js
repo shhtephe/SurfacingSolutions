@@ -219,7 +219,7 @@ router.get('/customer/:customer/quote/:quote/quotefinaldata', function(req, res,
 });
 
 router.post('/emailrender', function(req, res) {
-  var wkhtmltopdf = require('wkhtmltopdf');
+  /*var wkhtmltopdf = require('wkhtmltopdf');
   var fs = require('fs');
 
   console.log(req.cookies);
@@ -240,15 +240,13 @@ wkhtmltopdf( pageURL, {
       console.log("Success");
       res.sendStatus(200);
     });
+*/
 
-
-
-  /*var userID = req.body.data.userID;
+  var userID = req.body.data.userID;
   var quoteID = req.body.data.quoteID;
-  
   // get url to process
-  var url_to_process = "/#/customer/" + userID + "/quote/" + quoteID + "/quotefinal";
-
+  //var url_to_process = "localhost:3000/#/customer/" + userID + "/quote/" + quoteID + "/quotefinal";
+  var url_to_process = "google.com"
   if (userID === undefined || userID == '' || quoteID === undefined || quoteID == '') {
     res.writeHead(404, {'Content-Type': 'text/plain'});
     res.end("404 Not Found");
@@ -257,10 +255,13 @@ wkhtmltopdf( pageURL, {
   // phantomjs screenshot
   var phantom = require('phantom');
   console.log('Var created');
+  phantom.command = 'C:/phantomjs/bin/phantomjs.exe';
+console.log('command set');
   phantom.create(function(ph){
     console.log('Phantom.create initialised');
     ph.createPage(function(page){
-      console.log('ph.createpage initialised'); 
+      console.log('ph.createpage initialised');
+      console.log(url_to_process); 
       page.open(url_to_process, function(status){
         console.log('page.open initialised');
         if (status == "success") {
@@ -281,7 +282,6 @@ wkhtmltopdf( pageURL, {
       });
     });
   });
-*/
   /*
   var done = false; //flag that tells us if we're done rendering
   var userID = req.body.data.userID;

@@ -252,7 +252,7 @@
 
 	//Checks the shape of the table, and then calculates square footage.
 			if(shape === "rectangle"){
-				squareFootage = length * width;
+				squareFootage = (length * width) / 12; //measurements are in inches, then converted to feet
 			} else if(shape === "circle"){
 				squareFootage = (length*width) * Math.PI;
 				squareFootage = squareFootage.toFixed(2);

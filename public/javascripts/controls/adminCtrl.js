@@ -13,7 +13,6 @@
 
       dataFactory.getProductsMaterials()
         .then(function(data) {
-          console.log(data);
           vm.products = data.products;
           vm.materials = data.materials;
         })
@@ -119,7 +118,6 @@
 
 
       vm.addNewMaterial = function(materialDescription){
-        console.log(materialDescription);
         var material = {
           manufacturer : materialDescription.manufacturer,
           distributor : materialDescription.distributor,
@@ -137,14 +135,14 @@
           matCollection : materialDescription.matCollection
         };
         vm.materials.push(material);
-        console.log(vm.materials);
-        console.log(material);
+        //console.log(vm.materials);
+        //console.log(material);
 
         vm.saveMaterials("add", material);
       };
 
       vm.deleteMaterial = function(editMaterialDescription){
-        console.log(editMaterialDescription);
+        //console.log(editMaterialDescription);
 
         var index = arraySearch(editMaterialDescription._id, vm.materials)
         //delete item
@@ -161,10 +159,10 @@
 
       vm.updateMaterial = function(editMaterialDescription){
         //console.log(vm.materials);
-        console.log(editMaterialDescription);
+        //console.log(editMaterialDescription);
 
         var index = arraySearch(editMaterialDescription._id, vm.materials);
-        console.log(index);
+        //console.log(index);
 
         vm.materials[index].itemCode = editMaterialDescription.itemCode,
         vm.materials[index].thickness = editMaterialDescription.thickness,
@@ -183,7 +181,7 @@
       };
 
       vm.saveMaterials = function(action, parameter){
-      console.log(action, parameter, vm.materials[parameter]);
+      //console.log(action, parameter, vm.materials[parameter]);
       //declaring json data
         $http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
         $http.post('/savematerials', {"material":vm.materials[parameter], "action": action, "parameter": parameter}).
@@ -205,7 +203,7 @@
       };
 
     vm.addNewProduct = function(productDescription){
-        console.log(productDescription);
+        //console.log(productDescription);
         var product = {
           distributor : productDescription.distributor,
           manufacturer : productDescription.manufacturer,
@@ -223,7 +221,7 @@
       };
 
       vm.deleteProduct = function(editProductDescription){
-        console.log(editProductDescription);
+        //console.log(editProductDescription);
 
         var index = arraySearch(editProductDescription._id, vm.products)
         //delete item
@@ -242,7 +240,7 @@
 
       vm.updateProduct = function(editProductDescription){
         //console.log(vm.products);
-        console.log(editProductDescription);
+        //console.log(editProductDescription);
 
         var index = arraySearch(editProductDescription._id, vm.products);
         console.log(index);
@@ -256,7 +254,7 @@
 
       //I don't think I use this one either.
     	vm.saveProducts = function(action, parameter){
-        console.log(action, parameter);
+        //console.log(action, parameter);
 
       //declaring json data
         $http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';

@@ -335,7 +335,7 @@
 			/*if(vm.quote.jobDifficulty.$dirty === true){
 				console.log("value has changed");
 			};*/
-
+console.log(vm.quote.poNumber);
 			//save the quote
 			//Need to declare that it's sending a json doc
 			$http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';

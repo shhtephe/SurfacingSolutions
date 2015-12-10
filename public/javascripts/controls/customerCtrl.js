@@ -31,8 +31,8 @@
 			else {
 				max = 1;
 			}
-			console.log(max);
-			console.log($stateParams.custCode);
+			//console.log(max);
+			//console.log($stateParams.custCode);
 			var path = "/customer/" + $stateParams.custCode + "/quote/" + max;
 
 			$location.path( path );

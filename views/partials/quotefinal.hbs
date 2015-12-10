@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<div ng-controller="quoteCtrl">
+
+<!--{/vm.quote.counters[0]/}
+<br>
+<br>
+{/vm.customer/}
+<br>
+<br>-->
+<alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</alert>
+	<div id="page-wrap">
+	<a href="/#/customer/{/vm.customer.custCode/}/quote/{/vm.quote.quoteID/}"><button type="button" style="btn">Back</button></a>
+	<!--<button type="button" style="btn" ng-click="vm.email()">Email PDF</button>-->
+		<textarea id="header">Final Quote</textarea>	
+		<div id="surfacingIdentity">
+
+			<textarea id="surfacingInfo">Surfacing Solutions 2010 Ltd.</textarea>
+			<br> <br>
+			<textarea id="surfacingAddress">34-160 Wilkinson Road &#13;Brampton, Ontario&#13;L6T 4Z4&#13;P: 905-874-1814 F: 905-874-8083&#13;Website: www.surfacingsolutions.ca&#13;Email: psmith45@bell.net</textarea>
+			<div id="logo">
+
+              <div id="logoctr">
+                <a href="javascript:;" id="change-logo" title="Change logo">Change Logo</a>
+                <a href="javascript:;" id="save-logo" title="Save changes">Save</a>
+                |
+                <a href="javascript:;" id="delete-logo" title="Delete logo">Delete Logo</a>
+                <a href="javascript:;" id="cancel-logo" title="Cancel changes">Cancel</a>
+              </div>
+
+              <div id="logohelp">
+                <input id="imageloc" type="text" size="50" value="" /><br />
+                (max width: 540px, max height: 100px)
+              </div>
+              <img id="image" src="images/ssilogo.png" alt="logo" />
+            </div>
+		</div>
+
+		
+		<div style="clear:both"></div>
+		
+		<textarea id="customer-title">{/vm.customer.companyName/}</textarea>
+		<br> <br> <br> 
+		<div id="customer">
+            <textarea id="customerInfo">{/vm.customer.lastName/}, {/vm.customer.firstName/}
+{/vm.customer.addressLine1/} {/vm.customer.addressLine2/}
+{/vm.customer.city/}, {/vm.customer.province/} {/vm.customer.postal/}
+
+Phone: {/vm.customer.homePhone/}</textarea>
+
+            <table id="meta">
+                <tr>
+                    <td class="meta-head">Quote #</td>
+                    <td><textarea>{/vm.quote.quoteID/}</textarea></td>
+                </tr>
+                <tr>
+
+                    <td class="meta-head">Date</td>
+                    <td><textarea id="date">{/vm.quote.createdAt | limitTo: 10/}</textarea></td>
+                </tr>
+                <tr>
+                    <td class="meta-head">P.O. No./ Job No.</td>
+                    <td><div class="due">63820</div></td>
+                </tr>
+                <tr>
+                    <td class="meta-head">Payment Terms</td>
+                    <td><div class="due">Net 30</div></td>
+                </tr>
+
+            </table>
+		
+		</div>
+		
+		<table id="items">
+		
+		  <thead>
+		      <th>Item</th>
+		      <th>Description</th>
+		      <th>Unit Cost</th>
+		      <th>Quantity</th>
+		      <th>Price</th>
+		  </thead>
+		    <tbody>
+		    <tr ng-repeat="counter in vm.quote.counters | flattenRows">
+				<td class="item-name">
+					<span ng-hide="counter.addon">{/counter.material.manufacturer/} - {/counter.material.description/}</span>
+					<span class="label label-info" ng-show="counter.addon">Addon</span>
+				</td>
+			    <td class="description">
+			    	<span ng-hide="counter.addon">
+			    		<textarea>{/counter.description/}</textarea>
+		    		</span>
+		    		<span ng-show="counter.addon">
+			    		<textarea>{/counter.description/}</textarea>
+		    		</span>
+	    		</td>
+			    <td>
+			    	<span ng-hide="counter.addon">
+			    		<textarea class="cost">{/counter.material.price | currency:$/}</textarea>		    		
+		    		</span>
+		    		<span ng-show="counter.addon">
+			    		<textarea>{/counter.price | currency:$/}</textarea>
+		    		</span>
+		    	</td>
+			    <td>
+		    		<span ng-show="counter.addon">
+			    		<textarea>{/counter.quantity/}</textarea>
+		    		</span>		    	
+	    		</td>
+			    <td>	
+			    	<span class="price">{/counter.totalPrice | currency: $/}</span>
+		    	</td>
+			</tr>
+
+			<tr>
+		    	<td colspan="3" class="blank"> </td>
+		    	<td colspan="1" class="total-line">Subtotal</td>
+		    	<td class="total-value"><div id="subtotal">{/vm.quote.totalPrice * vm.quote.jobDifficulty| currency:$/}</div></td>
+		  	</tr>
+		  <tr>
+		      <td colspan="3" class="blank"> </td>
+		      <td colspan="1" class="total-line">HST (13%)</td>
+		      <td class="total-value"><div id="total">{/vm.quote.totalPrice * 0.13 | currency:$/}</div></td>
+		  </tr>
+		  <tr>
+		      <td colspan="3" class="blank"> </td>
+		      <td colspan="1" class="total-line">Total</td>
+		      <td class="total-value"><div id="total">{/vm.quote.totalPrice * 1.13 | currency:$/}</div></td>
+		  </tr>
+		
+		</table>
+		
+		<div id="terms">
+		  <h5>Terms</h5>
+		  <textarea>All product remains the property of Surfacing Solutions 2010 Ltd until paid in full.Interest charged at 2% per month on all past due accounts.We now accept VISA and MasterCard at time of quote only</textarea>
+		</div>
+	
+	</div>
+</div>

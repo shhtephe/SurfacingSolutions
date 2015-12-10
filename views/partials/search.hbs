@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<div ng-controller="searchCtrl" ng-init="
+customers = <%if (data) {%><%= JSON.stringify(data)%><%}else{%><%= false %><%}%>">
+	Search by Customer Data or Invoice Number <br> <br>
+<table class="table">
+	<tr>
+		<td>First Name <input ng-model="firstName" type="text" name="firstName"> 
+		Last Name <input ng-model="lastName" type="text" name="lastName"> <br></td>
+	</tr>
+	<tr>
+		<td>Company Name <input ng-model="companyName" type="text" name="companyName">
+		Email <input ng-model="email" type="text" name="email"> <br></td>
+	</tr>
+</table>
+	<button type="button" class="btn" ng-click="search(
+		firstName, 
+		lastName, 
+		companyName, 
+		email
+		)">
+		Search! : D
+	</button>
+</div>

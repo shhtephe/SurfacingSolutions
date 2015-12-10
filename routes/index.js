@@ -1,3 +1,15 @@
+(function() {
+    var childProcess = require("child_process");
+    var oldSpawn = childProcess.spawn;
+    function mySpawn() {
+        console.log('spawn called');
+        console.log(arguments);
+        var result = oldSpawn.apply(this, arguments);
+        return result;
+    }
+    childProcess.spawn = mySpawn;
+})();
+
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
@@ -5,7 +17,6 @@ var passport = require('passport');
 var account = require('../models/account'); 
 var quotes = require('../models/quotes'); 
 var customers = require('../models/customers'); 
-var customerSchema = require('../models/customers');
 var products = require('../models/products'); 
 var materials = require('../models/materials');
 //mongoose
@@ -15,12 +26,11 @@ mailer = require('express-mailer');
 //Recieve JSON from Angular
 var http = require('http');
 
-
 //I might have to ditch the error handler. Currently used in router.param(quote)
 function errorHandler(err, req, res, next) {
   console.log(err);
-  //res.status(500);
-  //res.render('error', { error: err });
+  res.status(500);
+  res.render('error', { error: err });
 }
 
 //html5 refresh fix
@@ -33,11 +43,12 @@ router.get('/home', function(req, res, next) {
   res.render('partials/home', { title: 'Express' });
 });
 
+//If route starts with 'customer', this will grab customer data and store it in req.customer, and pass it on to the next function
 router.param('customer', function(req, res, next, custCode) {
   var query = {};
       query["custCode"] = custCode;
 
-  var search = mongoose.model("customers").findOne(query);
+  var search = mongoose.model('customers').findOne(query);
 
   search.exec(function (err, customer){
     if (err) { return next(err); }
@@ -50,43 +61,48 @@ router.param('customer', function(req, res, next, custCode) {
   });
 });
 
-router.get('/customer/:customer', function(req, res, next) {
 
-  req.customer.populate('customer', function(err, customer) {
+router.get('/customerdata/:customer', function(req, res, next) {
+  req.customer.populate('customers', function(err, customer) {
     if (err) { return next(err); }
     var query = {};
     query["custCode"] = customer.custCode;
 
-    var search = mongoose.model("quote").find(query);
+    var search = mongoose.model('quote').find(query);
 
     search.exec(function (err, quotes){
     if (err) { return next(err); }
     if (!quotes) { return next(new Error('can\'t find Quotes')); }
       req.customer = customer;
       console.log(quotes);
-      res.render('partials/customer', { 
-      customer: customer,
-      quotes: quotes
+      var vm = {
+        customer: customer,
+        quotes: quotes
+      }
+      res.json(vm); 
     });
   });
-  });
+});
+
+router.get('/customer/:customer', function(req, res, next) {
+  res.render('partials/customer');
 });
 
 /*apparently will save me work, but I don't think it will.
 Supposed to run every time there's 'quote' in a url*/
-router.param('quote', function(req, res, next, quoteID) {
+router.param('quotedata', function(req, res, next, quoteID) {
   var query = {};
   query["quoteID"] = quoteID;
   query["custCode"] = req.customer.custCode;
 
-  var search = mongoose.model("quote").find(query);
+  var search = mongoose.model('quote').find(query);
   search.exec(function (err, quote){
     if (err) {return next(err); }
     if (typeof quote[0]==="undefined") {
-      //Instead of just hitting next, we replace the quote with a new one
+      //Instead of just hitting next, create a new quote
       var query = {};
       query["custCode"] = req.customer.custCode;
-      search = mongoose.model("quote").findOne().sort({quoteID : "desc"}).exec(function(err, quote){
+      search = mongoose.model('quote').findOne().sort({quoteID : "desc"}).exec(function(err, quote){
       
       var quoteID 
 
@@ -118,17 +134,15 @@ router.param('quote', function(req, res, next, quoteID) {
           }
           else {
           // saved!
-          console.log(quote);
-          console.log("Quote saved");
+          console.log("New quote saved");
           req.quote = quote;
           console.log("Param Quote");
           console.log(req.quote);
           return next();
-          }
+          };
         });
       });
-    }
-    else{
+    } else {
       req.quote = quote;
       console.log("Param Quote");
       console.log(req.quote);
@@ -137,38 +151,49 @@ router.param('quote', function(req, res, next, quoteID) {
   });
 });
 
-router.get('/customer/:customer/quote/:quote', function(req, res, next) {
+router.get('/customer/:customer/quotedata/:quotedata', function(req, res, next) {
+console.log(req.quote);
   if (typeof req.quote[0]==="undefined") {
-      mongoose.model("products").find(function(err, products){
-        mongoose.model("materials").find(function(err, materials){
-          //console.log(materials);
-          res.render('partials/quote', { 
+      mongoose.model('products').find(function(err, products){
+        mongoose.model('materials').find(function(err, materials){
+          var vm = { 
             quote: req.quote,
             customer: req.customer,
             products: products,
             materials: materials
-          });
+          };
+          res.json(vm)
         });
     })
   }
   else{
-    mongoose.model("products").find(function(err, products){
-      mongoose.model("materials").find(function(err, materials){
-        res.render('partials/quote', { 
+    mongoose.model('products').find(function(err, products){
+      mongoose.model('materials').find(function(err, materials){
+        var vm = { 
           quote: req.quote[0],
           customer: req.customer,
           products: products,
           materials: materials
-        });
+        };
+        res.json(vm);
       });
     })
   }
 });
-/*THIS IS FUCKIN TEST CODE FOR NOW*/
+
+router.get('/customer/:customer/quote/:quote', function(req, res, next) {
+  res.render('partials/quote');
+});
+
 router.get('/customer/:customer/quote/:quote/quotefinal', function(req, res, next) {
+  res.render('partials/quotefinal');
+});
+
+router.get('/customer/:customer/quote/:quote/quotefinaldata', function(req, res, next) {
+  console.log(req.quote);
   if (typeof req.quote[0]==="undefined") {
-      mongoose.model("products").find(function(err, products){
-        mongoose.model("materials").find(function(err, materials){
+      mongoose.model('products').find(function(err, products){
+        mongoose.model('materials').find(function(err, materials){
           console.log(materials);
           res.render('partials/quotefinal', { 
             quote: req.quote,
@@ -180,8 +205,8 @@ router.get('/customer/:customer/quote/:quote/quotefinal', function(req, res, nex
     })
   }
   else{
-    mongoose.model("products").find(function(err, products){
-      mongoose.model("materials").find(function(err, materials){
+    mongoose.model('products').find(function(err, products){
+      mongoose.model('materials').find(function(err, materials){
         res.render('partials/quotefinal', { 
           quote: req.quote[0],
           customer: req.customer,
@@ -191,127 +216,135 @@ router.get('/customer/:customer/quote/:quote/quotefinal', function(req, res, nex
       })
     })
   }
-})
-/*SERIOUSLY, JUST TEST STUFF UNTIL I GET IT GOING*/
-
-router.get('/customer/:customer/quote/:quote/invoice', function(req, res, next) {
-  if (typeof req.quote[0]==="undefined") {
-      mongoose.model("products").find(function(err, products){
-        mongoose.model("materials").find(function(err, materials){
-          console.log(materials);
-          res.render('partials/invoice', { 
-            quote: req.quote,
-            customer: req.customer,
-            products: products,
-            materials: materials
-          });
-        });
-    })
-  }
-  else{
-    mongoose.model("products").find(function(err, products){
-      mongoose.model("materials").find(function(err, materials){
-        res.render('partials/invoice', { 
-          quote: req.quote[0],
-          customer: req.customer,
-          products: products,
-          materials: materials
-        })
-      })
-    })
-  }
 });
 
-router.get('/admin', function(req, res, next) {
-  mongoose.model("products").find(function(err, products){
-    mongoose.model("materials").find(function(err, materials){
-      res.render('partials/admin', { 
-        products: products,
-        materials: materials
+router.post('/emailrender', function(req, res) {
+  /*var wkhtmltopdf = require('wkhtmltopdf');
+  var fs = require('fs');
+
+  console.log(req.cookies);
+
+  wkhtmltopdf.command = 'C:/wkhtmltopdf/bin/wkhtmltopdf.exe';
+
+  pageURL = "http://" + req.hostname + ":3000" + req.body.data.url;
+  console.log(pageURL);
+
+wkhtmltopdf( pageURL, { 
+    pageSize: 'letter',  
+    'window-status': 'ready',
+    
+  })
+  .pipe(fs.createWriteStream('out.pdf'))
+    .on('error', function( err ){ throw err })
+    .on('finish', function(){
+      console.log("Success");
+      res.sendStatus(200);
+    });
+*/
+
+  var userID = req.body.data.userID;
+  var quoteID = req.body.data.quoteID;
+  // get url to process
+  //var url_to_process = "localhost:3000/#/customer/" + userID + "/quote/" + quoteID + "/quotefinal";
+  var url_to_process = "google.com"
+  if (userID === undefined || userID == '' || quoteID === undefined || quoteID == '') {
+    res.writeHead(404, {'Content-Type': 'text/plain'});
+    res.end("404 Not Found");
+  };
+
+  // phantomjs screenshot
+  var phantom = require('phantom');
+  console.log('Var created');
+  phantom.command = 'C:/phantomjs/bin/phantomjs.exe';
+console.log('command set');
+  phantom.create(function(ph){
+    console.log('Phantom.create initialised');
+    ph.createPage(function(page){
+      console.log('ph.createpage initialised');
+      console.log(url_to_process); 
+      page.open(url_to_process, function(status){
+        console.log('page.open initialised');
+        if (status == "success") {
+          // put images in public directory
+          var image_file_name = url_to_process.replace(/\W/g, '_') + ".png"
+          var image_path = public_dir + "/" + image_file_name
+          page.render(image_path, function(){
+            // redirect to static image
+            res.redirect('/'+image_file_name);
+          });
+        }
+        else {
+          res.writeHead(404, {'Content-Type': 'text/plain'});
+          res.end("404 Not Found");
+        };
+        page.close();
+        ph.exit();
       });
     });
   });
+  /*
+  var done = false; //flag that tells us if we're done rendering
+  var userID = req.body.data.userID;
+  var quoteID = req.body.data.quoteID;
+  var page = require('webpage').create();
+  page.open('http://google.com', function (status) {
+      //If the page loaded successfully...
+      if(status === "success") {
+          //Render the page
+          page.render('google.pdf');
+          console.log("Site rendered...");
+
+          //Set the flag to true
+          done = true;
+      } else {
+        console.log('Site did not render');
+      };
+  });
+
+  //Start polling every 100ms to see if we are done
+  var intervalId = setInterval(function() {
+      if(done) {
+          //If we are done, let's say so and exit.
+          console.log("Done.");
+          phantom.exit();
+          res.sendStatus(200);
+      } else {
+          //If we're not done we're just going to say that we're polling
+          console.log("Polling...");
+      }
+  }, 100);
+*/
 });
 
-router.get('/newcustomer', function(req, res, next) {
-  res.render('partials/newcustomer', { save: false });
+router.get('/admindata', function(req, res, next) {
+  mongoose.model('products').find(function(err, products){
+    mongoose.model('materials').find(function(err, materials){
+      var vm = { 
+        products: products,
+        materials: materials
+      };
+      res.json(vm);
+    });
+  });
 });
 
-router.post('/newcustomer', function(req, res) {
-  var highCode=0;
-  //find customer with highest id and make new one with increment of one
-  highCode = mongoose.model("customers").findOne().sort({custCode : "desc"}).exec(function(err, customer){
-    console.log("Latest Customer:");
-    console.log(typeof customer);
-    console.log(customer);
-
-    if (customer == null) {
-      highCode = 1;
-    } else {
-      highCode = customer.custCode + 1;
-      console.log("Customer code:" + customer.custCode); 
-    }
-    console.log(req.body.companyName);
-    console.log("New Customer number: " + highCode);  
-
-    var firstName = req.body.firstName,
-    lastName = req.body.lastName,
-    companyName = req.body.companyName,
-    email = req.body.email,
-    addressLine1 = req.body.addressLine1,
-    addressLine2 = req.body.addressLine2,
-    city = req.body.city,
-    postal = req.body.postal,
-    province = req.body.province,
-    homePhone = req.body.homePhone,
-    mobilePhone = req.body.mobilePhone;
-    
-    var newCustomer = new customerSchema({
-      firstName: firstName,
-      lastName: lastName,
-      companyName: companyName,
-      email: email,
-      addressLine1: addressLine1,
-      addressLine2: addressLine2,
-      city: city,
-      postal: postal,
-      province: province,
-      homePhone: homePhone,
-      mobilePhone: mobilePhone,
-      custCode: highCode
-    });
-
-
-
-    newCustomer.save(function (err, customer) {
-      if (err) {
-        console.log("There is an error");
-        console.log(err);
-      }
-      else {
-        // saved!
-        console.log(newCustomer);
-        console.log("Customer Saved");
-      }
-    });
-  });
-  res.render('partials/newcustomer', {
-    save: "User has been created!"
-  });
+router.get('/admin', function(req, res, next) {
+  res.render('partials/admin');
 });
 
 router.post('/savematerials', function(req, res, next) {
-  console.log(req.body.material);
-  console.log(req.body.action);
-  console.log(req.body.parameter);
+  console.log('Material',req.body.material);
+  //console.log(req.body.action);
+  //console.log(req.body.parameter);
 
 
   if(req.body.action === "update"){
-    console.log(req.body.material.distributor);
+    /*console.log(req.body.material.distributor);
     console.log(req.body.material.manufacturer);
     console.log(req.body.material.colourGroup);
-    console.log(req.body.material.description);
+    console.log("Mat Colleciton", material.matCollection);*/
     var material = req.body.material;
+    
 
     var conditions = {distributor: req.body.material.distributor, manufacturer: req.body.material.manufacturer, colourGroup: req.body.material.colourGroup, description: req.body.material.description}
       , update = {
@@ -324,7 +357,7 @@ router.post('/savematerials', function(req, res, next) {
         fullSheet5 : material.fullSheet5,
         fullSheet21 : material.fullSheet21,
         isa : material.isa,
-        collection : material.collection
+        matCollection : material.matCollection
       }
       , options = { multi: false};
 
@@ -341,10 +374,11 @@ router.post('/savematerials', function(req, res, next) {
       };
     };
   } else if(req.body.action === "delete"){
+    console.log("Parameter:", req.body.parameter);
     var ObjectId = require('mongoose').Types.ObjectId; 
     var query = { _id: new ObjectId(req.body.parameter)};
-  console.log(query);
-    var search = mongoose.model("materials").find(query);
+  console.log('Query', query);
+    var search = mongoose.model('materials').find(query);
 
     search.remove().exec(function (err, searchMaterial){
       if (err) { return next(err); }
@@ -353,10 +387,10 @@ router.post('/savematerials', function(req, res, next) {
       res.sendStatus(200);
     });
   } else if(req.body.action === "add"){
-    bodyMaterials = req.body.material;
-    console.log(bodyMaterials);
+    bodyMaterials = req.body.parameter;
+    console.log('Body Materials', bodyMaterials);
 
-    console.log(bodyMaterials.manufacturer);
+    console.log('Manufaturer', bodyMaterials.manufacturer);
     //I didn't need to do this part, it's a bit redundant.
     var manufacturer = bodyMaterials.manufacturer,
         distributor = bodyMaterials.distributor,
@@ -405,16 +439,16 @@ router.post('/savematerials', function(req, res, next) {
 });
 
 router.post('/saveproducts', function(req, res, next) {
-  console.log(req.body.product);
-  console.log(req.body.action);
-  console.log(req.body.parameter);
+  //console.log(req.body.product);
+  console.log("Action: ", req.body.action);
+  //console.log(req.body.parameter);
 
 
   if(req.body.action === "update"){
-    console.log(req.body.product.distributor);
-    console.log(req.body.product.manufacturer);
-    console.log(req.body.product.type);
-    console.log(req.body.product.price);
+    //console.log(req.body.product.distributor);
+    //console.log(req.body.product.manufacturer);
+    //console.log(req.body.product.type);
+    console.log("Product: ", req.body.product);
     var product = req.body.product;
 
     var conditions = {distributor: req.body.product.distributor, manufacturer: req.body.product.manufacturer, type: req.body.product.type, description: req.body.product.description}
@@ -428,12 +462,13 @@ router.post('/saveproducts', function(req, res, next) {
         fullSheet5 : product.fullSheet5,
         fullSheet21 : product.fullSheet21,
         isa : product.isa,
-        collection : product.collection,
-        formula : product.formula 
+        matCollection : product.matCollection,
+        formula : product.formula,
+        price: product.price
       }
       , options = { multi: false};
 
-    mongoose.model('product').update(conditions, update, options, callback);
+    mongoose.model('products').update(conditions, update, options, callback);
     function callback (err, numAffected) {
       //numAffected is the number of updated documents
       if(err) {
@@ -448,8 +483,8 @@ router.post('/saveproducts', function(req, res, next) {
   } else if(req.body.action === "delete"){
     var ObjectId = require('mongoose').Types.ObjectId; 
     var query = { _id: new ObjectId(req.body.parameter)};
-  console.log(query);
-    var search = mongoose.model("products").find(query);
+  console.log("Query ", query);
+    var search = mongoose.model('products').find(query);
 
     search.remove().exec(function (err, searchProduct){
       if (err) { return next(err); }
@@ -458,17 +493,18 @@ router.post('/saveproducts', function(req, res, next) {
       res.sendStatus(200);
     });
   } else if(req.body.action === "add"){
-    bodyProducts = req.body.product;
-    console.log(bodyProducts);
+    bodyProducts = req.body.parameter;
+    console.log("Body Products: ", bodyProducts);
 
-    console.log(bodyProducts.manufacturer);
+    console.log("Manufacturer: ", bodyProducts.manufacturer);
     //I didn't need to do this part, it's a bit redundant.
     var distributor = bodyProducts.distributor,
       manufacturer = bodyProducts.manufacturer,
       type = bodyProducts.type,
       description = bodyProducts.description,
       itemCode = bodyProducts.itemCode,
-      price = bodyProducts.price;
+      price = bodyProducts.price,
+      formula = bodyProducts.formula;
 
     var newProduct = new products({
       distributor : distributor,
@@ -476,9 +512,10 @@ router.post('/saveproducts', function(req, res, next) {
       type : type,
       description : description,
       itemCode : itemCode,
-      price : price
+      price : price,
+      formula: formula
     });
-
+console.log("New Product: ", newProduct);
     newProduct.save(function (err, products) {
       if (err) {
         console.log("Errors: " + err);
@@ -494,8 +531,8 @@ router.post('/saveproducts', function(req, res, next) {
 });
 
 router.post('/savequote', function(req, res){
-  console.log(req.body.quote.counters[0].material);
-  console.log("addons", req.body.quote.counters[0].addons[0]);
+  //console.log(req.body.quote.counters[0].material);
+  //console.log("addons", req.body.quote.counters[0].addons[0]);
   var conditions = {quoteID: req.body.quote.quoteID, custCode: req.body.quote.custCode}
   , update = req.body.quote
   , options = { multi: false};
@@ -552,10 +589,16 @@ router.post('/savequote', function(req, res){
   });*/
 
 router.get('/customers', function(req, res, next) {
+      res.render('partials/customers');
+});
+
+router.get('/customersdata', function(req, res, next) {
   mongoose.model('customers').find(function(err, data) {
-      res.render('partials/customers', { data: data });
+      res.json(data);
   }); 
 });
+
+
 
 router.get('/', function (req, res) {
     res.render('index', { user : req.user });

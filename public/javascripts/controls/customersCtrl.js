@@ -1,18 +1,37 @@
-'use strict';
+(function() {
+	'use strict';
 
-app.controller('customersCtrl', 
-  ['$scope', '$state', function ($scope, $state) {
-  	$scope.alerts = [
-  	];
-	$scope.init = function() {
-		if (typeof $scope.customers === "undefined" || $scope.customers == "") {
-	    	$scope.alerts.push({
-				type: "warning",
-		    	msg: "There are no customers. Head to Quote-->New Customers to add a new customer"
-		    });
+	angular
+		.module('surfacingSolutions')
+		.controller('customersCtrl', customersCtrl);
+
+	customersCtrl.$inject = ['dataFactory', '$scope'];
+
+	function customersCtrl(dataFactory, $scope) {
+	  	var vm = this;
+	  	dataFactory.getCustomers()
+	  		.then(function(data) {
+	  			vm.customers = data;
+			  	vm.init(data);
+	  		},
+	  		function(reason) {
+  				console.log(reason);
+	  		});
+
+	  	vm.alerts = [
+	  	];
+
+		vm.init = function(customers) {
+			//console.log("customers: ", customers[0]);
+			if (typeof customers === undefined || customers[0] === undefined) {
+		    	vm.alerts.push({
+					type: "warning",
+			    	msg: "There are no customers. Head to Quote-->New Customers to add a new customer"
+			    });
+			};
 		};
+		vm.closeAlert = function(index) {
+	    	vm.alerts.splice(index, 1);
+	  	};
 	};
-	$scope.closeAlert = function(index) {
-    	$scope.alerts.splice(index, 1);
-  	};
-}]);
+}());

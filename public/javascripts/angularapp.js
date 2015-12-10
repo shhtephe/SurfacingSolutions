@@ -1,10 +1,11 @@
 var app = angular.module('surfacingSolutions', ['ui.router', 'angular.filter', 'ui.bootstrap']);
 
 app.config([
+'$interpolateProvider',
 '$stateProvider',
 '$urlRouterProvider',
 '$locationProvider',
-function($stateProvider, $urlRouterProvider, $locationProvider) {
+function($interpolateProvider, $stateProvider, $urlRouterProvider, $locationProvider) {
 
   $stateProvider
     .state('home', {
@@ -12,8 +13,9 @@ function($stateProvider, $urlRouterProvider, $locationProvider) {
       templateUrl: '/home',
       data: {
         requireLogin: false
-      }
-      //controller: 'mainCtrl'
+      },
+      controller: 'homeCtrl',
+      controllerAs: 'vm'
     })
     .state('login', {
   		url: '/login',
@@ -37,7 +39,8 @@ function($stateProvider, $urlRouterProvider, $locationProvider) {
   		controller: 'adminCtrl',
             data: {
         requireLogin: true
-      }
+      },
+      controllerAs: 'vm'
 	})
     .state('search', {
   		url: '/search',
@@ -55,27 +58,19 @@ function($stateProvider, $urlRouterProvider, $locationProvider) {
       data: {
         requireLogin: true
       },
-      controller: 'quoteCtrl'
+      controller: 'quoteCtrl',
+      controllerAs: 'vm'
   })
-    .state('invoice', {
-      url: '/customer/{custCode}/quote/{quoteID}/invoice',
-      templateUrl: function(stateParams){
-        return '/customer/' + stateParams.custCode + '/quote/' + stateParams.quoteID + '/invoice';
-      },
-      data: {
-        requireLogin: true
-      },
-      controller: 'invoiceCtrl'
-  })
-    .state('finalquote', {
+    .state('quotefinal', {
       url: '/customer/{custCode}/quote/{quoteID}/quotefinal',
       templateUrl: function(stateParams){
         return '/customer/' + stateParams.custCode + '/quote/' + stateParams.quoteID + '/quotefinal';
       },
       data: {
-        requireLogin: true
+        requireLogin: true,
       },
-      controller: 'finalQuoteCtrl',
+      controller: 'quoteFinalCtrl',
+      controllerAs: 'vm',
       css: ['stylesheets/quoteprint.css','stylesheets/quotestyle.css']
   })
     .state('customers', {
@@ -84,15 +79,17 @@ function($stateProvider, $urlRouterProvider, $locationProvider) {
             data: {
         requireLogin: true
       },
-      controller: 'customersCtrl'
+      controller: 'customersCtrl',
+      controllerAs: 'vm'
   })
   .state('newCustomer', {
-      url: '/newcustomer',
-      templateUrl: '/newcustomer',
+      url: '/customers/create',
+      templateUrl: '/customers/create',
             data: {
         requireLogin: true
       },
-      controller: 'newCustomerCtrl'
+      controller: 'newCustomerCtrl',
+      controllerAs: 'vm'
   })
     .state('logout', {
       url: '/logout',
@@ -110,7 +107,8 @@ function($stateProvider, $urlRouterProvider, $locationProvider) {
       data: {
         requireLogin: true
       },
-      controller: 'customerCtrl'
+      controller: 'customerCtrl',
+      controllerAs: 'vm'
   })
     .state('otherwise', { 
       url : '/index',
@@ -122,6 +120,10 @@ function($stateProvider, $urlRouterProvider, $locationProvider) {
 
   //$locationProvider.html5Mode(true).hashPrefix('!');
   $urlRouterProvider.otherwise('home');
+
+  //to fix handlebars not using the mustaches
+  $interpolateProvider.startSymbol('{/');
+  $interpolateProvider.endSymbol('/}');
 }]);
  
 app.run(function ($rootScope, $state) {

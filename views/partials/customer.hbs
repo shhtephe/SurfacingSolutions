@@ -1,0 +1,16 @@
+<!DOCTYPE=html>
+    <div class="jumbotron">
+        <div class="container">
+            <div class="col-xs-offset-2 col-xs-8">
+                <div ng-controller="customerCtrl">
+                	<!-- ng-init='customer=<%- JSON.stringify(customer) %>; quotes=<%- JSON.stringify(quotes) %>' -->
+				  <br>Customer:<br>{/vm.customer.firstName/} {/vm.customer.lastName/}<br><br>Quotes:<br>
+					<div ng-repeat="quote in vm.quotes">
+				    	<a ng-href="/#/customer/{/vm.customer.custCode/}/quote/{/quote.quoteID/}">{/quote.quoteID/} - {/quote.createdAt | limitTo: 10/}</a> - {/quote.description/}
+				  	</div>
+					<br>
+				<button type="button" class="btn" ng-click="vm.newQuote()">New Quote</button>
+				</div>
+            </div>
+        </div>
+    </div>

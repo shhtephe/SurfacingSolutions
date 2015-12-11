@@ -1,3 +1,4 @@
+//not sure if this is needed anymore. Was for debugging email/pdf rendering
 (function() {
     var childProcess = require("child_process");
     var oldSpawn = childProcess.spawn;
@@ -19,6 +20,8 @@ var quotes = require('../models/quotes');
 var customers = require('../models/customers'); 
 var products = require('../models/products'); 
 var materials = require('../models/materials');
+var terms = require('../models/tos');
+
 //mongoose
 var mongoose = require('mongoose');
 //express-mailer
@@ -152,30 +155,37 @@ router.param('quotedata', function(req, res, next, quoteID) {
 });
 
 router.get('/customer/:customer/quotedata/:quotedata', function(req, res, next) {
-console.log(req.quote);
+//console.log(req.quote);
   if (typeof req.quote[0]==="undefined") {
       mongoose.model('products').find(function(err, products){
         mongoose.model('materials').find(function(err, materials){
-          var vm = { 
-            quote: req.quote,
-            customer: req.customer,
-            products: products,
-            materials: materials
-          };
-          res.json(vm)
+          mongoose.model('terms').find(function(err, terms){
+            var vm = { 
+              quote: req.quote,
+              customer: req.customer,
+              products: products,
+              materials: materials,
+              terms: terms
+            };
+            res.json(vm)
+          });
         });
     })
   }
   else{
     mongoose.model('products').find(function(err, products){
       mongoose.model('materials').find(function(err, materials){
-        var vm = { 
-          quote: req.quote[0],
-          customer: req.customer,
-          products: products,
-          materials: materials
-        };
-        res.json(vm);
+        mongoose.model('terms').find(function(err, terms){
+          var vm = { 
+            quote: req.quote[0],
+            customer: req.customer,
+            products: products,
+            materials: materials,
+            terms: terms
+          };
+          console.log(terms.tos);
+          res.json(vm);
+        });
       });
     })
   }

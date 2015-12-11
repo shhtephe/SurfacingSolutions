@@ -334,16 +334,19 @@
 
 					<br>Job Difficulty: <input type="number" ng-model="vm.quote.jobDifficulty" name="vm.quote.jobDifficulty"><br>
 					<span style="float: left;">Total Price: {/vm.quote.totalPrice * vm.quote.jobDifficulty | currency:$/}</span>
+					<br><br>
+					<div ng-repeat="term in vm.terms">
+						<input type="checkbox" ng-model="vm.term[$index]">{/term.terms/}
+					</div>
+					<br><br>
+					Please click <a ng-href="/#/customer/{/vm.customer.custCode/}/quote/{/vm.quote.quoteID/}/quotefinal" target="">here</a> to view the invoice.
+					<br>
+					<alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</alert>
+					<br><br><br>
+					<!--<pre>{/quote | json/}</pre>-->
 					<span style="float: right;"><button type="button" style="btn" ng-click="vm.saveQuote(vm.quote.description)">Update/Save Quote</button></span>
 				</form>
-				<br><br>
-				
-				<br><br>
-				Please click <a ng-href="/#/customer/{/vm.customer.custCode/}/quote/{/vm.quote.quoteID/}/quotefinal" target="">here</a> to view the invoice.
-				<br>
-				<alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</alert>
-				<br><br><br>
-				<!--<pre>{/quote | json/}</pre>-->
+
 			</div>
         </div>
     </div>

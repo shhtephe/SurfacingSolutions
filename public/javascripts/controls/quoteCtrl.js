@@ -20,6 +20,8 @@
 				vm.customer = data.customer;
 				vm.products = data.products;
 				vm.materials = data.materials;
+				console.log(data.terms);
+				vm.terms = data.terms;
 			},
 			function(reason) {
 				console.log(reason);

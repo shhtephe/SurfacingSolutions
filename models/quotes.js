@@ -10,6 +10,7 @@ var quote = new Schema({
 	jobDifficulty: Number,
 	description: String,
 	poNumber: Number,
+	terms: String,
 	counters: [{
 		quantity: Number,
 		description: String,

@@ -252,9 +252,9 @@
 
 	//Checks the shape of the table, and then calculates square footage.
 			if(shape === "rectangle"){
-				squareFootage = (length * width) / 12; //measurements are in inches, then converted to feet
+				squareFootage = (length * width); //measurements are in inches, then converted to feet
 			} else if(shape === "circle"){
-				squareFootage = (length*width) * Math.PI;
+				squareFootage = ((length*width) * Math.PI)/4;
 				squareFootage = squareFootage.toFixed(2);
 			};
 			//console.log(squareFootage, length, width);
@@ -268,7 +268,7 @@
 	//console.log(material);
 	//Chooses the best match for pricing. Will need to make this user selectable later.
 			if(sheets <=.5 && material.halfSheet){
-			console.log("This ran 1", sheets, material.halfSheet);
+			console.log("This ran 1", sheets, material.halfSheet, squareFootage, length, width, material.width, material.length);
 				counterPrice = sheets * material.halfSheet;			
 			} else if(sheets <5 && material.fullsheet1){
 			console.log("This ran 2");

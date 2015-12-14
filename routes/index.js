@@ -20,7 +20,7 @@ var quotes = require('../models/quotes');
 var customers = require('../models/customers'); 
 var products = require('../models/products'); 
 var materials = require('../models/materials');
-var terms = require('../models/tos');
+var terms = require('../models/terms');
 
 //mongoose
 var mongoose = require('mongoose');
@@ -183,7 +183,6 @@ router.get('/customer/:customer/quotedata/:quotedata', function(req, res, next) 
             materials: materials,
             terms: terms
           };
-          console.log(terms.tos);
           res.json(vm);
         });
       });

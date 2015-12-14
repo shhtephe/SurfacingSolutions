@@ -3,7 +3,7 @@ var timestamps = require('mongoose-timestamp');
 var Schema = mongoose.Schema;
 
 var terms = new Schema({
-		tos: String
+		terms: String
 });
 
 terms.plugin(timestamps);

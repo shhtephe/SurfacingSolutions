@@ -4,9 +4,9 @@
 	angular.module('surfacingSolutions')
 	.controller('quoteCtrl', quoteCtrl);
 
-	quoteCtrl.$inject = ['dataFactory', '$stateParams', '$http'];
+	quoteCtrl.$inject = ['dataFactory', '$stateParams', '$http', '$scope'];
 
-	function quoteCtrl(dataFactory, $stateParams, $http) {
+	function quoteCtrl(dataFactory, $stateParams, $http, $scope) {
 		//'this' replaces $scope
 		var vm = this;
 
@@ -20,14 +20,56 @@
 				vm.customer = data.customer;
 				vm.products = data.products;
 				vm.materials = data.materials;
-				console.log(data.terms);
 				vm.terms = data.terms;
+				vm.init();
 			},
 			function(reason) {
 				console.log(reason);
 			});		
 
-			//console.log(vm.quote, customer, vm.products, materials);
+
+		//assign checkboxes for Terms of Service
+		vm.init = function (){
+			console.log($scope);
+			/*for (var i = vm.terms.length - 1; i >= 0; i--) {
+				console.log(vm.terms[i]);
+			};*/
+		};
+		
+
+		vm.arraySearch = function (nameKey, myArray, property){
+		    for (var i=0; i < myArray.length; i++) {
+		    	//console.log("my array i", myArray[i], "property", property)
+		        if (myArray[i][property] === nameKey) {
+		            return i;
+		        };
+		    };
+		};
+
+		vm.buildTerms = function(term){
+			var terms = vm.quote.terms;
+			var pushObj = {};
+			console.log("Term", term, "Terms", terms);
+			//If there are no terms, add empty terms to quote
+			if (typeof terms === "undefined") {
+				terms = [];
+			};
+			//console.log("Search", vm.arraySearch(term.terms, terms, "term"));
+			if (typeof vm.arraySearch(term.terms, terms, "term") !== "undefined") {
+				//make sure it matches
+				console.log("Found Entry");
+				//Found it, so remove it from the terms
+				terms.splice(vm.arraySearch(term.terms, terms, "term"), 1);
+			} else {
+				console.log("Couldn't find entry");
+				//Couldn't find it, so add it to the terms
+				pushObj = {
+					term: term.terms
+				};
+				terms.push(pushObj);
+			};
+			vm.quote.terms = terms;
+		};
 
 		vm.mandatoryChargeChange = function(product, price, quantity, counter, parentIndex, index){
 			var charges = vm.quote.counters[parentIndex].mandatoryCharges[index];
@@ -83,14 +125,6 @@
 	  	vm.closeAlert = function(index) {
 		    vm.alerts.splice(index, 1);
 	  	};
-
-		function arraySearch(nameKey, myArray){
-		    for (var i=0; i < myArray.length; i++) {
-		        if (myArray[i].product === nameKey) {
-		            return i;
-		        };
-		    };
-		};
 
 		vm.saveAddon = function(addon, index) {
 			var addons = vm.quote.counters[index].addons;
@@ -150,9 +184,10 @@
 				vm.quote.counters[index].totalPrice += addons[addons.length-1].totalPrice;
 			} else {
 				//Found it, so update the value
-				addons[arraySearch(addon.description, addons)].quantity = addon.quantity;
-				addons[arraySearch(addon.description, addons)].totalPrice = totalPrice;
-				vm.quote.counters[index].totalPrice += addons[arraySearch(addon.description, addons)].totalPrice;
+				var search = arraySearch(addon.description, addons, "products");
+				addons[search].quantity = addon.quantity;
+				addons[search].totalPrice = totalPrice;
+				vm.quote.counters[index].totalPrice += addons[search].totalPrice;
 			};
 
 			vm.dropDown1 = "";

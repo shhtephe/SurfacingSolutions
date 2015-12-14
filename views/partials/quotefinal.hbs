@@ -137,8 +137,9 @@ Phone: {/vm.customer.homePhone/}</textarea>
 		
 		<div id="terms">
 		  <h5>Terms</h5>
-		  <textarea>All product remains the property of Surfacing Solutions 2010 Ltd until paid in full.Interest charged at 2% per month on all past due accounts.We now accept VISA and MasterCard at time of quote only</textarea>
+		  <div ng-repeat="term in vm.quote.terms">
+			{/term.term/}
+  		  </div>
 		</div>
-	
 	</div>
 </div>

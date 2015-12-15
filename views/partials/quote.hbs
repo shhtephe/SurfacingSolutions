@@ -306,7 +306,7 @@
 							<button type="button" ng-click="vm.divAddons[$index]=false; counterAddonDistributor = ''" class="btn btn-danger">Cancel</button> 
 						</div>
 						<br>
-						<!--<br><button type="button" ng-click="vm.divMandatory = true; showMandatory($index)" ng-show="vm.divMandatory == false">Add Mandatory Charges</button>
+						<br><button type="button" ng-click="vm.divMandatory = true; showMandatory($index)" ng-show="vm.divMandatory == false">Add Mandatory Charges</button>
 						<div ng-show="vm.divMandatory == true">
 							<br>Mandatory charges: 
 							<br> Choose a Type:
@@ -321,7 +321,7 @@
 							<br>{/charge.type/} - {/charge.price | currency:$/}/{/charge.unitOfMeasure/}
 							<br>Quantity: <input ng-change="mandatoryChargeChange(charge.material, charge.price, charge.quantity, quote, counter, $parent.$index, $index)" type="number" ng-model="charge.quantity"> Total: {/charge.totalPrice |currency:$/}
 							<br><br> <button type="button" ng-click="vm.divMandatory = false" class="btn btn-danger">Cancel</button>
-						</div>-->
+						</div>
 				      	<br>
 				      	<br><hr style="background:#000000; border:0; height:7px" />
 				      	<span style="float: left;">Counter Subtotal: {/counter.totalPrice |currency:$/}</span><span style="float: right;"><button type="button" style="btn" ng-click="vm.saveQuote(vm.quote.description)">Update/Save Quote</button></span>

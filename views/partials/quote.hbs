@@ -337,7 +337,7 @@
 					<br><br>
 					<b><u>Terms</u></b>
 					<div ng-repeat="term in vm.terms">
-						<input type="checkbox" ng-model="term[$index].value" ng-click="vm.buildTerms(term)">{/term.terms/}
+						<input type="checkbox" ng-checked="vm.checkTerms(term)" ng-model="term[$index].value" ng-click="vm.buildTerms(term)">{/term.term/}
 					</div>
 					<br><br>
 					Please click <a ng-href="/#/customer/{/vm.customer.custCode/}/quote/{/vm.quote.quoteID/}/quotefinal" target="">here</a> to view the invoice.
@@ -346,8 +346,7 @@
 					<br><br><br>
 					<!--<pre>{/quote | json/}</pre>-->
 					<span style="float: right;"><button type="button" style="btn" ng-click="vm.saveQuote(vm.quote.description)">Update/Save Quote</button></span>
-					<br><br><br><br>
-					{/vm.quote/}
+					<br>
 				</form>
 			</div>
         </div>

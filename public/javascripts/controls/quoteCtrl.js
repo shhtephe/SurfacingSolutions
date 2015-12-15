@@ -17,11 +17,11 @@
 		dataFactory.getQuote(custCode, quoteID)
 			.then(function(data) {
 				vm.quote = data.quote;
+				vm.terms = data.terms;
 				vm.customer = data.customer;
 				vm.products = data.products;
 				vm.materials = data.materials;
 				vm.terms = data.terms;
-				vm.init();
 			},
 			function(reason) {
 				console.log(reason);
@@ -29,15 +29,19 @@
 
 
 		//assign checkboxes for Terms of Service
-		vm.init = function (){
-			console.log($scope);
-			/*for (var i = vm.terms.length - 1; i >= 0; i--) {
-				console.log(vm.terms[i]);
-			};*/
+		vm.checkTerms = function (term){
+			var terms = vm.quote.terms;
+			if (typeof vm.arraySearch(term.term, terms, "term") !== "undefined") {
+				//Found the term, so check the box
+				return true;
+			} else {
+				return false;
+			};
 		};
 		
 
 		vm.arraySearch = function (nameKey, myArray, property){
+		    //console.log(nameKey, myArray, property);
 		    for (var i=0; i < myArray.length; i++) {
 		    	//console.log("my array i", myArray[i], "property", property)
 		        if (myArray[i][property] === nameKey) {
@@ -49,22 +53,22 @@
 		vm.buildTerms = function(term){
 			var terms = vm.quote.terms;
 			var pushObj = {};
-			console.log("Term", term, "Terms", terms);
+			//console.log("Term", term, "Terms", terms);
 			//If there are no terms, add empty terms to quote
 			if (typeof terms === "undefined") {
 				terms = [];
 			};
 			//console.log("Search", vm.arraySearch(term.terms, terms, "term"));
-			if (typeof vm.arraySearch(term.terms, terms, "term") !== "undefined") {
+			if (typeof vm.arraySearch(term.term, terms, "term") !== "undefined") {
 				//make sure it matches
-				console.log("Found Entry");
+				//console.log("Found Entry");
 				//Found it, so remove it from the terms
-				terms.splice(vm.arraySearch(term.terms, terms, "term"), 1);
+				terms.splice(vm.arraySearch(term.term, terms, "term"), 1);
 			} else {
-				console.log("Couldn't find entry");
+				//console.log("Couldn't find entry");
 				//Couldn't find it, so add it to the terms
 				pushObj = {
-					term: term.terms
+					term: term.term
 				};
 				terms.push(pushObj);
 			};

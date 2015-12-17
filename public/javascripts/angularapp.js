@@ -50,10 +50,10 @@ function($interpolateProvider, $stateProvider, $urlRouterProvider, $locationProv
       },
   		controller: 'searchCtrl'
 	})
-    .state('quote', {
-      url: '/customer/{custCode}/quote/{quoteID}',
+    .state('quotebuild', {
+      url: '/customer/{custCode}/quotebuild/{quoteID}',
       templateUrl: function(stateParams){
-        return '/customer/' + stateParams.custCode + '/quote/' + stateParams.quoteID;
+        return '/customer/' + stateParams.custCode + '/quotebuild/' + stateParams.quoteID;
       },
       data: {
         requireLogin: true
@@ -62,12 +62,24 @@ function($interpolateProvider, $stateProvider, $urlRouterProvider, $locationProv
       controllerAs: 'vm'
   })
     .state('quotefinal', {
-      url: '/customer/{custCode}/quote/{quoteID}/quotefinal',
+      url: '/customer/{custCode}/quotebuild/{quoteID}/quotefinal',
       templateUrl: function(stateParams){
-        return '/customer/' + stateParams.custCode + '/quote/' + stateParams.quoteID + '/quotefinal';
+        return '/customer/' + stateParams.custCode + '/quotebuild/' + stateParams.quoteID + '/quotefinal';
       },
       data: {
         requireLogin: true,
+      },
+      controller: 'quoteFinalCtrl',
+      controllerAs: 'vm',
+      css: ['stylesheets/quoteprint.css','stylesheets/quotestyle.css']
+  })
+    .state('quotesend', {
+      url: '/customer/{custCode}/quotebuild/{quoteID}/quotesend',
+      templateUrl: function(stateParams){
+        return '/customer/' + stateParams.custCode + '/quotebuild/' + stateParams.quoteID + '/quotesend';
+      },
+      data: {
+        requireLogin: false,
       },
       controller: 'quoteFinalCtrl',
       controllerAs: 'vm',

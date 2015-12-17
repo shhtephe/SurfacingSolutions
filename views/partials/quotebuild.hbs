@@ -356,7 +356,7 @@
 						<input type="checkbox" ng-checked="vm.checkTerms(term)" ng-model="term[$index].value" ng-click="vm.buildTerms(term)">{/term.term/}
 					</div>
 					<br><br>
-					Please click <a ng-href="/#/customer/{/vm.customer.custCode/}/quote/{/vm.quote.quoteID/}/quotefinal" target="">here</a> to view the invoice.
+					Please click <a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotefinal" target="">here</a> to view the invoice.
 					<br>
 					<alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</alert>
 					<br><br><br>

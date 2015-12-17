@@ -9,8 +9,9 @@
 <br>-->
 <alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</alert>
 	<div id="page-wrap">
-	<a href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}"><button type="button" style="btn">Back</button></a> 
-	<a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotesend	" target=""><button type="button" style="btn">Client Preview</button></a>
+	<a href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotefinal"><button type="button" style="btn">Back</button></a>
+	<br>
+	<button type="button" style="btn" ng-click="vm.email()">Email PDF</button>
 		<textarea id="header">Final Quote</textarea>	
 		<div id="surfacingIdentity">
 
@@ -86,7 +87,7 @@ Phone: {/vm.customer.homePhone/}</textarea>
 		      <th>Price</th>
 		  </thead>
 		    <tbody>
-		    <tr ng-repeat="counter in vm.quote.counters | flattenRows">
+		    <tr ng-repeat="counter in vm.quote.counters">
 				<td class="item-name">
 					<span ng-hide="counter.addon">{/counter.material.manufacturer/} - {/counter.material.description/}</span>
 					<span class="label label-info" ng-show="counter.addon">Addon</span>

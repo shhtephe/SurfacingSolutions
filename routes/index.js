@@ -190,15 +190,19 @@ router.get('/customer/:customer/quotedata/:quotedata', function(req, res, next) 
   }
 });
 
-router.get('/customer/:customer/quote/:quote', function(req, res, next) {
-  res.render('partials/quote');
+router.get('/customer/:customer/quotebuild/:quote', function(req, res, next) {
+  res.render('partials/quotebuild');
 });
 
-router.get('/customer/:customer/quote/:quote/quotefinal', function(req, res, next) {
+router.get('/customer/:customer/quotebuild/:quote/quotefinal', function(req, res, next) {
   res.render('partials/quotefinal');
 });
 
-router.get('/customer/:customer/quote/:quote/quotefinaldata', function(req, res, next) {
+router.get('/customer/:customer/quotebuild/:quote/quotesend', function(req, res, next) {
+  res.render('partials/quotesend');
+});
+
+router.get('/customer/:customer/quotebuild/:quote/quotefinaldata', function(req, res, next) {
   console.log(req.quote);
   if (typeof req.quote[0]==="undefined") {
       mongoose.model('products').find(function(err, products){
@@ -254,18 +258,18 @@ wkhtmltopdf( pageURL, {
   var userID = req.body.data.userID;
   var quoteID = req.body.data.quoteID;
   // get url to process
-  //var url_to_process = "localhost:3000/#/customer/" + userID + "/quote/" + quoteID + "/quotefinal";
-  var url_to_process = "google.com"
+  var url_to_process = "localhost:3000/#/customer/" + userID + "/quotebuild/" + quoteID + "/quotesend";
+  //var url_to_process = "google.com"
   if (userID === undefined || userID == '' || quoteID === undefined || quoteID == '') {
     res.writeHead(404, {'Content-Type': 'text/plain'});
     res.end("404 Not Found");
   };
 
   // phantomjs screenshot
-  var phantom = require('phantom');
+  var phantom = require('phantomjs');
   console.log('Var created');
   phantom.command = 'C:/phantomjs/bin/phantomjs.exe';
-console.log('command set');
+  console.log('command set');
   phantom.create(function(ph){
     console.log('Phantom.create initialised');
     ph.createPage(function(page){

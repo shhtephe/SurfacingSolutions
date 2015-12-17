@@ -9,7 +9,7 @@
 	function quoteCtrl(dataFactory, $stateParams, $http, $scope) {
 		//'this' replaces $scope
 		var vm = this;
-
+		vm.Math = Math.PI;
 		var custCode = $stateParams.custCode;
 		var quoteID = $stateParams.quoteID;
 
@@ -226,6 +226,10 @@
 			var pushMandatory = {};
 			var pushMandatoryDropDown = {};
 
+			//convert to feet
+			length = length / 12;
+			width = width / 12;
+
 			//Makes doing math later down easier.
 			if(shape === "circle"){
 				length = width;
@@ -234,7 +238,7 @@
 			//console.log(width + "/" + length + "/" + shape + "/" + material.colourGroup + "/" + material.description + "/" + material.fullSheet1)
 			//console.log("width: " + width + "/length: " + length);
 
-	//Create an object containing all core counter information, also leaving addons space
+		//Create an object containing all core counter information, also leaving addons space
 			pushObj = {
 				description: "",
 				counterShape: shape,

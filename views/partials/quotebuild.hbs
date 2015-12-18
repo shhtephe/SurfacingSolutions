@@ -326,7 +326,7 @@
 					<br>
 		      			<div ng-repeat="addon in vm.quote.mandatoryAddons track by $index">
 							<br>{/addon.productType/} - {/addon.description/} : {/addon.quantity/}
-							@{/addon.price | currency:$/} <a ng-click="vm.removeMandatoryAddon(addon, $parent.$index, $index)">remove</a>
+							@{/addon.price | currency:$/} <a ng-click="vm.removeMandatoryAddon(addon, -1, $index)">remove</a>
 						</div>
 			      	<br>
 					<br>Job Difficulty: <input type="number" ng-model="vm.quote.jobDifficulty" name="vm.quote.jobDifficulty"><br>
@@ -349,7 +349,7 @@
 							<br>Quantity: <input ng-model="mandatoryDescription.quantity"> Total: {/mandatoryDescription.totalPrice |currency:$/}
 							<br>
 							<br>
-							<button type="button" ng-click="vm.saveMandatoryAddon(mandatoryDescription); mandatoryType=''; mandatoryDescription=''; quantity=''" class="btn btn-default">Add Mandatory</button>
+							<button type="button" ng-click="vm.saveMandatoryAddon(mandatoryDescription); mandatoryType=''; mandatoryDescription=''; mandatoryDescription.quantity=''; vm.divMandatory = false" class="btn btn-default">Add Mandatory</button>
 						</div>
 						<br> <button type="button" ng-click="vm.divMandatory = false" class="btn btn-danger">Cancel</button>
 					</div>

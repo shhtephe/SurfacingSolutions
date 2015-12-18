@@ -75,20 +75,6 @@
 			vm.quote.terms = terms;
 		};
 
-		vm.mandatoryChargeChange = function(product, price, quantity, counter, parentIndex, index){
-			var charges = vm.quote.counters[parentIndex].mandatoryCharges[index];
-	 		var oldPrice = 0;
-	 		if(charges.totalPrice !== undefined){
-	 			oldPrice = charges.totalPrice;	
-	 		};
-	 		charges.totalPrice = quantity * price;
-	 		vm.quote.counters[parentIndex].totalPrice += - oldPrice + charges.totalPrice;
-	 		vm.quote.totalPrice += - oldPrice + charges.totalPrice;
-	 		console.log(vm.quote.counters[parentIndex].mandatoryCharges[index]);
-	 		vm.quote = vm.quote;
-
-		};
-
 		vm.hideAddons = function(index) {  
 			console.log(vm.counterAddonDistributor);
 			vm.counterAddonDistributor = "",
@@ -103,7 +89,6 @@
 
 		vm.showMandatory = function() {  
 			vm.divMandatory = true;
-			console.log(vm.mandatoryForm);
 		};
 
 		vm.hideCounter = function() {  
@@ -133,7 +118,7 @@
 	  	vm.saveMandatoryAddon = function(addon, index) {
 	  		var addons = vm.quote.mandatoryAddons;
 			var pushObj = {};
-			var search = vm.arraySearch(addon, addons, "description");
+			var search = vm.arraySearch(addon.description, addons, "description");
 			var oldPrice = 0;
 			console.log(addon);
 
@@ -145,10 +130,12 @@
 			if (typeof search !== "undefined") {
 				//Found the term, so overwrite the value
 				console.log("Found it", vm.arraySearch(addon, addons, "description"));
-				//store old price
+				//store old addon price
 				oldPrice = addons[search].totalPrice;
 				//remove it from quote total
-				vm.quote.totalPrice =- oldPrice;
+				console.log("oldprice", oldPrice, vm.quote.totalPrice);
+				vm.quote.totalPrice -= oldPrice;
+				console.log("Set price", vm.quote.totalPrice)
 				//set new values
 				addons[search].quantity = addon.quantity;
 				addons[search].totalPrice = totalPrice;
@@ -168,8 +155,8 @@
 					totalPrice: totalPrice,
 				};
 				addons.push(pushObj);
-				console.log("Addons:", addons);
-				console.log("pushObj", pushObj);
+				//console.log("Addons:", addons);
+				//console.log("pushObj", pushObj);
 				vm.quote.totalPrice += addons[addons.length-1].totalPrice;
 			};
 
@@ -180,6 +167,7 @@
 			var pushObj = {};
 			var shape = vm.quote.counters[index].counterShape;
 			console.log(addon);
+			var search = vm.arraySearch(addon.description, addons, "description");
 
 			var totalPrice = 0;
 			var counterLength = vm.quote.counters[index].counterLength;
@@ -211,10 +199,7 @@
 			};
 
 			//Searches for the item by going through the list
-			var result = $.grep(addons, function(e){ return e.itemCode === addons.itemCode; });
-			console.log("This is the result: ", result);
-			console.log(Object.keys(result).length)
-			if (Object.keys(result).length == 0) {
+			if (typeof search === "undefined") {
 				//Couldn't find it, so add a new value
 				pushObj = {
 					distributor: addon.distributor,
@@ -228,12 +213,11 @@
 					totalPrice: totalPrice,
 				};
 				addons.push(pushObj);
-				console.log("Addons:", addons);
-				console.log("pushObj", pushObj);
+				//console.log("Addons:", addons);
+				//console.log("pushObj", pushObj);
 				vm.quote.counters[index].totalPrice += addons[addons.length-1].totalPrice;
 			} else {
 				//Found it, so update the value
-				var search = arraySearch(addon.description, addons, "products");
 				addons[search].quantity = addon.quantity;
 				addons[search].totalPrice = totalPrice;
 				vm.quote.counters[index].totalPrice += addons[search].totalPrice;
@@ -250,8 +234,15 @@
 		
 		vm.removeAddon = function(addon, counterIndex, addonIndex){		
 			vm.quote.totalPrice -= addon.totalPrice;
-			vm.quote.counters[counterIndex].totalPrice -= addon.totalPrice;
-			vm.quote.counters[counterIndex].addons.splice(addonIndex, 1);
+			if(counterIndex === -1){
+				//if mandatory:
+				vm.quote.mandatoryAddons.splice(addonIndex, 1);
+			} else {
+				//If normal: 
+				vm.quote.counters[counterIndex].totalPrice -= addon.totalPrice;
+				vm.quote.counters[counterIndex].addons.splice(addonIndex, 1);
+			};
+			
 		};
 
 		vm.saveEditCounter = function(index){

@@ -10,6 +10,17 @@ var quote = new Schema({
 	jobDifficulty: Number,
 	description: String,
 	poNumber: Number,
+	mandatoryAddons: [{
+		distributor: String,
+		manufactuer: String,
+		productType: String,
+		description: String,
+		itemCode: String,
+		price: Number,
+		formula: String,
+		quantity: Number,
+		totalPrice: Number
+	}],
 	terms: [{
 		term: String
 	}],
@@ -48,21 +59,6 @@ var quote = new Schema({
 			formula: String,
 			quantity: Number,
 			totalPrice: Number
-		}],
-		mandatoryCharges: [{
-			product: String,
-			name: String,
-			price: Number,
-			unitOfMeasure: String,
-			menuType: String,
-			quantity: Number,
-			totalPrice: Number,
-			dropDown: [{
-				price: Number,
-				product: String,
-				name: String,
-				quantity: Number
-			}]
 		}]
 	}]
 });

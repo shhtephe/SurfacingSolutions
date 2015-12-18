@@ -116,7 +116,23 @@ Phone: {/vm.customer.homePhone/}</textarea>
 			    	<span class="price">{/counter.totalPrice | currency: $/}</span>
 		    	</td>
 			</tr>
-
+			<tr ng-repeat="addon in vm.quote.mandatoryAddons ">	
+				<td class="item-name">
+					<span class="label label-info">Global Addon</span>
+				</td>
+			    <td class="description">
+			    	<textarea>{/addon.description/}</textarea>
+	    		</td>
+			    <td>
+			    	<textarea>{/addon.price | currency:$/}</textarea>
+		    	</td>
+			    <td>
+			    	<textarea>{/addon.quantity/}</textarea>
+	    		</td>
+			    <td>	
+			    	<span class="price">{/addon.totalPrice | currency: $/}</span>
+		    	</td>
+			</tr>
 			<tr>
 		    	<td colspan="3" class="blank"> </td>
 		    	<td colspan="1" class="total-line">Subtotal</td>

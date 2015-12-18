@@ -10,7 +10,6 @@
 <alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</alert>
 	<div id="page-wrap">
 	<a href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotefinal"><button type="button" style="btn">Back</button></a>
-	<br>
 	<button type="button" style="btn" ng-click="vm.email()">Email PDF</button>
 		<textarea id="header">Final Quote</textarea>	
 		<div id="surfacingIdentity">
@@ -72,7 +71,6 @@ Phone: {/vm.customer.homePhone/}</textarea>
                     <td class="meta-head">Payment Terms</td>
                     <td><div class="due">Net 30</div></td>
                 </tr>
-
             </table>
 		
 		</div>
@@ -117,7 +115,23 @@ Phone: {/vm.customer.homePhone/}</textarea>
 			    	<span class="price">{/counter.totalPrice | currency: $/}</span>
 		    	</td>
 			</tr>
-
+			<tr ng-repeat="addon in vm.quote.mandatoryAddons ">	
+				<td class="item-name">
+					<textarea>{/addon.productType/}</textarea>
+				</td>
+			    <td class="description">
+			    	<textarea>{/addon.description/}</textarea>
+	    		</td>
+			    <td>
+			    	<textarea>{/addon.price | currency:$/}</textarea>
+		    	</td>
+			    <td>
+			    	<textarea>{/addon.quantity/}</textarea>
+	    		</td>
+			    <td>	
+			    	<span class="price">{/addon.totalPrice | currency: $/}</span>
+		    	</td>
+			</tr>
 			<tr>
 		    	<td colspan="3" class="blank"> </td>
 		    	<td colspan="1" class="total-line">Subtotal</td>

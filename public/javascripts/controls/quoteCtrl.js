@@ -433,4 +433,14 @@ console.log(vm.quote.poNumber);
 	  		});
 		};
 	};
+	angular.module('surfacingSolutions')
+	.filter('termDate', function() {
+    return function(term, quote) {
+      var date = " " + quote.createdAt.substring(0, 10);
+      if(term == "This quotation is based on the measurements and specifications provided on "){
+      		term += date;
+		}
+      return term;
+    }
+  });
 }());

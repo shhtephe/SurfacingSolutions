@@ -70,17 +70,27 @@
 	angular.module('surfacingSolutions')
 	.filter('flattenRows', function() {
     return function(counters) {
-      var flatten = [];
-      angular.forEach(counters, function(counter) {
-        var addons = counter.addons;
-        flatten.push(counter);
-        if (addons) {
-          angular.forEach(addons, function(addon) {
-            flatten.push(angular.extend(addon, {addon: true}));
-          });
-        }
-      });
-      return flatten;
-    }
+    	var flatten = [];
+    	angular.forEach(counters, function(counter) {
+	        var addons = counter.addons;
+	        flatten.push(counter);
+	        if (addons) {
+	        	angular.forEach(addons, function(addon) {
+	        		flatten.push(angular.extend(addon, {addon: true}));
+	        	});
+	        };
+    	});
+    	return flatten;
+    };
+  });
+	angular.module('surfacingSolutions')
+	.filter('termDate', function() {
+    return function(term, quote) {
+    	var date = " " + quote.createdAt.substring(0, 10);
+    	if(term == "This quotation is based on the measurements and specifications provided on "){
+      		term += date;
+		};
+      	return term;
+    };
   });
 }());

@@ -356,7 +356,7 @@
 					<br><br>
 					<b><u>Terms</u></b>
 					<div ng-repeat="term in vm.terms">
-						<input type="checkbox" ng-checked="vm.checkTerms(term)" ng-model="term[$index].value" ng-click="vm.buildTerms(term)">{/term.term/}
+						<input type="checkbox" ng-checked="vm.checkTerms(term)" ng-model="term[$index].value" ng-click="vm.buildTerms(term)">{/term.term | termDate:vm.quote/}
 					</div>
 					<br><br>
 					Please click <a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotefinal" target="">here</a> to view the invoice.

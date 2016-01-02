@@ -1,4 +1,4 @@
-var app = angular.module('surfacingSolutions', ['ui.router', 'angular.filter', 'ui.bootstrap']);
+var app = angular.module('surfacingSolutions', ['ui.router', 'angular.filter', 'ui.bootstrap', 'angucomplete-alt']);
 
 app.config([
 '$interpolateProvider',

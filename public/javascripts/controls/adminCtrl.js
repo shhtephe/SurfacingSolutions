@@ -15,6 +15,7 @@
         .then(function(data) {
           vm.products = data.products;
           vm.materials = data.materials;
+          vm.uniqueMaterialsProducts();
         })
       
       vm.alerts = [];
@@ -25,6 +26,42 @@
                   return i;
               };
           };
+      };
+
+
+      vm.uniqueSort = function(column, array){
+
+        var result = {};
+        var unique = {};
+        var distinct = [];
+
+        for( var i in array ){
+          //console.log(array[i][column]);
+          if( typeof(unique[array[i][column]]) == "undefined"){
+            result = {
+              [column] : array[i][column]
+            };
+            distinct.push(result);
+          };
+          unique[array[i][column]] = 0;
+        };
+        return distinct;
+      };
+
+      vm.uniqueMaterialsProducts = function(){
+
+        vm.uniqueProductDistributor = vm.uniqueSort("distributor", vm.products);
+        //console.log(vm.uniqueProductDistributor);
+        vm.uniqueProductManufacturer = vm.uniqueSort("manufacturer", vm.products);
+        //console.log(vm.uniqueProductManufacturer);
+        vm.uniqueProductDescription = vm.uniqueSort("description", vm.products);
+        //console.log(vm.uniqueProductManufacturer);
+
+        vm.uniqueMaterialDistributor = vm.uniqueSort("distributor", vm.materials);
+        //console.log(vm.uniqueMaterialDistributor);
+        vm.uniqueMaterialManufacturer = vm.uniqueSort("manufacturer", vm.materials);
+        //console.log(vm.uniqueMaterialManufacturer);
+        vm.uniqueMaterialDescription = vm.uniqueSort("description", vm.materials);
       };
 
       vm.addAlert = function(type, msg) {
@@ -119,8 +156,8 @@
 
       vm.addNewMaterial = function(materialDescription){
         var material = {
-          manufacturer : materialDescription.manufacturer,
-          distributor : materialDescription.distributor,
+          manufacturer : materialDescription.manufacturer.title,
+          distributor : materialDescription.distributor.title,
           description : materialDescription.description,
           itemCode : materialDescription.itemCode,
           colourGroup : materialDescription.colourGroup,
@@ -136,9 +173,9 @@
         };
         vm.materials.push(material);
         //console.log(vm.materials);
-        //console.log(material);
+        console.log(material);
 
-        vm.saveMaterials("add", material);
+        //vm.saveMaterials("add", material);
       };
 
       vm.deleteMaterial = function(editMaterialDescription){
@@ -205,10 +242,10 @@
     vm.addNewProduct = function(productDescription){
         //console.log(productDescription);
         var product = {
-          distributor : productDescription.distributor,
-          manufacturer : productDescription.manufacturer,
+          distributor : productDescription.distributor.title,
+          manufacturer : productDescription.manufacturer.title,
           type : productDescription.type,
-          description : productDescription.description,
+          description : productDescription.description.title,
           itemCode : productDescription.itemCode,
           price : productDescription.price,
           formula : productDescription.formula

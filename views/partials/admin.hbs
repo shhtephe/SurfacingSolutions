@@ -84,10 +84,28 @@
 				<div ng-show="vm.newMaterial == true">
 						<ul class="list-group"> 
 							<li class="list-group-item">	
-								Distributor: <input type="text" name="newDistributor" ng-model="materialDescription.distributor"> <br> 
+								Distributor: <br> 
+								<angucomplete-alt id="newDistributor"
+					              placeholder="Enter a Distributor."
+					              pause="100"
+					              selected-object="materialDescription.distributor"
+					              local-data="vm.uniqueMaterialDistributor"
+					              search-fields="distributor"
+					              title-field="distributor"
+					              minlength="1"
+					              input-class="form-control form-control-small"></angucomplete-alt>
 							</li>
 							<li class="list-group-item">	
-								Manufacturer: <input type="text" name="newManufacturer" ng-model="materialDescription.manufacturer"> <br> 
+								Manufacturer: <br>
+								<angucomplete-alt id="newManufacturer"
+					              placeholder="Enter a Manufacturer."
+					              pause="100"
+					              selected-object="materialDescription.manufacturer"
+					              local-data="vm.uniqueMaterialManufacturer"
+					              search-fields="manufacturer"
+					              title-field="manufacturer"
+					              minlength="1"
+					              input-class="form-control form-control-small"></angucomplete-alt><br> 
 							</li>
 							<li class="list-group-item">	
 								Colour Group: <input type="text" name="newColourGroup" ng-model="materialDescription.colourGroup"> <br> 
@@ -191,10 +209,26 @@
 				<div ng-show="vm.newProduct == true">
 						<ul class="list-group"> 
 							<li class="list-group-item">	
-								Distributor: <input type="text" name="newProductDistributor" ng-model="productDescription.distributor"> <br> 
+								Distributor: <angucomplete-alt id="newDistributor"
+					              placeholder="Enter a Distributor."
+					              pause="100"
+					              selected-object="productDescription.distributor"
+					              local-data="vm.uniqueProductDistributor"
+					              search-fields="distributor"
+					              title-field="distributor"
+					              minlength="1"
+					              input-class="form-control form-control-small"></angucomplete-alt> <br>
 							</li>
 							<li class="list-group-item">	
-								Manufacturer: <input type="text" name="newProductManufacturer" ng-model="productDescription.manufacturer"> <br> 
+								Manufacturer: <angucomplete-alt id="newManufacturer"
+					              placeholder="Enter a Distributor."
+					              pause="100"
+					              selected-object="productDescription.manufacturer"
+					              local-data="vm.uniqueProductManufacturer"
+					              search-fields="manufacturer"
+					              title-field="manufacturer"
+					              minlength="1"
+					              input-class="form-control form-control-small"></angucomplete-alt> <br> 
 							</li>
 							<li class="list-group-item">	
 								Type: <input type="text" name="newProductType" ng-model="productDescription.type"> <br> 

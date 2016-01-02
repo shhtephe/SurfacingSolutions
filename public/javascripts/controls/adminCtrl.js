@@ -175,7 +175,7 @@
         //console.log(vm.materials);
         console.log(material);
 
-        //vm.saveMaterials("add", material);
+        vm.saveMaterials("add", material);
       };
 
       vm.deleteMaterial = function(editMaterialDescription){
@@ -245,14 +245,14 @@
           distributor : productDescription.distributor.title,
           manufacturer : productDescription.manufacturer.title,
           type : productDescription.type,
-          description : productDescription.description.title,
+          description : productDescription.description,
           itemCode : productDescription.itemCode,
           price : productDescription.price,
           formula : productDescription.formula
         };
         vm.products.push(product);
-        console.log(vm.products);
-        console.log(vm.product);
+        //console.log(vm.products);
+        //console.log(vm.product);
 
         vm.saveProducts("add", product);
       };
@@ -264,6 +264,7 @@
         //delete item
         vm.products.splice(index, 1);
 
+        vm.newEditProduct = false;
         vm.editProductDistributor = "";
         vm.editProductManufacturer = "";
         vm.editProductType = "";
@@ -310,6 +311,12 @@
             // or server returns response with an error status.
             vm.addAlert("danger", "Error: Product did not " + action);
             console.log("Nope.jpg");
+          });
+          dataFactory.getProductsMaterials()
+          .then(function(data) {
+            vm.products = data.products;
+            vm.materials = data.materials;
+            vm.uniqueMaterialsProducts();
           });
       };
   };

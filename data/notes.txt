@@ -1,0 +1,5 @@
+Notes:
+
+Make the invoice number increase across ALL quotes. So make it quote 10 TOTAL, not quote 10 for a specific customer. Allow to search by that.
+
+Sheet size is typically x.

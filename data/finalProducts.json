@@ -1,0 +1,350 @@
+[
+	{
+		category: "mandatory",
+		id: 1,
+		name: "directionalMaterialFabrication",
+		product: "Directional Material Fabrication",
+		price: 0,
+		unitOfMeasure: "Item",
+		menuType: "textBox"
+	},
+	{
+		category: "mandatory",
+		id: 2,
+		name: "adhesiveLinerPerFoot",
+		product: "Adhesive Liner Per Foot",
+		price: 0,
+		unitOfMeasure: "Foot",
+		menuType: "textBox"
+	},
+	{
+		category: "mandatory",
+		id: 3,
+		name: "counterDepth",
+		product: "Counter Depth",
+		price: 0,
+		unitOfMeasure: "Item",
+		menuType: "textBox",
+		dropDown:[{
+			name: "0-26",
+			product: '0" to 26"',
+			price: 0
+		},
+		{
+			name: "27-36",
+			product: '27" to 36"',
+			price: 0
+		},
+		{
+			name: "37-50",
+			product: '37" to 50"',
+			price: 0
+		}]
+	},
+	{
+		category: "mandatory",
+		id: 4,
+		name: "siteJoint",
+		product: "Site Joint",
+		price: 0,
+		unitOfMeasure: "Item",
+		menuType: "none"
+	},
+	{
+		category: "general",
+		id: 1,
+		name: "cuttingBoards",
+		product: "Cutting Boards",
+		price: 0,
+		unitOfMeasure: "Item",
+		menuType: "textbox"
+	},
+	{
+		category: "general",
+		id: 2,
+		name: "backBridgeForSlideInStove",
+		product: "Back bridge for slide in stove",
+		price: 0,
+		unitOfMeasure: "Item",
+		menuType: "checkbox"
+	},
+	{
+		category: "general",
+		id: 3,
+		name: "drainBoard",
+		product: "Drain Board",
+		price: 0,
+		unitOfMeasure: "Item",
+		menuType: "textbox"
+	},
+	{
+		category: "general",
+		id: 4,
+		name: "highGlossFinish",
+		product: "High Gloss Finish",
+		price: 0,
+		unitOfMeasure: "Item",
+		menuType: "checkbox"
+	},
+	{
+		category: "general",
+		id: 5,
+		name: "thermalForming",
+		product: "Thermal Forming",
+		price: 0,
+		unitOfMeasure: "Item",
+		menuType: "textbox"
+	},
+	{
+		category: "general",
+		id: 6,
+		name: "cookTopCutOut",
+		product: "Cook-Top Cut Out",
+		price: 0,
+		unitOfMeasure: "Item",
+		menuType: "checkbox"
+	},
+	{
+		category: "general",
+		id: 1,
+		name: "Backsplash",
+		product: "Backsplash",
+		price: 0,
+		unitOfMeasure: "Item",
+		menuType: "dropDown",
+		dropDown: [{
+			name: "customEdge",
+			product: 'Custom Edge',
+			price: 0
+		},
+		{
+			name: "3/4to3",
+			product: '',
+			price: 0
+		},
+		{
+			name: "below3/4",
+			product: '',
+			price: 0
+		}]
+	},
+	{
+		category: "edging",
+		id: 1,
+		name: "radius",
+		product: "Radius",
+		price: 0,
+		unitOfMeasure: "Item",
+		menuType: "dropDown",
+		dropDown: [{
+			name: "below3/4",
+			product: 'Radius corners < 3/4',
+			price: 0
+		},
+		{
+			name: "3/4to3",
+			product: 'Radius corners 3/4" to 3"',
+			price: 0
+		},
+		{
+			name: "below3/4",
+			product: 'Radius corners < 3/4',
+			price: 0
+		}]
+	},
+	{
+		category: "edging",
+		id: 2,
+		name: "edgeDetail",
+		product: "Edge Detail",
+		price: 0,
+		unitOfMeasure: "Item",
+		menuType: "dropDown",
+		dropDown: [{
+			name: "1/8T&B",
+			product: '1/8 T&B',
+			price: 0
+		},
+		{
+			name: "1/4T&B",
+			product: '1/4 T&B',
+			price: 0
+		},
+		{
+			name: "3/8T&B",
+			product: '3/8 T&B',
+			price: 0
+		},
+		{
+			name: "1/4ChamferT&B",
+			product: '1/4 Chamfer T&B',
+			price: 0
+		},
+		{
+			name: "traditionalOgee",
+			product: 'Traditional Ogee',
+			price: 0
+		},
+		{
+			name: "bullNose",
+			product: 'Bull Nose',
+			price: 0
+		},
+		{
+			name: "premiumOgee",
+			product: 'Premium Ogee',
+			price: 0
+		}]
+	},
+	{
+		category: "edging",
+		id: 3,
+		name: "skirtDetail",
+		product: "Skirt Detail",
+		price: 0,
+		unitOfMeasure: "Item",
+		menuType: "dropDown",
+		dropDown: [{
+			name: "0-1.5",
+			product: '0 to 1.5',
+			price: 0
+		},
+		{
+			name: "1.5-3",
+			product: '1.5 to 3',
+			price: 0
+		},
+		{
+			name: "3-6",
+			product: '3 to 6',
+			price: 0
+		},
+		{
+			name: "7-12",
+			product: '7 to 12',
+			price: 0
+		}]
+	},
+	{
+		category: "edging",
+		id: 3,
+		name: "gableEnd",
+		product: "Gable End",
+		price: 0,
+		unitOfMeasure: "Item",
+		menuType: "dropDown",
+		dropDown: [{
+			name: "0-26",
+			product: 'Waterfall - 0 to 26',
+			price: 0
+		},
+		{
+			name: "27-36",
+			product: 'Waterfall - 27 to 36',
+			price: 0
+		},
+		{
+			name: "37+",
+			product: 'Waterfall - >37',
+			price: 0
+		}]
+	},
+	{
+		category: "sink",
+		id: 1,
+		name: "supplyOfSink",
+		product: "Supply of Sink",
+		price: 0,
+		unitOfMeasure: "Item",
+		menuType: "dropDown",
+		dropDown: [{
+			name: "singleUndermountSS",
+			product: "Single Undermount SS",
+			price: 0
+		},
+		{
+			name: "doubleUndermountSinkSS",
+			product: "Double Undermount Sink SS",
+			price: 0
+		},
+		{
+			name: "singleSolidSurface",
+			product: "Single Solid Surface",
+			price: 0
+		},
+		{
+			name: "doubleSolidSurface",
+			product: "Double Solid Surface",
+			price: 0
+		},
+		{
+			name: "singleDropInSinkSS",
+			product: "Single Drop-in Sink SS",
+			price: 0
+		},
+		{
+			name: "doubleDropInSinkSS",
+			product: "Double Drop-in Sink SS",
+			price: 0
+		}]
+	},
+	{
+		category: "sink",
+		id: 2,
+		name: "sinkCutOut",
+		product: "Sink Cut-Out",
+		price: 0,
+		unitOfMeasure: "Item",
+		menuType: "dropDown",
+		dropDown: [{
+			name: "singleUndermountSink",
+			product: "Single Undermount Sink",
+			price: 0
+		},
+		{
+			name: "doubleUndermountSink",
+			product: "Double Undermount Sink",
+			price: 0
+		},
+		{
+			name: "SingleDropInSink",
+			product: "Single Drop-in Sink",
+			price: 0
+		},
+		{
+			name: "doubleDropInSink",
+			product: "Double Drop-in Sink",
+			price: 0
+		}]
+	}, 
+	{
+		category: "sink",
+		id: 3,
+		name: "sinkInstallation",
+		product: "Sink Installation",
+		price: 0,
+		unitOfMeasure: "Item",
+		menuType: "dropDown",
+		dropDown: [{
+			name: "customerProvidedDropIn",
+			product: "Customer Provided Drop-in",
+			price: 0
+		},
+		{
+			name: "customerProvidedUndermount",
+			product: "Customer Provided Undermount",
+			price: 0
+		},
+		{
+			name: "suppliedDropInSink",
+			product: "Supplied Drop-in Sink",
+			price: 0
+		},
+		{
+			name: "suppliedUndermount",
+			product: "Supplied Undermount",
+			price: 0
+		}]
+	}, 
+
+]

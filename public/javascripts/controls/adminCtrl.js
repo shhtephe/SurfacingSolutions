@@ -156,8 +156,13 @@
 
       vm.addNewMaterial = function(materialDescription){
         var material = {
+<<<<<<< HEAD
           distributor : materialDescription.distributor.title,
           manufacturer : materialDescription.manufacturer.title,
+=======
+          manufacturer : materialDescription.manufacturer.title,
+          distributor : materialDescription.distributor.title,
+>>>>>>> 36571d67e12d3fd87eebd2dd95776d9b7c9e4e66
           description : materialDescription.description,
           itemCode : materialDescription.itemCode,
           colourGroup : materialDescription.colourGroup,
@@ -312,8 +317,11 @@
             vm.addAlert("danger", "Error: Product did not " + action);
             console.log("Nope.jpg");
           });
+<<<<<<< HEAD
           
           //Reload all data
+=======
+>>>>>>> 36571d67e12d3fd87eebd2dd95776d9b7c9e4e66
           dataFactory.getProductsMaterials()
           .then(function(data) {
             vm.products = data.products;

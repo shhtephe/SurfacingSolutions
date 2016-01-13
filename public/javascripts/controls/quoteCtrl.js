@@ -350,7 +350,7 @@
 	//Chooses the best match for pricing. Will need to make this user selectable later.
 			if(sheets <=.5 && material.halfSheet){
 			console.log("This ran 1", sheets, material.halfSheet, squareFootage, length, width, material.width, material.length);
-				counterPrice = sheets * material.halfSheet;			
+				counterPrice = 1 * material.halfSheet;			
 			} else if(sheets <5 && material.fullsheet1){
 			console.log("This ran 2");
 				counterPrice = sheets * material.fullSheet1;
@@ -416,7 +416,7 @@
 			/*if(vm.quote.jobDifficulty.$dirty === true){
 				console.log("value has changed");
 			};*/
-console.log(vm.quote.poNumber);
+
 			//save the quote
 			//Need to declare that it's sending a json doc
 			$http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';

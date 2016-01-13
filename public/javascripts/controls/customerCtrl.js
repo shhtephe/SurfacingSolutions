@@ -33,7 +33,8 @@
 			}
 			//console.log(max);
 			//console.log($stateParams.custCode);
-			var path = "/customer/" + $stateParams.custCode + "/quote/" + max;
+			var path = "/customer/" + $stateParams.custCode + "/quotebuild/" + max;
+			//console.log(path);
 
 			$location.path( path );
 		};

@@ -185,7 +185,7 @@
 					totalPrice = addon.price * squareFootage;
 					console.log(counterLength, counterWidth, squareFootage, totalPrice, addon.price);
 				} else if(shape === "circle"){
-					squareFootage = (counterWidth*counterWidth) * Math.PI;
+					squareFootage = (Math.PI * (Math.pow(counterWidth, 2)));
 					squareFootage = squareFootage.toFixed(2);
 					addon.quantity = squareFootage;
 					totalPrice = addon.price * squareFootage;
@@ -250,9 +250,9 @@
 		};
 
 		vm.saveCounter = function(width, length, shape, material, index) {
-	console.log("Width", width, "Length", length, "Shape", shape, "Material", material, "Index", index);
+		console.log("Width", width, "Length", length, "Shape", shape, "Material", material, "Index", index);
 
-	//Obviously, we set some variables. 
+		//Obviously, we set some variables. 
 			var squareFootage = 0;
 			var sheets = 0;
 			var lastPrice = 0;
@@ -263,8 +263,8 @@
 			var pushMandatoryDropDown = {};
 
 			//convert to feet
-			length = length / 12;
-			width = width / 12;
+			length = length;
+			width = width;
 
 			//Makes doing math later down easier.
 			if(shape === "circle"){
@@ -333,9 +333,9 @@
 
 	//Checks the shape of the table, and then calculates square footage.
 			if(shape === "rectangle"){
-				squareFootage = (length * width); //measurements are in inches, then converted to feet
+				squareFootage = (length * width/144); //measurements are in inches, then converted to feet
 			} else if(shape === "circle"){
-				squareFootage = ((length*width) * Math.PI)/4;
+				squareFootage = (Math.PI * (Math.pow(width, 2)));
 				squareFootage = squareFootage.toFixed(2);
 			};
 			//console.log(squareFootage, length, width);

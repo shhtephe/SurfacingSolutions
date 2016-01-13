@@ -11,7 +11,7 @@
 					<br>
 					<br>-->
 
-					Customer: {/vm.customer.lastName/}, {/vm.customer.firstName/}
+					Customer: {/vm.customer.companyName/} - {/vm.customer.lastName/}, {/vm.customer.firstName/}
 					<br>QuoteID: {/vm.quote.quoteID/}
 					<br>
 					<br>
@@ -32,13 +32,13 @@
 								<option value="circle">Circle (use radius)</option>
 							</select>
 							<br>
+							<div ng-show="shape == 'rectangle'">
+								Length in inches: <input type="text" ng-model="counterLength" name="counterLength">
+							</div>
 							<div ng-show="shape == 'rectangle' || shape == 'circle'">
 								Width in inches: <input type="text" ng-model="counterWidth" name="counterWidth">
 							</div>
 							<br>
-							<div ng-show="shape == 'rectangle'">
-								Length in inches: <input type="text" ng-model="counterLength" name="counterLength">
-							</div>
 							<br>
 							<div ng-show="shape == 'rectangle' || shape == 'circle'">
 								<br>

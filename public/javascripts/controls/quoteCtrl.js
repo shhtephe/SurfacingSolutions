@@ -115,6 +115,34 @@
 		    vm.alerts.splice(index, 1);
 	  	};
 
+	  	vm.changePricing = function(pricing, index) {
+		console.log(pricing, index);
+		var sheets = vm.quote.counters[index].sheets;
+		var material = vm.quote.counters[index].material;
+		var counterPrice = 0;
+
+	  		if(pricing == "halfSheet"){
+				counterPrice = sheets * material.halfSheet;		
+				vm.quote.counters[index].pricing = "halfSheet";
+			} else if(pricing =="fullsheet1"){
+				counterPrice = sheets * material.fullSheet1;
+				vm.quote.counters[index].pricing = "fullsheet1";
+			} else if(pricing == "fullSheet5"){
+				counterPrice = sheets * material.fullSheet5;
+				vm.quote.counters[index].pricing = "fullSheet5";
+			} else if(pricing == "fullSheet21") {
+				counterPrice = sheets * material.fullSheet21;
+				vm.quote.counters[index].pricing = "fullSheet21";
+			} else if(pricing == "isa") {
+				counterPrice = sheets * material.isa;
+				vm.quote.counters[index].pricing = "isa";
+			};
+			//change price from old to new, and update main total
+			vm.quote.totalPrice -= vm.quote.counters[index].totalPrice;
+			vm.quote.counters[index].totalPrice = counterPrice;
+			vm.quote.totalPrice += vm.quote.counters[index].totalPrice;
+	  	};
+
 	  	vm.saveMandatoryAddon = function(addon, index) {
 	  		var addons = vm.quote.mandatoryAddons;
 			var pushObj = {};
@@ -242,7 +270,6 @@
 				vm.quote.counters[counterIndex].totalPrice -= addon.totalPrice;
 				vm.quote.counters[counterIndex].addons.splice(addonIndex, 1);
 			};
-			
 		};
 
 		vm.saveEditCounter = function(index){
@@ -261,7 +288,7 @@
 			var pushObj = {};
 			var pushMandatory = {};
 			var pushMandatoryDropDown = {};
-
+			var pricing = "";
 			//convert to feet
 			length = length;
 			width = width;
@@ -350,20 +377,26 @@
 	//Chooses the best match for pricing. Will need to make this user selectable later.
 			if(sheets <=.5 && material.halfSheet){
 			console.log("This ran 1", sheets, material.halfSheet, squareFootage, length, width, material.width, material.length);
-				counterPrice = 1 * material.halfSheet;			
+				//it will round down to 0, so make it one sheet
+				sheets = 1;
+				counterPrice = sheets * material.halfSheet;		
+				pricing = "halfSheet";
 			} else if(sheets <5 && material.fullsheet1){
 			console.log("This ran 2");
 				counterPrice = sheets * material.fullSheet1;
+				pricing = "fullsheet1";
 			} else if(sheets <21 && material.fullsheet5){
 			console.log("This ran 3");
 				counterPrice = sheets * material.fullSheet5;
+				pricing = "fullSheet5";
 			} else if(sheets >=21 && material.fullSheet21) {
 			console.log("This ran 4");
 				counterPrice = sheets * material.fullSheet21;
+				pricing = "fullSheet21";
 			} else {
 			console.log("Loop 5 | Sheets: " + sheets + " | Price: " + material.fullSheet1);
 				counterPrice = sheets * material.fullSheet1;
-			}
+			};
 
 	//Commits data to arrays depending on whether it's an edit or a new save.
 			if(typeof index === "undefined"){
@@ -371,7 +404,9 @@
 				vm.quote.counters.push(pushObj);
 	//Set price of counter minues addons
 				vm.quote.counters[vm.quote.counters.length-1].totalPrice = counterPrice;
-
+	//Add Pricing default and commit number of 'sheets' required for Counter
+				vm.quote.counters[vm.quote.counters.length-1].pricing = pricing;
+				vm.quote.counters[vm.quote.counters.length-1].sheets = sheets;
 	//Hides the counter add button at the top of the page.
 				vm.hideCounter();
 	//Save the price of the counter, and the total price of the vm.quote. Save it to the vm.quote variable.
@@ -381,15 +416,18 @@
 			else{
 	//Replace the existing addons into the new array :)
 	//console.log(vm.quote.counters[index].addons.length);
-			if(typeof vm.quote.counters[index].addons.length !== undefined) {
-				for (var i = vm.quote.counters[index].addons.length - 1; i >= 0; i--) {
-					pushObj.addons.push(vm.quote.counters[index].addons[i]);6
+				if(typeof vm.quote.counters[index].addons.length !== undefined) {
+					for (var i = vm.quote.counters[index].addons.length - 1; i >= 0; i--) {
+						pushObj.addons.push(vm.quote.counters[index].addons[i]);6
 					pushObj.totalPrice += vm.quote.counters[index].addons[i].totalPrice;
+					};
 				};
-			};
 	//Replace counter total.
 				pushObj.material.price = counterPrice;
 				pushObj.totalPrice += counterPrice;
+	//Add Pricing default and commit number of 'sheets' required for Counter
+				pushObj.pricing = pricing;
+				pushObj.sheets = sheets;
 	//Add vm.quote total with new counter price but first replace old price.		
 				vm.quote.totalPrice -= vm.quote.counters[index].totalPrice;
 				vm.quote.totalPrice += pushObj.totalPrice;

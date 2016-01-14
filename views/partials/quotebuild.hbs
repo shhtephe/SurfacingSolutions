@@ -10,7 +10,8 @@
 					{/products[30]/}
 					<br>
 					<br>-->
-
+					<!--{/vm.quote/}-->
+					<br><br>
 					Customer: {/vm.customer.companyName/} - {/vm.customer.lastName/}, {/vm.customer.firstName/}
 					<br>QuoteID: {/vm.quote.quoteID/}
 					<br>
@@ -123,6 +124,8 @@
 						<br><textarea rows="4" columns="150" ng-model="counter.description"></textarea>
 						<br>
 				  		<table class="table table-hover table-bordered">
+						<!--<br><br>{/counter|json/}-->
+						{/counter.pricing/}
 				  			<caption><u>Summary</u></caption>
 				  			<tbody>
 					  			<tr>
@@ -172,6 +175,50 @@
 								      		<br>Material: {/counter.material.description/}
 								      		<br>Price: {/counter.material.price | currency:$/}
 								      	</td>
+								      	<table>
+							      			<caption><u>Pricing</u></caption>
+							      			<form>
+							      				<tr>
+							      					<td ng-show="counter.material.halfSheet">
+							      						Half Sheet
+							      					</td>
+							      					<td ng-show="counter.material.fullSheet1">
+							      						1-5 Full Sheets
+							      					</td>
+							      					<td ng-show="counter.material.fullSheet5">
+							      						6-20 Full Sheets 
+							      					</td>
+							      					<td ng-show="counter.material.fullSheet21">
+							      						21+ Full Sheets
+							      					</td>
+							      					<td ng-show="counter.material.isa">
+							      						ISA Discount
+							      					</td>
+							      				</tr>
+								      			<tr>
+								      				<td ng-show="counter.material.halfSheet">
+								      					<input type="radio" name="counterPricing" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $index)" value="halfSheet">
+								      					{/counter.material.halfSheet | currency:$/}/sheet
+								      				</td>
+								      				<td ng-show="counter.material.fullSheet1">
+								      					<input type="radio" name="counterPricing" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $index)" value="fullsheet1">
+								      					{/counter.material.fullSheet1 | currency:$/}/sheet
+								      				</td>
+								      				<td ng-show="counter.material.fullSheet5">
+								      					<input type="radio" name="counterPricing" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $index)" value="fullSheet5">
+								      					{/counter.material.fullSheet5 | currency:$/}/sheet
+								      				</td>
+								      				<td ng-show="counter.material.fullSheet21">
+								      					<input type="radio" name="counterPricing" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $index)" value="fullSheet21">
+								      					{/counter.material.fullSheet21 | currency:$/}/sheet
+								      				</td>
+								      				<td ng-show="counter.material.isa">
+								      					<input type="radio" name="counterPricing" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $index)" value="isa">
+								      					{/counter.material.isa | currency:$/}/sheet
+								      				</td>
+								      			</tr>
+							      			</form>
+							      		</table>
 					      			</span>
 						  		</tr>
 					  		</tbody>
@@ -326,7 +373,7 @@
 					<br>
 		      			<div ng-repeat="addon in vm.quote.mandatoryAddons track by $index">
 							<br>{/addon.productType/} - {/addon.description/} : {/addon.quantity/}
-							@{/addon.price | currency:$/} <a ng-click="vm.removeMandatoryAddon(addon, -1, $index)">remove</a>
+							@{/addon.price | currency:$/} <a ng-click="vm.removeAddon(addon, -1, $index)">remove</a>
 						</div>
 			      	<br>
 					<br>Job Difficulty: <input type="number" ng-model="vm.quote.jobDifficulty" name="vm.quote.jobDifficulty"><br>

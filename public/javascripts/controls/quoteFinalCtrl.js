@@ -7,7 +7,6 @@
 	quoteFinalCtrl.$inject = ['dataFactory', '$stateParams', '$http', '$window'];
 
 	function quoteFinalCtrl(dataFactory, $stateParams, $http, $window) {
-		console.log($window.status);
 		var vm = this;
 		vm.alerts = [];
 
@@ -66,6 +65,7 @@
 		};
 
 		$window.status = "ready";	
+		console.log($window.status);
 	};
 	angular.module('surfacingSolutions')
 	.filter('flattenRows', function() {
@@ -83,6 +83,7 @@
     	return flatten;
     };
   });
+	
 	angular.module('surfacingSolutions')
 	.filter('termDate', function() {
     return function(term, quote) {

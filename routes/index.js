@@ -258,19 +258,55 @@ wkhtmltopdf( pageURL, {
   var userID = req.body.data.userID;
   var quoteID = req.body.data.quoteID;
   // get url to process
-  var url_to_process = "localhost:3000/#/customer/" + userID + "/quotebuild/" + quoteID + "/quotesend";
-  //var url_to_process = "google.com"
+  var url_to_process = "http://localhost:3000/#/customer/" + userID + "/quotebuild/" + quoteID + "/quotesend";
+  console.log(url_to_process);
   if (userID === undefined || userID == '' || quoteID === undefined || quoteID == '') {
     res.writeHead(404, {'Content-Type': 'text/plain'});
     res.end("404 Not Found");
   };
 
-  // phantomjs screenshot
+//set public directory
+var public_dir = 'public\\images\\emailquote';
+
+console.log("require phantom");
+var phantom = require('phantom');
+console.log("set path");
+//phantom.path = 'C:/phantomjs/bin/phantomjs.exe';
+console.log("create function");
+phantom.create(function (ph) {
+  ph.createPage(function (page) {
+    page.open(url_to_process, function (status) {
+      console.log(status);
+      if (status == "success") {
+          // put images in public directory
+          var image_file_name = url_to_process + ".png";
+          console.log(image_file_name);
+          var image_path = public_dir + "\\" + image_file_name;
+          console.log(image_path);
+          page.render(image_path, function(){
+            console.log(status);
+            res.sendStatus(200);
+          });
+        }
+        else {
+          res.writeHead(404, {'Content-Type': 'text/plain'});
+          res.end("404 Not Found");
+        };
+        page.close();
+        ph.exit();
+      });
+    });
+  });
+
+  /*// phantomjs screenshot
   var phantom = require('phantomjs');
   console.log('Var created');
-  phantom.command = 'C:/phantomjs/bin/phantomjs.exe';
+  phantom.path = 'C:/phantomjs/bin/phantomjs.exe';
   console.log('command set');
-  phantom.create(function(ph){
+
+  console.log(phantom);
+  
+  phantom.create(function(phantom){
     console.log('Phantom.create initialised');
     ph.createPage(function(page){
       console.log('ph.createpage initialised');
@@ -294,7 +330,7 @@ wkhtmltopdf( pageURL, {
         ph.exit();
       });
     });
-  });
+  });*/
   /*
   var done = false; //flag that tells us if we're done rendering
   var userID = req.body.data.userID;

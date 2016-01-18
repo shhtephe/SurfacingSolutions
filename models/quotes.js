@@ -9,7 +9,7 @@ var quote = new Schema({
 	totalPrice: Number,
 	jobDifficulty: Number,
 	description: String,
-	poNumber: Number,
+	poNumber: String,
 	mandatoryAddons: [{
 		distributor: String,
 		manufactuer: String,

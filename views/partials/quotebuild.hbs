@@ -23,8 +23,15 @@
 					<br>
 					<textarea rows="4" columns="150" ng-model="vm.quote.description"></textarea>
 					<br>
+					<hr style="background:#000000; border:0; height:7px" />
+				      	<span style="float: left;">
+		      		<br>
 					<div ng-show="vm.addCounter == true">
 						<ng-form name="vm.addCounterForm">
+							Counter Description:
+							<br><textarea rows="4" columns="150" ng-model="counter.description"></textarea>
+							<br><br>
+
 							Counter Shape: 
 							<br>
 							<select name="shape" ng-model="shape" convert-to-number id="shape">
@@ -120,9 +127,6 @@
 					<div ng-repeat="counter in vm.quote.counters track by $index">
 				  		<u>Counter {/$index + 1/}</u> <button type="button" style="btn btn-danger" ng-click="vm.deleteCounter($index)">DELETE THIS COUNTER</button>
 						<br><br>
-						Counter Description:
-						<br><textarea rows="4" columns="150" ng-model="counter.description"></textarea>
-						<br>
 				  		<table class="table table-hover table-bordered">
 						<!--<br><br>{/counter|json/}-->
 						{/counter.pricing/}

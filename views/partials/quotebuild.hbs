@@ -333,8 +333,8 @@
 
 							<div ng-show="counterAddonDistributor && counterAddonManufacturer && counterAddonType">
 								<br>
-								Choose a Description:
-								<select name="counterAddonDescription" ng-model="counterAddonDescription" ng-options="product.description for product in vm.products | filter:{distributor:counterAddonDistributor.distributor, manufacturer:counterAddonManufacturer.manufacturer, type:counterAddonType.type} | unique: 'description' | orderBy:'description'">
+								Choose a Item Code:
+								<select name="counterAddonDescription" ng-model="counterAddonDescription" ng-options="product.itemCode for product in vm.products | filter:{distributor:counterAddonDistributor.distributor, manufacturer:counterAddonManufacturer.manufacturer, type:counterAddonType.type} | unique: 'itemCode' | orderBy:'itemCode'">
 									<option value="">----Select----</option>
 								</select>
 							</div>
@@ -342,7 +342,7 @@
 								<br>
 								<ul class="list-group"> 
 									<li class="list-group-item">	
-										Item Code: {/counterAddonDescription.itemCode/}<br> 
+										Description: {/counterAddonDescription.description/}<br> 
 									</li>	
 									<li class="list-group-item">	
 										Price /<span ng-show="counterAddonDescription.formula=='item'">Item</span>

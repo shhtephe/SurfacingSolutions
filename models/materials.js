@@ -12,10 +12,12 @@ var materials = new Schema({
 	thickness: Number,
 	length: Number,
 	width: Number,
-	fullSheet1: Number,
+	quarterSheet: Number,
 	halfSheet: Number,
+	fullSheet1: Number,
 	fullSheet5: Number,
 	fullSheet21: Number,
+	salePrice: Number,
 	isa: Number,
 	matCollection: String
 });

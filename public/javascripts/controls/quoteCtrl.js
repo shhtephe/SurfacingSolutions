@@ -4,9 +4,9 @@
 	angular.module('surfacingSolutions')
 	.controller('quoteCtrl', quoteCtrl);
 
-	quoteCtrl.$inject = ['dataFactory', '$stateParams', '$http', '$scope'];
+	quoteCtrl.$inject = ['dataFactory', '$stateParams', '$http', '$scope', '$uibModal'];
 
-	function quoteCtrl(dataFactory, $stateParams, $http, $scope) {
+	function quoteCtrl(dataFactory, $stateParams, $http, $scope, $uibModal) {
 		//'this' replaces $scope
 		var vm = this;
 		vm.Math = Math.PI;
@@ -27,20 +27,21 @@
 				console.log(reason);
 			});		
 
-
-		vm.open = function (size) {
-
+		//baby's first modal
+		vm.addCounter = function (size) {
 	    	var modalInstance = $uibModal.open({
-		      animation: $scope.animationsEnabled,
-		      templateUrl: 'admin.hbs',
-		      controller: 'ModalInstanceCtrl',
+		      animation: true,
+		      templateUrl: 'addtable.html',
+		      controller: 'adminCtrl',
 		      size: size,
+		      materials: vm.materials,
 		      resolve: {
 		        items: function () {
 		          return vm.items;
 		        }
-	      	}
-	    });
+	      	  }
+      	  	});
+	    };
 
 
 		//assign checkboxes for Terms of Service

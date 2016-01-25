@@ -28,6 +28,21 @@
 			});		
 
 
+		vm.open = function (size) {
+
+	    	var modalInstance = $uibModal.open({
+		      animation: $scope.animationsEnabled,
+		      templateUrl: 'admin.hbs',
+		      controller: 'ModalInstanceCtrl',
+		      size: size,
+		      resolve: {
+		        items: function () {
+		          return vm.items;
+		        }
+	      	}
+	    });
+
+
 		//assign checkboxes for Terms of Service
 		vm.checkTerms = function (term){
 			var terms = vm.quote.terms;

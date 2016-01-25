@@ -32,7 +32,7 @@
 	    	var modalInstance = $uibModal.open({
 		      animation: true,
 		      templateUrl: 'addtable.html',
-		      controller: ['materials', addTableCtrl],
+		      controller: ['$uibModalInstance', 'materials', addTableCtrl],
 		      controllerAs: 'vm',
 		      size: size,
 		      resolve: {
@@ -41,16 +41,16 @@
       	  	});
 	    };
 
-	    var addTableCtrl = function(materials) {
+	    var addTableCtrl = function($uibModalInstance, materials) {
 	    	var vm = this;
 	    	vm.materials = materials;
 
-	    	vm.saveCounter = function() {
-
+	    	vm.saveCounter = function(width, length, shape, material, index) {
+	    		$uibModalInstance.close(width, length, shape, material, index);
 	    	};
 
 	    	vm.cancel = function() {
-
+				$uibModalInstance.dismiss('cancel');
 	    	};
 	    }
 

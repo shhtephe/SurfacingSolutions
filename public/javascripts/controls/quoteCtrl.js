@@ -32,17 +32,27 @@
 	    	var modalInstance = $uibModal.open({
 		      animation: true,
 		      templateUrl: 'addtable.html',
-		      controller: 'adminCtrl',
+		      controller: ['materials', addTableCtrl],
+		      controllerAs: 'vm',
 		      size: size,
-		      materials: vm.materials,
 		      resolve: {
-		        items: function () {
-		          return vm.items;
+		        materials: function() {return vm.materials}
 		        }
-	      	  }
       	  	});
 	    };
 
+	    var addTableCtrl = function(materials) {
+	    	var vm = this;
+	    	vm.materials = materials;
+
+	    	vm.saveCounter = function() {
+
+	    	};
+
+	    	vm.cancel = function() {
+
+	    	};
+	    }
 
 		//assign checkboxes for Terms of Service
 		vm.checkTerms = function (term){

@@ -4,9 +4,9 @@
 	angular.module('surfacingSolutions')
 	.controller('quoteCtrl', quoteCtrl);
 
-	quoteCtrl.$inject = ['dataFactory', '$stateParams', '$http', '$scope'];
+	quoteCtrl.$inject = ['dataFactory', '$stateParams', '$http', '$scope', '$uibModal'];
 
-	function quoteCtrl(dataFactory, $stateParams, $http, $scope) {
+	function quoteCtrl(dataFactory, $stateParams, $http, $scope, $uibModal) {
 		//'this' replaces $scope
 		var vm = this;
 		vm.Math = Math.PI;
@@ -27,21 +27,32 @@
 				console.log(reason);
 			});		
 
-
-		vm.open = function (size) {
-
+		//baby's first modal
+		vm.addCounter = function (size) {
 	    	var modalInstance = $uibModal.open({
-		      animation: $scope.animationsEnabled,
-		      templateUrl: 'admin.hbs',
-		      controller: 'ModalInstanceCtrl',
+		      animation: true,
+		      templateUrl: 'addtable.html',
+		      controller: ['$uibModalInstance', 'materials', addTableCtrl],
+		      controllerAs: 'vm',
 		      size: size,
 		      resolve: {
-		        items: function () {
-		          return vm.items;
+		        materials: function() {return vm.materials}
 		        }
-	      	}
-	    });
+      	  	});
+	    };
 
+	    var addTableCtrl = function($uibModalInstance, materials) {
+	    	var vm = this;
+	    	vm.materials = materials;
+
+	    	vm.saveCounter = function(width, length, shape, material, index) {
+	    		$uibModalInstance.close(width, length, shape, material, index);
+	    	};
+
+	    	vm.cancel = function() {
+				$uibModalInstance.dismiss('cancel');
+	    	};
+	    }
 
 		//assign checkboxes for Terms of Service
 		vm.checkTerms = function (term){

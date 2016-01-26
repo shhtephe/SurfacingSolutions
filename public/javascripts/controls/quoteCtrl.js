@@ -39,14 +39,28 @@
 		        materials: function() {return vm.materials}
 		        }
       	  	});
+
+      	  	modalInstance.result.then(function (counter) {
+				//console.log(counter.width, counter.length, counter.shape, counter.material, counter.index);
+      			vm.saveCounter(counter.width, counter.length, counter.shape, counter.material, counter.index);
+			}, function () {
+      		console.log('Modal dismissed at: ' + new Date());
+    		});
 	    };
 
 	    var addTableCtrl = function($uibModalInstance, materials) {
 	    	var vm = this;
 	    	vm.materials = materials;
 
-	    	vm.saveCounter = function(width, length, shape, material, index) {
-	    		$uibModalInstance.close(width, length, shape, material, index);
+	    	vm.saveCounterModal = function(width, length, shape, material, index) {
+	    		var counter = {
+	    			width: width,
+	    			length: length, 
+	    			shape: shape, 
+	    			material: material,
+	    			index: index
+	    		};
+	    		$uibModalInstance.close(counter);
 	    	};
 
 	    	vm.cancel = function() {
@@ -302,6 +316,24 @@
 			console.log(vm.quote.counters[index], index);
 		};
 
+		vm.addGroup = function() {
+			var pushObj = {};
+
+			console.log(typeof vm.quote.counterGroup[0]);
+			//check to see if first group
+			if(typeof vm.quote.counterGroup[0] === "undefined") {
+				pushObj = 
+				{
+					groupNumber : 0
+				};
+			} else {
+				pushObj = {
+					groupNumber : vm.quote.counterGroup.length + 1
+				};
+			};
+			vm.quote.counterGroup.push(pushObj);
+		};
+
 		vm.saveCounter = function(width, length, shape, material, index) {
 		console.log("Width", width, "Length", length, "Shape", shape, "Material", material, "Index", index);
 
@@ -426,8 +458,12 @@
 
 	//Commits data to arrays depending on whether it's an edit or a new save.
 			if(typeof index === "undefined"){
-	//Add object to counter array
-				vm.quote.counters.push(pushObj);
+	//Find 'size' of counterGroup array and then Add object to counterGroup array
+				if(typeof vm.quote.counters.counterGroup.length === undefined) {
+					vm.quote.counters.counterGroup.push(pushObj);	
+				} else {
+					//vm.quote.counters.counterGroup().push(pushObj);	
+				};
 	//Set price of counter minues addons
 				vm.quote.counters[vm.quote.counters.length-1].totalPrice = counterPrice;
 	//Add Pricing default and commit number of 'sheets' required for Counter

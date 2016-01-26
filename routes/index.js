@@ -129,7 +129,8 @@ router.param('quotedata', function(req, res, next, quoteID) {
           custCode: custCode,
           totalPrice: totalPrice,
           jobDifficulty: 1,
-          counters: []
+          counterGroup: []
+          
         });
 
         newQuote.save(function (err, quote) {
@@ -599,43 +600,6 @@ router.post('/savequote', function(req, res){
     }
   }
 });
-
-//"Search" GET. 
-  /*router.get('/search', function(req, res, next) {
-      mongoose.model('customers').find(function(err, customers){
-      res.render('partials/search', { 
-        data: products
-      });
-    });
-  });*/
-
-//"Search" POST. Likely not using it at all.
-  /*router.post('/search', function(req, res) {
-    var firstName=req.body.firstName,
-    lastName=req.body.lastName,
-    companyName=req.body.companyName,
-    email=req.body.email;
-
-    console.log(req.body.firstName);
-
-    //generate query object based on availability of value 
-    var query = {};
-    if( firstName ) {
-        query["firstName"] = firstName;
-    }
-    if( lastName ) {
-        query["lastName"] = lastName;
-    }
-    if( companyName ) {
-        query["companyName"] = companyName;
-    }
-    if( email ) {
-        query["email"] = email;
-    }
-    mongoose.model('customers').find(query, function(err, data) {
-        console.log(data);
-    });
-  });*/
 
 router.get('/customers', function(req, res, next) {
       res.render('partials/customers');

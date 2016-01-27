@@ -26,6 +26,8 @@ var quote = new Schema({
 	}],
 	counterGroup: [{
 		groupNumber: Number,
+		description: String,
+		totalPrice: Number,
 		counters: [{
 			quantity: Number,
 			description: String,

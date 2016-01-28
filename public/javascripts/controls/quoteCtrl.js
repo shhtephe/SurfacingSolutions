@@ -31,7 +31,7 @@
 		vm.addCounter = function (groupIndex, size) {
 	    	var modalInstance = $uibModal.open({
 		      animation: true,
-		      templateUrl: 'addtable.html',
+		      templateUrl: 'addcounter.html',
 		      controller: ['$uibModalInstance', 'materials', 'groupIndex', addTableCtrl],
 		      controllerAs: 'vm',
 		      size: size,
@@ -41,9 +41,9 @@
 		        }
       	  	});
 
-      	  	modalInstance.result.then(function (counter, groupIndex) {
+      	  	modalInstance.result.then(function (counter) {
 				//console.log(counter.width, counter.length, counter.shape, counter.material, counter.index);
-      			vm.saveCounter(counter.width, counter.length, counter.shape, counter.material, counter.index, counter.groupIndex);
+      			vm.saveCounter(counter.width, counter.length, counter.shape, counter.material, counter.index, counter.groupIndex, counter.description);
 			}, function () {
       		console.log('Modal dismissed at: ' + new Date());
     		});
@@ -53,15 +53,17 @@
 	    	var vm = this;
 	    	vm.materials = materials;
 	    	vm.groupIndex = groupIndex;
-	    	vm.saveCounterModal = function(width, length, shape, material, index) {
+	    	vm.saveCounterModal = function(width, length, shape, material, index, description) {
 	    		var counter = {
 	    			width: width,
 	    			length: length, 
 	    			shape: shape, 
 	    			material: material,
 	    			index: index,
-	    			groupIndex: groupIndex
+	    			groupIndex: groupIndex,
+	    			description: description
 	    		};
+
 	    		$uibModalInstance.close(counter);
 	    	};
 
@@ -157,32 +159,32 @@
 		    vm.alerts.splice(index, 1);
 	  	};
 
-	  	vm.changePricing = function(pricing, index) {
+	  	vm.changePricing = function(pricing, index, groupIndex) {
 		console.log(pricing, index);
-		var sheets = vm.quote.counters[index].sheets;
-		var material = vm.quote.counters[index].material;
+		var sheets = vm.quote.counterGroup[groupIndex].counters[index].sheets;
+		var material = vm.quote.counterGroup[groupIndex].counters[index].material;
 		var counterPrice = 0;
 
 	  		if(pricing == "halfSheet"){
 				counterPrice = sheets * material.halfSheet;		
-				vm.quote.counters[index].pricing = "halfSheet";
+				vm.quote.counterGroup[groupIndex].counters[index].pricing = "halfSheet";
 			} else if(pricing =="fullsheet1"){
 				counterPrice = sheets * material.fullSheet1;
-				vm.quote.counters[index].pricing = "fullsheet1";
+				vm.quote.counterGroup[groupIndex].counters[index].pricing = "fullsheet1";
 			} else if(pricing == "fullSheet5"){
 				counterPrice = sheets * material.fullSheet5;
-				vm.quote.counters[index].pricing = "fullSheet5";
+				vm.quote.counterGroup[groupIndex].counters[index].pricing = "fullSheet5";
 			} else if(pricing == "fullSheet21") {
 				counterPrice = sheets * material.fullSheet21;
-				vm.quote.counters[index].pricing = "fullSheet21";
+				vm.quote.counterGroup[groupIndex].counters[index].pricing = "fullSheet21";
 			} else if(pricing == "isa") {
 				counterPrice = sheets * material.isa;
-				vm.quote.counters[index].pricing = "isa";
+				vm.quote.counterGroup[groupIndex].counters[index].pricing = "isa";
 			};
 			//change price from old to new, and update main total
-			vm.quote.totalPrice -= vm.quote.counters[index].totalPrice;
-			vm.quote.counters[index].totalPrice = counterPrice;
-			vm.quote.totalPrice += vm.quote.counters[index].totalPrice;
+			vm.quote.totalPrice -= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
+			vm.quote.counterGroup[groupIndex].counters[index].totalPrice = counterPrice;
+			vm.quote.totalPrice += vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
 	  	};
 
 	  	vm.saveMandatoryAddon = function(addon, index) {
@@ -327,7 +329,9 @@
 				};
 			} else {
 				pushObj = {
-					groupNumber : vm.quote.counterGroup.length + 1
+					groupNumber : vm.quote.counterGroup.length,
+					counters: [],
+					totalPrice: 0
 				};
 			};
 			vm.quote.counterGroup.push(pushObj);
@@ -337,8 +341,8 @@
 			vm.quote.counterGroup.splice(index, index+1);
 		};
 
-		vm.saveCounter = function(width, length, shape, material, index, groupIndex) {
-		console.log("Width", width, "Length", length, "Shape", shape, "Material", material, "Index", index, "Group Index", groupIndex);
+		vm.saveCounter = function(width, length, shape, material, index, groupIndex, description) {
+		console.log("Width", width, "Length", length, "Shape", shape, "Material", material, "Index", index, "Group Index", groupIndex, "description", description);
 
 		//Obviously, we set some variables. 
 			var squareFootage = 0;
@@ -364,7 +368,7 @@
 
 		//Create an object containing all core counter information, also leaving addons space
 			pushObj = {
-				description: "",
+				description: description,
 				counterShape: shape,
 				counterLength: length,
 				counterWidth: width,
@@ -489,7 +493,7 @@
 				pushObj.pricing = pricing;
 				pushObj.sheets = sheets;
 	//Add vm.quote total with new counter price but first replace old price.		
-				vm.quote.totalPrice -= vm.quote.counters[index].totalPrice;
+				vm.quote.totalPrice -= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
 				vm.quote.totalPrice += pushObj.totalPrice;
 	//replace the counter object with the edited one.
 				vm.quote.counterGroup[groupIndex].counters.splice(index, 1, pushObj);
@@ -502,10 +506,11 @@
 			//console.log("Counter Price w/o addons", vm.quote.counters[vm.quote.counters.length-1].material.price);
 		};
 
-		vm.deleteCounter = function(index) {
-			vm.quote.totalPrice -= vm.quote.counters[index].totalPrice;
-			console.log(vm.quote.counters[index].totalPrice);
-			vm.quote.counters.splice(index, index+1);
+		vm.deleteCounter = function(groupIndex, index) {
+			vm.quote.counterGroup[groupIndex].totalPrice -= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
+			vm.quote.totalPrice-= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
+			//console.log(vm.quote.counters[index].totalPrice);
+			vm.quote.counterGroup[groupIndex].counters.splice(index, index+1);
 			//I don't think I need a refresh		$state.go($state.current, {}, {reload: true}); //second parameter is for $stateParams
 		};
 

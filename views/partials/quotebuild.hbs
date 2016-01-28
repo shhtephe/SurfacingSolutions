@@ -28,14 +28,14 @@
 					<hr style="background:#000000; border:0; height:7px" />
 		      		<br>
 		      		<br>
-					<script type="text/ng-template" id="addtable.html">	
+					<script type="text/ng-template" id="addcounter.html">	
 						<ng-form name="vm.addCounterForm">
 					        <div class="modal-header">
 								<h3 class="modal-title">Add Counter</h3>
 							</div>
 							<div class="modal-body" style="background-color:#d3d3d3">
 								Counter Description:
-								<br><textarea rows="4" columns="150" ng-model="counter.description"></textarea>
+								<br><textarea rows="4" columns="150" ng-model="description"></textarea>
 								<br><br>
 
 								Counter Shape: 
@@ -121,30 +121,32 @@
         					<div class="modal-footer">
             					<button type="button" style="btn" ng-click="vm.cancel()">Cancel</button>
 								<span ng-show="materialDistributor && materialManufacturer && materialColourGroup && materialDescription">
-								<button type="button" style="btn" ng-click="vm.saveCounterModal(counterWidth, counterLength, shape, materialDescription, $index); shape=''; counterWidth=''; counterLength=''; materialDistributor=''; materialManufacturer=''; materialColourGroup=''; materialDescription='';">Save Counter</button>
-								</span></button>
+								<button type="button" style="btn" ng-click="vm.saveCounterModal(counterWidth, counterLength, shape, materialDescription, $index, description); shape=''; counterWidth=''; counterLength=''; materialDistributor=''; materialManufacturer=''; materialColourGroup=''; materialDescription='';">Save Counter</button>
+								</span>
         					</div>
 						</ng-form>
 					</script>
 
 					<div ng-repeat="group in vm.quote.counterGroup track by $index">
-						<u>Group {/$index + 1/}</u> <button type="button" style="btn btn-danger" ng-click="vm.removeGroup($index)">DELETE THIS GROUP</button>
-						<br>
+						<u>Group {/group.groupNumber + 1/}</u> <button type="button" class="btn btn-danger" style="float:right" ng-click="vm.removeGroup($index)">DELETE THIS GROUP</button>
+						<br> <br>
 						Group Description:
 						<br><textarea rows="4" columns="150" ng-model="group.description"></textarea>
 						<br>
 						<br>
 						<button type="button" style="btn;" ng-click="vm.addCounter($index)">Add a Counter</button>
 						<br>
+						<br>
+
 						<div ng-repeat="counter in group.counters track by $index">
-					  		<u>Counter {/$index + 1/}</u> <button type="button" style="btn btn-danger" ng-click="vm.deleteCounter($index)">DELETE THIS COUNTER</button>
-							<br><br>
+							</u> <button type="button" style="btn btn-danger; float: right" ng-click="vm.deleteCounter($parent.$index, $index)">DELETE THIS COUNTER</button>
 					  			<button type="button" class="btn btn-default" ng-click="isCollapsed = !isCollapsed">Counter {/$index + 1/}</button>
-					  			<hr>
 					  			<div uib-collapse="!isCollapsed">
 									<div class="well well-lg">
 										<table class="table table-hover table-bordered">
 											<!--<br><br>{/counter|json/}-->
+											<br><textarea rows="4" columns="150" ng-model="counter.description"></textarea>
+											<br>
 								  			<caption><u>Summary</u></caption>
 											<tbody>
 									  			<tr>
@@ -216,23 +218,23 @@
 											      				</tr>
 												      			<tr>
 												      				<td ng-show="counter.material.halfSheet">
-												      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $index)" value="halfSheet">
+												      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $index, $parent.$index)" value="halfSheet">
 												      					{/counter.material.halfSheet | currency:$/}/sheet
 												      				</td>
 												      				<td ng-show="counter.material.fullSheet1">
-												      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $index)" value="fullsheet1">
+												      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $index, $parent.$index)" value="fullsheet1">
 												      					{/counter.material.fullSheet1 | currency:$/}/sheet
 												      				</td>
 												      				<td ng-show="counter.material.fullSheet5">
-												      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $index)" value="fullSheet5">
+												      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $index, $parent.$index)" value="fullSheet5">
 												      					{/counter.material.fullSheet5 | currency:$/}/sheet
 												      				</td>
 												      				<td ng-show="counter.material.fullSheet21">
-												      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $index)" value="fullSheet21">
+												      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $index, $parent.$index)" value="fullSheet21">
 												      					{/counter.material.fullSheet21 | currency:$/}/sheet
 												      				</td>
 												      				<td ng-show="counter.material.isa">
-												      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $index)" value="isa">
+												      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $index, $parent.$index)" value="isa">
 												      					{/counter.material.isa | currency:$/}/sheet
 												      				</td>
 												      			</tr>
@@ -242,80 +244,78 @@
 										  		</tr>
 							  				</tbody>
 						  				</table>
+						  				<br><button type="button" ng-click="vm.editCounter[$index] = true" ng-hide="vm.editCounter[$index]" class="btn btn-default">Edit this Counter</button>
+						  				<span ng-show="vm.editCounter[$index]">
+											Choose a Distributor: 
+											<select name="materialDistributor" ng-model="materialDistributor" ng-options="material as material.distributor for material in vm.materials | orderBy:'distributor' | unique: 'distributor'">
+											<option value="">----Select----</option>
+											</select>
+											<br>
+											<div ng-show="materialDistributor">
+												<br>
+												Choose a Manufacturer:
+												<select name="materialManufacturer" ng-model="materialManufacturer" ng-options="material.manufacturer for material in vm.materials | filter: {distributor: materialDistributor.distributor} | unique: 'manufacturer' | orderBy:'manufacturer'">
+													<option value="">----Select----</option>
+												</select>
+											</div>
+											<div ng-show="materialDistributor && materialManufacturer">
+												<br>
+												Choose a Colour Group:
+												<select name="materialColourGroup" ng-model="materialColourGroup" ng-options="material.colourGroup for material in vm.materials | filter:{distributor:materialDistributor.distributor, manufacturer: materialManufacturer.manufacturer} | unique: 'colourGroup' | orderBy:'colourGroup'">
+													<option value="">----Select----</option>
+												</select>
+											</div>
+											<div ng-show="materialDistributor && materialManufacturer && materialColourGroup">
+												<br>
+												Choose a Colour Description:
+												<select name="materialDescription" ng-model="materialDescription" ng-options="material.description for material in vm.materials | filter:{distributor:materialDistributor.distributor, manufacturer:materialManufacturer.manufacturer, colourGroup:materialColourGroup.colourGroup} | unique: 'description' | orderBy:'description'">
+													<option value="">----Select----</option>
+												</select>
+											</div>
+											<div ng-show="materialDistributor && materialManufacturer && materialColourGroup && materialDescription">
+												<br>
+												<ul class="list-group"> 
+													<li class="list-group-item">	
+														Item Code: {/materialDescription.itemCode/} <br> 
+													</li>	
+													<li class="list-group-item">	
+														Thickness: {/materialDescription.thickness/} <br> 
+													</li>	
+													<li class="list-group-item">	
+														Width (In.): {/materialDescription.width/} <br> 
+													</li>				
+													<li class="list-group-item">	
+														Length (In.): {/materialDescription.length/} <br> 
+													</li>	
+													<li class="list-group-item">	
+														Full Sheet 1-5: {/materialDescription.fullSheet1/} <br> 
+													</li>	
+													<li class="list-group-item">	
+														Half Sheet: {/materialDescription.halfSheet/} <br> 
+													</li>
+													<li class="list-group-item">	
+														Full Sheet 5-20:{/materialDescription.fullSheet5/} <br> 
+													</li>
+													<li class="list-group-item">	
+														Full Sheet 21+: {/materialDescription.fullSheet21/} <br> 
+													</li>
+													<li class="list-group-item">	
+														ISA: {/materialDescription.isa/} <br> 
+													</li>
+													<li class="list-group-item">	
+														Collection: {/materialDescription.matCollection/} <br> 
+													</li>
+												</ul>
+												<!--{/materialDescription | json/}-->
+												<button type="button" ng-click="vm.saveCounter(counter.counterWidth, counter.counterLength, counter.counterShape, materialDescription, $index, $parent.$index); vm.editCounter[$index] = false" ng-show="vm.editCounter[$index]" class="btn btn-default">Save Edit</button>
+												<br> <br>
+											</div>
+											<button type="button" ng-click="vm.editCounter[$index] = false; $scope.counter.materialDistributor = ''" ng-show="vm.editCounter[$index]" class="btn btn-danger">Cancel</button>
+							      		</span>
 									</div>
 								</div>					  	
-					    	
 					      	<!--<br> {/counter.material | json/} <br>-->
-					      	<span ng-show="vm.editCounter[$index]">
-								Choose a Distributor: 
-								<select name="materialDistributor" ng-model="materialDistributor" ng-options="material as material.distributor for material in vm.materials | orderBy:'distributor' | unique: 'distributor'">
-								<option value="">----Select----</option>
-								</select>
-								<br>
-								<div ng-show="materialDistributor">
-									<br>
-									Choose a Manufacturer:
-									<select name="materialManufacturer" ng-model="materialManufacturer" ng-options="material.manufacturer for material in vm.materials | filter: {distributor: materialDistributor.distributor} | unique: 'manufacturer' | orderBy:'manufacturer'">
-										<option value="">----Select----</option>
-									</select>
-								</div>
-								<div ng-show="materialDistributor && materialManufacturer">
-									<br>
-									Choose a Colour Group:
-									<select name="materialColourGroup" ng-model="materialColourGroup" ng-options="material.colourGroup for material in vm.materials | filter:{distributor:materialDistributor.distributor, manufacturer: materialManufacturer.manufacturer} | unique: 'colourGroup' | orderBy:'colourGroup'">
-										<option value="">----Select----</option>
-									</select>
-								</div>
-								<div ng-show="materialDistributor && materialManufacturer && materialColourGroup">
-									<br>
-									Choose a Colour Description:
-									<select name="materialDescription" ng-model="materialDescription" ng-options="material.description for material in vm.materials | filter:{distributor:materialDistributor.distributor, manufacturer:materialManufacturer.manufacturer, colourGroup:materialColourGroup.colourGroup} | unique: 'description' | orderBy:'description'">
-										<option value="">----Select----</option>
-									</select>
-								</div>
-								<div ng-show="materialDistributor && materialManufacturer && materialColourGroup && materialDescription">
-									<br>
-									<ul class="list-group"> 
-										<li class="list-group-item">	
-											Item Code: {/materialDescription.itemCode/} <br> 
-										</li>	
-										<li class="list-group-item">	
-											Thickness: {/materialDescription.thickness/} <br> 
-										</li>	
-										<li class="list-group-item">	
-											Width (In.): {/materialDescription.width/} <br> 
-										</li>				
-										<li class="list-group-item">	
-											Length (In.): {/materialDescription.length/} <br> 
-										</li>	
-										<li class="list-group-item">	
-											Full Sheet 1-5: {/materialDescription.fullSheet1/} <br> 
-										</li>	
-										<li class="list-group-item">	
-											Half Sheet: {/materialDescription.halfSheet/} <br> 
-										</li>
-										<li class="list-group-item">	
-											Full Sheet 5-20:{/materialDescription.fullSheet5/} <br> 
-										</li>
-										<li class="list-group-item">	
-											Full Sheet 21+: {/materialDescription.fullSheet21/} <br> 
-										</li>
-										<li class="list-group-item">	
-											ISA: {/materialDescription.isa/} <br> 
-										</li>
-										<li class="list-group-item">	
-											Collection: {/materialDescription.matCollection/} <br> 
-										</li>
-									</ul>
-									<!--{/materialDescription | json/}-->
-									<button type="button" ng-click="vm.saveCounter(counter.counterWidth, counter.counterLength, counter.counterShape, materialDescription, $index); vm.editCounter[$index] = false" ng-show="vm.editCounter[$index]" class="btn btn-default">Save Edit</button>
-									<br> <br>
-								</div>
-								<button type="button" ng-click="vm.editCounter[$index] = false; $scope.counter.materialDistributor = ''" ng-show="vm.editCounter[$index]" class="btn btn-danger">Cancel</button>
-				      		</span>
 				      		<span ng-show="vm.mateRial"><button ng-click="vm.editCounter[$index] = false" ng-hide="vm.editCounter[$index]"class="btn btn-danger">Save</button></span>
-					      	<br><button type="button" ng-click="vm.editCounter[$index] = true" ng-hide="vm.editCounter[$index]" class="btn btn-default">Edit this Counter</button>
-							<br>
 							<br><u>Selected Addons:</u> 
 							<br>
 							<div ng-repeat="addon in counter.addons track by $index">
@@ -383,7 +383,7 @@
 								</div>
 								<button type="button" ng-click="vm.divAddons[$index]=false; counterAddonDistributor = ''" class="btn btn-danger">Cancel</button> 
 							</div>
-					      	<br><hr style="background:#000000; border:0; height:7px" />
+					      	<br>
 					      	<span style="float: left;">Counter Subtotal: {/counter.totalPrice |currency:$/}</span><span style="float: right;"><button type="button" style="btn" ng-click="vm.saveQuote(vm.quote.description)">Update/Save Quote</button></span>
 					      	<br>
 					      	<!--<br>counter Thickness: {/counter.counterThickness1/}

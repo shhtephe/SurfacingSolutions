@@ -54,73 +54,10 @@
 								</div>
 								<br>
 								<br>
-								<div ng-show="shape == 'rectangle' || shape == 'circle'">
-									<br>
-									Choose a Distributor: <select name="materialDistributor" ng-model="materialDistributor" ng-options="material.distributor for material in vm.materials | orderBy:'distributor' | unique: 'distributor'">
-									<option value="">----Select----</option>
-									</select>
-									<br>
-									<div ng-show="materialDistributor">
-										<br>
-										Choose a Manufacturer:
-										<select name="materialManufacturer" ng-model="materialManufacturer" ng-options="material.manufacturer for material in vm.materials | filter:{distributor:materialDistributor.distributor} | unique: 'manufacturer' | orderBy:'manufacturer'">
-											<option value="">----Select----</option>
-										</select>
-									</div>
-									<div ng-show="materialDistributor && materialManufacturer">
-										<br>
-										Choose a Colour Group:
-										<select name="materialColourGroup" ng-model="materialColourGroup" ng-options="material.colourGroup for material in vm.materials | filter:{distributor:materialDistributor.distributor, manufacturer:materialManufacturer.manufacturer} | unique: 'colourGroup' | orderBy:'colourGroup'">
-											<option value="">----Select----</option>
-										</select>
-									</div>
-									<div ng-show="materialDistributor && materialManufacturer && materialColourGroup">
-										<br>
-										Choose a Colour Description:
-										<select name="materialDescription" ng-model="materialDescription" ng-options="material.description for material in vm.materials | filter:{distributor:materialDistributor.distributor, manufacturer:materialManufacturer.manufacturer, colourGroup:materialColourGroup.colourGroup} | unique: 'description' | orderBy:'description'">
-											<option value="">----Select----</option>
-										</select>
-									</div>
-									<div ng-show="materialDistributor && materialManufacturer && materialColourGroup && materialDescription">
-										<br>
-										<ul class="list-group"> 
-											<li class="list-group-item">	
-												Item Code: {/materialDescription.itemCode/} <br> 
-											</li>	
-											<li class="list-group-item">	
-												Thickness: {/materialDescription.thickness/} <br> 
-											</li>	
-											<li class="list-group-item">	
-												Width (In.): {/materialDescription.width/} <br> 
-											</li>				
-											<li class="list-group-item">	
-												Length (In.): {/materialDescription.length/} <br> 
-											</li>	
-											<li class="list-group-item">	
-												Full Sheet 1-5: {/materialDescription.fullSheet1/} <br> 
-											</li>	
-											<li class="list-group-item">	
-												Half Sheet: {/materialDescription.halfSheet/} <br> 
-											</li>
-											<li class="list-group-item">	
-												Full Sheet 5-20:{/materialDescription.fullSheet5/} <br> 
-											</li>
-											<li class="list-group-item">	
-												Full Sheet 21+: {/materialDescription.fullSheet21/} <br> 
-											</li>
-											<li class="list-group-item">	
-												ISA: {/materialDescription.isa/} <br> 
-											</li>
-											<li class="list-group-item">	
-												Collection: {/materialDescription.matCollection/} <br> 
-											</li>
-										</ul>
-									</div>
-								</div>
         					</div>
         					<div class="modal-footer">
             					<button type="button" style="btn" ng-click="vm.cancel()">Cancel</button>
-								<span ng-show="materialDistributor && materialManufacturer && materialColourGroup && materialDescription">
+								<span ng-show="(shape=='rectangle' && counterLength && counterWidth) || (shape=='circle' && counterWidth)">
 								<button type="button" style="btn" ng-click="vm.saveCounterModal(counterWidth, counterLength, shape, materialDescription, $index, description); shape=''; counterWidth=''; counterLength=''; materialDistributor=''; materialManufacturer=''; materialColourGroup=''; materialDescription='';">Save Counter</button>
 								</span>
         					</div>
@@ -137,7 +74,71 @@
 						<button type="button" style="btn;" ng-click="vm.addCounter($index)">Add a Counter</button>
 						<br>
 						<br>
-
+						<!-- This will be used for below
+						<span ng-show="materialDistributor && materialManufacturer && materialColourGroup && materialDescription"> -->
+						<div ng-show="shape == 'rectangle' || shape == 'circle'">
+							<br>
+							Choose a Distributor: <select name="materialDistributor" ng-model="materialDistributor" ng-options="material.distributor for material in vm.materials | orderBy:'distributor' | unique: 'distributor'">
+							<option value="">----Select----</option>
+							</select>
+							<br>
+							<div ng-show="materialDistributor">
+								<br>
+								Choose a Manufacturer:
+								<select name="materialManufacturer" ng-model="materialManufacturer" ng-options="material.manufacturer for material in vm.materials | filter:{distributor:materialDistributor.distributor} | unique: 'manufacturer' | orderBy:'manufacturer'">
+									<option value="">----Select----</option>
+								</select>
+							</div>
+							<div ng-show="materialDistributor && materialManufacturer">
+								<br>
+								Choose a Colour Group:
+								<select name="materialColourGroup" ng-model="materialColourGroup" ng-options="material.colourGroup for material in vm.materials | filter:{distributor:materialDistributor.distributor, manufacturer:materialManufacturer.manufacturer} | unique: 'colourGroup' | orderBy:'colourGroup'">
+									<option value="">----Select----</option>
+								</select>
+							</div>
+							<div ng-show="materialDistributor && materialManufacturer && materialColourGroup">
+								<br>
+								Choose a Colour Description:
+								<select name="materialDescription" ng-model="materialDescription" ng-options="material.description for material in vm.materials | filter:{distributor:materialDistributor.distributor, manufacturer:materialManufacturer.manufacturer, colourGroup:materialColourGroup.colourGroup} | unique: 'description' | orderBy:'description'">
+									<option value="">----Select----</option>
+								</select>
+							</div>
+							<div ng-show="materialDistributor && materialManufacturer && materialColourGroup && materialDescription">
+								<br>
+								<ul class="list-group"> 
+									<li class="list-group-item">	
+										Item Code: {/materialDescription.itemCode/} <br> 
+									</li>	
+									<li class="list-group-item">	
+										Thickness: {/materialDescription.thickness/} <br> 
+									</li>	
+									<li class="list-group-item">	
+										Width (In.): {/materialDescription.width/} <br> 
+									</li>				
+									<li class="list-group-item">	
+										Length (In.): {/materialDescription.length/} <br> 
+									</li>	
+									<li class="list-group-item">	
+										Full Sheet 1-5: {/materialDescription.fullSheet1/} <br> 
+									</li>	
+									<li class="list-group-item">	
+										Half Sheet: {/materialDescription.halfSheet/} <br> 
+									</li>
+									<li class="list-group-item">	
+										Full Sheet 5-20:{/materialDescription.fullSheet5/} <br> 
+									</li>
+									<li class="list-group-item">	
+										Full Sheet 21+: {/materialDescription.fullSheet21/} <br> 
+									</li>
+									<li class="list-group-item">	
+										ISA: {/materialDescription.isa/} <br> 
+									</li>
+									<li class="list-group-item">	
+										Collection: {/materialDescription.matCollection/} <br> 
+									</li>
+								</ul>
+							</div>
+						</div>
 						<div ng-repeat="counter in group.counters track by $index">
 							</u> <button type="button" style="btn btn-danger; float: right" ng-click="vm.deleteCounter($parent.$index, $index)">DELETE THIS COUNTER</button>
 					  			<button type="button" class="btn btn-default" ng-click="isCollapsed = !isCollapsed">Counter {/$index + 1/}</button>

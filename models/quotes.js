@@ -28,18 +28,7 @@ var quote = new Schema({
 		groupNumber: Number,
 		description: String,
 		totalPrice: Number,
-		counters: [{
-			quantity: Number,
-			description: String,
-			counterShape: String,
-			counterLength: Number,
-			counterWidth: Number,
-			counterThickness1: Number,
-			counterThickness2: Number,
-			totalPrice: Number,
-			pricing: String,
-			sheets: Number,
-			material:{
+		material:{
 				itemCode: String,
 				thickness: Number,
 				width: Number,
@@ -54,7 +43,18 @@ var quote = new Schema({
 				manufacturer: String,
 				colourGroup: String,
 				description: String
-			},
+		},
+		counters: [{
+			quantity: Number,
+			description: String,
+			counterShape: String,
+			counterLength: Number,
+			counterWidth: Number,
+			counterThickness1: Number,
+			counterThickness2: Number,
+			totalPrice: Number,
+			pricing: String,
+			sheets: Number,
 			addons: [{
 				distributor: String,
 				manufactuer: String,

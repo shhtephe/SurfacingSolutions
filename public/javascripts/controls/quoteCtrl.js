@@ -32,36 +32,43 @@
 	    	var modalInstance = $uibModal.open({
 		      animation: true,
 		      templateUrl: 'addcounter.html',
-		      controller: ['$uibModalInstance', 'materials', 'groupIndex', addTableCtrl],
+		      controller: ['$uibModalInstance', 'materials', 'products','groupIndex', addTableCtrl],
 		      controllerAs: 'vm',
 		      size: size,
 		      resolve: {
 		        materials: function() {return vm.materials},
+		        products: function() {return vm.products},
 		        groupIndex: function() {return groupIndex}
 		        }
       	  	});
 
       	  	modalInstance.result.then(function (counter) {
-				//console.log(counter.width, counter.length, counter.shape, counter.material, counter.index);
-      			vm.saveCounter(counter.width, counter.length, counter.shape, counter.material, counter.index, counter.groupIndex, counter.description);
+				console.log(counter.width, counter.length, counter.shape, counter.index, counter.groupIndex, counter.description);
+      			vm.saveCounter(counter.width, counter.length, counter.shape, counter.index, counter.groupIndex, counter.description);
 			}, function () {
       		console.log('Modal dismissed at: ' + new Date());
     		});
 	    };
 
-	    var addTableCtrl = function($uibModalInstance, materials, groupIndex) {
+	    var addTableCtrl = function($uibModalInstance, materials, products, groupIndex) {
 	    	var vm = this;
 	    	vm.materials = materials;
 	    	vm.groupIndex = groupIndex;
-	    	vm.saveCounterModal = function(width, length, shape, material, index, description) {
+	    	vm.products = products;
+
+	    	vm.saveAddon = function(addon) {
+	    		
+	    	};
+
+	    	vm.saveCounterModal = function(width, length, shape, index, description) {
 	    		var counter = {
 	    			width: width,
 	    			length: length, 
 	    			shape: shape, 
-	    			material: material,
 	    			index: index,
 	    			groupIndex: groupIndex,
-	    			description: description
+	    			description: description,
+	    			addons: addons
 	    		};
 
 	    		$uibModalInstance.close(counter);
@@ -168,9 +175,9 @@
 	  		if(pricing == "halfSheet"){
 				counterPrice = sheets * material.halfSheet;		
 				vm.quote.counterGroup[groupIndex].counters[index].pricing = "halfSheet";
-			} else if(pricing =="fullsheet1"){
+			} else if(pricing =="fullSheet1"){
 				counterPrice = sheets * material.fullSheet1;
-				vm.quote.counterGroup[groupIndex].counters[index].pricing = "fullsheet1";
+				vm.quote.counterGroup[groupIndex].counters[index].pricing = "fullSheet1";
 			} else if(pricing == "fullSheet5"){
 				counterPrice = sheets * material.fullSheet5;
 				vm.quote.counterGroup[groupIndex].counters[index].pricing = "fullSheet5";
@@ -341,7 +348,36 @@
 			vm.quote.counterGroup.splice(index, index+1);
 		};
 
-		vm.saveCounter = function(width, length, shape, material, index, groupIndex, description) {
+
+		vm.saveMaterial = function(material, index){
+			console.log(material);
+			vm.quote.counterGroup[index].material = {
+				itemCode: material.itemCode,
+				thickness: material.thickness,
+				width: material.width,
+				length: material.length,
+				price: material.price,
+				fullSheet1: material.fullSheet1,
+				fullSheet5: material.fullSheet5,
+				fullSheet21: material.fullSheet21,
+				isa: material.isa,
+				distributor: material.distributor,
+				manufacturer: material.manufacturer,
+				colourGroup: material.colourGroup,
+				description: material.description
+			};
+			console.log(vm.quote.counterGroup[index].material);
+		};
+
+		vm.saveCounter = function(width, length, shape, index, groupIndex, description){
+			console.log(width, length, shape, index, groupIndex, description);
+
+			if(shape === "circle"){
+				length = width;
+			};
+		};
+
+		vm.calculateGroup = function(width, length, shape, material, index, groupIndex, description) {
 		console.log("Width", width, "Length", length, "Shape", shape, "Material", material, "Index", index, "Group Index", groupIndex, "description", description);
 
 		//Obviously, we set some variables. 
@@ -446,11 +482,11 @@
 				sheets = 1;
 				counterPrice = sheets * material.halfSheet;		
 				pricing = "halfSheet";
-			} else if(sheets <5 && material.fullsheet1){
+			} else if(sheets <5 && material.fullSheet1){
 			console.log("This ran 2");
 				counterPrice = sheets * material.fullSheet1;
-				pricing = "fullsheet1";
-			} else if(sheets <21 && material.fullsheet5){
+				pricing = "fullSheet1";
+			} else if(sheets <21 && material.fullSheet5){
 			console.log("This ran 3");
 				counterPrice = sheets * material.fullSheet5;
 				pricing = "fullSheet5";

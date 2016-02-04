@@ -55,12 +55,19 @@
 	    	vm.materials = materials;
 	    	vm.groupIndex = groupIndex;
 	    	vm.products = products;
+	    	vm.addons = [];
 
-	    	vm.saveAddon = function(addon) {
-	    		
-	    	};
+			vm.arraySearchModal = function (nameKey, myArray, property){
+			    //console.log(nameKey, myArray, property);
+			    for (var i=0; i < myArray.length; i++) {
+			    	//console.log("my array i", myArray[i], "property", property)
+			        if (myArray[i][property] === nameKey) {
+			            return i;
+			        };
+			    };
+			};
 
-	    	vm.saveCounterModal = function(width, length, shape, index, description) {
+	    	vm.saveCounterModal = function(width, length, shape, index, description, addons) {
 	    		var counter = {
 	    			width: width,
 	    			length: length, 
@@ -73,6 +80,76 @@
 
 	    		$uibModalInstance.close(counter);
 	    	};
+
+			vm.saveAddonModal = function(addon, shape, length, width) {
+
+				if(typeof vm.addons === "undefined"){
+					var addons = [];
+				}else{
+					var addons = vm.addons;
+				};
+				var pushObj = {};
+				var search = vm.arraySearchModal(addon.description, addons, "description");
+
+				console.log(addon);
+
+
+				var totalPrice = 0;
+				var counterLength = length;
+				var counterWidth = width;
+				var squareFootage = 0;
+
+				console.log(addon.formula, addon.quantity, addon.price);
+
+				if (addon.formula === "item") {
+					totalPrice =  addon.quantity * addon.price;
+				}else if(addon.formula === "square"){
+					console.log(vm.quote.counters[index]);
+					if(shape === "rectangle"){
+						squareFootage = counterLength * counterWidth;
+						addon.quantity = squareFootage;
+						totalPrice = addon.price * squareFootage;
+						console.log(counterLength, counterWidth, squareFootage, totalPrice, addon.price);
+					} else if(shape === "circle"){
+						squareFootage = (Math.PI * (Math.pow(counterWidth, 2)));
+						squareFootage = squareFootage.toFixed(2);
+						addon.quantity = squareFootage;
+						totalPrice = addon.price * squareFootage;
+					};
+				}else if(addon.formula === "linear"){	
+						addon.quantity = squareFootage;
+						totalPrice = addon.linear * price;
+				}else{
+					console.log("This shouldn't ever run, I think!");
+					totalPrice = addon.quantity * addon.price;
+				};
+
+				//Searches for the item by going through the list
+				if (typeof search === "undefined") {
+					//Couldn't find it, so add a new value
+					pushObj = {
+						distributor: addon.distributor,
+						manufacturer: addon.manufacturer,
+						productType: addon.type,
+						description: addon.description,
+						itemCode: addon.itemCode,
+						price: addon.price,
+						formula: addon.formula,
+						quantity: addon.quantity,
+						totalPrice: totalPrice,
+					};
+					addons.push(pushObj);
+					//console.log("Addons:", addons);
+					//console.log("pushObj", pushObj);
+					totalPrice += addons[addons.length-1].totalPrice;
+				} else {
+					//Found it, so update the value
+					addons[search].quantity = addon.quantity;
+					addons[search].totalPrice = totalPrice;
+					//below code will be done when modal is saved and we're back on the normal page
+					//vm.quote.counters[index].totalPrice += addons[search].totalPrice;
+				};
+			};
 
 	    	vm.cancel = function() {
 				$uibModalInstance.dismiss('cancel');

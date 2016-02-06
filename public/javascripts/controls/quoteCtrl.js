@@ -28,33 +28,46 @@
 			});		
 
 		//baby's first modal
-		vm.addCounter = function (groupIndex, size) {
+		vm.addCounter = function (groupIndex, material, counters, size) {
 	    	var modalInstance = $uibModal.open({
 		      animation: true,
 		      templateUrl: 'addcounter.html',
-		      controller: ['$uibModalInstance', 'materials', 'products','groupIndex', addTableCtrl],
+		      controller: ['$uibModalInstance', 'materials', 'products', 'material', 'counters', 'groupIndex', addTableCtrl],
 		      controllerAs: 'vm',
 		      size: size,
 		      resolve: {
 		        materials: function() {return vm.materials},
 		        products: function() {return vm.products},
-		        groupIndex: function() {return groupIndex}
+		        groupIndex: function() {return groupIndex},
+		        material: function() {return material},
+		        counters: function() {return counters}
 		        }
       	  	});
 
       	  	modalInstance.result.then(function (counter) {
-				console.log(counter.width, counter.length, counter.shape, counter.index, counter.groupIndex, counter.description);
-      			vm.saveCounter(counter.width, counter.length, counter.shape, counter.index, counter.groupIndex, counter.description);
+				console.log(counter.width, counter.length, counter.shape, counter.material, counter.index, counter.groupIndex, counter.description);
+      			//Save the countertop and put all the data back onto the main controller
+      			vm.calculateGroup(counter.width, counter.length, counter.shape, counter.material, counter.index, counter.groupIndex, counter.description);
+      			//do the same thing with each addon
+      			console.log(counter.counters)
+      			for (var i=-1; i < counter.counters; i++) {
+      				console.log("this ran");
+			    	vm.saveAddon(counter.addons[i], counter.counters, counter.groupIndex)
+			    };
+      				
+
 			}, function () {
       		console.log('Modal dismissed at: ' + new Date());
     		});
 	    };
 
-	    var addTableCtrl = function($uibModalInstance, materials, products, groupIndex) {
+	    var addTableCtrl = function($uibModalInstance, materials, products, material, counters, groupIndex) {
 	    	var vm = this;
 	    	vm.materials = materials;
+	    	vm.material = material;
 	    	vm.groupIndex = groupIndex;
 	    	vm.products = products;
+	    	vm.counters = counters;
 	    	vm.addons = [];
 
 			vm.arraySearchModal = function (nameKey, myArray, property){
@@ -67,7 +80,8 @@
 			    };
 			};
 
-	    	vm.saveCounterModal = function(width, length, shape, index, description, addons) {
+	    	vm.saveCounterModal = function(width, length, shape, index, description, addons, material, counters) {
+	    		console.log(counters);
 	    		var counter = {
 	    			width: width,
 	    			length: length, 
@@ -75,7 +89,9 @@
 	    			index: index,
 	    			groupIndex: groupIndex,
 	    			description: description,
-	    			addons: addons
+	    			addons: addons,
+	    			material: material,
+	    			counters: counters
 	    		};
 
 	    		$uibModalInstance.close(counter);
@@ -83,7 +99,7 @@
 
 			vm.saveAddonModal = function(addon, shape, length, width) {
 
-				if(typeof vm.addons === "undefined"){
+				if(typeof vm.addons === undefined){
 					var addons = [];
 				}else{
 					var addons = vm.addons;
@@ -141,7 +157,7 @@
 					addons.push(pushObj);
 					//console.log("Addons:", addons);
 					//console.log("pushObj", pushObj);
-					totalPrice += addons[addons.length-1].totalPrice;
+					totalPrice += vm.addons[addons.length-1].totalPrice;
 				} else {
 					//Found it, so update the value
 					addons[search].quantity = addon.quantity;
@@ -149,12 +165,13 @@
 					//below code will be done when modal is saved and we're back on the normal page
 					//vm.quote.counters[index].totalPrice += addons[search].totalPrice;
 				};
+				vm.addons = addons;
 			};
 
 	    	vm.cancel = function() {
 				$uibModalInstance.dismiss('cancel');
 	    	};
-	    }
+	    };
 
 		//assign checkboxes for Terms of Service
 		vm.checkTerms = function (term){
@@ -318,16 +335,16 @@
 
 		};
 
-		vm.saveAddon = function(addon, index) {
-			var addons = vm.quote.counters[index].addons;
+		vm.saveAddon = function(addon, index, groupIndex) {
+			var addons = vm.quote.counterGroup[groupIndex].counters[index].addons;
 			var pushObj = {};
 			var shape = vm.quote.counters[index].counterShape;
-			console.log(addon);
+			console.log(addon, addons);
 			var search = vm.arraySearch(addon.description, addons, "description");
 
 			var totalPrice = 0;
-			var counterLength = vm.quote.counters[index].counterLength;
-			var counterWidth = vm.quote.counters[index].counterWidth;
+			var counterLength = vm.quote.counterGroup[groupIndex].counters[index].counterLength;
+			var counterWidth = vm.quote.counterGroup[groupIndex].counters[index].counterWidth;
 			var squareFootage = 0;
 
 			console.log(addon.formula, addon.quantity, addon.price);
@@ -371,12 +388,12 @@
 				addons.push(pushObj);
 				//console.log("Addons:", addons);
 				//console.log("pushObj", pushObj);
-				vm.quote.counters[index].totalPrice += addons[addons.length-1].totalPrice;
+				vm.quote.counterGroup[groupIndex].counters[index].totalPrice += addons[addons.length-1].totalPrice;
 			} else {
 				//Found it, so update the value
 				addons[search].quantity = addon.quantity;
 				addons[search].totalPrice = totalPrice;
-				vm.quote.counters[index].totalPrice += addons[search].totalPrice;
+				vm.quote.counterGroup[groupIndex].counters[index].totalPrice += addons[search].totalPrice;
 			};
 
 			vm.dropDown1 = "";
@@ -456,6 +473,10 @@
 
 		vm.calculateGroup = function(width, length, shape, material, index, groupIndex, description) {
 		console.log("Width", width, "Length", length, "Shape", shape, "Material", material, "Index", index, "Group Index", groupIndex, "description", description);
+
+			if(typeof index === undefined){
+
+			};
 
 		//Obviously, we set some variables. 
 			var squareFootage = 0;
@@ -589,8 +610,7 @@
 	//Save the price of the counter, and the total price of the vm.quote. Save it to the vm.quote variable.
 				vm.quote.counterGroup[groupIndex].counters[vm.quote.counterGroup[groupIndex].counters.length-1].material.price = vm.quote.counterGroup[groupIndex].counters[vm.quote.counterGroup[groupIndex].counters.length-1].totalPrice;		
 				vm.quote.totalPrice += vm.quote.counterGroup[groupIndex].counters[vm.quote.counterGroup[groupIndex].counters.length-1].totalPrice;
-			}
-			else{
+			} else{
 	//Replace the existing addons into the new array :)
 	//console.log(vm.quote.counters[index].addons.length);
 				if(typeof vm.quote.counterGroup[groupIndex].counters[index].addons.length !== undefined) {

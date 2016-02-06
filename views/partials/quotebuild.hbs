@@ -54,6 +54,14 @@
 								</div>
 								<br>
 								<br>
+								<br><u>Selected Addons:</u> 
+								<br>
+								<div ng-repeat="addon in vm.addons track by $index">
+									<br>{/addon.productType/} - {/addon.description/} : 
+									<span ng-show="addon.formula =='item' || addon.formula == 'linear'">{/addon.quantity/}</span>
+									<span ng-show="addon.formula =='square'">{/counter.counterWidth * counter.counterLength/}</span>
+									@{/addon.price | currency:$/} <a ng-click="vm.removeAddonModal(addon, $parent.$index, $index)">remove</a>
+								</div>
         					</div>
 							<br>
 							<div class="modal-body" style="background-color:#d3d3d3" ng-show="(shape=='rectangle' && counterLength && counterWidth) || (shape=='circle' && counterWidth)">
@@ -118,13 +126,14 @@
         					<div class="modal-footer">
             					<button type="button" style="btn" ng-click="vm.cancel()">Cancel</button>
 								<span ng-show="(shape=='rectangle' && counterLength && counterWidth) || (shape=='circle' && counterWidth)">
-								<button type="button" style="btn" ng-click="vm.saveCounterModal(counterWidth, counterLength, shape, $index, description); shape=''; counterWidth=''; counterLength=''; materialDistributor=''; materialManufacturer=''; materialColourGroup=''; materialDescription='';">Save Counter</button>
+								<button type="button" style="btn" ng-click="vm.saveCounterModal(counterWidth, counterLength, shape, $index, description, vm.addons, vm.material, vm.counters); shape=''; counterWidth=''; counterLength=''; materialDistributor=''; materialManufacturer=''; materialColourGroup=''; materialDescription='';">Save Counter</button>
 								</span>
         					</div>
 						</ng-form>
 					</script>
 					<div ng-repeat="group in vm.quote.counterGroup track by $index">
 						{/group|json/}
+						<br>
 						<u>Group {/group.groupNumber + 1/}</u> <button type="button" class="btn btn-danger" style="float:right" ng-click="vm.removeGroup($index)">DELETE THIS GROUP</button>
 						<br> <br>
 						Group Description:
@@ -146,9 +155,6 @@
 											<td>
 												Width
 											</td>
-											<td>
-												Distributor
-											</td>
 										</tr>
 										<tr>
 											<td>
@@ -160,11 +166,11 @@
 											<td>
 												{/group.material.width/}
 											</td>
-											<td>
-												{/group.material.distributor/}
-											</td>
 										</tr>
 										<tr>
+											<td>
+												Distributor
+											</td>
 											<td>
 												Manufacturer
 											</td>
@@ -176,6 +182,9 @@
 											</td>
 										</tr>
 										<tr>
+											<td>
+												{/group.material.distributor/}
+											</td>
 											<td>
 												{/group.material.manufacturer/}
 											</td>
@@ -297,9 +306,9 @@
 							<br><br>
 							<button type="button" ng-click="vm.saveMaterial(materialDescription , $index); materialDistributor=''; materialManufacturer=''; materialColourGroup=''; materialDescription=''" ng-show="materialDistributor && materialManufacturer && materialColourGroup && materialDescription" class="btn btn-default">Save Material</button>
 						</div>
-						<br><br>
 						<br>
-						<button type="button" style="btn;" ng-click="vm.addCounter($index)">Add a Counter</button>
+						<br>
+						<button type="button" style="btn;" ng-click="vm.addCounter($index, group.material, group.counters.length)">Add a Counter</button>
 						<br>
 						<br>
 						<div ng-repeat="counter in group.counters track by $index">
@@ -386,7 +395,7 @@
 												      					{/counter.material.halfSheet | currency:$/}/sheet
 												      				</td>
 												      				<td ng-show="counter.material.fullSheet1">
-												      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $index, $parent.$index)" value="fullsheet1">
+												      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $index, $parent.$index)" value="fullSheet1">
 												      					{/counter.material.fullSheet1 | currency:$/}/sheet
 												      				</td>
 												      				<td ng-show="counter.material.fullSheet5">
@@ -480,7 +489,10 @@
 								</div>					  	
 					      	<!--<br> {/counter.material | json/} <br>-->
 				      		<span ng-show="vm.mateRial"><button ng-click="vm.editCounter[$index] = false" ng-hide="vm.editCounter[$index]"class="btn btn-danger">Save</button></span>
+							<br>
 							<br><u>Selected Addons:</u> 
+							<br>
+							{/counter.addons|json/}
 							<br>
 							<div ng-repeat="addon in counter.addons track by $index">
 								<br>{/addon.productType/} - {/addon.description/} : 

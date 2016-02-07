@@ -49,9 +49,9 @@
       			//Save the countertop and put all the data back onto the main controller
       			vm.calculateGroup(counter.width, counter.length, counter.shape, counter.material, counter.index, counter.groupIndex, counter.description);
       			//do the same thing with each addon
-      			console.log(counter.counters)
-      			for (var i=-1; i < counter.counters; i++) {
-      				console.log("this ran");
+      			console.log(counter.addons, counter.counters)
+      			for (var i=0; i < counter.counters+1; i++) {
+      				console.log("i", i, counter.addons[i]);
 			    	vm.saveAddon(counter.addons[i], counter.counters, counter.groupIndex)
 			    };
       				
@@ -336,11 +336,13 @@
 		};
 
 		vm.saveAddon = function(addon, index, groupIndex) {
+			console.log(addon);
 			var addons = vm.quote.counterGroup[groupIndex].counters[index].addons;
 			var pushObj = {};
-			var shape = vm.quote.counters[index].counterShape;
+			var shape = vm.quote.counterGroup[groupIndex].counters[index].counterShape;
 			console.log(addon, addons);
 			var search = vm.arraySearch(addon.description, addons, "description");
+			console.log(search);
 
 			var totalPrice = 0;
 			var counterLength = vm.quote.counterGroup[groupIndex].counters[index].counterLength;

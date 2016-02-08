@@ -45,9 +45,9 @@
       	  	});
 
       	  	modalInstance.result.then(function (counter) {
-				console.log(counter.width, counter.length, counter.shape, counter.material, counter.index, counter.groupIndex, counter.description);
+				console.log(counter.width, counter.length, counter.shape, counter.material, counter.counters, counter.groupIndex, counter.description, true);
       			//Save the countertop and put all the data back onto the main controller
-      			vm.calculateCounter(counter.width, counter.length, counter.shape, counter.material, counter.index, counter.groupIndex, counter.description);
+      			vm.calculateCounter(counter.width, counter.length, counter.shape, counter.material, counter.counters, counter.groupIndex, counter.description, true);
       			//do the same thing with each addon
       			//console.log(counter.addons, counter.counters)
       			for (var i=0; i < counter.addons.length; i++) {
@@ -86,7 +86,6 @@
 	    			width: width,
 	    			length: length, 
 	    			shape: shape, 
-	    			index: index,
 	    			groupIndex: groupIndex,
 	    			description: description,
 	    			addons: addons,
@@ -403,6 +402,7 @@
 			vm.addonQuantity = "";
 			console.log(vm.quote.totalPrice, totalPrice);
 			vm.quote.totalPrice += totalPrice;
+			vm.quote.counterGroup[groupIndex].totalPrice += totalPrice;
 			//vm.hideAddons();
 		};	
 		
@@ -440,7 +440,10 @@
 		};
 
 		vm.removeGroup = function(index) {
+			console.log(index, vm.quote.counterGroup[index].totalPrice);
+			vm.quote.totalPrice -= vm.quote.counterGroup[index].totalPrice;
 			vm.quote.counterGroup.splice(index, index+1);
+
 		};
 
 
@@ -472,12 +475,8 @@
 			};
 		};
 
-		vm.calculateCounter = function(width, length, shape, material, index, groupIndex, description) {
+		vm.calculateCounter = function(width, length, shape, material, index, groupIndex, description, modal) {
 		console.log("Width", width, "Length", length, "Shape", shape, "Material", material, "Index", index, "Group Index", groupIndex, "description", description);
-
-			if(typeof index === undefined){
-
-			};
 
 		//Obviously, we set some variables. 
 			var squareFootage = 0;
@@ -489,9 +488,8 @@
 			var pushMandatory = {};
 			var pushMandatoryDropDown = {};
 			var pricing = "";
-			//convert to feet
-			length = length;
-			width = width;
+			var counterIndex = vm.quote.counterGroup[groupIndex].counters.length;
+			console.log(counterIndex, index);
 
 			//Makes doing math later down easier.
 			if(shape === "circle"){
@@ -528,34 +526,6 @@
 				mandatoryCharges: []
 			};
 
-	// adds up all mandatory charges for the counter - this might not be used.
-			/*for (var i = vm.products.length - 1; i >= 0; i--) {
-				if(vm.products[i].category === "mandatory"){
-					//console.log(vm.products[i].category);
-					pushMandatory = {
-						product: vm.products[i].product,
-						name: vm.products[i].name,
-						price: vm.products[i].price,
-						unitOfMeasure: vm.products[i].unitOfMeasure,
-						menuType: vm.products[i].menuType,
-						quantity: vm.products[i].quantity,
-						totalPrice: vm.products[i].totalPrice,
-						dropDown:[]
-					};
-					if(vm.products[i].dropDown[0] !== undefined ){
-						for (var j = vm.products[i].dropDown.length - 1; j >= 0; j--) {
-							pushMandatoryDropDown = {
-								price: vm.products[i].dropDown[j].price,
-								product: vm.products[i].dropDown[j].product,
-								name: vm.products[i].dropDown[j].name
-							}; 	
-							pushMandatory.dropDown.push(pushMandatoryDropDown);
-						}; 
-					};
-					pushObj.mandatoryCharges.push(pushMandatory);
-				};
-			};*/
-
 			//console.log("Push Object", pushObj);
 
 	//Checks the shape of the table, and then calculates square footage.
@@ -563,17 +533,16 @@
 				squareFootage = (length * width/144); //measurements are in inches, then converted to feet
 			} else if(shape === "circle"){
 				squareFootage = (Math.PI * (Math.pow(width, 2)));
-				squareFootage = squareFootage.toFixed(2);
 			};
-			//console.log(squareFootage, length, width);
+			squareFootage = squareFootage.toFixed(2);
+			console.log(squareFootage, length, width);
 
 	//Calculate how many sheets are needed. Will need to revamp this: check width and length of sheets as well as square footage
-			sheets = squareFootage / (material.length * material.width);
+			sheets = squareFootage / (material.length * material.width/144);
+			console.log("Sheets: " + sheets);
 			sheets = sheets.toFixed(1);
-			//console.log("Sheets: " + sheets);
-			//console.log(material);
-	//for edit, remember last price and 
-	//console.log(material);
+			console.log("Sheets: " + sheets);
+			console.log(material.length, material.width);
 	//Chooses the best match for pricing. Will need to make this user selectable later.
 			if(sheets <=.5 && material.halfSheet){
 			console.log("This ran 1", sheets, material.halfSheet, squareFootage, length, width, material.width, material.length);
@@ -597,23 +566,23 @@
 			console.log("Loop 5 | Sheets: " + sheets + " | Price: " + material.fullSheet1);
 				counterPrice = sheets * material.fullSheet1;
 			};
-
+			console.log(counterPrice, sheets, typeof modal);
 	//Commits data to arrays depending on whether it's an edit or a new save.
-			if(typeof index === "undefined"){
+			if(modal === true){
 				vm.quote.counterGroup[groupIndex].counters.push(pushObj);	
 	//Set price of counter minues addons
-				vm.quote.counterGroup[groupIndex].counters[vm.quote.counterGroup[groupIndex].counters.length-1].totalPrice = counterPrice;
+				vm.quote.counterGroup[groupIndex].counters[counterIndex].totalPrice = counterPrice;
 	//Add Pricing default and commit number of 'sheets' required for Counter
-				vm.quote.counterGroup[groupIndex].counters[vm.quote.counterGroup[groupIndex].counters.length-1].pricing = pricing;
-				vm.quote.counterGroup[groupIndex].counters[vm.quote.counterGroup[groupIndex].counters.length-1].sheets = sheets;
+				vm.quote.counterGroup[groupIndex].counters[counterIndex].pricing = pricing;
+				vm.quote.counterGroup[groupIndex].counters[counterIndex].sheets = sheets;
 	//Hides the counter add button at the top of the page.
 				vm.hideCounter();
 	//Save the price of the counter, and the total price of the vm.quote. Save it to the vm.quote variable.
-				vm.quote.counterGroup[groupIndex].counters[vm.quote.counterGroup[groupIndex].counters.length-1].material.price = vm.quote.counterGroup[groupIndex].counters[vm.quote.counterGroup[groupIndex].counters.length-1].totalPrice;		
-				vm.quote.totalPrice += vm.quote.counterGroup[groupIndex].counters[vm.quote.counterGroup[groupIndex].counters.length-1].totalPrice;
+				vm.quote.counterGroup[groupIndex].counters[counterIndex].material.price = vm.quote.counterGroup[groupIndex].counters[vm.quote.counterGroup[groupIndex].counters.length-1].totalPrice;		
+				vm.quote.totalPrice += vm.quote.counterGroup[groupIndex].counters[counterIndex].totalPrice;
+				vm.quote.counterGroup[groupIndex].totalPrice += vm.quote.counterGroup[groupIndex].counters[counterIndex].totalPrice;
 			} else{
 	//Replace the existing addons into the new array :)
-	//console.log(vm.quote.counters[index].addons.length);
 				if(typeof vm.quote.counterGroup[groupIndex].counters[index].addons.length !== undefined) {
 					for (var i = vm.quote.counterGroup[groupIndex].counters[index].addons.length - 1; i >= 0; i--) {
 						pushObj.addons.push(vm.quote.counterGroup[groupIndex].counters[index].addons[i]);6
@@ -629,6 +598,8 @@
 	//Add vm.quote total with new counter price but first replace old price.		
 				vm.quote.totalPrice -= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
 				vm.quote.totalPrice += pushObj.totalPrice;
+				vm.quote.counterGroup[groupIndex].totalPrice -= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
+				vm.quote.counterGroup[groupIndex].totalPrice += pushObj.totalPrice;
 	//replace the counter object with the edited one.
 				vm.quote.counterGroup[groupIndex].counters.splice(index, 1, pushObj);
 

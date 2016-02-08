@@ -29,7 +29,6 @@
 		      		<br>
 		      		<br>
 					<script type="text/ng-template" id="addcounter.html">	
-						<ng-form name="vm.addCounterForm">
 					        <div class="modal-header">
 								<h3 class="modal-title">Add Counter</h3>
 							</div>
@@ -129,7 +128,6 @@
 								<button type="button" style="btn" ng-click="vm.saveCounterModal(counterWidth, counterLength, shape, description, vm.addons, vm.material, vm.counters); shape=''; counterWidth=''; counterLength=''; materialDistributor=''; materialManufacturer=''; materialColourGroup=''; materialDescription='';">Save Counter</button>
 								</span>
         					</div>
-						</ng-form>
 					</script>
 					<div ng-repeat="group in vm.quote.counterGroup track by $index">
 						{/group|json/}
@@ -497,17 +495,22 @@
 											<span ng-show="addon.formula =='square'">{/counter.counterWidth * counter.counterLength/}</span>
 											@{/addon.price | currency:$/} <a ng-click="vm.removeAddon(addon, $parent.$index, $index)">remove</a>
 										</div>
+										<!--<br> {/counter.material | json/} <br>-->
+							      		<span ng-show="vm.mateRial"><button ng-click="vm.editCounter[$index] = false" ng-hide="vm.editCounter[$index]"class="btn btn-danger">Save</button></span>
+								      	<br>
+								      	<br>
+								      	Counter Subtotal: {/counter.totalPrice |currency:$/}
 									</div>
-								</div>					  	
-					      	<!--<br> {/counter.material | json/} <br>-->
-				      		<span ng-show="vm.mateRial"><button ng-click="vm.editCounter[$index] = false" ng-hide="vm.editCounter[$index]"class="btn btn-danger">Save</button></span>
-					      	<br><br>
-					      	<span style="float: left;">Counter Subtotal: {/counter.totalPrice |currency:$/}</span><span style="float: right;"><button type="button" style="btn" ng-click="vm.saveQuote(vm.quote.description)">Update/Save Quote</button></span>
-					      	<br>
+								</div>	
+								<br><br>		
+								<span style="float: left;">
+									<button type="button" style="btn" ng-click="vm.saveQuote(vm.quote.description)">Update/Save Quote</button></span>
+								      	<br>		  	
 					      	<!--<br>counter Thickness: {/counter.counterThickness1/}
 					      	<br>counter Thickness 2: {/counter.counterThickness1/}-->
 					      	<hr style="background:#FFFFFF; border:0; height:7px" />
 						</div>
+						Group Subtotal: {/group.totalPrice |currency:$/}
 						<hr style="background:#000000; border:0; height:7px" />
 					</div>
 

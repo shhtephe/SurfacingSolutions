@@ -57,7 +57,7 @@
 								<br><u>Selected Addons:</u> 
 								<br>
 								<div ng-repeat="addon in vm.addons track by $index">
-									<br>{/addon.productType/} - {/addon.description/} : 
+									<br>{/addon.type/} - {/addon.description/} : 
 									<span ng-show="addon.formula =='item' || addon.formula == 'linear'">{/addon.quantity/}</span>
 									<span ng-show="addon.formula =='square'">{/counter.counterWidth * counter.counterLength/}</span>
 									@{/addon.price | currency:$/} <a ng-click="vm.removeAddonModal(addon, $parent.$index, $index)">remove</a>
@@ -126,7 +126,7 @@
         					<div class="modal-footer">
             					<button type="button" style="btn" ng-click="vm.cancel()">Cancel</button>
 								<span ng-show="(shape=='rectangle' && counterLength && counterWidth) || (shape=='circle' && counterWidth)">
-								<button type="button" style="btn" ng-click="vm.saveCounterModal(counterWidth, counterLength, shape, $index, description, vm.addons, vm.material, vm.counters); shape=''; counterWidth=''; counterLength=''; materialDistributor=''; materialManufacturer=''; materialColourGroup=''; materialDescription='';">Save Counter</button>
+								<button type="button" style="btn" ng-click="vm.saveCounterModal(counterWidth, counterLength, shape, description, vm.addons, vm.material, vm.counters); shape=''; counterWidth=''; counterLength=''; materialDistributor=''; materialManufacturer=''; materialColourGroup=''; materialDescription='';">Save Counter</button>
 								</span>
         					</div>
 						</ng-form>
@@ -144,6 +144,7 @@
 				  			<div uib-collapse="!isCollapsed">
 								<div class="well well-lg">
 									<table class="table table-hover table-bordered">
+										{/group.totalPrice/}
 										<caption>Material Info</caption>
 										<tr>
 											<td>
@@ -485,22 +486,22 @@
 											</div>
 											<button type="button" ng-click="vm.editCounter[$index] = false; $scope.counter.materialDistributor = ''" ng-show="vm.editCounter[$index]" class="btn btn-danger">Cancel</button>
 							      		</span>
+							      		<br><br>
+							      		<u>Selected Addons:</u> 
+										<br>
+										<!--{/counter.addons|json/}-->
+										<br>
+										<div ng-repeat="addon in counter.addons track by $index">
+											<br>{/addon.productType/} - {/addon.itemCode/} : 
+											<span ng-show="addon.formula =='item' || addon.formula == 'linear'">{/addon.quantity/}</span>
+											<span ng-show="addon.formula =='square'">{/counter.counterWidth * counter.counterLength/}</span>
+											@{/addon.price | currency:$/} <a ng-click="vm.removeAddon(addon, $parent.$index, $index)">remove</a>
+										</div>
 									</div>
 								</div>					  	
 					      	<!--<br> {/counter.material | json/} <br>-->
 				      		<span ng-show="vm.mateRial"><button ng-click="vm.editCounter[$index] = false" ng-hide="vm.editCounter[$index]"class="btn btn-danger">Save</button></span>
-							<br>
-							<br><u>Selected Addons:</u> 
-							<br>
-							{/counter.addons|json/}
-							<br>
-							<div ng-repeat="addon in counter.addons track by $index">
-								<br>{/addon.productType/} - {/addon.description/} : 
-								<span ng-show="addon.formula =='item' || addon.formula == 'linear'">{/addon.quantity/}</span>
-								<span ng-show="addon.formula =='square'">{/counter.counterWidth * counter.counterLength/}</span>
-								@{/addon.price | currency:$/} <a ng-click="vm.removeAddon(addon, $parent.$index, $index)">remove</a>
-							</div>
-					      	<br>
+					      	<br><br>
 					      	<span style="float: left;">Counter Subtotal: {/counter.totalPrice |currency:$/}</span><span style="float: right;"><button type="button" style="btn" ng-click="vm.saveQuote(vm.quote.description)">Update/Save Quote</button></span>
 					      	<br>
 					      	<!--<br>counter Thickness: {/counter.counterThickness1/}

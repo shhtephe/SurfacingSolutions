@@ -47,11 +47,11 @@
       	  	modalInstance.result.then(function (counter) {
 				console.log(counter.width, counter.length, counter.shape, counter.material, counter.index, counter.groupIndex, counter.description);
       			//Save the countertop and put all the data back onto the main controller
-      			vm.calculateGroup(counter.width, counter.length, counter.shape, counter.material, counter.index, counter.groupIndex, counter.description);
+      			vm.calculateCounter(counter.width, counter.length, counter.shape, counter.material, counter.index, counter.groupIndex, counter.description);
       			//do the same thing with each addon
-      			console.log(counter.addons, counter.counters)
-      			for (var i=0; i < counter.counters+1; i++) {
-      				console.log("i", i, counter.addons[i]);
+      			//console.log(counter.addons, counter.counters)
+      			for (var i=0; i < counter.addons.length; i++) {
+      				//console.log("i", i, counter.addons[i]);
 			    	vm.saveAddon(counter.addons[i], counter.counters, counter.groupIndex)
 			    };
       				
@@ -80,8 +80,8 @@
 			    };
 			};
 
-	    	vm.saveCounterModal = function(width, length, shape, index, description, addons, material, counters) {
-	    		console.log(counters);
+	    	vm.saveCounterModal = function(width, length, shape, description, addons, material, counters) {
+	    		//console.log(counters);
 	    		var counter = {
 	    			width: width,
 	    			length: length, 
@@ -107,7 +107,7 @@
 				var pushObj = {};
 				var search = vm.arraySearchModal(addon.description, addons, "description");
 
-				console.log(addon);
+				//console.log(addon);
 
 
 				var totalPrice = 0;
@@ -115,7 +115,7 @@
 				var counterWidth = width;
 				var squareFootage = 0;
 
-				console.log(addon.formula, addon.quantity, addon.price);
+				//console.log(addon.formula, addon.quantity, addon.price);
 
 				if (addon.formula === "item") {
 					totalPrice =  addon.quantity * addon.price;
@@ -146,7 +146,7 @@
 					pushObj = {
 						distributor: addon.distributor,
 						manufacturer: addon.manufacturer,
-						productType: addon.type,
+						type: addon.type,
 						description: addon.description,
 						itemCode: addon.itemCode,
 						price: addon.price,
@@ -403,7 +403,6 @@
 			vm.addonQuantity = "";
 			console.log(vm.quote.totalPrice, totalPrice);
 			vm.quote.totalPrice += totalPrice;
-			//updatePrice(quantity, price, "addon"); - For use later
 			//vm.hideAddons();
 		};	
 		
@@ -473,7 +472,7 @@
 			};
 		};
 
-		vm.calculateGroup = function(width, length, shape, material, index, groupIndex, description) {
+		vm.calculateCounter = function(width, length, shape, material, index, groupIndex, description) {
 		console.log("Width", width, "Length", length, "Shape", shape, "Material", material, "Index", index, "Group Index", groupIndex, "description", description);
 
 			if(typeof index === undefined){

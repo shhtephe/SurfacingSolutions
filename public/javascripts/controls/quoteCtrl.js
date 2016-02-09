@@ -95,7 +95,7 @@
 	    	};
 
 			vm.saveAddonModal = function(addon, shape, length, width) {
-
+/*
 				if(typeof vm.addons === undefined){
 					var addons = [];
 				}else{
@@ -163,6 +163,7 @@
 					//vm.quote.counters[index].totalPrice += addons[search].totalPrice;
 				};
 				vm.addons = addons;
+*/
 			};
 
 	    	vm.cancel = function() {
@@ -572,9 +573,8 @@
 				vm.quote.counterGroup[groupIndex].counters[counterIndex].totalPrice = counterPrice;
 	//Add Pricing default and commit number of 'sheets' required for Counter
 				vm.quote.counterGroup[groupIndex].counters[counterIndex].pricing = pricing;
+
 				vm.quote.counterGroup[groupIndex].counters[counterIndex].sheets = sheets;
-	//Hides the counter add button at the top of the page.
-				vm.hideCounter();
 	//Save the price of the counter, and the total price of the vm.quote. Save it to the vm.quote variable.
 				vm.quote.counterGroup[groupIndex].counters[counterIndex].material.price = vm.quote.counterGroup[groupIndex].counters[vm.quote.counterGroup[groupIndex].counters.length-1].totalPrice;		
 				vm.quote.totalPrice += vm.quote.counterGroup[groupIndex].counters[counterIndex].totalPrice;

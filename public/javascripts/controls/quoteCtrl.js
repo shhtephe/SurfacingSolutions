@@ -53,9 +53,7 @@
       			for (var i=0; i < counter.addons.length; i++) {
       				//console.log("i", i, counter.addons[i]);
 			    	vm.saveAddon(counter.addons[i], counter.counters, counter.groupIndex)
-			    };
-      				
-
+			    };  				
 			}, function () {
       		console.log('Modal dismissed at: ' + new Date());
     		});

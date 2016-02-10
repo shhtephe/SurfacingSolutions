@@ -55,6 +55,7 @@ var quote = new Schema({
 			totalPrice: Number,
 			pricing: String,
 			sheets: Number,
+			jobDifficulty: Number,
 			addons: [{
 				distributor: String,
 				manufactuer: String,

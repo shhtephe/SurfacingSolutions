@@ -95,7 +95,6 @@
 	    	};
 
 			vm.saveAddonModal = function(addon, shape, length, width) {
-/*
 				if(typeof vm.addons === undefined){
 					var addons = [];
 				}else{
@@ -163,7 +162,6 @@
 					//vm.quote.counters[index].totalPrice += addons[search].totalPrice;
 				};
 				vm.addons = addons;
-*/
 			};
 
 	    	vm.cancel = function() {
@@ -466,11 +464,22 @@
 			console.log(vm.quote.counterGroup[index].material);
 		};
 
-		vm.saveCounter = function(width, length, shape, index, groupIndex, description){
+		vm.saveCounter = function(width, length, shape, index, groupIndex, description, modal){
 			console.log(width, length, shape, index, groupIndex, description);
 
+			//Makes doing math later down easier.
 			if(shape === "circle"){
 				length = width;
+			};
+			//Create an object containing all core counter information, also leaving addons space
+			pushObj = {
+				description: description,
+				counterShape: shape,
+				counterLength: length,
+				counterWidth: width,
+				totalPrice: 0,
+				addons: [],
+				mandatoryCharges: []
 			};
 		};
 
@@ -504,23 +513,7 @@
 				counterShape: shape,
 				counterLength: length,
 				counterWidth: width,
-				totalPrice: 0,
-				material:{
-					itemCode: material.itemCode,
-					thickness: material.thickness,
-					width: material.width,
-					length: material.length,
-					price: 0,
-					fullSheet1: material.fullSheet1,
-					halfSheet: material.halfSheet,
-					fullSheet5: material.fullSheet5,
-					fullSheet21: material.fullSheet21,
-					isa: material.isa,
-					distributor: material.distributor,
-					manufacturer: material.manufacturer,
-					colourGroup: material.colourGroup,
-					description: material.description
-				},
+				price: 0,
 				addons: [],
 				mandatoryCharges: []
 			};
@@ -573,10 +566,10 @@
 				vm.quote.counterGroup[groupIndex].counters[counterIndex].totalPrice = counterPrice;
 	//Add Pricing default and commit number of 'sheets' required for Counter
 				vm.quote.counterGroup[groupIndex].counters[counterIndex].pricing = pricing;
-
 				vm.quote.counterGroup[groupIndex].counters[counterIndex].sheets = sheets;
 	//Save the price of the counter, and the total price of the vm.quote. Save it to the vm.quote variable.
-				vm.quote.counterGroup[groupIndex].counters[counterIndex].material.price = vm.quote.counterGroup[groupIndex].counters[vm.quote.counterGroup[groupIndex].counters.length-1].totalPrice;		
+				//WHAT THE FUCK DOES THIS LINE DO?
+				//vm.quote.counterGroup[groupIndex].counters[counterIndex].material.price = vm.quote.counterGroup[groupIndex].counters[vm.quote.counterGroup[groupIndex].counters.length-1].totalPrice;		
 				vm.quote.totalPrice += vm.quote.counterGroup[groupIndex].counters[counterIndex].totalPrice;
 				vm.quote.counterGroup[groupIndex].totalPrice += vm.quote.counterGroup[groupIndex].counters[counterIndex].totalPrice;
 			} else{

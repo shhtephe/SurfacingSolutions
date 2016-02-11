@@ -454,7 +454,7 @@
 				price: material.price,
 				fullSheet1: material.fullSheet1,
 				fullSheet5: material.fullSheet5,
-				fullSheet21: material.fullSheet21,
+				fullSheet20: material.fullSheet20,
 				isa: material.isa,
 				distributor: material.distributor,
 				manufacturer: material.manufacturer,

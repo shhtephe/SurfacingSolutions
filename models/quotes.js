@@ -37,7 +37,7 @@ var quote = new Schema({
 				fullSheet1: Number,
 				halfSheet: Number,
 				fullSheet5: Number,
-				fullSheet21: Number,
+				fullSheet20: Number,
 				isa: Number,
 				distributor: String,
 				manufacturer: String,

@@ -256,10 +256,9 @@
 		    vm.alerts.splice(index, 1);
 	  	};
 
-	  	vm.changePricing = function(pricing, index, groupIndex) {
-		console.log(pricing, index);
+	  	vm.changePricing = function(pricing, index, groupIndex, material) {
+		console.log(pricing, index, material);
 		var sheets = vm.quote.counterGroup[groupIndex].counters[index].sheets;
-		var material = vm.quote.counterGroup[groupIndex].counters[index].material;
 		var counterPrice = 0;
 
 	  		if(pricing == "halfSheet"){
@@ -452,6 +451,7 @@
 				width: material.width,
 				length: material.length,
 				price: material.price,
+				halfSheet: material.halfSheet,
 				fullSheet1: material.fullSheet1,
 				fullSheet5: material.fullSheet5,
 				fullSheet20: material.fullSheet20,

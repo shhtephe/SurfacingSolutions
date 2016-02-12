@@ -257,9 +257,11 @@
 	  	};
 
 	  	vm.changePricing = function(pricing, index, groupIndex, material) {
-		console.log(pricing, index, material);
+		console.log(pricing, index, groupIndex, material);
 		var sheets = vm.quote.counterGroup[groupIndex].counters[index].sheets;
 		var counterPrice = 0;
+		var counter = vm.quote.counterGroup[groupIndex].counters[index];
+		var addonsTotalPrice = 0;
 
 	  		if(pricing == "halfSheet"){
 				counterPrice = sheets * material.halfSheet;		
@@ -277,9 +279,18 @@
 				counterPrice = sheets * material.isa;
 				vm.quote.counterGroup[groupIndex].counters[index].pricing = "isa";
 			};
-			//change price from old to new, and update main total
+
+			for (var i=0; i < counter.addons.length; i++) {
+      				//console.log("i", i, counter.addons[i]);
+			    	addonsTotalPrice += counter.addons[i].totalPrice;
+			    };  
+
+
+			//remove the price of the entire counter
 			vm.quote.totalPrice -= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
-			vm.quote.counterGroup[groupIndex].counters[index].totalPrice = counterPrice;
+			//set new value with addons added to price
+			vm.quote.counterGroup[groupIndex].counters[index].totalPrice = counterPrice + addonsTotalPrice;
+			//update new grand total
 			vm.quote.totalPrice += vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
 	  	};
 
@@ -464,23 +475,31 @@
 			console.log(vm.quote.counterGroup[index].material);
 		};
 
-		vm.saveCounter = function(width, length, shape, index, groupIndex, description, modal){
-			console.log(width, length, shape, index, groupIndex, description);
+		vm.editMaterialSave = function(material, index){
+			console.log(material, index);
+			var pushObj = {};
 
-			//Makes doing math later down easier.
-			if(shape === "circle"){
-				length = width;
-			};
 			//Create an object containing all core counter information, also leaving addons space
 			pushObj = {
-				description: description,
-				counterShape: shape,
-				counterLength: length,
-				counterWidth: width,
-				totalPrice: 0,
-				addons: [],
-				mandatoryCharges: []
+				itemCode: material.itemCode,
+				thickness: material.thickness,
+				width: material.width,
+				length: material.length,
+				price: material.price,
+				fullSheet1: material.fullSheet1,
+				halfSheet: material.halfSheet,
+				fullSheet5: material.fullSheet5,
+				fullSheet20: material.fullSheet20,
+				isa: material.isa,
+				distributor: material.distributor,
+				manufacturer: material.manufacturer,
+				colourGroup: material.colourGroup,
+				description: material.description
 			};
+			console.log(vm.quote.counterGroup[index]);
+			vm.quote.counterGroup[index].material = pushObj;
+			//vm.quote.counterGroup[index].material.splice(index, 1, pushObj);
+
 		};
 
 		vm.calculateCounter = function(width, length, shape, material, index, groupIndex, description, modal) {

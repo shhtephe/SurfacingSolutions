@@ -33,7 +33,6 @@ var quote = new Schema({
 				thickness: Number,
 				width: Number,
 				length: Number,
-				price: Number,
 				fullSheet1: Number,
 				halfSheet: Number,
 				fullSheet5: Number,
@@ -54,6 +53,7 @@ var quote = new Schema({
 			counterThickness2: Number,
 			totalPrice: Number,
 			pricing: String,
+			matPrice: Number,
 			sheets: Number,
 			jobDifficulty: Number,
 			addons: [{

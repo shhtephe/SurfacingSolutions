@@ -313,6 +313,7 @@
 						  				</tbody>
 					  				</table>
 					  				<br><button type="button" ng-click="vm.editCounter[$index] = true" ng-hide="vm.editCounter[$index]" class="btn btn-default">Edit this Counter</button>
+					  				<button type="button" ng-click="vm.calculateCounter(counter.counterWidth, counter.counterLength, counter.counterShape, group.material, $index, $parent.$index); vm.editCounter[$index]=false" ng-show="vm.editCounter[$index]" class="btn btn-default">Save Counter</button>
 						      		<br><br>
 						      		<span ng-show="counter.addons[0]"><u>Selected Addons:</u> 
 									<br>

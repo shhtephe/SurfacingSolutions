@@ -461,7 +461,8 @@
 				thickness: material.thickness,
 				width: material.width,
 				length: material.length,
-				price: material.price,
+				//this needs to change
+				//price: material.price,
 				halfSheet: material.halfSheet,
 				fullSheet1: material.fullSheet1,
 				fullSheet5: material.fullSheet5,
@@ -555,33 +556,30 @@
 			console.log("Sheets: " + sheets);
 			console.log(material.length, material.width);
 	//Chooses the best match for pricing. Will need to make this user selectable later.
-			if(sheets <=.5 && material.halfSheet){
-			console.log("This ran 1", sheets, material.halfSheet, squareFootage, length, width, material.width, material.length);
+			if(material.fullSheet21 && sheets >= 21) {
+				counterPrice = sheets * material.fullSheet21;
+				pricing = "fullSheet21";
+			} else if (material.fullSheet5 && sheets > 5) {
+				counterPrice = sheets * material.fullSheet5;
+				pricing = "fullSheet5";
+			} else if (material.fullSheet1 && sheets >= 1) {
+				counterPrice = sheets * material.fullSheet1;
+				pricing = "fullSheet1";
+			} else if (material.halfSheet && sheets < .5) {
 				//it will round down to 0, so make it one sheet
 				sheets = 1;
 				counterPrice = sheets * material.halfSheet;		
 				pricing = "halfSheet";
-			} else if(sheets <5 && material.fullSheet1){
-			console.log("This ran 2");
+			} else {
 				counterPrice = sheets * material.fullSheet1;
 				pricing = "fullSheet1";
-			} else if(sheets <21 && material.fullSheet5){
-			console.log("This ran 3");
-				counterPrice = sheets * material.fullSheet5;
-				pricing = "fullSheet5";
-			} else if(sheets >=21 && material.fullSheet21) {
-			console.log("This ran 4");
-				counterPrice = sheets * material.fullSheet21;
-				pricing = "fullSheet21";
-			} else {
-			console.log("Loop 5 | Sheets: " + sheets + " | Price: " + material.fullSheet1);
-				counterPrice = sheets * material.fullSheet1;
 			};
-			console.log(counterPrice, sheets, typeof modal);
+
+			console.log(counterPrice, sheets, typeof modal, pricing);
 	//Commits data to arrays depending on whether it's an edit or a new save.
 			if(modal === true){
 				vm.quote.counterGroup[groupIndex].counters.push(pushObj);	
-	//Set price of counter minues addons
+	//Set price of counter minus addons
 				vm.quote.counterGroup[groupIndex].counters[counterIndex].totalPrice = counterPrice;
 	//Add Pricing default and commit number of 'sheets' required for Counter
 				vm.quote.counterGroup[groupIndex].counters[counterIndex].pricing = pricing;
@@ -599,8 +597,9 @@
 					pushObj.totalPrice += vm.quote.counterGroup[groupIndex].counters[index].addons[i].totalPrice;
 					};
 				};
+				console.log(counterPrice, pricing, sheets);
 	//Replace counter total.
-				pushObj.material.price = counterPrice;
+				pushObj.matPrice = counterPrice;
 				pushObj.totalPrice += counterPrice;
 	//Add Pricing default and commit number of 'sheets' required for Counter
 				pushObj.pricing = pricing;
@@ -613,7 +612,7 @@
 	//replace the counter object with the edited one.
 				vm.quote.counterGroup[groupIndex].counters.splice(index, 1, pushObj);
 
-				console.log(vm.quote.counterGroup[groupIndex].counter);
+				console.log(vm.quote);
 			};
 
 			//vm.quote = vm.quote; - I don't think this is needed anymore, since VM is the view model and is already bound.

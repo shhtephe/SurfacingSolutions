@@ -503,6 +503,41 @@
 
 		};
 
+		vm.calulateSheets = function(squareFootage, material){
+		//Calculate how many sheets are needed. Will need to revamp this: check width and length of sheets as well as square footage
+			var returnObj = {
+				sheets : 0,
+				pricing: '',
+				counterPrice: 0
+			};
+
+			returnObj.sheets = squareFootage / (material.length * material.width/144);
+			//console.log("Sheets: " + sheets);
+			returnObj.sheets = returnObj.sheets.toFixed(1);
+			//console.log("Sheets: " + sheets);
+			//console.log(material.length, material.width);
+		//Chooses the best match for pricing. Will need to make this user selectable later.
+			if(material.fullSheet21 && sheets >= 21) {
+				returnObj.counterPrice = sheets * material.fullSheet21;
+				returnObj.pricing = "fullSheet21";
+			} else if (material.fullSheet5 && sheets > 5) {
+				returnObj.counterPrice = sheets * material.fullSheet5;
+				returnObj.pricing = "fullSheet5";
+			} else if (material.fullSheet1 && sheets >= 1) {
+				returnObj.counterPrice = sheets * material.fullSheet1;
+				returnObj.pricing = "fullSheet1";
+			} else if (material.halfSheet && sheets < .5) {
+				//it will round down to 0, so make it one sheet
+				sheets = 1;
+				returnObj.counterPrice = sheets * material.halfSheet;		
+				returnObj.pricing = "halfSheet";
+			} else {
+				returnObj.counterPrice = sheets * material.fullSheet1;
+				returnObj.pricing = "fullSheet1";
+			};
+			return(returnObj);
+		};
+
 		vm.calculateCounter = function(width, length, shape, material, index, groupIndex, description, modal) {
 		console.log("Width", width, "Length", length, "Shape", shape, "Material", material, "Index", index, "Group Index", groupIndex, "description", description);
 
@@ -549,31 +584,8 @@
 			squareFootage = squareFootage.toFixed(2);
 			console.log(squareFootage, length, width);
 
-	//Calculate how many sheets are needed. Will need to revamp this: check width and length of sheets as well as square footage
-			sheets = squareFootage / (material.length * material.width/144);
-			console.log("Sheets: " + sheets);
-			sheets = sheets.toFixed(1);
-			console.log("Sheets: " + sheets);
-			console.log(material.length, material.width);
-	//Chooses the best match for pricing. Will need to make this user selectable later.
-			if(material.fullSheet21 && sheets >= 21) {
-				counterPrice = sheets * material.fullSheet21;
-				pricing = "fullSheet21";
-			} else if (material.fullSheet5 && sheets > 5) {
-				counterPrice = sheets * material.fullSheet5;
-				pricing = "fullSheet5";
-			} else if (material.fullSheet1 && sheets >= 1) {
-				counterPrice = sheets * material.fullSheet1;
-				pricing = "fullSheet1";
-			} else if (material.halfSheet && sheets < .5) {
-				//it will round down to 0, so make it one sheet
-				sheets = 1;
-				counterPrice = sheets * material.halfSheet;		
-				pricing = "halfSheet";
-			} else {
-				counterPrice = sheets * material.fullSheet1;
-				pricing = "fullSheet1";
-			};
+			sheets = vm.calulateSheets(squareFootage, material);
+			console.log(sheets.pricing, sheets.sheets);
 
 			console.log(counterPrice, sheets, typeof modal, pricing);
 	//Commits data to arrays depending on whether it's an edit or a new save.

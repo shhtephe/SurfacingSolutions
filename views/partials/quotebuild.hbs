@@ -10,15 +10,15 @@
 				<br>-->
 {/vm.quote|json/}
 				<br><br>
+				<span style="float:right">
+					Quote Description:
+					<br>
+					<textarea rows="4" columns="150" ng-model="vm.quote.description"></textarea>
+				</span>
 				Customer: {/vm.customer.companyName/} - {/vm.customer.lastName/}, {/vm.customer.firstName/}
 				<br>QuoteID: {/vm.quote.quoteID/}
 				<br>
 				P.O. Number: <input type="text" ng-model="vm.quote.poNumber">
-				<br>
-				<br>
-				Quote Description:
-				<br>
-				<textarea rows="4" columns="150" ng-model="vm.quote.description"></textarea>
 				<br>
 				<br>
 				<button type="button" style="btn" ng-click="vm.addGroup()">Create Group</button>
@@ -39,7 +39,7 @@
 					<br><textarea rows="4" columns="150" ng-model="group.description"></textarea>
 					<br>
 					<br>
-					<button type="button" ng-show="vm.quote.counterGroup[$index].material" class="btn btn-default" ng-click="isMaterialCollapsed = !isMaterialCollapsed">{/group.material.description/}</button>
+					<button type="button" ng-show="vm.quote.counterGroup[$index].material" class="btn btn-default" ng-click="isMaterialCollapsed = !isMaterialCollapsed">Material - {/group.material.description/}</button>
 					<!--Material Collapsable-->
 		  			<div uib-collapse="!isMaterialCollapsed">
 						<div class="well well-lg">
@@ -147,7 +147,7 @@
 									</div>
 					      		</span>
 							<br>
-							<br><button type="button" ng-click="vm.editMaterial[$index] = true" ng-hide="vm.editCounter[$index]" class="btn btn-default">Edit this Counter</button>
+							<br><button type="button" ng-click="vm.editMaterial[$index] = true" ng-hide="vm.editMaterial[$index]" class="btn btn-default">Edit this Material</button>
 							<button type="button" ng-click="vm.editMaterial[$index] = false" ng-show="vm.editMaterial[$index]" class="btn btn-default">Cancel</button>
 {/group.counter/}
 						</div>
@@ -334,16 +334,17 @@
 							      	Counter Subtotal: {/counter.totalPrice |currency:$/}
 								</div>
 							</div>	
-							<br><br>		
-							<span style="float: left;">
-								<button type="button" style="btn" ng-click="vm.saveQuote(vm.quote.description)">Update/Save Quote</button></span>
-							      	<br>		  	
+							<br>
 			      		<!--<br>counter Thickness: {/counter.counterThickness1/}
 				      	<br>counter Thickness 2: {/counter.counterThickness1/}-->
 				      	<hr style="background:#FFFFFF; border:0; height:7px" />
 					</div>
 					<!--END OF COUNTER LOOP-->
-					Group Subtotal: {/group.totalPrice |currency:$/}
+					Group Subtotal: {/group.totalPrice |currency:$/}		
+					<span style="float: right;">
+						<button type="button" style="btn" ng-click="vm.saveQuote(vm.quote.description)">Update/Save Quote</button>
+					</span>
+			      	<br>		  	
 					<hr style="background:#000000; border:0; height:7px" />
 				</div>
 
@@ -387,18 +388,18 @@
 				</div>
 				<br><br>
 				Please click <a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotefinal" target="">here</a> to view the invoice.
+				<button type="button" style="btn; float:right" ng-click="vm.saveQuote(vm.quote.description)">Update/Save Quote</button>
+				<br>
 				<br>
 				<uib-alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</uib-alert>
 				<br><br><br>
 <!--<pre>{/quote | json/}</pre>-->
-				<button type="button" style="btn" ng-click="vm.saveQuote(vm.quote.description)">Update/Save Quote</button>
-				<br>
 			</div>
         </div>
     </div>
 </div>
 
-<!--Modal Code for adding a table-->
+<!--Modal Code for adding a counter-->
 <script type="text/ng-template" id="addcounter.html">	
 	<div class="modal-header">
 		<h3 class="modal-title">Add Counter</h3>

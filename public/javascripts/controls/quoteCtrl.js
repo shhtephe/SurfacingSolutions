@@ -1,3 +1,19 @@
+/*
+STUFF TO REMEMBER: 
+backsplash = item
+size will be added by user in counter creation.
+
+linear calculations will be x1 linear foot or x2 linear foot
+
+**linear calc takes into account linear foot of entire group**
+
+In display group cost per sqft
+
+addons are PER GROUP not per table
+
+*/
+
+
 (function() {
 	'use strict';
  

@@ -500,8 +500,8 @@ addons are PER GROUP not per table
 			pushObj = {
 				itemCode: material.itemCode,
 				thickness: material.thickness,
-				width: material.width,
-				length: material.length,
+				matWidth: material.width,
+				matLength: material.length,
 				price: material.price,
 				fullSheet1: material.fullSheet1,
 				halfSheet: material.halfSheet,
@@ -555,7 +555,8 @@ addons are PER GROUP not per table
 			return(returnObj);
 		};
 
-		vm.commitCounter = function(modal, pushObj, counterPrice, sheets, counterIndex, groupIndex){
+		vm.commitCounter = function(modal, pushObj, counterPrice, pricing, sheets, counterIndex, groupIndex){
+			console.log(groupIndex, counterIndex, counterPrice);
 			//Commits data to arrays depending on whether it's an edit or a new save.
 			if(modal === true){
 				vm.quote.counterGroup[groupIndex].counters.push(pushObj);	
@@ -592,9 +593,9 @@ addons are PER GROUP not per table
 	//replace the counter object with the edited one.
 				vm.quote.counterGroup[groupIndex].counters.splice(index, 1, pushObj);
 
-				console.log(vm.quote);
 			};
-
+			console.log(vm.quote);
+			console.log(counterPrice, sheets, typeof modal, pricing);
 			//vm.quote = vm.quote; - I don't think this is needed anymore, since VM is the view model and is already bound.
 
 			//console.log("Counter Price w/o addons", vm.quote.counters[vm.quote.counters.length-1].material.price);
@@ -614,7 +615,6 @@ addons are PER GROUP not per table
 			var pushMandatoryDropDown = {};
 			var pricing = "";
 			var counterIndex = vm.quote.counterGroup[groupIndex].counters.length;
-			console.log(counterIndex, index);
 
 			//Makes doing math later down easier.
 			if(shape === "circle"){
@@ -651,9 +651,7 @@ addons are PER GROUP not per table
 			sheets = vm.calulateSheets(squareFootage, material);
 			console.log(sheets.pricing, sheets.sheets);
 
-			console.log(counterPrice, sheets, typeof modal, pricing);
-
-			vm.commitCounter(modal, pushObj, counterPrice, sheets.pricing, sheets.sheets, counterIndex, groupIndex);
+			vm.commitCounter(modal, pushObj, sheets.counterPrice, sheets.pricing, sheets.sheets, counterIndex, groupIndex);
 		};
 
 		vm.deleteCounter = function(groupIndex, index) {

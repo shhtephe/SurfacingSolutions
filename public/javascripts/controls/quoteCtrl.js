@@ -520,6 +520,7 @@ addons are PER GROUP not per table
 		};
 
 		vm.calulateSheets = function(squareFootage, material){
+			var sheets = 0;
 		//Calculate how many sheets are needed. Will need to revamp this: check width and length of sheets as well as square footage
 			var returnObj = {
 				sheets : 0,
@@ -554,12 +555,57 @@ addons are PER GROUP not per table
 			return(returnObj);
 		};
 
+		vm.commitCounter = function(modal, pushObj, counterPrice, sheets, counterIndex, groupIndex){
+			//Commits data to arrays depending on whether it's an edit or a new save.
+			if(modal === true){
+				vm.quote.counterGroup[groupIndex].counters.push(pushObj);	
+	//Set price of counter minus addons
+				vm.quote.counterGroup[groupIndex].counters[counterIndex].totalPrice = counterPrice;
+	//Add Pricing default and commit number of 'sheets' required for Counter
+				vm.quote.counterGroup[groupIndex].counters[counterIndex].pricing = sheets.pricing;
+				vm.quote.counterGroup[groupIndex].counters[counterIndex].sheets = sheets.sheets;
+	//Save the price of the counter, and the total price of the vm.quote. Save it to the vm.quote variable.
+				//WHAT THE FUCK DOES THIS LINE DO?
+				//vm.quote.counterGroup[groupIndex].counters[counterIndex].material.price = vm.quote.counterGroup[groupIndex].counters[vm.quote.counterGroup[groupIndex].counters.length-1].totalPrice;		
+				vm.quote.totalPrice += vm.quote.counterGroup[groupIndex].counters[counterIndex].totalPrice;
+				vm.quote.counterGroup[groupIndex].totalPrice += vm.quote.counterGroup[groupIndex].counters[counterIndex].totalPrice;
+			} else{
+	//Replace the existing addons into the new array :)
+				if(typeof vm.quote.counterGroup[groupIndex].counters[index].addons.length !== undefined) {
+					for (var i = vm.quote.counterGroup[groupIndex].counters[index].addons.length - 1; i >= 0; i--) {
+						pushObj.addons.push(vm.quote.counterGroup[groupIndex].counters[index].addons[i]);6
+					pushObj.totalPrice += vm.quote.counterGroup[groupIndex].counters[index].addons[i].totalPrice;
+					};
+				};
+				console.log(counterPrice, sheets.pricing, sheets.sheets);
+	//Replace counter total.
+				pushObj.matPrice = counterPrice;
+				pushObj.totalPrice += counterPrice;
+	//Add Pricing default and commit number of 'sheets' required for Counter
+				pushObj.pricing = sheets.pricing;
+				pushObj.sheets = sheets.sheets;
+	//Add vm.quote total with new counter price but first replace old price.		
+				vm.quote.totalPrice -= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
+				vm.quote.totalPrice += pushObj.totalPrice;
+				vm.quote.counterGroup[groupIndex].totalPrice -= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
+				vm.quote.counterGroup[groupIndex].totalPrice += pushObj.totalPrice;
+	//replace the counter object with the edited one.
+				vm.quote.counterGroup[groupIndex].counters.splice(index, 1, pushObj);
+
+				console.log(vm.quote);
+			};
+
+			//vm.quote = vm.quote; - I don't think this is needed anymore, since VM is the view model and is already bound.
+
+			//console.log("Counter Price w/o addons", vm.quote.counters[vm.quote.counters.length-1].material.price);
+		};
+
 		vm.calculateCounter = function(width, length, shape, material, index, groupIndex, description, modal) {
 		console.log("Width", width, "Length", length, "Shape", shape, "Material", material, "Index", index, "Group Index", groupIndex, "description", description);
 
 		//Obviously, we set some variables. 
+			var sheets = {};
 			var squareFootage = 0;
-			var sheets = 0;
 			var lastPrice = 0;
 			var counterPrice = 0;
 			var totalPrice = 0;
@@ -584,6 +630,7 @@ addons are PER GROUP not per table
 				counterShape: shape,
 				counterLength: length,
 				counterWidth: width,
+				squareFootage: 0,
 				price: 0,
 				addons: [],
 				mandatoryCharges: []
@@ -597,6 +644,7 @@ addons are PER GROUP not per table
 			} else if(shape === "circle"){
 				squareFootage = (Math.PI * (Math.pow(width, 2)));
 			};
+			pushObj.squareFootage = squareFootage;
 			squareFootage = squareFootage.toFixed(2);
 			console.log(squareFootage, length, width);
 
@@ -604,48 +652,8 @@ addons are PER GROUP not per table
 			console.log(sheets.pricing, sheets.sheets);
 
 			console.log(counterPrice, sheets, typeof modal, pricing);
-	//Commits data to arrays depending on whether it's an edit or a new save.
-			if(modal === true){
-				vm.quote.counterGroup[groupIndex].counters.push(pushObj);	
-	//Set price of counter minus addons
-				vm.quote.counterGroup[groupIndex].counters[counterIndex].totalPrice = counterPrice;
-	//Add Pricing default and commit number of 'sheets' required for Counter
-				vm.quote.counterGroup[groupIndex].counters[counterIndex].pricing = pricing;
-				vm.quote.counterGroup[groupIndex].counters[counterIndex].sheets = sheets;
-	//Save the price of the counter, and the total price of the vm.quote. Save it to the vm.quote variable.
-				//WHAT THE FUCK DOES THIS LINE DO?
-				//vm.quote.counterGroup[groupIndex].counters[counterIndex].material.price = vm.quote.counterGroup[groupIndex].counters[vm.quote.counterGroup[groupIndex].counters.length-1].totalPrice;		
-				vm.quote.totalPrice += vm.quote.counterGroup[groupIndex].counters[counterIndex].totalPrice;
-				vm.quote.counterGroup[groupIndex].totalPrice += vm.quote.counterGroup[groupIndex].counters[counterIndex].totalPrice;
-			} else{
-	//Replace the existing addons into the new array :)
-				if(typeof vm.quote.counterGroup[groupIndex].counters[index].addons.length !== undefined) {
-					for (var i = vm.quote.counterGroup[groupIndex].counters[index].addons.length - 1; i >= 0; i--) {
-						pushObj.addons.push(vm.quote.counterGroup[groupIndex].counters[index].addons[i]);6
-					pushObj.totalPrice += vm.quote.counterGroup[groupIndex].counters[index].addons[i].totalPrice;
-					};
-				};
-				console.log(counterPrice, pricing, sheets);
-	//Replace counter total.
-				pushObj.matPrice = counterPrice;
-				pushObj.totalPrice += counterPrice;
-	//Add Pricing default and commit number of 'sheets' required for Counter
-				pushObj.pricing = pricing;
-				pushObj.sheets = sheets;
-	//Add vm.quote total with new counter price but first replace old price.		
-				vm.quote.totalPrice -= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
-				vm.quote.totalPrice += pushObj.totalPrice;
-				vm.quote.counterGroup[groupIndex].totalPrice -= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
-				vm.quote.counterGroup[groupIndex].totalPrice += pushObj.totalPrice;
-	//replace the counter object with the edited one.
-				vm.quote.counterGroup[groupIndex].counters.splice(index, 1, pushObj);
 
-				console.log(vm.quote);
-			};
-
-			//vm.quote = vm.quote; - I don't think this is needed anymore, since VM is the view model and is already bound.
-
-			//console.log("Counter Price w/o addons", vm.quote.counters[vm.quote.counters.length-1].material.price);
+			vm.commitCounter(modal, pushObj, counterPrice, sheets.pricing, sheets.sheets, counterIndex, groupIndex);
 		};
 
 		vm.deleteCounter = function(groupIndex, index) {

@@ -52,6 +52,7 @@ var quote = new Schema({
 			counterThickness1: Number,
 			counterThickness2: Number,
 			totalPrice: Number,
+			squareFootage: Number,
 			pricing: String,
 			matPrice: Number,
 			sheets: Number,

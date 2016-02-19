@@ -563,8 +563,8 @@ addons are PER GROUP not per table
 	//Set price of counter minus addons
 				vm.quote.counterGroup[groupIndex].counters[counterIndex].totalPrice = counterPrice;
 	//Add Pricing default and commit number of 'sheets' required for Counter
-				vm.quote.counterGroup[groupIndex].counters[counterIndex].pricing = sheets.pricing;
-				vm.quote.counterGroup[groupIndex].counters[counterIndex].sheets = sheets.sheets;
+				vm.quote.counterGroup[groupIndex].counters[counterIndex].pricing = pricing;
+				vm.quote.counterGroup[groupIndex].counters[counterIndex].sheets = sheets;
 	//Save the price of the counter, and the total price of the vm.quote. Save it to the vm.quote variable.
 				//WHAT THE FUCK DOES THIS LINE DO?
 				//vm.quote.counterGroup[groupIndex].counters[counterIndex].material.price = vm.quote.counterGroup[groupIndex].counters[vm.quote.counterGroup[groupIndex].counters.length-1].totalPrice;		
@@ -578,7 +578,7 @@ addons are PER GROUP not per table
 					pushObj.totalPrice += vm.quote.counterGroup[groupIndex].counters[index].addons[i].totalPrice;
 					};
 				};
-				console.log(counterPrice, sheets.pricing, sheets.sheets);
+				console.log(counterPrice, pricing, sheets);
 	//Replace counter total.
 				pushObj.matPrice = counterPrice;
 				pushObj.totalPrice += counterPrice;
@@ -662,7 +662,11 @@ addons are PER GROUP not per table
 			//I don't think I need a refresh		$state.go($state.current, {}, {reload: true}); //second parameter is for $stateParams
 		};
 
-		vm.saveQuote = function(description) {
+		vm.calculateGroup = function(){
+
+		};
+
+		vm.saveQuote = function() {
 			//console.log(vm.quote.jobDifficulty.$dirty);
 			/*if(vm.quote.jobDifficulty.$dirty === true){
 				console.log("value has changed");

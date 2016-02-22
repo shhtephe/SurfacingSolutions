@@ -324,6 +324,14 @@
 									  		</tr>
 						  				</tbody>
 					  				</table>
+
+									<div ng-repeat="addon in vm.addons track by $index">
+										<br>{/addon.type/} - {/addon.description/} : 
+										<span ng-show="addon.formula =='item' || addon.formula == 'linear'">{/addon.quantity/}</span>
+										<span ng-show="addon.formula =='square'">{/counter.counterWidth * counter.counterLength/}</span>
+										@{/addon.price | currency:$/} <a ng-click="vm.removeAddonModal(addon, $parent.$index, $index)">remove</a>
+									</div>
+
 					  				<br><button type="button" ng-click="vm.editCounter[$index] = true" ng-hide="vm.editCounter[$index]" class="btn btn-default">Edit this Counter</button>
 					  				<button type="button" ng-click="vm.calculateCounter(counter.counterWidth, counter.counterLength, counter.counterShape, group.material, $index, $parent.$index); vm.editCounter[$index]=false" ng-show="vm.editCounter[$index]" class="btn btn-default">Save Counter</button>
 						      		<br><br>
@@ -352,7 +360,63 @@
 				      	<hr style="background:#FFFFFF; border:0; height:7px" />
 					</div>
 					<!--END OF COUNTER LOOP-->
-					Group Subtotal: {/group.totalPrice |currency:$/}		
+
+					<button type="button" ng-click="vm.divAddons = true">Add Addons</button>
+					<div ng-show="vm.divAddons">
+						<br>Addons: 
+						<!--
+						Manufactuer
+						Type
+						Description -> display both item code AND description
+						-->
+						<br>
+						Choose a Manufacturer:
+						<select name="counterAddonManufacturer" ng-model="counterAddonManufacturer" ng-options="product.manufacturer for product in vm.products | filter:{distributor:counterAddonDistributor.distributor} | unique: 'manufacturer' | orderBy:'manufacturer'">
+							<option value="">----Select----</option>
+						</select>
+						<div ng-show="counterAddonManufacturer">
+							<br>
+							Choose a Product Type:
+							<select name="counterAddonType" ng-model="counterAddonType" ng-options="product.type for product in vm.products | filter:{manufacturer:counterAddonManufacturer.manufacturer} | unique: 'type' | orderBy:'type'">
+								<option value="">----Select----</option>
+							</select>
+						</div>
+						<div ng-show="counterAddonManufacturer && counterAddonType">
+							<br>
+							Choose a Item Code:
+							<select name="counterAddonDescription" ng-model="counterAddonDescription" ng-options="product.itemCode + ' - ' + product.description for product in vm.products | filter:{manufacturer:counterAddonManufacturer.manufacturer, type:counterAddonType.type} | unique: 'itemCode' | orderBy:'itemCode'">
+								<option value="">----Select----</option>
+							</select>
+						</div>
+						<div ng-show="counterAddonManufacturer && counterAddonType && counterAddonDescription">
+							<br>
+							<ul class="list-group">
+								<li class="list-group-item">	
+									Price /<span ng-show="counterAddonDescription.formula=='item'">Item</span>
+									<span ng-show="counterAddonDescription.formula=='square'">Square Foot</span>
+									<span ng-show="counterAddonDescription.formula=='linear'">Linear Foot</span>: {/counterAddonDescription.price/}<br> 
+								</li>	
+								<li class="list-group-item">	
+									Formula: {/counterAddonDescription.formula/}
+								</li>
+								<li ng-show="counterAddonDescription.formula=='item'" class="list-group-item">	
+									Quantity: <input type="text" ng-model="counterAddonDescription.quantity">
+									<br>
+								</li>
+								<li ng-show="counterAddonDescription.formula=='square'" class="list-group-item">
+									Square Footage: {/counter.counterWidth * counter.counterLength/} 
+									<br>Price: {/counter.counterWidth * counter.counterLength * counterAddonDescription.price/}
+								</li>	
+							</ul>
+						    <button type="button" ng-click="vm.saveAddonModal(counterAddonDescription, shape, counterLength, counterWidth, $index); vm.divAddons=false; counterAddonDistributor=''; counterAddonManufacturer=''; counterAddonType=''; counterAddonDescription='';" class="btn btn-default">Add Addons</button>
+						</div>
+						<br>
+						<button type="button" ng-click="vm.divAddons=false; counterAddonDistributor = ''" class="btn btn-danger">Cancel</button> 
+					</div>
+					<br>
+					<br>
+					Group Subtotal: {/group.totalPrice |currency:$/}
+					<br>	
 					<span style="float: right;">
 						<button type="button" style="btn" ng-click="vm.saveQuote(vm.quote.description)">Update/Save Quote</button>
 					</span>
@@ -439,66 +503,6 @@
 		<br>
 		<br><u>Selected Addons:</u> 
 		<br>
-		<div ng-repeat="addon in vm.addons track by $index">
-			<br>{/addon.type/} - {/addon.description/} : 
-			<span ng-show="addon.formula =='item' || addon.formula == 'linear'">{/addon.quantity/}</span>
-			<span ng-show="addon.formula =='square'">{/counter.counterWidth * counter.counterLength/}</span>
-			@{/addon.price | currency:$/} <a ng-click="vm.removeAddonModal(addon, $parent.$index, $index)">remove</a>
-		</div>
-	</div>
-	<br>
-	<div class="modal-body" style="background-color:#d3d3d3" ng-show="(shape=='rectangle' && counterLength && counterWidth) || (shape=='circle' && counterWidth)">
-		<button type="button" ng-click="vm.divAddons = true">Add Addons</button>
-		<div ng-show="vm.divAddons">
-			<br>Addons: 
-			<!--
-			Manufactuer
-			Type
-			Description -> display both item code AND description
-			-->
-			<br>
-			Choose a Manufacturer:
-			<select name="counterAddonManufacturer" ng-model="counterAddonManufacturer" ng-options="product.manufacturer for product in vm.products | filter:{distributor:counterAddonDistributor.distributor} | unique: 'manufacturer' | orderBy:'manufacturer'">
-				<option value="">----Select----</option>
-			</select>
-			<div ng-show="counterAddonManufacturer">
-				<br>
-				Choose a Product Type:
-				<select name="counterAddonType" ng-model="counterAddonType" ng-options="product.type for product in vm.products | filter:{manufacturer:counterAddonManufacturer.manufacturer} | unique: 'type' | orderBy:'type'">
-					<option value="">----Select----</option>
-				</select>
-			</div>
-			<div ng-show="counterAddonManufacturer && counterAddonType">
-				<br>
-				Choose a Item Code:
-				<select name="counterAddonDescription" ng-model="counterAddonDescription" ng-options="product.itemCode + ' - ' + product.description for product in vm.products | filter:{manufacturer:counterAddonManufacturer.manufacturer, type:counterAddonType.type} | unique: 'itemCode' | orderBy:'itemCode'">
-					<option value="">----Select----</option>
-				</select>
-			</div>
-			<div ng-show="counterAddonManufacturer && counterAddonType && counterAddonDescription">
-				<br>
-				<ul class="list-group">
-					<li class="list-group-item">	
-						Price /<span ng-show="counterAddonDescription.formula=='item'">Item</span>
-						<span ng-show="counterAddonDescription.formula=='square'">Square Foot</span>
-						<span ng-show="counterAddonDescription.formula=='linear'">Linear Foot</span>: {/counterAddonDescription.price/}<br> 
-					</li>	
-					<li class="list-group-item">	
-						Formula: {/counterAddonDescription.formula/}
-					</li>
-					<li ng-show="counterAddonDescription.formula=='item'" class="list-group-item">	
-						Quantity: <input type="text" ng-model="counterAddonDescription.quantity">
-						<br>
-					</li>
-					<li ng-show="counterAddonDescription.formula=='square'" class="list-group-item">
-						Square Footage: {/counter.counterWidth * counter.counterLength/} 
-						<br>Price: {/counter.counterWidth * counter.counterLength * counterAddonDescription.price/}
-					</li>	
-				</ul>
-			    <button type="button" ng-click="vm.saveAddonModal(counterAddonDescription, shape, counterWidth, counterLength); vm.divAddons=false; counterAddonDistributor=''; counterAddonManufacturer=''; counterAddonType=''; counterAddonDescription='';" class="btn btn-default">Add Addons</button>
-			</div>
-			<button type="button" ng-click="vm.divAddons=false; counterAddonDistributor = ''" class="btn btn-danger">Cancel</button> 
-		</div>
 	</div>
 	<div class="modal-footer">
 		<button type="button" style="btn" ng-click="vm.cancel()">Cancel</button>

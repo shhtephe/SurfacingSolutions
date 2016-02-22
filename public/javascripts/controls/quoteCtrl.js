@@ -48,7 +48,7 @@ addons are PER GROUP not per table
 	    	var modalInstance = $uibModal.open({
 		      animation: true,
 		      templateUrl: 'addcounter.html',
-		      controller: ['$uibModalInstance', 'materials', 'products', 'material', 'counters', 'groupIndex', addTableCtrl],
+		      controller: ['$uibModalInstance', 'materials', 'products', 'material', 'counters', 'groupIndex', addCounterCtrl],
 		      controllerAs: 'vm',
 		      size: size,
 		      resolve: {
@@ -75,7 +75,7 @@ addons are PER GROUP not per table
     		});
 	    };
 
-	    var addTableCtrl = function($uibModalInstance, materials, products, material, counters, groupIndex) {
+	    var addCounterCtrl = function($uibModalInstance, materials, products, material, counters, groupIndex) {
 	    	var vm = this;
 	    	vm.materials = materials;
 	    	vm.material = material;
@@ -110,76 +110,6 @@ addons are PER GROUP not per table
 	    		$uibModalInstance.close(counter);
 	    	};
 
-			vm.saveAddonModal = function(addon, shape, length, width) {
-				if(typeof vm.addons === undefined){
-					var addons = [];
-				}else{
-					var addons = vm.addons;
-				};
-				var pushObj = {};
-				var search = vm.arraySearchModal(addon.description, addons, "description");
-
-				//console.log(addon);
-
-
-				var totalPrice = 0;
-				var counterLength = length;
-				var counterWidth = width;
-				var squareFootage = 0;
-
-				//console.log(addon.formula, addon.quantity, addon.price);
-
-				if (addon.formula === "item") {
-					totalPrice =  addon.quantity * addon.price;
-				}else if(addon.formula === "square"){
-					console.log(vm.quote.counters[index]);
-					if(shape === "rectangle"){
-						squareFootage = counterLength * counterWidth;
-						addon.quantity = squareFootage;
-						totalPrice = addon.price * squareFootage;
-						console.log(counterLength, counterWidth, squareFootage, totalPrice, addon.price);
-					} else if(shape === "circle"){
-						squareFootage = (Math.PI * (Math.pow(counterWidth, 2)));
-						squareFootage = squareFootage.toFixed(2);
-						addon.quantity = squareFootage;
-						totalPrice = addon.price * squareFootage;
-					};
-				}else if(addon.formula === "linear"){	
-						addon.quantity = squareFootage;
-						totalPrice = addon.linear * price;
-				}else{
-					console.log("This shouldn't ever run, I think!");
-					totalPrice = addon.quantity * addon.price;
-				};
-
-				//Searches for the item by going through the list
-				if (typeof search === "undefined") {
-					//Couldn't find it, so add a new value
-					pushObj = {
-						distributor: addon.distributor,
-						manufacturer: addon.manufacturer,
-						type: addon.type,
-						description: addon.description,
-						itemCode: addon.itemCode,
-						price: addon.price,
-						formula: addon.formula,
-						quantity: addon.quantity,
-						totalPrice: totalPrice,
-					};
-					addons.push(pushObj);
-					//console.log("Addons:", addons);
-					//console.log("pushObj", pushObj);
-					totalPrice += vm.addons[addons.length-1].totalPrice;
-				} else {
-					//Found it, so update the value
-					addons[search].quantity = addon.quantity;
-					addons[search].totalPrice = totalPrice;
-					//below code will be done when modal is saved and we're back on the normal page
-					//vm.quote.counters[index].totalPrice += addons[search].totalPrice;
-				};
-				vm.addons = addons;
-			};
-
 	    	vm.cancel = function() {
 				$uibModalInstance.dismiss('cancel');
 	    	};
@@ -210,7 +140,7 @@ addons are PER GROUP not per table
 		vm.buildTerms = function(term){
 			var terms = vm.quote.terms;
 			var pushObj = {};
-			//console.log("Term", term, "Terms", terms);
+			console.log("Term", term, "Terms", terms);
 			//If there are no terms, add empty terms to quote
 			if (typeof terms === "undefined") {
 				terms = [];
@@ -355,6 +285,74 @@ addons are PER GROUP not per table
 				vm.quote.totalPrice += addons[addons.length-1].totalPrice;
 			};
 
+		};
+
+		vm.saveAddonModal = function(addon, shape, length, width, groupIndex) {
+			console.log(addons, vm.addons, typeof vm.quote.counterGroup[groupIndex].addons);
+
+			if(typeof vm.quote.counterGroup[groupIndex].addons === "undefined"){
+				var addons = [];
+			}else{
+				var addons = vm.quote.counterGroup[groupIndex].addons;
+			};
+			var pushObj = {};
+			var search = vm.arraySearch(addon.description, addons, "description");
+			var totalPrice = 0;
+			var counterLength = length;
+			var counterWidth = width;
+			var squareFootage = 0;
+
+			//console.log(addon.formula, addon.quantity, addon.price);
+
+			if (addon.formula === "item") {
+				totalPrice =  addon.quantity * addon.price;
+			}else if(addon.formula === "square"){
+				console.log(vm.quote.counters[index]);
+				if(shape === "rectangle"){
+					squareFootage = counterLength * counterWidth;
+					addon.quantity = squareFootage;
+					totalPrice = addon.price * squareFootage;
+					console.log(counterLength, counterWidth, squareFootage, totalPrice, addon.price);
+				} else if(shape === "circle"){
+					squareFootage = (Math.PI * (Math.pow(counterWidth, 2)));
+					squareFootage = squareFootage.toFixed(2);
+					addon.quantity = squareFootage;
+					totalPrice = addon.price * squareFootage;
+				};
+			}else if(addon.formula === "linear"){	
+					addon.quantity = squareFootage;
+					totalPrice = addon.linear * price;
+			}else{
+				console.log("This shouldn't ever run, I think!");
+				totalPrice = addon.quantity * addon.price;
+			};
+
+			//Searches for the item by going through the list
+			if (typeof search === "undefined") {
+				//Couldn't find it, so add a new value
+				pushObj = {
+					distributor: addon.distributor,
+					manufacturer: addon.manufacturer,
+					type: addon.type,
+					description: addon.description,
+					itemCode: addon.itemCode,
+					price: addon.price,
+					formula: addon.formula,
+					quantity: addon.quantity,
+					totalPrice: totalPrice,
+				};
+				vm.quote.counterGroup[groupIndex].addons.push(pushObj);
+				//console.log("Addons:", addons);
+				//console.log("pushObj", pushObj);
+				totalPrice += vm.quote.counterGroup[groupIndex].addons[vm.quote.counterGroup[groupIndex].addons.length-1].totalPrice;
+			} else {
+				//Found it, so update the value
+				vm.quote.counterGroup[groupIndex].addons[search].quantity = addon.quantity;
+				vm.quote.counterGroup[groupIndex].addons[search].totalPrice = totalPrice;
+				//below code will be done when modal is saved and we're back on the normal page
+				//vm.quote.counters[index].totalPrice += addons[search].totalPrice;
+			};
+			vm.addons = addons;
 		};
 
 		vm.saveAddon = function(addon, index, groupIndex) {

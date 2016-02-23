@@ -44,26 +44,24 @@ addons are PER GROUP not per table
 			});		
 
 		//baby's first modal
-		vm.addCounter = function (groupIndex, material, counters, size) {
+		vm.addCounter = function (groupIndex, counters, size) {
+			console.log(groupIndex, counters, size);
 	    	var modalInstance = $uibModal.open({
 		      animation: true,
 		      templateUrl: 'addcounter.html',
-		      controller: ['$uibModalInstance', 'materials', 'products', 'material', 'counters', 'groupIndex', addCounterCtrl],
+		      controller: ['$uibModalInstance', 'groupIndex', 'counters', addCounterCtrl],
 		      controllerAs: 'vm',
 		      size: size,
 		      resolve: {
-		        materials: function() {return vm.materials},
-		        products: function() {return vm.products},
 		        groupIndex: function() {return groupIndex},
-		        material: function() {return material},
 		        counters: function() {return counters}
 		        }
       	  	});
 
       	  	modalInstance.result.then(function (counter) {
-				console.log(counter.width, counter.length, counter.shape, counter.material, counter.counters, counter.groupIndex, counter.description, true);
+				console.log(counter.width, counter.length, counter.shape, counter.counters, counter.groupIndex, counter.description, true);
       			//Save the countertop and put all the data back onto the main controller
-      			vm.calculateCounter(counter.width, counter.length, counter.shape, counter.material, counter.counters, counter.groupIndex, counter.description, true);
+      			vm.calculateCounter(counter.width, counter.length, counter.shape, counter.counters, counter.groupIndex, counter.description, true);
       			//do the same thing with each addon
       			//console.log(counter.addons, counter.counters)
       			 				
@@ -72,16 +70,13 @@ addons are PER GROUP not per table
     		});
 	    };
 
-	    var addCounterCtrl = function($uibModalInstance, materials, products, material, counters, groupIndex) {
+	    var addCounterCtrl = function($uibModalInstance, groupIndex, counters) {
 	    	var vm = this;
-	    	vm.materials = materials;
-	    	vm.material = material;
 	    	vm.groupIndex = groupIndex;
-	    	vm.products = products;
 	    	vm.counters = counters;
-	    	vm.addons = [];
-
-			vm.arraySearchModal = function (nameKey, myArray, property){
+	    	console.log(vm.counters, vm.groupIndex);
+	    	//remove?
+			/*vm.arraySearchModal = function (nameKey, myArray, property){
 			    //console.log(nameKey, myArray, property);
 			    for (var i=0; i < myArray.length; i++) {
 			    	//console.log("my array i", myArray[i], "property", property)
@@ -90,17 +85,16 @@ addons are PER GROUP not per table
 			        };
 			    };
 			};
+			*/
 
-	    	vm.saveCounterModal = function(width, length, shape, description, addons, material, counters) {
-	    		//console.log(counters);
+	    	vm.saveCounterModal = function(width, length, shape, description, counters, groupIndex) {
+	    		console.log(counters, groupIndex);
 	    		var counter = {
 	    			width: width,
 	    			length: length, 
 	    			shape: shape, 
-	    			groupIndex: groupIndex,
 	    			description: description,
-	    			addons: addons,
-	    			material: material,
+	    			groupIndex: groupIndex,
 	    			counters: counters
 	    		};
 
@@ -284,8 +278,8 @@ addons are PER GROUP not per table
 
 		};
 
-		vm.saveAddonModal = function(addon, shape, length, width, groupIndex) {
-			console.log(addons, vm.addons, typeof vm.quote.counterGroup[groupIndex].addons);
+		vm.saveAddon = function(addon, shape, length, width, groupIndex) {
+			console.log(typeof vm.quote.counterGroup[groupIndex].addons);
 
 			if(typeof vm.quote.counterGroup[groupIndex].addons === "undefined"){
 				var addons = [];
@@ -338,7 +332,8 @@ addons are PER GROUP not per table
 					quantity: addon.quantity,
 					totalPrice: totalPrice,
 				};
-				console.log("Addons:", addons, "pushObj", pushObj, vm.quote.counterGroup[groupIndex]);
+
+				console.log("Addons:", addons, "pushObj", pushObj, vm.quote);
 
 				vm.quote.counterGroup[groupIndex].addons.push(pushObj);
 
@@ -350,10 +345,10 @@ addons are PER GROUP not per table
 				//below code will be done when modal is saved and we're back on the normal page
 				//vm.quote.counters[index].totalPrice += addons[search].totalPrice;
 			};
-			vm.addons = addons;
-		};
 
-		vm.saveAddon = function(addon, index, groupIndex) {
+		};
+		//likely to remove
+		/*vm.saveAddon = function(addon, index, groupIndex) {
 			console.log(addon);
 			var addons = vm.quote.counterGroup[groupIndex].counters[index].addons;
 			var pushObj = {};
@@ -423,18 +418,13 @@ addons are PER GROUP not per table
 			vm.quote.totalPrice += totalPrice;
 			vm.quote.counterGroup[groupIndex].totalPrice += totalPrice;
 			//vm.hideAddons();
-		};	
+		};	*/
 		
 		vm.removeAddon = function(addon, counterIndex, addonIndex){		
 			vm.quote.totalPrice -= addon.totalPrice;
-			if(counterIndex === -1){
-				//if mandatory:
-				vm.quote.mandatoryAddons.splice(addonIndex, 1);
-			} else {
-				//If normal: 
-				vm.quote.counters[counterIndex].totalPrice -= addon.totalPrice;
-				vm.quote.counters[counterIndex].addons.splice(addonIndex, 1);
-			};
+		
+			vm.quote.counterGroup[counterIndex].totalPrice -= addon.totalPrice;
+			vm.quote.counterGroup[counterIndex].addons.splice(addonIndex, 1);
 		};
 
 		vm.addGroup = function() {
@@ -455,7 +445,7 @@ addons are PER GROUP not per table
 					groupNumber : vm.quote.counterGroup.length,
 					TAC: 0,
 					counters: [],
-					addons:[],
+					addons: [],
 					totalPrice: 0
 				};
 			};
@@ -602,8 +592,8 @@ addons are PER GROUP not per table
 			//console.log("Counter Price w/o addons", vm.quote.counters[vm.quote.counters.length-1].material.price);
 		};
 
-		vm.calculateCounter = function(width, length, shape, material, index, groupIndex, description, modal) {
-		console.log("Width", width, "Length", length, "Shape", shape, "Material", material, "Index", index, "Group Index", groupIndex, "description", description);
+		vm.calculateCounter = function(width, length, shape, index, groupIndex, description, modal) {
+		console.log("Width", width, "Length", length, "Shape", shape, "Index", index, "Group Index", groupIndex, "description", description);
 
 		//Obviously, we set some variables. 
 			var sheets = {};

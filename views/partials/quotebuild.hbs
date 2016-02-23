@@ -32,7 +32,7 @@
 					<u>Group {/group.groupNumber + 1/}</u> <button type="button" class="btn btn-danger" style="float:right" ng-click="vm.removeGroup($index)">DELETE THIS GROUP</button>
 					<br>
 					<br>
-					<button type="button" style="btn;" ng-click="vm.addCounter($index, group.material, group.counters.length)">Add a Counter</button>
+					<button type="button" style="btn;" ng-click="vm.addCounter($index, group.counters.length)">Add a Counter</button>
 					<br>
 					<br>
 					Group Description:
@@ -323,27 +323,12 @@
 									  		</tr>
 						  				</tbody>
 					  				</table>
-
-									<div ng-repeat="addon in group.addons track by $index">
-										<br>{/addon.type/} - {/addon.description/} : 
-										<span ng-show="addon.formula =='item' || addon.formula == 'linear'">{/addon.quantity/}</span>
-										<span ng-show="addon.formula =='square'">{/counter.counterWidth * counter.counterLength/}</span>
-										@{/addon.price | currency:$/} <a ng-click="vm.removeAddonModal(addon, $parent.$index, $index)">remove</a>
-									</div>
-
 					  				<br><button type="button" ng-click="vm.editCounter[$index] = true" ng-hide="vm.editCounter[$index]" class="btn btn-default">Edit this Counter</button>
 					  				<button type="button" ng-click="vm.calculateCounter(counter.counterWidth, counter.counterLength, counter.counterShape, group.material, $index, $parent.$index); vm.editCounter[$index]=false" ng-show="vm.editCounter[$index]" class="btn btn-default">Save Counter</button>
 						      		<br><br>
 						      		<span ng-show="counter.addons[0]"><u>Selected Addons:</u> 
 									<br>
 									<br></span>
-<!--{/counter.addons|json/}-->
-									<div ng-repeat="addon in counter.addons track by $index">
-										<br>{/addon.productType/} - {/addon.itemCode/} : 
-										<span ng-show="addon.formula =='item' || addon.formula == 'linear'">{/addon.quantity/}</span>
-										<span ng-show="addon.formula =='square'">{/counter.counterWidth * counter.counterLength/}</span>
-										@{/addon.price | currency:$/} <a ng-click="vm.removeAddon(addon, $parent.$index, $index)">remove</a>
-									</div>
 <!--<br> {/counter.material | json/} <br>-->
 						      		<span ng-show="vm.material">
 						      			<button ng-click="vm.editCounter[$index] = false" ng-hide="vm.editCounter[$index]"class="btn btn-danger">Save</button>
@@ -407,12 +392,19 @@
 									<br>Price: {/counter.counterWidth * counter.counterLength * counterAddonDescription.price/}
 								</li>	
 							</ul>
-						    <button type="button" ng-click="vm.saveAddonModal(counterAddonDescription, shape, counterLength, counterWidth, $index); vm.divAddons=false; counterAddonDistributor=''; counterAddonManufacturer=''; counterAddonType=''; counterAddonDescription='';" class="btn btn-default">Add Addons</button>
+						    <button type="button" ng-click="vm.saveAddon(counterAddonDescription, shape, counterLength, counterWidth, $index); vm.divAddons=false; counterAddonDistributor=''; counterAddonManufacturer=''; counterAddonType=''; counterAddonDescription='';" class="btn btn-default">Add Addons</button>
 						</div>
 						<br>
 						<button type="button" ng-click="vm.divAddons=false; counterAddonDistributor = ''" class="btn btn-danger">Cancel</button> 
 					</div>
 					<br>
+<!--{/group.addons|json/}-->
+					<div ng-repeat="addon in group.addons track by $index">
+						<br>{/addon.type/} - {/addon.description/} : 
+						<span ng-show="addon.formula =='item' || addon.formula == 'linear'">{/addon.quantity/}</span>
+						<span ng-show="addon.formula =='square'">{/counter.counterWidth * counter.counterLength/}</span>
+						@{/addon.price | currency:$/} <a ng-click="vm.removeAddon(addon, $parent.$index, $index)">remove</a>
+					</div>
 					<br>
 					Group Subtotal: {/group.totalPrice |currency:$/}
 					<span style="float: right;">
@@ -505,7 +497,7 @@
 	<div class="modal-footer">
 		<button type="button" style="btn" ng-click="vm.cancel()">Cancel</button>
 		<span ng-show="(shape=='rectangle' && counterLength && counterWidth) || (shape=='circle' && counterWidth)">
-		<button type="button" style="btn" ng-click="vm.saveCounterModal(counterWidth, counterLength, shape, description, vm.addons, vm.material, vm.counters); shape=''; counterWidth=''; counterLength=''; materialDistributor=''; materialManufacturer=''; materialColourGroup=''; materialDescription='';">Save Counter</button>
+		<button type="button" style="btn" ng-click="vm.saveCounterModal(counterWidth, counterLength, shape, description, vm.counters, vm.groupIndex); shape=''; counterWidth=''; counterLength=''; materialDistributor=''; materialManufacturer=''; materialColourGroup=''; materialDescription='';">Save Counter</button>
 		</span>
 	</div>
 	</script>

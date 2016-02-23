@@ -31,9 +31,9 @@ var quote = new Schema({
 		totalPrice: Number,
 		addons: [{
 			distributor: String,
-			manufactuer: String,
-			productType: String,
 			description: String,
+			manufacturer: String,
+			type: String,
 			itemCode: String,
 			price: Number,
 			formula: String,

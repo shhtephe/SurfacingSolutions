@@ -292,7 +292,7 @@ addons are PER GROUP not per table
 			var counterLength = length;
 			var counterWidth = width;
 			var squareFootage = 0;
-
+			addon.quantity = Number(addon.quantity);
 			//console.log(addon.formula, addon.quantity, addon.price);
 
 			if (addon.formula === "item") {
@@ -324,13 +324,13 @@ addons are PER GROUP not per table
 				pushObj = {
 					distributor: addon.distributor,
 					manufacturer: addon.manufacturer,
-					type: addon.type,
+					productType: addon.type,
 					description: addon.description,
 					itemCode: addon.itemCode,
 					price: addon.price,
 					formula: addon.formula,
 					quantity: addon.quantity,
-					totalPrice: totalPrice,
+					totalPrice: totalPrice
 				};
 
 				console.log("Addons:", addons, "pushObj", pushObj, vm.quote);

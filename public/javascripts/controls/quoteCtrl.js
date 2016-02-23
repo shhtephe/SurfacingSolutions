@@ -66,10 +66,7 @@ addons are PER GROUP not per table
       			vm.calculateCounter(counter.width, counter.length, counter.shape, counter.material, counter.counters, counter.groupIndex, counter.description, true);
       			//do the same thing with each addon
       			//console.log(counter.addons, counter.counters)
-      			for (var i=0; i < counter.addons.length; i++) {
-      				//console.log("i", i, counter.addons[i]);
-			    	vm.saveAddon(counter.addons[i], counter.counters, counter.groupIndex)
-			    };  				
+      			 				
 			}, function () {
       		console.log('Modal dismissed at: ' + new Date());
     		});
@@ -341,9 +338,10 @@ addons are PER GROUP not per table
 					quantity: addon.quantity,
 					totalPrice: totalPrice,
 				};
+				console.log("Addons:", addons, "pushObj", pushObj, vm.quote.counterGroup[groupIndex]);
+
 				vm.quote.counterGroup[groupIndex].addons.push(pushObj);
-				//console.log("Addons:", addons);
-				//console.log("pushObj", pushObj);
+
 				totalPrice += vm.quote.counterGroup[groupIndex].addons[vm.quote.counterGroup[groupIndex].addons.length-1].totalPrice;
 			} else {
 				//Found it, so update the value
@@ -446,14 +444,18 @@ addons are PER GROUP not per table
 			if(typeof vm.quote.counterGroup[0] === "undefined") {
 				pushObj = 
 				{
-					groupNumber : 0,
+					groupNumber: 0,
+					TAC: 0,
 					counters: [],
+					addons:[],
 					totalPrice: 0
 				};
 			} else {
 				pushObj = {
 					groupNumber : vm.quote.counterGroup.length,
+					TAC: 0,
 					counters: [],
+					addons:[],
 					totalPrice: 0
 				};
 			};
@@ -509,7 +511,8 @@ addons are PER GROUP not per table
 				distributor: material.distributor,
 				manufacturer: material.manufacturer,
 				colourGroup: material.colourGroup,
-				description: material.description
+				description: material.description,
+				addons: []
 			};
 			console.log(vm.quote.counterGroup[index]);
 			vm.quote.counterGroup[index].material = pushObj;
@@ -556,7 +559,7 @@ addons are PER GROUP not per table
 		vm.commitCounter = function(modal, pushObj, counterPrice, pricing, sheets, counterIndex, groupIndex){
 			console.log(groupIndex, counterIndex, counterPrice);
 			//Commits data to arrays depending on whether it's an edit or a new save.
-			if(modal === true){
+			if(typeof vm.quote.counterGroup[groupIndex].counters[counterIndex] === "undefined"){
 				vm.quote.counterGroup[groupIndex].counters.push(pushObj);	
 	//Set price of counter minus addons
 				vm.quote.counterGroup[groupIndex].counters[counterIndex].totalPrice = counterPrice;
@@ -629,9 +632,7 @@ addons are PER GROUP not per table
 				counterLength: length,
 				counterWidth: width,
 				squareFootage: 0,
-				price: 0,
-				addons: [],
-				mandatoryCharges: []
+				price: 0
 			};
 
 			//console.log("Push Object", pushObj);
@@ -644,9 +645,12 @@ addons are PER GROUP not per table
 			};
 			pushObj.squareFootage = squareFootage;
 			squareFootage = squareFootage.toFixed(2);
+			vm.quote.counterGroup[groupIndex].TAC += squareFootage;
 			console.log(squareFootage, length, width);
 
-			sheets = vm.calulateSheets(squareFootage, material);
+			if(typeof material !== "undefined"){
+				sheets = vm.calulateSheets(squareFootage, material);
+			};
 			console.log(sheets.pricing, sheets.sheets);
 
 			vm.commitCounter(modal, pushObj, sheets.counterPrice, sheets.pricing, sheets.sheets, counterIndex, groupIndex);
@@ -654,13 +658,29 @@ addons are PER GROUP not per table
 
 		vm.deleteCounter = function(groupIndex, index) {
 			vm.quote.counterGroup[groupIndex].totalPrice -= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
+			vm.quote.counterGroup[groupIndex].TAC -= vm.quote.counterGroup[groupIndex].counters[index].squareFootage;
 			vm.quote.totalPrice-= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
 			//console.log(vm.quote.counters[index].totalPrice);
 			vm.quote.counterGroup[groupIndex].counters.splice(index, index+1);
-			//I don't think I need a refresh		$state.go($state.current, {}, {reload: true}); //second parameter is for $stateParams
 		};
 
-		vm.calculateGroup = function(){
+		vm.calcGroup = function(){
+			//Total area of Counters within a group. Individual counter areas added up.
+			var TAC = 0;
+
+
+			//calculate all addons for group. go through each table
+			//There's a fuckton more to go in this bit. Likely will be it's own function.
+			/*
+			for (var c=0; i< counters.length; c++){
+				for (var i=0; i < counters[c].addons.length; i++) {
+      				//console.log("i", i, counter.addons[i]);
+			    	vm.saveAddon(counter.addons[i], counter.counters, counter.groupIndex)
+				};	
+			};
+			 */
+
+			//
 
 		};
 

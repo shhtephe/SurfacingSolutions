@@ -324,7 +324,7 @@
 						  				</tbody>
 					  				</table>
 
-									<div ng-repeat="addon in vm.addons track by $index">
+									<div ng-repeat="addon in group.addons track by $index">
 										<br>{/addon.type/} - {/addon.description/} : 
 										<span ng-show="addon.formula =='item' || addon.formula == 'linear'">{/addon.quantity/}</span>
 										<span ng-show="addon.formula =='square'">{/counter.counterWidth * counter.counterLength/}</span>
@@ -345,7 +345,7 @@
 										@{/addon.price | currency:$/} <a ng-click="vm.removeAddon(addon, $parent.$index, $index)">remove</a>
 									</div>
 <!--<br> {/counter.material | json/} <br>-->
-						      		<span ng-show="vm.mateRial">
+						      		<span ng-show="vm.material">
 						      			<button ng-click="vm.editCounter[$index] = false" ng-hide="vm.editCounter[$index]"class="btn btn-danger">Save</button>
 										<br>
 							      		<br>
@@ -415,9 +415,8 @@
 					<br>
 					<br>
 					Group Subtotal: {/group.totalPrice |currency:$/}
-					<br>	
 					<span style="float: right;">
-						<button type="button" style="btn" ng-click="vm.saveQuote()">Save Group</button>
+						<button type="button" style="btn" ng-show="group.material" ng-click="vm.calcGroup()">Calculate Summary</button>
 					</span>
 			      	<br>		  	
 					<hr style="background:#000000; border:0; height:7px" />

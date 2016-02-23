@@ -61,7 +61,7 @@ addons are PER GROUP not per table
       	  	modalInstance.result.then(function (counter) {
 				console.log(counter.width, counter.length, counter.shape, counter.counters, counter.groupIndex, counter.description, true);
       			//Save the countertop and put all the data back onto the main controller
-      			vm.calculateCounter(counter.width, counter.length, counter.shape, counter.counters, counter.groupIndex, counter.description, true);
+      			vm.calcCounter(counter.width, counter.length, counter.shape, counter.counters, counter.groupIndex, counter.description, true);
       			//do the same thing with each addon
       			//console.log(counter.addons, counter.counters)
       			 				
@@ -480,6 +480,14 @@ addons are PER GROUP not per table
 				description: material.description
 			};
 			console.log(vm.quote.counterGroup[index].material);
+
+			var TAC = 0;
+
+			for (var i = 0; i <= vm.quote.counterGroup[index].counters.length - 1; i++) {
+				console.log(i);
+				TAC += vm.quote.counterGroup[index].counters[i].squareFootage
+			};
+			console.log(TAC);
 		};
 
 		vm.editMaterialSave = function(material, index){
@@ -510,7 +518,7 @@ addons are PER GROUP not per table
 
 		};
 
-		vm.calulateSheets = function(squareFootage, material){
+		vm.calcSheets = function(squareFootage, material){
 			var sheets = 0;
 		//Calculate how many sheets are needed. Will need to revamp this: check width and length of sheets as well as square footage
 			var returnObj = {
@@ -592,7 +600,7 @@ addons are PER GROUP not per table
 			//console.log("Counter Price w/o addons", vm.quote.counters[vm.quote.counters.length-1].material.price);
 		};
 
-		vm.calculateCounter = function(width, length, shape, index, groupIndex, description, modal) {
+		vm.calcCounter = function(width, length, shape, index, groupIndex, description, modal) {
 		console.log("Width", width, "Length", length, "Shape", shape, "Index", index, "Group Index", groupIndex, "description", description);
 
 		//Obviously, we set some variables. 
@@ -655,6 +663,10 @@ addons are PER GROUP not per table
 		};
 
 		vm.calcGroup = function(){
+			//So I think this is going to be more of a 'hub' for all the update functions: calculate sheets, calculate counters, calculate addons etc etc.
+			//It'll check to see what data it has, and then will calculate what it can. Will probably need to make a flag set when all the info is there
+			//So it'll catch you if click on the quote page with missing info "Quote is incomplete - group 1 requires material. Are you sure you want to continue?"
+
 			//Total area of Counters within a group. Individual counter areas added up.
 			var TAC = 0;
 
@@ -671,7 +683,10 @@ addons are PER GROUP not per table
 			 */
 
 			//
-
+			if(typeof material !== "undefined"){
+				vm.calcSheets(TAC, material);	
+			}
+			
 		};
 
 		vm.saveQuote = function() {

@@ -97,55 +97,55 @@
 								</tr>
 							</table>
 							<span ng-show="vm.editMaterial[$index]">
-									Choose a Manufacturer:
-									<select name="materialManufacturer" ng-model="materialManufacturer" ng-options="material.manufacturer for material in vm.materials | filter: {distributor: materialDistributor.distributor} | unique: 'manufacturer' | orderBy:'manufacturer'">
+								Choose a Manufacturer:
+								<select name="materialManufacturer" ng-model="materialManufacturer" ng-options="material.manufacturer for material in vm.materials | filter: {distributor: materialDistributor.distributor} | unique: 'manufacturer' | orderBy:'manufacturer'">
+									<option value="">----Select----</option>
+								</select>
+								<div ng-show="materialManufacturer">
+									<br>
+									Choose a Colour Description:
+									<select name="materialDescription" ng-model="materialDescription" ng-options="material.description + ' - ' + material.thickness + 'x' + material.width + 'x' + material.length for material in vm.materials | filter:{manufacturer:materialManufacturer.manufacturer} | orderBy:'description'">
 										<option value="">----Select----</option>
 									</select>
-									<div ng-show="materialManufacturer">
-										<br>
-										Choose a Colour Description:
-										<select name="materialDescription" ng-model="materialDescription" ng-options="material.description + ' - ' + material.thickness + 'x' + material.width + 'x' + material.length for material in vm.materials | filter:{manufacturer:materialManufacturer.manufacturer} | orderBy:'description'">
-											<option value="">----Select----</option>
-										</select>
-									</div>
-									<div ng-show="materialManufacturer && materialDescription">
-										<br>
-										<ul class="list-group"> 
-											<li class="list-group-item">	
-												Item Code: {/materialDescription.itemCode/} <br> 
-											</li>	
-											<li class="list-group-item">	
-												Thickness: {/materialDescription.thickness/} <br> 
-											</li>	
-											<li class="list-group-item">	
-												Width (In.): {/materialDescription.width/} <br> 
-											</li>				
-											<li class="list-group-item">	
-												Length (In.): {/materialDescription.length/} <br> 
-											</li>	
-											<li class="list-group-item">	
-												Full Sheet 1-5: {/materialDescription.fullSheet1/} <br> 
-											</li>	
-											<li class="list-group-item">	
-												Half Sheet: {/materialDescription.halfSheet/} <br> 
-											</li>
-											<li class="list-group-item">	
-												Full Sheet 5-20:{/materialDescription.fullSheet5/} <br> 
-											</li>
-											<li class="list-group-item">	
-												Full Sheet 21+: {/materialDescription.fullSheet21/} <br> 
-											</li>
-											<li class="list-group-item">	
-												ISA: {/materialDescription.isa/} <br> 
-											</li>
-											<li class="list-group-item">	
-												Collection: {/materialDescription.matCollection/} <br> 
-											</li>
-										</ul>
+								</div>
+								<div ng-show="materialManufacturer && materialDescription">
+									<br>
+									<ul class="list-group"> 
+										<li class="list-group-item">	
+											Item Code: {/materialDescription.itemCode/} <br> 
+										</li>	
+										<li class="list-group-item">	
+											Thickness: {/materialDescription.thickness/} <br> 
+										</li>	
+										<li class="list-group-item">	
+											Width (In.): {/materialDescription.width/} <br> 
+										</li>				
+										<li class="list-group-item">	
+											Length (In.): {/materialDescription.length/} <br> 
+										</li>	
+										<li class="list-group-item">	
+											Full Sheet 1-5: {/materialDescription.fullSheet1/} <br> 
+										</li>	
+										<li class="list-group-item">	
+											Half Sheet: {/materialDescription.halfSheet/} <br> 
+										</li>
+										<li class="list-group-item">	
+											Full Sheet 5-20:{/materialDescription.fullSheet5/} <br> 
+										</li>
+										<li class="list-group-item">	
+											Full Sheet 21+: {/materialDescription.fullSheet21/} <br> 
+										</li>
+										<li class="list-group-item">	
+											ISA: {/materialDescription.isa/} <br> 
+										</li>
+										<li class="list-group-item">	
+											Collection: {/materialDescription.matCollection/} <br> 
+										</li>
+									</ul>
 <!--{/materialDescription | json/}-->
-										<button type="button" ng-click="vm.editMaterialSave(materialDescription, $index); vm.editMaterial[$index] = false; materialManufacturer==''; materialDescription" ng-show="vm.editMaterial[$index]" class="btn btn-default">Save Edit</button>
-									</div>
-					      		</span>
+									<button type="button" ng-click="vm.editMaterialSave(materialDescription, $index); vm.editMaterial[$index] = false; materialManufacturer==''; materialDescription" ng-show="vm.editMaterial[$index]" class="btn btn-default">Save Edit</button>
+								</div>
+				      		</span>
 							<br>
 							<br><button type="button" ng-click="vm.editMaterial[$index] = true" ng-hide="vm.editMaterial[$index]" class="btn btn-default">Edit this Material</button>
 							<button type="button" ng-click="vm.editMaterial[$index] = false" ng-show="vm.editMaterial[$index]" class="btn btn-default">Cancel</button>
@@ -153,61 +153,6 @@
 						</div>
 					</div>
 					<!--End Material Collapsable-->
-					<!--Material Selection-->
-					<div ng-hide="group.material"> 
-						<u>Choose your Material</u>
-						<br>
-						<br>
-						Choose a Manufacturer:
-						<select name="materialManufacturer" ng-model="materialManufacturer" ng-options="material.manufacturer for material in vm.materials | unique: 'manufacturer' | orderBy:'manufacturer'">
-							<option value="">----Select----</option>
-						</select>
-						<div ng-show="materialManufacturer">
-							<br>
-							Choose a Colour Description:
-							<select name="materialDescription" ng-model="materialDescription" ng-options="material.description + ' - ' + material.thickness + 'x' + material.width + 'x' + material.length for material in vm.materials | filter:{manufacturer:materialManufacturer.manufacturer} | orderBy:'description'">
-								<option value="">----Select----</option>
-							</select>
-						</div>
-						<div ng-show="materialManufacturer && materialDescription">
-							<br>
-							<ul class="list-group"> 
-								<li class="list-group-item">	
-									Item Code: {/materialDescription.itemCode/} <br> 
-								</li>	
-								<li class="list-group-item">	
-									Thickness: {/materialDescription.thickness/} <br> 
-								</li>	
-								<li class="list-group-item">	
-									Width (In.): {/materialDescription.width/} <br> 
-								</li>				
-								<li class="list-group-item">	
-									Length (In.): {/materialDescription.length/} <br> 
-								</li>	
-								<li class="list-group-item">	
-									Full Sheet 1-5: {/materialDescription.fullSheet1/} <br> 
-								</li>	
-								<li class="list-group-item">	
-									Half Sheet: {/materialDescription.halfSheet/} <br> 
-								</li>
-								<li class="list-group-item">	
-									Full Sheet 5-20:{/materialDescription.fullSheet5/} <br> 
-								</li>
-								<li class="list-group-item">	
-									Full Sheet 21+: {/materialDescription.fullSheet21/} <br> 
-								</li>
-								<li class="list-group-item">	
-									ISA: {/materialDescription.isa/} <br> 
-								</li>
-								<li class="list-group-item">	
-									Collection: {/materialDescription.matCollection/} <br> 
-								</li>
-							</ul>
-						</div>
-						<br>
-						<button type="button" ng-click="vm.saveMaterial(materialDescription , $index); materialDistributor=''; materialManufacturer=''; materialColourGroup=''; materialDescription=''" ng-show="materialManufacturer && materialDescription" class="btn btn-default">Save Material</button>
-					</div>
-					<!--End Material Selection-->
 					<br>
 					<br>
 					<!--START OF COUNTER LOOP-->
@@ -344,7 +289,64 @@
 				      	<hr style="background:#FFFFFF; border:0; height:7px" />
 					</div>
 					<!--END OF COUNTER LOOP-->
-
+					<br>
+<!--Material Selection-->
+					<div ng-hide="group.material"> 
+						<u>Choose your Material</u>
+						<br>
+						<br>
+						Choose a Manufacturer:
+						<select name="materialManufacturer" ng-model="materialManufacturer" ng-options="material.manufacturer for material in vm.materials | unique: 'manufacturer' | orderBy:'manufacturer'">
+							<option value="">----Select----</option>
+						</select>
+						<div ng-show="materialManufacturer">
+							<br>
+							Choose a Colour Description:
+							<select name="materialDescription" ng-model="materialDescription" ng-options="material.description + ' - ' + material.thickness + 'x' + material.width + 'x' + material.length for material in vm.materials | filter:{manufacturer:materialManufacturer.manufacturer} | orderBy:'description'">
+								<option value="">----Select----</option>
+							</select>
+						</div>
+						<div ng-show="materialManufacturer && materialDescription">
+							<br>
+							<ul class="list-group"> 
+								<li class="list-group-item">	
+									Item Code: {/materialDescription.itemCode/} <br> 
+								</li>	
+								<li class="list-group-item">	
+									Thickness: {/materialDescription.thickness/} <br> 
+								</li>	
+								<li class="list-group-item">	
+									Width (In.): {/materialDescription.width/} <br> 
+								</li>				
+								<li class="list-group-item">	
+									Length (In.): {/materialDescription.length/} <br> 
+								</li>	
+								<li class="list-group-item">	
+									Full Sheet 1-5: {/materialDescription.fullSheet1/} <br> 
+								</li>	
+								<li class="list-group-item">	
+									Half Sheet: {/materialDescription.halfSheet/} <br> 
+								</li>
+								<li class="list-group-item">	
+									Full Sheet 5-20:{/materialDescription.fullSheet5/} <br> 
+								</li>
+								<li class="list-group-item">	
+									Full Sheet 21+: {/materialDescription.fullSheet21/} <br> 
+								</li>
+								<li class="list-group-item">	
+									ISA: {/materialDescription.isa/} <br> 
+								</li>
+								<li class="list-group-item">	
+									Collection: {/materialDescription.matCollection/} <br> 
+								</li>
+							</ul>
+						</div>
+						<br>
+						<button type="button" ng-click="vm.saveMaterial(materialDescription , $index); materialDistributor=''; materialManufacturer=''; materialColourGroup=''; materialDescription=''" ng-show="materialManufacturer && materialDescription" class="btn btn-default">Save Material</button>
+					</div>
+					<!--End Material Selection-->
+					<br>
+					<br>
 					<button type="button" ng-click="vm.divAddons = true">Add Addons</button>
 					<div ng-show="vm.divAddons">
 						<br>Addons: 

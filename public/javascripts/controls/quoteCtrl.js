@@ -694,7 +694,6 @@ addons are PER GROUP not per table
 			console.log("Worked");
 			if(typeof material !== "undefined"){
 				console.log("There is a material");
-				//pricing = vm.calcSheets(TAC, material);	
 			};
 			//calculate 
 			if(typeof vm.quote.counterGroup[index].counter !== "undefined") {
@@ -703,7 +702,7 @@ addons are PER GROUP not per table
 
 			};
 
-			if(blah) {
+			if() {
 
 			};
 

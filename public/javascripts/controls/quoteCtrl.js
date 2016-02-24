@@ -685,7 +685,9 @@ addons are PER GROUP not per table
 			//
 			if(typeof material !== "undefined"){
 				vm.calcSheets(TAC, material);	
-			}
+			};
+
+			
 			
 		};
 

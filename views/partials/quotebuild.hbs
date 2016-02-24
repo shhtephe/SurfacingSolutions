@@ -99,6 +99,50 @@
 									</td>
 								</tr>
 							</table>
+				      		<table>
+				      			<caption><u>Pricing</u></caption>
+				      			<form>
+				      				<tr>
+				      					<td ng-show="group.material.halfSheet">
+				      						Half Sheet
+				      					</td>
+				      					<td ng-show="group.material.fullSheet1">
+				      						1-5 Full Sheets
+				      					</td>
+				      					<td ng-show="group.material.fullSheet5">
+				      						6-20 Full Sheets 
+				      					</td>
+				      					<td ng-show="group.material.fullSheet21">
+				      						21+ Full Sheets
+				      					</td>
+				      					<td ng-show="group.material.isa">
+				      						ISA Discount
+				      					</td>
+				      				</tr>
+					      			<tr>
+					      				<td ng-show="group.material.halfSheet">
+					      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $parent.$index, group.material)" value="halfSheet">
+					      					{/group.material.halfSheet | currency:$/}/sheet
+					      				</td>
+					      				<td ng-show="group.material.fullSheet1">
+					      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $parent.$index, group.material)" value="fullSheet1">
+					      					{/group.material.fullSheet1 | currency:$/}/sheet
+					      				</td>
+					      				<td ng-show="group.material.fullSheet5">
+					      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $parent.$index, group.material)" value="fullSheet5">
+					      					{/group.material.fullSheet5 | currency:$/}/sheet
+					      				</td>
+					      				<td ng-show="group.material.fullSheet21">
+					      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $parent.$index, group.material)" value="fullSheet21">
+					      					{/group.material.fullSheet21 | currency:$/}/sheet
+					      				</td>
+					      				<td ng-show="group.material.isa">
+					      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $parent.$index, group.material)" value="isa">
+					      					{/group.material.isa | currency:$/}/sheet
+					      				</td>
+					      			</tr>
+				      			</form>
+				      		</table>
 							<span ng-show="vm.editMaterial[$index]">
 								Choose a Manufacturer:
 								<select name="materialManufacturer" ng-model="materialManufacturer" ng-options="material.manufacturer for material in vm.materials | filter: {distributor: materialDistributor.distributor} | unique: 'manufacturer' | orderBy:'manufacturer'">
@@ -224,50 +268,6 @@
 							  					  	</td>
 								  				</span>
 <!--{/counter|json/}-->
-										      	<table>
-									      			<caption><u>Pricing</u></caption>
-									      			<form>
-									      				<tr>
-									      					<td ng-show="group.material.halfSheet">
-									      						Half Sheet
-									      					</td>
-									      					<td ng-show="group.material.fullSheet1">
-									      						1-5 Full Sheets
-									      					</td>
-									      					<td ng-show="group.material.fullSheet5">
-									      						6-20 Full Sheets 
-									      					</td>
-									      					<td ng-show="group.material.fullSheet21">
-									      						21+ Full Sheets
-									      					</td>
-									      					<td ng-show="group.material.isa">
-									      						ISA Discount
-									      					</td>
-									      				</tr>
-										      			<tr>
-										      				<td ng-show="group.material.halfSheet">
-										      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $index, $parent.$index, group.material)" value="halfSheet">
-										      					{/group.material.halfSheet | currency:$/}/sheet
-										      				</td>
-										      				<td ng-show="group.material.fullSheet1">
-										      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $index, $parent.$index, group.material)" value="fullSheet1">
-										      					{/group.material.fullSheet1 | currency:$/}/sheet
-										      				</td>
-										      				<td ng-show="group.material.fullSheet5">
-										      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $index, $parent.$index, group.material)" value="fullSheet5">
-										      					{/group.material.fullSheet5 | currency:$/}/sheet
-										      				</td>
-										      				<td ng-show="group.material.fullSheet21">
-										      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $index, $parent.$index, group.material)" value="fullSheet21">
-										      					{/group.material.fullSheet21 | currency:$/}/sheet
-										      				</td>
-										      				<td ng-show="group.material.isa">
-										      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $index, $parent.$index, group.material)" value="isa">
-										      					{/group.material.isa | currency:$/}/sheet
-										      				</td>
-										      			</tr>
-									      			</form>
-									      		</table>
 									  		</tr>
 						  				</tbody>
 					  				</table>
@@ -292,10 +292,9 @@
 				      	<hr style="background:#FFFFFF; border:0; height:7px" />
 					</div>
 					<!--END OF COUNTER LOOP-->
-					<br>
 					<button type="button" ng-click="vm.divAddons = true">Add Addons</button>
 						<span style="float: right;">
-							<button type="button" style="btn" ng-show="group.material" ng-click="vm.calcGroup()">Calculate Summary</button>
+							<button type="button" style="btn" ng-show="group.material" ng-click="vm.calcGroup($index)">Calculate Summary</button>
 						</span>
 					<div ng-show="vm.divAddons">
 						<br>Addons: 
@@ -359,7 +358,7 @@
 					<br>
 					<br>
 					<!--Material Selection-->
-					<div ng-hide="group.material"> 
+					<div ng-hide="group.material || !group.counters.length"> 
 						<u>Choose your Material</u>
 						<br>
 						<br>

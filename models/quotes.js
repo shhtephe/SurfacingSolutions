@@ -28,7 +28,9 @@ var quote = new Schema({
 		groupNumber: Number,
 		description: String,
 		TAC: Number,
+		pricing: String,
 		totalPrice: Number,
+		sheets: Number,
 		addons: [{
 			distributor: String,
 			manufacturer: String,
@@ -65,9 +67,7 @@ var quote = new Schema({
 			counterThickness2: Number,
 			totalPrice: Number,
 			squareFootage: Number,
-			pricing: String,
 			matPrice: Number,
-			sheets: Number,
 			jobDifficulty: Number
 		}]
 	}]

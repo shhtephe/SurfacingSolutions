@@ -193,11 +193,11 @@ addons are PER GROUP not per table
 		    vm.alerts.splice(index, 1);
 	  	};
 
-	  	vm.changePricing = function(pricing, index, groupIndex, material) {
+	  	vm.changePricing = function(pricing, groupIndex, material) {
 		console.log(pricing, index, groupIndex, material);
-		var sheets = vm.quote.counterGroup[groupIndex].counters[index].sheets;
+		var sheets = vm.quote.counterGroup[groupIndex].sheets;
 		var counterPrice = 0;
-		var counter = vm.quote.counterGroup[groupIndex].counters[index];
+		var group = vm.quote.counterGroup[groupIndex];
 		var addonsTotalPrice = 0;
 
 	  		if(pricing == "halfSheet"){
@@ -217,9 +217,9 @@ addons are PER GROUP not per table
 				vm.quote.counterGroup[groupIndex].counters[index].pricing = "isa";
 			};
 
-			for (var i=0; i < counter.addons.length; i++) {
+			for (var i=0; i < group.addons.length; i++) {
       				//console.log("i", i, counter.addons[i]);
-			    	addonsTotalPrice += counter.addons[i].totalPrice;
+			    	addonsTotalPrice += group.addons[i].totalPrice;
 			    };  
 
 
@@ -651,6 +651,7 @@ addons are PER GROUP not per table
 			};
 			console.log(sheets.pricing, sheets.sheets);
 
+			//"Save" the counter to vm.quote
 			vm.commitCounter(modal, pushObj, sheets.counterPrice, sheets.pricing, sheets.sheets, counterIndex, groupIndex);
 		};
 
@@ -662,14 +663,21 @@ addons are PER GROUP not per table
 			vm.quote.counterGroup[groupIndex].counters.splice(index, index+1);
 		};
 
-		vm.calcGroup = function(){
+		vm.calcGroup = function(index){
 			//So I think this is going to be more of a 'hub' for all the update functions: calculate sheets, calculate counters, calculate addons etc etc.
 			//It'll check to see what data it has, and then will calculate what it can. Will probably need to make a flag set when all the info is there
 			//So it'll catch you if click on the quote page with missing info "Quote is incomplete - group 1 requires material. Are you sure you want to continue?"
 
 			//Total area of Counters within a group. Individual counter areas added up.
 			var TAC = 0;
-
+			//Group MATERIAL Cost - Cost of all counters combined
+			var GMC = 0;
+			// GMC square foot total divided by the total area of sheets required
+			var GMCPSF = 0;
+			// Total Group Cost - addons + GMC
+			var TGC = 0;
+			//Group Cost per Squarefoot
+			var GCPSF = 0;
 
 			//calculate all addons for group. go through each table
 			//There's a fuckton more to go in this bit. Likely will be it's own function.
@@ -682,13 +690,23 @@ addons are PER GROUP not per table
 			};
 			 */
 
-			//
+			//Calc material pricing
+			console.log("Worked");
 			if(typeof material !== "undefined"){
-				vm.calcSheets(TAC, material);	
+				console.log("There is a material");
+				//pricing = vm.calcSheets(TAC, material);	
+			};
+			//calculate 
+			if(typeof vm.quote.counterGroup[index].counter !== "undefined") {
+				console.log("There's at least one counter");
+				//vm.calcCounter = function(width, length, shape, index, groupIndex, description, modal) {
+
 			};
 
-			
-			
+			if(blah) {
+
+			};
+
 		};
 
 		vm.saveQuote = function() {

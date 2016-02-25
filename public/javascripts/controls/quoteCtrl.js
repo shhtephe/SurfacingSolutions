@@ -194,7 +194,7 @@ addons are PER GROUP not per table
 	  	};
 
 	  	vm.changePricing = function(pricing, groupIndex, material) {
-		console.log(pricing, index, groupIndex, material);
+		console.log(pricing, groupIndex, material);
 		var sheets = vm.quote.counterGroup[groupIndex].sheets;
 		var counterPrice = 0;
 		var group = vm.quote.counterGroup[groupIndex];
@@ -347,78 +347,6 @@ addons are PER GROUP not per table
 			};
 
 		};
-		//likely to remove
-		/*vm.saveAddon = function(addon, index, groupIndex) {
-			console.log(addon);
-			var addons = vm.quote.counterGroup[groupIndex].counters[index].addons;
-			var pushObj = {};
-			var shape = vm.quote.counterGroup[groupIndex].counters[index].counterShape;
-			console.log(addon, addons);
-			var search = vm.arraySearch(addon.description, addons, "description");
-			console.log(search);
-
-			var totalPrice = 0;
-			var counterLength = vm.quote.counterGroup[groupIndex].counters[index].counterLength;
-			var counterWidth = vm.quote.counterGroup[groupIndex].counters[index].counterWidth;
-			var squareFootage = 0;
-
-			console.log(addon.formula, addon.quantity, addon.price);
-			if (addon.formula === "item") {
-				totalPrice =  addon.quantity * addon.price;
-			}else if(addon.formula === "square"){
-				console.log(vm.quote.counters[index]);
-				if(shape === "rectangle"){
-					squareFootage = counterLength * counterWidth;
-					addon.quantity = squareFootage;
-					totalPrice = addon.price * squareFootage;
-					console.log(counterLength, counterWidth, squareFootage, totalPrice, addon.price);
-				} else if(shape === "circle"){
-					squareFootage = (Math.PI * (Math.pow(counterWidth, 2)));
-					squareFootage = squareFootage.toFixed(2);
-					addon.quantity = squareFootage;
-					totalPrice = addon.price * squareFootage;
-				};
-			}else if(addon.formula === "linear"){	
-					addon.quantity = squareFootage;
-					totalPrice = addon.linear * price;
-			}else{
-				console.log("This shouldn't ever run, I think!");
-				totalPrice = addon.quantity * addon.price;
-			};
-
-			//Searches for the item by going through the list
-			if (typeof search === "undefined") {
-				//Couldn't find it, so add a new value
-				pushObj = {
-					distributor: addon.distributor,
-					manufacturer: addon.manufacturer,
-					productType: addon.type,
-					description: addon.description,
-					itemCode: addon.itemCode,
-					price: addon.price,
-					formula: addon.formula,
-					quantity: addon.quantity,
-					totalPrice: totalPrice,
-				};
-				addons.push(pushObj);
-				//console.log("Addons:", addons);
-				//console.log("pushObj", pushObj);
-				vm.quote.counterGroup[groupIndex].counters[index].totalPrice += addons[addons.length-1].totalPrice;
-			} else {
-				//Found it, so update the value
-				addons[search].quantity = addon.quantity;
-				addons[search].totalPrice = totalPrice;
-				vm.quote.counterGroup[groupIndex].counters[index].totalPrice += addons[search].totalPrice;
-			};
-
-			vm.dropDown1 = "";
-			vm.dropDown2 = "";
-			vm.addonQuantity = "";
-			console.log(vm.quote.totalPrice, totalPrice);
-			vm.quote.totalPrice += totalPrice;
-			vm.quote.counterGroup[groupIndex].totalPrice += totalPrice;
-			//vm.hideAddons();
-		};	*/
 		
 		vm.removeAddon = function(addon, counterIndex, addonIndex){		
 			vm.quote.totalPrice -= addon.totalPrice;
@@ -462,6 +390,9 @@ addons are PER GROUP not per table
 
 		vm.saveMaterial = function(material, index){
 			console.log(material);
+
+			var sheets = vm.calcSheets(material);
+
 			vm.quote.counterGroup[index].material = {
 				itemCode: material.itemCode,
 				thickness: material.thickness,
@@ -481,13 +412,27 @@ addons are PER GROUP not per table
 			};
 			console.log(vm.quote.counterGroup[index].material);
 
-			var TAC = 0;
 
 			for (var i = 0; i <= vm.quote.counterGroup[index].counters.length - 1; i++) {
-				console.log(i);
-				TAC += vm.quote.counterGroup[index].counters[i].squareFootage
+				console.log(i, vm.quote.counterGroup[index].counters[i].squareFootage, material.length, material.width);
+				//Estimate number of sheets needed for counter and add it to total sheets for the group
+				vm.quote.counterGroup[index].sheets += vm.quote.counterGroup[index].counters[i].squareFootage / (material.length * material.width/144);
+				console.log("Sheets: " + vm.quote.counterGroup[index].sheets);
+				//vm.quote.counterGroup[index].sheets = vm.quote.counterGroup[index].sheets.toFixed(1);
+				//Add square footage of one counter to the TOTAL Area
+				vm.quote.counterGroup[index].TAC += vm.quote.counterGroup[index].counters[i].squareFootage
+
+				//Set price of counter minus addons
+				vm.quote.counterGroup[index].counters[i].totalPrice = sheets.counterPrice;
+				//Add Pricing default and commit number of 'sheets' required for Counter
+				vm.quote.counterGroup[index].counters[i].pricing = sheets.pricing;
+				vm.quote.counterGroup[index].counters[i].sheets = sheets.sheets;
+				//Save the price of the counter, and the total price of the vm.quote. Save it to the vm.quote variable.
+				vm.quote.totalPrice += vm.quote.counterGroup[index].counters[i].totalPrice;
+				vm.quote.counterGroup[index].totalPrice += vm.quote.counterGroup[index].counters[i].totalPrice;
 			};
-			console.log(TAC);
+			vm.quote.counterGroup[index].TAC = vm.quote.counterGroup[index].TAC.toFixed(1)
+			console.log(vm.quote.counterGroup[index].TAC);
 		};
 
 		vm.editMaterialSave = function(material, index){
@@ -518,7 +463,7 @@ addons are PER GROUP not per table
 
 		};
 
-		vm.calcSheets = function(squareFootage, material){
+		vm.calcSheets = function(material){
 			var sheets = 0;
 		//Calculate how many sheets are needed. Will need to revamp this: check width and length of sheets as well as square footage
 			var returnObj = {
@@ -527,9 +472,6 @@ addons are PER GROUP not per table
 				counterPrice: 0
 			};
 
-			returnObj.sheets = squareFootage / (material.length * material.width/144);
-			//console.log("Sheets: " + sheets);
-			returnObj.sheets = returnObj.sheets.toFixed(1);
 			//console.log("Sheets: " + sheets);
 			//console.log(material.length, material.width);
 		//Chooses the best match for pricing. Will need to make this user selectable later.
@@ -551,33 +493,25 @@ addons are PER GROUP not per table
 				returnObj.counterPrice = sheets * material.fullSheet1;
 				returnObj.pricing = "fullSheet1";
 			};
+			console.log(returnObj);
 			return(returnObj);
 		};
 
-		vm.commitCounter = function(modal, pushObj, counterPrice, pricing, sheets, counterIndex, groupIndex){
-			console.log(groupIndex, counterIndex, counterPrice);
+		vm.commitCounter = function(modal, pushObj, index, groupIndex){
+			console.log(groupIndex, index, typeof vm.quote.counterGroup[groupIndex].counters[index]);
 			//Commits data to arrays depending on whether it's an edit or a new save.
-			if(typeof vm.quote.counterGroup[groupIndex].counters[counterIndex] === "undefined"){
+			if(typeof vm.quote.counterGroup[groupIndex].counters[index] === "undefined"){
+				//push counter into vm.quote
 				vm.quote.counterGroup[groupIndex].counters.push(pushObj);	
-	//Set price of counter minus addons
-				vm.quote.counterGroup[groupIndex].counters[counterIndex].totalPrice = counterPrice;
-	//Add Pricing default and commit number of 'sheets' required for Counter
-				vm.quote.counterGroup[groupIndex].counters[counterIndex].pricing = pricing;
-				vm.quote.counterGroup[groupIndex].counters[counterIndex].sheets = sheets;
-	//Save the price of the counter, and the total price of the vm.quote. Save it to the vm.quote variable.
-				//WHAT THE FUCK DOES THIS LINE DO?
-				//vm.quote.counterGroup[groupIndex].counters[counterIndex].material.price = vm.quote.counterGroup[groupIndex].counters[vm.quote.counterGroup[groupIndex].counters.length-1].totalPrice;		
-				vm.quote.totalPrice += vm.quote.counterGroup[groupIndex].counters[counterIndex].totalPrice;
-				vm.quote.counterGroup[groupIndex].totalPrice += vm.quote.counterGroup[groupIndex].counters[counterIndex].totalPrice;
 			} else{
 	//Replace the existing addons into the new array :)
-				if(typeof vm.quote.counterGroup[groupIndex].counters[index].addons.length !== undefined) {
+				if(typeof vm.quote.counterGroup[groupIndex].counters[index].addons !== "undefined") {
 					for (var i = vm.quote.counterGroup[groupIndex].counters[index].addons.length - 1; i >= 0; i--) {
 						pushObj.addons.push(vm.quote.counterGroup[groupIndex].counters[index].addons[i]);6
 					pushObj.totalPrice += vm.quote.counterGroup[groupIndex].counters[index].addons[i].totalPrice;
 					};
 				};
-				console.log(counterPrice, pricing, sheets);
+				console.log(sheets);
 	//Replace counter total.
 				pushObj.matPrice = counterPrice;
 				pushObj.totalPrice += counterPrice;
@@ -594,7 +528,7 @@ addons are PER GROUP not per table
 
 			};
 			console.log(vm.quote);
-			console.log(counterPrice, sheets, typeof modal, pricing);
+			console.log(typeof modal);
 			//vm.quote = vm.quote; - I don't think this is needed anymore, since VM is the view model and is already bound.
 
 			//console.log("Counter Price w/o addons", vm.quote.counters[vm.quote.counters.length-1].material.price);
@@ -604,7 +538,6 @@ addons are PER GROUP not per table
 		console.log("Width", width, "Length", length, "Shape", shape, "Index", index, "Group Index", groupIndex, "description", description);
 
 		//Obviously, we set some variables. 
-			var sheets = {};
 			var squareFootage = 0;
 			var lastPrice = 0;
 			var counterPrice = 0;
@@ -613,7 +546,7 @@ addons are PER GROUP not per table
 			var pushMandatory = {};
 			var pushMandatoryDropDown = {};
 			var pricing = "";
-			var counterIndex = vm.quote.counterGroup[groupIndex].counters.length;
+//			var counterIndex = vm.quote.counterGroup[groupIndex].counters.length;
 
 			//Makes doing math later down easier.
 			if(shape === "circle"){
@@ -632,27 +565,21 @@ addons are PER GROUP not per table
 				squareFootage: 0,
 				price: 0
 			};
+			//might not use this.
+			if(typeof vm.quote.counterGroup[groupIndex].material !== "undefined"){
 
+			};
 			//console.log("Push Object", pushObj);
 
 	//Checks the shape of the table, and then calculates square footage.
 			if(shape === "rectangle"){
-				squareFootage = (length * width/144); //measurements are in inches, then converted to feet
+				pushObj.squareFootage = (length * width/144); //measurements are in inches, then converted to feet
 			} else if(shape === "circle"){
-				squareFootage = (Math.PI * (Math.pow(width, 2)));
+				pushObj.squareFootage = (Math.PI * (Math.pow(width, 2)));
 			};
-			pushObj.squareFootage = squareFootage;
-			squareFootage = squareFootage.toFixed(2);
-			vm.quote.counterGroup[groupIndex].TAC += squareFootage;
-			console.log(squareFootage, length, width);
-
-			if(typeof material !== "undefined"){
-				sheets = vm.calulateSheets(squareFootage, material);
-			};
-			console.log(sheets.pricing, sheets.sheets);
 
 			//"Save" the counter to vm.quote
-			vm.commitCounter(modal, pushObj, sheets.counterPrice, sheets.pricing, sheets.sheets, counterIndex, groupIndex);
+			vm.commitCounter(modal, pushObj, index, groupIndex);
 		};
 
 		vm.deleteCounter = function(groupIndex, index) {
@@ -668,6 +595,7 @@ addons are PER GROUP not per table
 			//It'll check to see what data it has, and then will calculate what it can. Will probably need to make a flag set when all the info is there
 			//So it'll catch you if click on the quote page with missing info "Quote is incomplete - group 1 requires material. Are you sure you want to continue?"
 
+			var group = vm.quote.counterGroup[index];
 			//Total area of Counters within a group. Individual counter areas added up.
 			var TAC = 0;
 			//Group MATERIAL Cost - Cost of all counters combined
@@ -691,19 +619,13 @@ addons are PER GROUP not per table
 			 */
 
 			//Calc material pricing
-			console.log("Worked");
 			if(typeof material !== "undefined"){
 				console.log("There is a material");
 			};
-			//calculate 
+
 			if(typeof vm.quote.counterGroup[index].counter !== "undefined") {
 				console.log("There's at least one counter");
-				//vm.calcCounter = function(width, length, shape, index, groupIndex, description, modal) {
-
-			};
-
-			if() {
-
+				//vm.calcCounter = function(width, length, shape, index, groupIndex, description, modal);
 			};
 
 		};

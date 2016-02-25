@@ -44,6 +44,8 @@
 					<br><br><br>
 					<button type="button" ng-show="vm.quote.counterGroup[$index].material" class="btn btn-default" ng-click="isMaterialCollapsed = !isMaterialCollapsed">Material - {/group.material.description/}</button>
 					<!--Material Collapsable-->
+					<br>
+					<br>
 		  			<div uib-collapse="!isMaterialCollapsed">
 						<div class="well well-lg">
 							<table class="table table-hover table-bordered">
@@ -99,50 +101,6 @@
 									</td>
 								</tr>
 							</table>
-				      		<table>
-				      			<caption><u>Pricing</u></caption>
-				      			<form>
-				      				<tr>
-				      					<td ng-show="group.material.halfSheet">
-				      						Half Sheet
-				      					</td>
-				      					<td ng-show="group.material.fullSheet1">
-				      						1-5 Full Sheets
-				      					</td>
-				      					<td ng-show="group.material.fullSheet5">
-				      						6-20 Full Sheets 
-				      					</td>
-				      					<td ng-show="group.material.fullSheet21">
-				      						21+ Full Sheets
-				      					</td>
-				      					<td ng-show="group.material.isa">
-				      						ISA Discount
-				      					</td>
-				      				</tr>
-					      			<tr>
-					      				<td ng-show="group.material.halfSheet">
-					      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $parent.$index, group.material)" value="halfSheet">
-					      					{/group.material.halfSheet | currency:$/}/sheet
-					      				</td>
-					      				<td ng-show="group.material.fullSheet1">
-					      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $parent.$index, group.material)" value="fullSheet1">
-					      					{/group.material.fullSheet1 | currency:$/}/sheet
-					      				</td>
-					      				<td ng-show="group.material.fullSheet5">
-					      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $parent.$index, group.material)" value="fullSheet5">
-					      					{/group.material.fullSheet5 | currency:$/}/sheet
-					      				</td>
-					      				<td ng-show="group.material.fullSheet21">
-					      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $parent.$index, group.material)" value="fullSheet21">
-					      					{/group.material.fullSheet21 | currency:$/}/sheet
-					      				</td>
-					      				<td ng-show="group.material.isa">
-					      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $parent.$index, group.material)" value="isa">
-					      					{/group.material.isa | currency:$/}/sheet
-					      				</td>
-					      			</tr>
-				      			</form>
-				      		</table>
 							<span ng-show="vm.editMaterial[$index]">
 								Choose a Manufacturer:
 								<select name="materialManufacturer" ng-model="materialManufacturer" ng-options="material.manufacturer for material in vm.materials | filter: {distributor: materialDistributor.distributor} | unique: 'manufacturer' | orderBy:'manufacturer'">
@@ -196,7 +154,6 @@
 							<br>
 							<br><button type="button" ng-click="vm.editMaterial[$index] = true" ng-hide="vm.editMaterial[$index]" class="btn btn-default">Edit this Material</button>
 							<button type="button" ng-click="vm.editMaterial[$index] = false" ng-show="vm.editMaterial[$index]" class="btn btn-default">Cancel</button>
-{/group.counter/}
 						</div>
 					</div>
 					<!--End Material Collapsable-->
@@ -204,27 +161,16 @@
 					<br>
 					<!--START OF COUNTER LOOP-->
 					<div ng-repeat="counter in group.counters track by $index">
-						</u> <button type="button" style="btn btn-danger; float: right" ng-click="vm.deleteCounter($parent.$index, $index)">DELETE THIS COUNTER</button>
+						</u> <button type="button" class="btn btn-danger" style="float:right" ng-click="vm.deleteCounter($parent.$index, $index)">DELETE THIS COUNTER</button>
 				  			<button type="button" class="btn btn-default" ng-click="isCounterCollapsed = !isCounterCollapsed">Counter {/$index + 1/}</button>
 				  			<div uib-collapse="!isCounterCollapsed">
 								<div class="well well-lg">
 									<table class="table table-hover table-bordered">
 <!--<br><br>{/counter.sheets|json/}-->
+										Counter Description:
 										<br><textarea rows="4" columns="150" ng-model="counter.description"></textarea>
 										<br>
 							  			<caption><u>Summary</u></caption>
-							  			<tbody>
-							  				<tr>
-							  					<td>
-						  							Some cool stuff
-							  					</td>
-							  				</tr>
-							  				<tr>
-							  					<td>
-							  						This displays that cool thing.
-							  					</td>
-							  				</tr>
-							  			</tbody>
 										<tbody>
 								  			<tr>
 								  				<td>
@@ -281,11 +227,11 @@
 									</span>
 <!--<br> {/counter.material | json/} <br>-->
 						      		<span ng-show="vm.material">
-						      			<button ng-click="vm.editCounter[$index] = false" ng-hide="vm.editCounter[$index]"class="btn btn-danger">Save</button>
+						      			<button ng-click="vm.editCounter[$index] = false" ng-hide="vm.editCounter[$index]" class="btn btn-danger">Save</button>
 										<br>
 							      		<br>
 						      		</span>
-							      	Counter Subtotal: {/counter.totalPrice |currency:$/}
+							      	<span ng-show="counter.totalPrice">Counter Subtotal: {/counter.totalPrice |currency:$/}</span>
 								</div>
 							</div>	
 							<br>
@@ -415,53 +361,52 @@
 					</div>
 					<!--End Material Selection-->
 					<br>
-					<span>
+					<span ng-show="group.counters && group.material">
 						<table>
 			      			<caption><u>Pricing</u></caption>
-			      			<form>
-			      				<tr>
-			      					<td ng-show="group.material.halfSheet">
-			      						Half Sheet
-			      					</td>
-			      					<td ng-show="group.material.fullSheet1">
-			      						1-5 Full Sheets
-			      					</td>
-			      					<td ng-show="group.material.fullSheet5">
-			      						6-20 Full Sheets 
-			      					</td>
-			      					<td ng-show="group.material.fullSheet21">
-			      						21+ Full Sheets
-			      					</td>
-			      					<td ng-show="group.material.isa">
-			      						ISA Discount
-			      					</td>
-			      				</tr>
-				      			<tr>
-				      				<td ng-show="group.material.halfSheet">
-				      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $parent.$index, group.material)" value="halfSheet">
-				      					{/group.material.halfSheet | currency:$/}/sheet
-				      				</td>
-				      				<td ng-show="group.material.fullSheet1">
-				      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $parent.$index, group.material)" value="fullSheet1">
-				      					{/group.material.fullSheet1 | currency:$/}/sheet
-				      				</td>
-				      				<td ng-show="group.material.fullSheet5">
-				      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $parent.$index, group.material)" value="fullSheet5">
-				      					{/group.material.fullSheet5 | currency:$/}/sheet
-				      				</td>
-				      				<td ng-show="group.material.fullSheet21">
-				      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $parent.$index, group.material)" value="fullSheet21">
-				      					{/group.material.fullSheet21 | currency:$/}/sheet
-				      				</td>
-				      				<td ng-show="group.material.isa">
-				      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $parent.$index, group.material)" value="isa">
-				      					{/group.material.isa | currency:$/}/sheet
-				      				</td>
-				      			</tr>
-			      			</form>
+		      				<tr>
+		      					<td ng-show="group.material.halfSheet">
+		      						Half Sheet
+		      					</td>
+		      					<td ng-show="group.material.fullSheet1">
+		      						1-5 Full Sheets
+		      					</td>
+		      					<td ng-show="group.material.fullSheet5">
+		      						6-20 Full Sheets 
+		      					</td>
+		      					<td ng-show="group.material.fullSheet21">
+		      						21+ Full Sheets
+		      					</td>
+		      					<td ng-show="group.material.isa">
+		      						ISA Discount
+		      					</td>
+		      				</tr>
+			      			<tr>
+			      				<td ng-show="group.material.halfSheet">
+			      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $parent.$index, group.material)" value="halfSheet">
+			      					{/group.material.halfSheet | currency:$/}/sheet
+			      				</td>
+			      				<td ng-show="group.material.fullSheet1">
+			      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $parent.$index, group.material)" value="fullSheet1">
+			      					{/group.material.fullSheet1 | currency:$/}/sheet
+			      				</td>
+			      				<td ng-show="group.material.fullSheet5">
+			      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $parent.$index, group.material)" value="fullSheet5">
+			      					{/group.material.fullSheet5 | currency:$/}/sheet
+			      				</td>
+			      				<td ng-show="group.material.fullSheet21">
+			      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $parent.$index, group.material)" value="fullSheet21">
+			      					{/group.material.fullSheet21 | currency:$/}/sheet
+			      				</td>
+			      				<td ng-show="group.material.isa">
+			      					<input type="radio" name="counterPricing{/$index/}" ng-model="counter.pricing" ng-change="vm.changePricing(counter.pricing, $parent.$index, group.material)" value="isa">
+			      					{/group.material.isa | currency:$/}/sheet
+			      				</td>
+			      			</tr>
 			      		</table>
+						<br>
+			      		Group Subtotal: {/group.totalPrice |currency:$/}
 					</span>
-					Group Subtotal: {/group.totalPrice |currency:$/}
 			      	<br>		  	
 					<hr style="background:#000000; border:0; height:7px" />
 				</div>
@@ -555,6 +500,9 @@
 	</script>
 <!--
 List of things I would like to add:
+Move Screen and center where the user should click, so they don't get lost.
+
+
 Dynamic ul's for item code, thickness, etc. if they're empty, they don't show up
 
 Things to do:

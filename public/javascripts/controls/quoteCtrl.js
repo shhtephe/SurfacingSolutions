@@ -391,7 +391,7 @@ addons are PER GROUP not per table
 		vm.saveMaterial = function(material, index){
 			console.log(material);
 
-			var sheets = vm.calcSheets(material);
+			var sheets = {};
 
 			vm.quote.counterGroup[index].material = {
 				itemCode: material.itemCode,
@@ -418,15 +418,17 @@ addons are PER GROUP not per table
 				//Estimate number of sheets needed for counter and add it to total sheets for the group
 				vm.quote.counterGroup[index].sheets += vm.quote.counterGroup[index].counters[i].squareFootage / (material.length * material.width/144);
 				console.log("Sheets: " + vm.quote.counterGroup[index].sheets);
-				//vm.quote.counterGroup[index].sheets = vm.quote.counterGroup[index].sheets.toFixed(1);
+				//Calculate which pricing model should be used given the number of sheets.
+				sheets = vm.calcSheets(material, vm.quote.counterGroup[index].sheets);
+				vm.quote.counterGroup[index].sheets = sheets.sheets;
+				vm.quote.counterGroup[index].sheets = vm.quote.counterGroup[index].sheets.toFixed(1);
 				//Add square footage of one counter to the TOTAL Area
 				vm.quote.counterGroup[index].TAC += vm.quote.counterGroup[index].counters[i].squareFootage
-
 				//Set price of counter minus addons
 				vm.quote.counterGroup[index].counters[i].totalPrice = sheets.counterPrice;
 				//Add Pricing default and commit number of 'sheets' required for Counter
-				vm.quote.counterGroup[index].counters[i].pricing = sheets.pricing;
-				vm.quote.counterGroup[index].counters[i].sheets = sheets.sheets;
+				vm.quote.counterGroup[index].material.pricing = sheets.pricing;
+				vm.quote.counterGroup[index].sheets = sheets.sheets;
 				//Save the price of the counter, and the total price of the vm.quote. Save it to the vm.quote variable.
 				vm.quote.totalPrice += vm.quote.counterGroup[index].counters[i].totalPrice;
 				vm.quote.counterGroup[index].totalPrice += vm.quote.counterGroup[index].counters[i].totalPrice;
@@ -463,8 +465,7 @@ addons are PER GROUP not per table
 
 		};
 
-		vm.calcSheets = function(material){
-			var sheets = 0;
+		vm.calcSheets = function(material, sheets){
 		//Calculate how many sheets are needed. Will need to revamp this: check width and length of sheets as well as square footage
 			var returnObj = {
 				sheets : 0,
@@ -472,7 +473,7 @@ addons are PER GROUP not per table
 				counterPrice: 0
 			};
 
-			//console.log("Sheets: " + sheets);
+			console.log("Sheets: " + sheets, material.halfSheet);
 			//console.log(material.length, material.width);
 		//Chooses the best match for pricing. Will need to make this user selectable later.
 			if(material.fullSheet21 && sheets >= 21) {
@@ -486,7 +487,7 @@ addons are PER GROUP not per table
 				returnObj.pricing = "fullSheet1";
 			} else if (material.halfSheet && sheets < .5) {
 				//it will round down to 0, so make it one sheet
-				sheets = 1;
+				returnObj.sheets = 1;
 				returnObj.counterPrice = sheets * material.halfSheet;		
 				returnObj.pricing = "halfSheet";
 			} else {

@@ -32,7 +32,6 @@ var quote = new Schema({
 		TGC: Number,
 		GMCPSF: Number,
 		GCPSF: Number,
-		pricing: String,
 		totalPrice: Number,
 		sheets: Number,
 		addons: [{
@@ -59,6 +58,7 @@ var quote = new Schema({
 				distributor: String,
 				manufacturer: String,
 				colourGroup: String,
+				pricing: String,
 				description: String
 		},
 		counters: [{

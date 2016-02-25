@@ -412,9 +412,10 @@ addons are PER GROUP not per table
 			};
 			console.log(vm.quote.counterGroup[index].material);
 
-
+			vm.quote.counterGroup[index].sheets = 0; 
+			
 			for (var i = 0; i <= vm.quote.counterGroup[index].counters.length - 1; i++) {
-				console.log(i, vm.quote.counterGroup[index].counters[i].squareFootage, material.length, material.width);
+				console.log(i, vm.quote.counterGroup[index].counters[i].squareFootage, material.length, material.width, vm.quote.counterGroup[index].sheets);
 				//Estimate number of sheets needed for counter and add it to total sheets for the group
 				vm.quote.counterGroup[index].sheets += vm.quote.counterGroup[index].counters[i].squareFootage / (material.length * material.width/144);
 				console.log("Sheets: " + vm.quote.counterGroup[index].sheets);
@@ -432,6 +433,8 @@ addons are PER GROUP not per table
 				//Save the price of the counter, and the total price of the vm.quote. Save it to the vm.quote variable.
 				vm.quote.totalPrice += vm.quote.counterGroup[index].counters[i].totalPrice;
 				vm.quote.counterGroup[index].totalPrice += vm.quote.counterGroup[index].counters[i].totalPrice;
+
+				console.log(sheets, vm.quote.counterGroup[index].sheets, vm.quote.counterGroup[index].TAC, vm.quote.counterGroup[index].counters[i].totalPrice, vm.quote.counterGroup[index].material.pricing);
 			};
 			vm.quote.counterGroup[index].TAC = vm.quote.counterGroup[index].TAC.toFixed(1)
 			console.log(vm.quote.counterGroup[index].TAC);

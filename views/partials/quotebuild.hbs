@@ -405,7 +405,27 @@
 			      			</tr>
 			      		</table>
 						<br>
-			      		Group Subtotal: {/group.totalPrice |currency:$/}
+						<table>
+							<caption><u>Summary:</u></caption>
+							<tr>
+								<td>Total Area of Counters</td>
+								<td>Quantity of Sheets Required</td>
+								<td>Group Subtotal</td>
+								<td>Group Material Cost</td>
+								<td>Group Material Cost Per ft2</td>
+								<td>Total Group Cost</td>
+								<td>Total Group Cost Per ft2</td>
+							</tr>
+							<tr>
+								<td>{/group.TAC/} SQFT</td>
+								<td>{/group.sheets/}</td>
+								<td>{/group.totalPrice |currency:$/}</td>
+								<td>{/group.GMC |currency:$/}</td>
+								<td>{/group.GMCPSF|currency:$/}/SQFT</td>
+								<td>{/group.GCP|currency:$/}</td>
+								<td>{/group.GCPSF|currency:$/}/SQFT</td>
+							</tr>
+						</table>
 					</span>
 			      	<br>		  	
 					<hr style="background:#000000; border:0; height:7px" />

@@ -555,7 +555,6 @@ addons are PER GROUP not per table
 				//Estimate number of sheets needed for counter and add it to total sheets for the group
 				//this can be done in the calcsheets function
 				vm.quote.counterGroup[index].sheets += vm.quote.counterGroup[index].counters[i].squareFootage / (material.length * material.width/144);
-				vm.quote.counterGroup[index].sheets = vm.quote.counterGroup[index].sheets;
 				console.log("Sheets: " + vm.quote.counterGroup[index].sheets);
 				//Add square footage of one counter to the TOTAL Area
 				vm.quote.counterGroup[index].TAC += vm.quote.counterGroup[index].counters[i].squareFootage;
@@ -563,8 +562,6 @@ addons are PER GROUP not per table
 				var pricing = vm.quote.counterGroup[index].material.pricing;
 				vm.quote.counterGroup[index].counters[i].totalPrice = sheets.sheets * material[pricing];	
 				//console.log("group " + index, "counter " + i, "total price " + vm.quote.counterGroup[index].counters[i].totalPrice, "material price " + material[pricing], "Sheets " + sheets.sheets);			
-				//Commit number of 'sheets' required for Counter
-				vm.quote.counterGroup[index].sheets = parseFloat(sheets.sheets);
 				//Save the price of the counter, and the total price of the vm.quote. Save it to the vm.quote variable.
 				vm.quote.totalPrice += vm.quote.counterGroup[index].counters[i].totalPrice;
 				vm.quote.counterGroup[index].totalPrice += vm.quote.counterGroup[index].counters[i].totalPrice;

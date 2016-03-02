@@ -202,36 +202,38 @@ addons are PER GROUP not per table
 
 	  		if(pricing == "halfSheet"){
 				counterPrice = sheets * material.halfSheet;		
-				vm.quote.counterGroup[groupIndex].counters[index].pricing = "halfSheet";
+				vm.quote.counterGroup[groupIndex].material.pricing = "halfSheet";
 			} else if(pricing =="fullSheet1"){
 				counterPrice = sheets * material.fullSheet1;
-				vm.quote.counterGroup[groupIndex].counters[index].pricing = "fullSheet1";
+				vm.quote.counterGroup[groupIndex].material.pricing = "fullSheet1";
 			} else if(pricing == "fullSheet5"){
 				counterPrice = sheets * material.fullSheet5;
-				vm.quote.counterGroup[groupIndex].counters[index].pricing = "fullSheet5";
+				vm.quote.counterGroup[groupIndex].material.pricing = "fullSheet5";
 			} else if(pricing == "fullSheet21") {
 				counterPrice = sheets * material.fullSheet21;
-				vm.quote.counterGroup[groupIndex].counters[index].pricing = "fullSheet21";
+				vm.quote.counterGroup[groupIndex].material.pricing = "fullSheet21";
 			} else if(pricing == "isa") {
 				counterPrice = sheets * material.isa;
-				vm.quote.counterGroup[groupIndex].counters[index].pricing = "isa";
+				vm.quote.counterGroup[groupIndex].material.pricing = "isa";
 			};
-
+console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counterGroup[groupIndex].material); 
 			for (var i=0; i < group.addons.length; i++) {
-      				//console.log("i", i, counter.addons[i]);
-			    	addonsTotalPrice += group.addons[i].totalPrice;
-			    };  
+				//console.log("i", i, counter.addons[i]);
+	    		addonsTotalPrice += group.addons[i].totalPrice;
+			};  
 
-
+			/*
+			pretty sure that calcgroup takes care of this!
 			//remove the price of the entire counter
 			vm.quote.totalPrice -= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
 			//set new value with addons added to price
 			vm.quote.counterGroup[groupIndex].counters[index].totalPrice = counterPrice + addonsTotalPrice;
 			//update new grand total
 			vm.quote.totalPrice += vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
+			*/
 			//recalculate group if material is present
 			if( vm.quote.counterGroup[groupIndex].material) {
-				calcGroup(index, vm.groupIndex.material);
+				vm.calcGroup(groupIndex, vm.quote.counterGroup[groupIndex].material, pricing);
 			};
 	  	};
 
@@ -450,7 +452,7 @@ addons are PER GROUP not per table
 			};
 		};
 
-		vm.calcSheets = function(material, sheets){
+		vm.calcSheets = function(material, sheets, overridePricing){
 		//Calculate how many sheets are needed. Will need to revamp this: check width and length of sheets as well as square footage
 
 
@@ -461,24 +463,30 @@ addons are PER GROUP not per table
 			};
 
 			//console.log(material.length, material.width);
-		//Chooses the best match for pricing. Will need to make this user selectable later.
-			if(material.fullSheet21 && sheets >= 21) {
-//				returnObj.counterPrice = sheets * material.fullSheet21;
-				returnObj.pricing = "fullSheet21";
-			} else if (material.fullSheet5 && sheets > 5) {
-//				returnObj.counterPrice = sheets * material.fullSheet5;
-				returnObj.pricing = "fullSheet5";
-			} else if (material.fullSheet1 && sheets >= 1) {
-//				returnObj.counterPrice = sheets * material.fullSheet1;
-				returnObj.pricing = "fullSheet1";
-			} else if (material.halfSheet && sheets < .5) {
-				//it will round down to 0, so make it one sheet
-				returnObj.sheets = .5;
-//				returnObj.counterPrice = sheets * material.halfSheet;		
-				returnObj.pricing = "halfSheet";
+			console.log(typeof overridePricing);
+		if(typeof overridePricing === 'undefined') {
+			//Chooses the best match for pricing. Will need to make this user selectable later.
+				if(material.fullSheet21 && sheets >= 21) {
+		//				returnObj.counterPrice = sheets * material.fullSheet21;
+					returnObj.pricing = "fullSheet21";
+				} else if (material.fullSheet5 && sheets > 5) {
+		//				returnObj.counterPrice = sheets * material.fullSheet5;
+					returnObj.pricing = "fullSheet5";
+				} else if (material.fullSheet1 && sheets >= 1) {
+		//				returnObj.counterPrice = sheets * material.fullSheet1;
+					returnObj.pricing = "fullSheet1";
+				} else if (material.halfSheet && sheets < .5) {
+					//it will round down to 0, so make it one sheet
+					returnObj.sheets = .5;
+		//				returnObj.counterPrice = sheets * material.halfSheet;		
+					returnObj.pricing = "halfSheet";
+				} else {
+		//				returnObj.counterPrice = sheets * material.fullSheet1;
+					returnObj.pricing = "fullSheet1";
+				};
 			} else {
-//				returnObj.counterPrice = sheets * material.fullSheet1;
-				returnObj.pricing = "fullSheet1";
+				console.log("Pricing override");
+				returnObj.pricing = overridePricing;
 			};
 			returnObj.sheets = returnObj.sheets.toFixed(2);
 			console.log(returnObj);
@@ -535,7 +543,7 @@ addons are PER GROUP not per table
 			};
 		};
 
-		vm.calcGroup = function(index, material){
+		vm.calcGroup = function(index, material, overridePricing){
 			//So I think this is going to be more of a 'hub' for all the update functions: calculate sheets, calculate counters, calculate addons etc etc.
 			//It'll check to see what data it has, and then will calculate what it can. Will probably need to make a flag set when all the info is there
 			//So it'll catch you if click on the quote page with missing info "Quote is incomplete - group 1 requires material. Are you sure you want to continue?"
@@ -543,49 +551,53 @@ addons are PER GROUP not per table
 			var group = vm.quote.counterGroup[index];
 			var sheets = {};
 
-			//calculate all addons for group. go through each table
-			//There's a fuckton more to go in this bit. Likely will be it's own function.
-			/*
-			for (var c=0; i< counters.length; c++){
-				for (var i=0; i < counters[c].addons.length; i++) {
-      				//console.log("i", i, counter.addons[i]);
-			    	vm.saveAddon(counter.addons[i], counter.counters, counter.groupIndex)
-				};	
-			};
-			 */
+			//clear values for each counter and the main group
+			vm.quote.counterGroup[index].TAC = 0;
+			vm.quote.counterGroup[index].totalPrice = 0;
+			vm.quote.counterGroup[index].sheets = 0;
 
-			vm.quote.counterGroup[index].sheets = 0; 
 			var counterSheets = 0; 
+			//go through each counter and add all relevant values up
 			for (var i = 0; i <= vm.quote.counterGroup[index].counters.length - 1; i++) {
-				console.log("i " + i);
+				//console.log("i " + i);
 				//Add square footage of one counter to the TOTAL Area
-				vm.quote.counterGroup[index].TAC += vm.quote.counterGroup[index].counters[i].squareFootage
+				vm.quote.counterGroup[index].TAC += vm.quote.counterGroup[index].counters[i].squareFootage;
 				//Estimate number of sheets needed for counter and add it to total sheets for the group
 				//this can be done in the calcsheets function
 				counterSheets = vm.quote.counterGroup[index].counters[i].squareFootage / (material.length * material.width/144)
 				vm.quote.counterGroup[index].sheets += counterSheets;
-				console.log("Sheets: " + vm.quote.counterGroup[index].sheets);
-				//Add square footage of one counter to the TOTAL Area
-				vm.quote.counterGroup[index].TAC += vm.quote.counterGroup[index].counters[i].squareFootage;
+				//console.log("Sheets: " + vm.quote.counterGroup[index].sheets);
 				//Set price of counter minus addons
-				sheets = vm.calcSheets(material, counterSheets);
-				console.log(counterSheets, sheets.pricing)
+				sheets = vm.calcSheets(material, counterSheets, overridePricing);
+				//console.log(counterSheets, sheets.pricing, material[sheets.pricing])
 				vm.quote.counterGroup[index].counters[i].totalPrice = counterSheets * material[sheets.pricing];	
-				//console.log("group " + index, "counter " + i, "total price " + vm.quote.counterGroup[index].counters[i].totalPrice, "material price " + material[pricing], "Sheets " + sheets.sheets);			
-				//Save the price of the counter, and the total price of the vm.quote. Save it to the vm.quote variable.
+				//console.log("group " + index, "counter " + i, "total price " + vm.quote.counterGroup[index].counters[i].totalPrice, "material price " + material[sheets.pricing], "Sheets " + vm.quote.counterGroup[index].sheets);			
+				//Save the price of the counter, and the total price of the vm.quote. Save it to the vm.quote variable. Unless there is an override.
+				//If there is, add all other groups up again, and add NEW values for this group.
+				if(typeof overridePricing !== 'undefined'){
+
+					for (var t = vm.quote.counterGroup.length - 1; t >= 0; t--) {
+						if(t !== index){
+							vm.quote.totalPrice += vm.quote.counterGroup[t].totalPrice;
+						};	
+					};
+				};
+				//console.log(vm.quote.totalPrice);
+				//console.log(vm.quote.counterGroup[index].counters[i]); 	
 				vm.quote.totalPrice += vm.quote.counterGroup[index].counters[i].totalPrice;
 				vm.quote.counterGroup[index].totalPrice += vm.quote.counterGroup[index].counters[i].totalPrice;
+				//console.log(vm.quote.counterGroup[index].counters[i].totalPrice, vm.quote.counterGroup[index].totalPrice);
 			};
 
 			//Calculate which pricing model should be used given the number of sheets.
-				sheets = vm.calcSheets(material, vm.quote.counterGroup[index].sheets);
+				sheets = vm.calcSheets(material, vm.quote.counterGroup[index].sheets, overridePricing);
 				vm.quote.counterGroup[index].material.pricing = sheets.pricing;
 			//might not need			vm.quote.counterGroup[index].TAC = vm.quote.counterGroup[index].TAC.toFixed(1)
-			console.log(vm.quote.counterGroup[index].TAC, sheets);
+			//console.log(vm.quote.counterGroup[index].TAC, sheets);
 
 			//STILL HAVE TO CALC ADDONS
 			for(var i = 0; i < vm.quote.counterGroup[index].addons.length; i++) {
-				console.log(vm.quote.counterGroup[index].addons[i], i, index);
+				//console.log(vm.quote.counterGroup[index].addons[i], i, index);
 				vm.quote.counterGroup[index].totalPrice += vm.quote.counterGroup[index].addons[i].totalPrice;
 				vm.quote.totalPrice += vm.quote.counterGroup[index].addons[i].totalPrice;
 			};

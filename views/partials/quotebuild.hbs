@@ -8,7 +8,7 @@
 {/products[30]/}
 				<br>
 				<br>-->
-{/vm.quote|json/}
+<!--{/vm.quote|json/}-->
 				<br><br>
 				<span style="float:right">
 					Quote Description:
@@ -410,10 +410,9 @@
 							<tr>
 								<td>Total Area of Counters</td>
 								<td>Quantity of Sheets Required</td>
-								<td>Group Subtotal</td>
+								<td>Total Group Cost</td>
 								<td>Group Material Cost</td>
 								<td>Group Material Cost Per ft2</td>
-								<td>Total Group Cost</td>
 								<td>Total Group Cost Per ft2</td>
 							</tr>
 							<tr>
@@ -422,7 +421,6 @@
 								<td>{/group.totalPrice |currency:$/}</td>
 								<td>{/group.GMC |currency:$/}</td>
 								<td>{/group.GMCPSF|currency:$/}/SQFT</td>
-								<td>{/group.GCP|currency:$/}</td>
 								<td>{/group.GCPSF|currency:$/}/SQFT</td>
 							</tr>
 						</table>

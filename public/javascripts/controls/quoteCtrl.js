@@ -440,6 +440,8 @@ addons are PER GROUP not per table
 
 		vm.calcSheets = function(material, sheets){
 		//Calculate how many sheets are needed. Will need to revamp this: check width and length of sheets as well as square footage
+
+
 			var returnObj = {
 				sheets : 0,
 				pricing: '',
@@ -551,22 +553,21 @@ addons are PER GROUP not per table
 				//Add square footage of one counter to the TOTAL Area
 				vm.quote.counterGroup[index].TAC += vm.quote.counterGroup[index].counters[i].squareFootage
 				//Estimate number of sheets needed for counter and add it to total sheets for the group
+				//this can be done in the calcsheets function
 				vm.quote.counterGroup[index].sheets += vm.quote.counterGroup[index].counters[i].squareFootage / (material.length * material.width/144);
 				vm.quote.counterGroup[index].sheets = vm.quote.counterGroup[index].sheets;
 				console.log("Sheets: " + vm.quote.counterGroup[index].sheets);
-				//Calculate which pricing model should be used given the number of sheets.
-				sheets = vm.calcSheets(material, vm.quote.counterGroup[index].sheets);
-				vm.quote.counterGroup[index].material.pricing = sheets.pricing;
 				//Add square footage of one counter to the TOTAL Area
 				vm.quote.counterGroup[index].TAC += vm.quote.counterGroup[index].counters[i].squareFootage;
 				//Set price of counter minus addons
 				var pricing = vm.quote.counterGroup[index].material.pricing;
-				vm.quote.counterGroup[index].counters[i].totalPrice = sheets.sheets * material[pricing];				
+				vm.quote.counterGroup[index].counters[i].totalPrice = sheets.sheets * material[pricing];	
+				//console.log("group " + index, "counter " + i, "total price " + vm.quote.counterGroup[index].counters[i].totalPrice, "material price " + material[pricing], "Sheets " + sheets.sheets);			
 				//Commit number of 'sheets' required for Counter
-				vm.quote.counterGroup[index].sheets += parseFloat(sheets.sheets);
+				vm.quote.counterGroup[index].sheets = parseFloat(sheets.sheets);
 				//Save the price of the counter, and the total price of the vm.quote. Save it to the vm.quote variable.
-
-				//calculate counter price
+				vm.quote.totalPrice += vm.quote.counterGroup[index].counters[i].totalPrice;
+				vm.quote.counterGroup[index].totalPrice += vm.quote.counterGroup[index].counters[i].totalPrice;
 
 /*
 				console.log("counter " + i, "SqFt " + vm.quote.counterGroup[index].counters[i].squareFootage, "length" + material.length,"width " + material.width, "sheets " + vm.quote.counterGroup[index].sheets);
@@ -595,13 +596,18 @@ addons are PER GROUP not per table
 				console.log("sheets " + sheets, "sheets.sheets " + vm.quote.counterGroup[index].sheets, "TAC " + vm.quote.counterGroup[index].TAC, "counter total price" + vm.quote.counterGroup[index].counters[i].totalPrice, vm.quote.counterGroup[index].material.pricing);
 */
 			};
-//might not need			vm.quote.counterGroup[index].TAC = vm.quote.counterGroup[index].TAC.toFixed(1)
+
+			//Calculate which pricing model should be used given the number of sheets.
+				sheets = vm.calcSheets(material, vm.quote.counterGroup[index].sheets);
+				vm.quote.counterGroup[index].material.pricing = sheets.pricing;
+			//might not need			vm.quote.counterGroup[index].TAC = vm.quote.counterGroup[index].TAC.toFixed(1)
 			console.log(vm.quote.counterGroup[index].TAC);
 
 			//STILL HAVE TO CALC ADDONS
 			for(var i = 0; i < vm.quote.counterGroup[index].addons.length; i++) {
 				console.log(vm.quote.counterGroup[index].addons[i], i, index);
 				vm.quote.counterGroup[index].totalPrice += vm.quote.counterGroup[index].addons[i].totalPrice;
+				vm.quote.totalPrice += vm.quote.counterGroup[index].addons[i].totalPrice;
 			};
 
 			//Calc material pricing

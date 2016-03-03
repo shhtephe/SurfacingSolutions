@@ -218,19 +218,8 @@
 						  				</tbody>
 					  				</table>
 					  				<br><button type="button" ng-click="vm.editCounter[$index] = true" ng-hide="vm.editCounter[$index]" class="btn btn-default">Edit this Counter</button>
-					  				<button type="button" ng-click="vm.calculateCounter(counter.counterWidth, counter.counterLength, counter.counterShape, group.material, $index, $parent.$index); vm.editCounter[$index]=false" ng-show="vm.editCounter[$index]" class="btn btn-default">Save Counter</button>
-						      		<br><br>
-						      		<span ng-show="counter.addons[0]">
-						      			<u>Selected Addons:</u> 
-										<br>
-										<br>
-									</span>
+					  				<button type="button" ng-click="vm.calcCounter(counter.counterWidth, counter.counterLength, counter.counterShape, $index, $parent.$index); vm.editCounter[$index]=false" ng-show="vm.editCounter[$index]" class="btn btn-default">Save Counter</button>
 <!--<br> {/counter.material | json/} <br>-->
-						      		<span ng-show="vm.material">
-						      			<button ng-click="vm.editCounter[$index] = false" ng-hide="vm.editCounter[$index]" class="btn btn-danger">Save</button>
-										<br>
-							      		<br>
-						      		</span>
 							      	<span ng-show="counter.totalPrice">Counter Subtotal: {/counter.totalPrice |currency:$/}</span>
 								</div>
 							</div>	
@@ -241,9 +230,6 @@
 					</div>
 					<!--END OF COUNTER LOOP-->
 					<button type="button" ng-click="vm.divAddons = true">Add Addons</button>
-						<span style="float: right;">
-							<button type="button" style="btn" ng-show="group.material" ng-click="vm.calcGroup($index)">Calculate Summary</button>
-						</span>
 					<div ng-show="vm.divAddons">
 						<br>Addons: 
 						<!--

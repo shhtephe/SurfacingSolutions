@@ -353,7 +353,7 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 			};
 			//recalculate group if material is present
 			if( vm.quote.counterGroup[groupIndex].material) {
-				calcGroup(index, vm.groupIndex.material);
+				vm.calcGroup(groupIndex, vm.quote.counterGroup[groupIndex].material);
 			};
 		};
 		
@@ -364,7 +364,7 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 			vm.quote.counterGroup[counterIndex].addons.splice(addonIndex, 1);
 			//recalculate group if material is present
 			if( vm.quote.counterGroup[groupIndex].material) {
-				calcGroup(index, vm.groupIndex.material);
+				vm.calcGroup(groupIndex, vm.quote.counterGroup[groupIndex].material);
 			};
 		};
 
@@ -448,7 +448,7 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 			vm.quote.counterGroup[index].material = pushObj;
 			//vm.quote.counterGroup[index].material.splice(index, 1, pushObj);
 			if( vm.quote.counterGroup[groupIndex].material) {
-				calcGroup(index, vm.groupIndex.material);
+				vm.calcGroup(groupIndex, vm.quote.groupIndex[index].material);
 			};
 		};
 
@@ -458,8 +458,7 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 
 			var returnObj = {
 				sheets : 0,
-				pricing: '',
-				counterPrice: 0
+				pricing: ''
 			};
 
 			//console.log(material.length, material.width);
@@ -500,34 +499,26 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 				//push counter into vm.quote
 				vm.quote.counterGroup[groupIndex].counters.push(pushObj);	
 			} else{
-	//Replace the existing addons into the new array :)
-				if(typeof vm.quote.counterGroup[groupIndex].counters[index].addons !== "undefined") {
-					for (var i = vm.quote.counterGroup[groupIndex].counters[index].addons.length - 1; i >= 0; i--) {
-						pushObj.addons.push(vm.quote.counterGroup[groupIndex].counters[index].addons[i]);6
-					pushObj.totalPrice += vm.quote.counterGroup[groupIndex].counters[index].addons[i].totalPrice;
-					};
-				};
-				console.log(sheets);
 	//Replace counter total.
-				pushObj.matPrice = counterPrice;
-				pushObj.totalPrice += counterPrice;
+				//pushObj.matPrice = counterPrice;
+				//pushObj.totalPrice += counterPrice;
 	//Add Pricing default and commit number of 'sheets' required for Counter
-				pushObj.pricing = sheets.pricing;
-				pushObj.sheets = sheets.sheets;
+				//pushObj.pricing = sheets.pricing;
+				//pushObj.sheets = sheets.sheets;
 	//Add vm.quote total with new counter price but first replace old price.		
-				vm.quote.totalPrice -= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
-				vm.quote.totalPrice += pushObj.totalPrice;
-				vm.quote.counterGroup[groupIndex].totalPrice -= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
-				vm.quote.counterGroup[groupIndex].totalPrice += pushObj.totalPrice;
+				//vm.quote.totalPrice -= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
+				//vm.quote.totalPrice += pushObj.totalPrice;
+				//vm.quote.counterGroup[groupIndex].totalPrice -= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
+				//vm.quote.counterGroup[groupIndex].totalPrice += pushObj.totalPrice;
 	//replace the counter object with the edited one.
-				vm.quote.counterGroup[groupIndex].counters.splice(index, 1, pushObj);
+				//vm.quote.counterGroup[groupIndex].counters.splice(index, 1, pushObj);
 
 			};
 			console.log(vm.quote);
-			console.log(typeof modal);
+			console.log(typeof modal, vm.quote.counterGroup[groupIndex].material);
 			//recalculate group if material is present
-			if( vm.quote.counterGroup[groupIndex].material) {
-				calcGroup(index, vm.groupIndex.material);
+			if(typeof vm.quote.counterGroup[groupIndex].material !== 'undefined') {
+				vm.calcGroup(groupIndex, vm.quote.counterGroup[groupIndex].material);
 			};
 		};
 
@@ -538,8 +529,8 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 			//console.log(vm.quote.counters[index].totalPrice);
 			vm.quote.counterGroup[groupIndex].counters.splice(index, index+1);
 			//recalculate group if material is present
-			if( vm.quote.counterGroup[groupIndex].material) {
-				calcGroup(index, vm.groupIndex.material);
+			if(typeof vm.quote.counterGroup[groupIndex].material !== 'undefined') {
+				vm.calcGroup(groupIndex, vm.quote.counterGroup[groupIndex].material);
 			};
 		};
 
@@ -551,10 +542,23 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 			var group = vm.quote.counterGroup[index];
 			var sheets = {};
 
+			console.log(vm.quote.counterGroup[index], index);
 			//clear values for each counter and the main group
 			vm.quote.counterGroup[index].TAC = 0;
 			vm.quote.counterGroup[index].totalPrice = 0;
 			vm.quote.counterGroup[index].sheets = 0;
+
+
+			//This is for after it's calculated once, because it adds up all OTHER counters, and then adds the new value for group total 
+			if(typeof vm.quote.counterGroup[index].totalPrice !== 'undefined'){
+				vm.quote.totalPrice = 0;
+				for (var t = vm.quote.counterGroup.length - 1; t >= 0; t--) {
+					if(t !== index){
+						vm.quote.totalPrice += vm.quote.counterGroup[t].totalPrice;
+					};	
+				};
+			};
+			console.log(vm.quote.totalPrice);
 
 			var counterSheets = 0; 
 			//go through each counter and add all relevant values up
@@ -564,26 +568,19 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 				vm.quote.counterGroup[index].TAC += vm.quote.counterGroup[index].counters[i].squareFootage;
 				//Estimate number of sheets needed for counter and add it to total sheets for the group
 				//this can be done in the calcsheets function
+				console.log(vm.quote.counterGroup[index].counters[i].squareFootage);
 				counterSheets = vm.quote.counterGroup[index].counters[i].squareFootage / (material.length * material.width/144)
 				vm.quote.counterGroup[index].sheets += counterSheets;
 				//console.log("Sheets: " + vm.quote.counterGroup[index].sheets);
 				//Set price of counter minus addons
 				sheets = vm.calcSheets(material, counterSheets, overridePricing);
-				//console.log(counterSheets, sheets.pricing, material[sheets.pricing])
+				console.log(counterSheets, sheets.pricing, material[sheets.pricing], index, i);
 				vm.quote.counterGroup[index].counters[i].totalPrice = counterSheets * material[sheets.pricing];	
 				//console.log("group " + index, "counter " + i, "total price " + vm.quote.counterGroup[index].counters[i].totalPrice, "material price " + material[sheets.pricing], "Sheets " + vm.quote.counterGroup[index].sheets);			
 				//Save the price of the counter, and the total price of the vm.quote. Save it to the vm.quote variable. Unless there is an override.
 				//If there is, add all other groups up again, and add NEW values for this group.
-				if(typeof overridePricing !== 'undefined'){
 
-					for (var t = vm.quote.counterGroup.length - 1; t >= 0; t--) {
-						if(t !== index){
-							vm.quote.totalPrice += vm.quote.counterGroup[t].totalPrice;
-						};	
-					};
-				};
-				//console.log(vm.quote.totalPrice);
-				//console.log(vm.quote.counterGroup[index].counters[i]); 	
+				console.log(vm.quote.counterGroup[index].counters[i]); 	
 				vm.quote.totalPrice += vm.quote.counterGroup[index].counters[i].totalPrice;
 				vm.quote.counterGroup[index].totalPrice += vm.quote.counterGroup[index].counters[i].totalPrice;
 				//console.log(vm.quote.counterGroup[index].counters[i].totalPrice, vm.quote.counterGroup[index].totalPrice);
@@ -640,19 +637,17 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 				counterLength: length,
 				counterWidth: width,
 				squareFootage: 0,
-				price: 0
+				counterPrice: 0
 			};
-			//might not use this.
-			if(typeof vm.quote.counterGroup[groupIndex].material !== "undefined"){
 
-			};
 			//console.log("Push Object", pushObj);
 
 	//Checks the shape of the table, and then calculates square footage.
 			if(shape === "rectangle"){
 				pushObj.squareFootage = (length * width/144); //measurements are in inches, then converted to feet
 			} else if(shape === "circle"){
-				pushObj.squareFootage = (Math.PI * (Math.pow(width, 2)));
+				pushObj.squareFootage = (Math.PI * (Math.pow(width, 2)))/144;
+				console.log(pushObj.squareFootage);
 			};
 
 			//"Save" the counter to vm.quote

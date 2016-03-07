@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <div ng-controller="quoteCtrl">
-
-<!--{/vm.quote.counters[0]/}
+<!--
+{/vm.quote/}
 <br>
 <br>
 {/vm.customer/}
@@ -76,8 +76,8 @@ Phone: {/vm.customer.homePhone/}</textarea>
 		
 		</div>
 		
-		<table id="items">
-		
+		<table id="items" ng-repeat='group in vm.quote.counterGroup'>
+			<caption>Group {/$index+1/} - {/group.description/}</caption>
 		  <thead>
 		      <th>Item</th>
 		      <th>Description</th>
@@ -86,36 +86,36 @@ Phone: {/vm.customer.homePhone/}</textarea>
 		      <th>Price</th>
 		  </thead>
 		    <tbody>
-		    <tr ng-repeat="counter in vm.quote.counters | flattenRows">
-				<td class="item-name">
-					<span ng-hide="counter.addon">{/counter.material.manufacturer/} - {/counter.material.description/}</span>
-					<span class="label label-info" ng-show="counter.addon">Addon</span>
-				</td>
-			    <td class="description">
-			    	<span ng-hide="counter.addon">
-			    		<textarea>{/counter.description/}</textarea>
-		    		</span>
-		    		<span ng-show="counter.addon">
-			    		<textarea>{/counter.itemCode/}</textarea>
-		    		</span>
-	    		</td>
-			    <td>
-			    	<span ng-hide="counter.addon">
-			    		<textarea class="cost">{/counter.material.price | currency:$/}</textarea>		    		
-		    		</span>
-		    		<span ng-show="counter.addon">
-			    		<textarea>{/counter.price | currency:$/}</textarea>
-		    		</span>
-		    	</td>
-			    <td>
-		    		<span ng-show="counter.addon">
-			    		<textarea>{/counter.quantity/}</textarea>
-		    		</span>		    	
-	    		</td>
-			    <td>	
-			    	<span class="price">{/counter.totalPrice | currency: $/}</span>
-		    	</td>
-			</tr>
+		    	<tr ng-repeat='counter in group.counters'>
+					<td class="item-name">
+						<span ng-hide="counter.addon">{/group.material.manufacturer/} - {/group.material.description/}</span>
+						<span class="label label-info" ng-show="counter.addon">Addon</span>
+					</td>
+				    <td class="description">
+				    	<span ng-hide="counter.addon">
+				    		<textarea>{/counter.description/}</textarea>
+			    		</span>
+			    		<span ng-show="counter.addon">
+				    		<textarea>{/counter.itemCode/}</textarea>
+			    		</span>
+		    		</td>
+				    <td>
+				    	<span ng-hide="counter.addon">
+				    		<textarea class="cost">{/counter.material.price | currency:$/}</textarea>		    		
+			    		</span>
+			    		<span ng-show="counter.addon">
+				    		<textarea>{/counter.price | currency:$/}</textarea>
+			    		</span>
+			    	</td>
+				    <td>
+			    		<span ng-show="counter.addon">
+				    		<textarea>{/counter.quantity/}</textarea>
+			    		</span>		    	
+		    		</td>
+				    <td>	
+				    	<span class="price">{/counter.totalPrice | currency: $/}</span>
+			    	</td>
+				</tr>
 			<tr ng-repeat="addon in vm.quote.mandatoryAddons ">	
 				<td class="item-name">
 					<span class="label label-info">Global Addon</span>

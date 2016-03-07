@@ -546,7 +546,7 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 				console.log(vm.quote.counterGroup[index], index);
 				//clear values for each counter and the main group
 				vm.quote.counterGroup[index].TAC = 0;
-
+				vm.quote.totalPrice = 0;
 				//Go through each counter and add up all area values.
 				for (var i = 0; i <= vm.quote.counterGroup[index].counters.length - 1; i++) {
 					//Add square footage of one counter to the TOTAL Area
@@ -558,10 +558,10 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 					//If the sheets have not been overriden, take entire area and estimate number of sheets required.
 					vm.quote.counterGroup[index].sheets = vm.quote.counterGroup[index].TAC / (material.length * material.width/144);
 					vm.quote.counterGroup[index].sheets = vm.quote.counterGroup[index].sheets.toFixed(2);	
-				} else {
+				}/* else {
 					console.log(vm.quote.counterGroup[index].totalPrice, vm.quote.totalPrice);
 					vm.quote.totalPrice -= vm.quote.counterGroup[index].totalPrice;
-				};
+				}*/;
 				
 				console.log(parseFloat(vm.quote.counterGroup[index].sheets));
 			

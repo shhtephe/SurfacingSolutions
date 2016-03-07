@@ -538,8 +538,8 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 			//So I think this is going to be more of a 'hub' for all the update functions: calculate sheets, calculate counters, calculate addons etc etc.
 			//It'll check to see what data it has, and then will calculate what it can. Will probably need to make a flag set when all the info is there
 			//So it'll catch you if click on the quote page with missing info "Quote is incomplete - group 1 requires material. Are you sure you want to continue?"
-			console.log(isNaN(parseFloat(vm.quote.counterGroup[index].sheets)));
-			if(isNaN(parseFloat(vm.quote.counterGroup[index].sheets)) === false){
+			console.log(isNaN(parseFloat(vm.quote.counterGroup[index].sheets)), typeof vm.quote.counterGroup[index].sheets);
+			if(isNaN(parseFloat(vm.quote.counterGroup[index].sheets)) === false || typeof vm.quote.counterGroup[index].sheets === "undefined"){
 				var group = vm.quote.counterGroup[index];
 				var sheets = {};
 

@@ -539,6 +539,7 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 			//It'll check to see what data it has, and then will calculate what it can. Will probably need to make a flag set when all the info is there
 			//So it'll catch you if click on the quote page with missing info "Quote is incomplete - group 1 requires material. Are you sure you want to continue?"
 			console.log(isNaN(parseFloat(vm.quote.counterGroup[index].sheets)), typeof vm.quote.counterGroup[index].sheets);
+			//If sheets entered is not a number or undefined, don't calculate.
 			if(isNaN(parseFloat(vm.quote.counterGroup[index].sheets)) === false || typeof vm.quote.counterGroup[index].sheets === "undefined"){
 				var group = vm.quote.counterGroup[index];
 				var sheets = {};
@@ -558,10 +559,8 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 					//If the sheets have not been overriden, take entire area and estimate number of sheets required.
 					vm.quote.counterGroup[index].sheets = vm.quote.counterGroup[index].TAC / (material.length * material.width/144);
 					vm.quote.counterGroup[index].sheets = vm.quote.counterGroup[index].sheets.toFixed(2);	
-				}/* else {
-					console.log(vm.quote.counterGroup[index].totalPrice, vm.quote.totalPrice);
-					vm.quote.totalPrice -= vm.quote.counterGroup[index].totalPrice;
-				}*/;
+					vm.quote.counterGroup[index].estimatedSheets = vm.quote.counterGroup[index].sheets;
+				};
 				
 				console.log(parseFloat(vm.quote.counterGroup[index].sheets));
 			
@@ -595,7 +594,7 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 					//console.log(vm.quote.counterGroup[index].addons[i], i, index);
 					vm.quote.counterGroup[index].totalPrice += vm.quote.counterGroup[index].addons[i].totalPrice;
 					vm.quote.totalPrice += vm.quote.counterGroup[index].addons[i].totalPrice;
-				};
+				};				
 			};
 		};
 

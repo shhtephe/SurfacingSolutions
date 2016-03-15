@@ -555,6 +555,9 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 					vm.quote.counterGroup[index].TAC += vm.quote.counterGroup[index].counters[i].squareFootage;
 				};
 
+				//Round 'em.
+				vm.quote.counterGroup[index].TAC = vm.quote.counterGroup[index].TAC.toFixed(2);
+
 				if(typeof vm.quote.counterGroup[index].sheets === "undefined") {
 					//If the sheets have not been overriden, take entire area and estimate number of sheets required.
 					vm.quote.counterGroup[index].sheets = vm.quote.counterGroup[index].TAC / (material.length * material.width/144);

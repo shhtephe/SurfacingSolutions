@@ -33,6 +33,7 @@ var quote = new Schema({
 		GMCPSF: Number,
 		GCPSF: Number,
 		totalPrice: Number,
+		estimatedSheets: Number,
 		sheets: Number,
 		addons: [{
 			distributor: String,

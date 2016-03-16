@@ -20,20 +20,16 @@
 				<br>
 				P.O. Number: <input type="text" ng-model="vm.quote.poNumber">
 				<br>
-				<br>
 				<button type="button" style="btn" ng-click="vm.addGroup()">Create Group</button>
 				<br>
 				<hr style="background:#000000; border:0; height:7px" />
 	      		<br>
-	      		<br>
 				<div ng-repeat="group in vm.quote.counterGroup track by $index">
 <!--{/group|json/}-->
-					<br>
 					<u>Group {/group.groupNumber + 1/}</u><button type="button" class="btn btn-danger" style="float:right" ng-click="vm.removeGroup($index)">DELETE THIS GROUP</button>
 					<br>
-					<br>
-					<br>
 					<button type="button" style="btn;" ng-click="vm.addCounter($index, group.counters.length)">Add a Counter</button>
+					<br>
 					<span style="float: right" >
 						Group Description:
 						<br><textarea rows="4" columns="150" ng-model="group.description"></textarea>
@@ -41,7 +37,6 @@
 					<br>
 					<br>
 					<br>
-					<br><br><br>
 					<button type="button" ng-show="vm.quote.counterGroup[$index].material" class="btn btn-default" ng-click="isMaterialCollapsed = !isMaterialCollapsed">Material - {/group.material.description/}</button>
 					<!--Material Collapsable-->
 					<br>
@@ -151,13 +146,11 @@
 									<button type="button" ng-click="vm.editMaterialSave(materialDescription, $index); vm.editMaterial[$index] = false; materialManufacturer==''; materialDescription" ng-show="vm.editMaterial[$index]" class="btn btn-default">Save Edit</button>
 								</div>
 				      		</span>
-							<br>
 							<br><button type="button" ng-click="vm.editMaterial[$index] = true" ng-hide="vm.editMaterial[$index]" class="btn btn-default">Edit this Material</button>
 							<button type="button" ng-click="vm.editMaterial[$index] = false" ng-show="vm.editMaterial[$index]" class="btn btn-default">Cancel</button>
 						</div>
 					</div>
 					<!--End Material Collapsable-->
-					<br>
 					<br>
 					<!--START OF COUNTER LOOP-->
 					<div ng-repeat="counter in group.counters track by $index">
@@ -225,9 +218,6 @@
 							      	<!--<span ng-show="counter.totalPrice">Counter Subtotal: {/counter.totalPrice |currency:$/}</span>-->
 								</div>
 							</div>	
-							<br>
-			      		<!--<br>counter Thickness: {/counter.counterThickness1/}
-				      	<br>counter Thickness 2: {/counter.counterThickness1/}-->
 				      	<hr style="background:#FFFFFF; border:0; height:7px" />
 					</div>
 					<!--END OF COUNTER LOOP-->
@@ -292,11 +282,9 @@
 						@{/addon.price | currency:$/} <a ng-click="vm.removeAddon(addon, $parent.$index, $index)">remove</a>
 					</div>
 					<br>
-					<br>
 					<!--Material Selection-->
 					<div ng-hide="group.material || !group.counters.length"> 
 						<u>Choose your Material</u>
-						<br>
 						<br>
 						Choose a Manufacturer:
 						<select name="materialManufacturer" ng-model="materialManufacturer" ng-options="material.manufacturer for material in vm.materials | unique: 'manufacturer' | orderBy:'manufacturer'">
@@ -344,11 +332,9 @@
 								</li>
 							</ul>
 						</div>
-						<br>
 						<button type="button" ng-click="vm.saveMaterial(materialDescription , $index); materialDistributor=''; materialManufacturer=''; materialColourGroup=''; materialDescription=''" ng-show="materialManufacturer && materialDescription" class="btn btn-default">Save Material</button>
 					</div>
 					<!--End Material Selection-->
-					<br>
 					<span ng-show="group.counters && group.material">
 						<table>
 			      			<caption><u>Pricing</u></caption>
@@ -414,24 +400,11 @@
 						</table>
 						<br>
 						Sheets required: <input type:"number" ng-model='group.sheets' name='group.sheets' ng-change="vm.calcGroup($index, group.material)">
-						<br>	
-					</span>
-			      	<br>	  	
+					</span> 	
 					<hr style="background:#000000; border:0; height:7px" />
 				</div>
 
 				<br>
-		      	<br>
-				<u>Mandatory Charges:</u>
-				<br>
-	      			<div ng-repeat="addon in vm.quote.mandatoryAddons track by $index">
-						<br>{/addon.productType/} - {/addon.description/} : {/addon.quantity/}
-						@{/addon.price | currency:$/} <a ng-click="vm.removeAddon(addon, -1, $index)">remove</a>
-					</div>
-		      	<br>
-				<br>Job Difficulty: <input type="number" ng-model="vm.quote.jobDifficulty" name="vm.quote.jobDifficulty"><br>
-				<span style="float: left;">Total Price: {/vm.quote.totalPrice * vm.quote.jobDifficulty | currency:$/}</span>
-				<br><br>
 				<br><button type="button" ng-click="vm.divMandatory = true; showMandatory($index)" ng-show="vm.divMandatory == false">Add Mandatory Charges</button>
 				<div ng-show="vm.divMandatory == true">
 					<br>Mandatory charges: 
@@ -453,6 +426,35 @@
 					</div>
 					<br> <button type="button" ng-click="vm.divMandatory = false" class="btn btn-danger">Cancel</button>
 				</div>
+		      	<br>
+				<u>Mandatory Charges:</u>
+				<br>
+	      			<div ng-repeat="addon in vm.quote.mandatoryAddons track by $index">
+						<br>{/addon.productType/} - {/addon.description/} : {/addon.quantity/}
+						@{/addon.price | currency:$/} <a ng-click="vm.removeAddon(addon, -1, $index)">remove</a>
+					</div>
+		      	<br>
+				<table>
+					<caption><u>Total Summary:</u></caption>
+					<tr>
+						<td>Total Area of Counters</td>
+						<td>Estimated Sheets</td>
+						<td>Total Group Cost</td>
+						<td>Group Material Cost</td>
+						<td>Group Material Cost Per ft2</td>
+						<td>Total Group Cost Per ft2</td>
+					</tr>
+					<tr>
+						<td>{/vm.quote.TAC/} SQFT</td>
+						<td>{/vm.quote.estimatedSheets/}</td>
+						<td>{/vm.quote.totalPrice | currency:$/}</td>
+						<td>{/vm.quote.GMC | currency:$/}</td>
+						<td>{/vm.quote.GMCPSF | currency:$/}/SQFT</td>
+						<td>{/vm.quote.GCPSF | currency:$/}/SQFT</td>
+					</tr>
+				</table>
+				<br>Job Difficulty: <input type="number" ng-model="vm.quote.jobDifficulty" name="vm.quote.jobDifficulty"><br>
+				<span style="float: left;">Total Price: {/vm.quote.totalPrice * vm.quote.jobDifficulty | currency:$/}</span>
 				<br><br>
 				<b><u>Terms</u></b>
 				<div ng-repeat="term in vm.terms">
@@ -512,10 +514,46 @@ List of things I would like to add:
 Move Screen and center where the user should click, so they don't get lost.
 
 
-Dynamic ul's for item code, thickness, etc. if they're empty, they don't show up
+Dynamic ul's for item code, thickness, etc. if they're empty, they don't show up - THIS HAS BEEN DONE.
 
 Things to do:
-Add selectable price for counter (half sheet/full sheet/ multidiscount)
+Add selectable price for counter (half sheet/full sheet/ multidiscount) - THIS HAS BEEN DONE
 
 add ability to multiply tables
+-->
+<!--
+Feedback: 
+
+TAC not rounding - should be fixed
+
+estimated sheets variable - done
+
+adding addons: TGC per foot does not go up or down - fixed!
+
+Second group does not calculate. only adds TGC. However third group did. - might have been a one off glitch. Seems to work now.
+
+TAC not rounding in third table as well. - same as above. one off glitch?
+
+Summary of summaries on TOTAL -COMING SOON
+
+Add calendar picker to terms below.
+
+remove whitespace of counters
+
+make "counter 1" the description
+
+Group description text box not area, across "group 1" heading (group 1 - description text box)
+
+
+
+Group Title - Group description
+
+table
+	Item
+	description
+	unit cost in dollars
+	quantity
+	price
+below counters
+addons with item/description etc
 -->

@@ -566,19 +566,26 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 				};
 				
 				console.log(parseFloat(vm.quote.counterGroup[index].sheets));
-			
+
 				//Below is the math for taking the total area of the group and getting pricing/estimating charges. The sheet estimation will be overriden when there's the sheets have been entered.
 				sheets = vm.calcSheets(material, vm.quote.counterGroup[index].sheets, overridePricing);
 				vm.quote.counterGroup[index].material.pricing = sheets.pricing;
 				vm.quote.counterGroup[index].totalPrice = vm.quote.counterGroup[index].sheets * material[sheets.pricing];	
-				//vm.quote.totalPrice += vm.quote.counterGroup[index].totalPrice;
+
+				//calculate addons
+				for(var i = 0; i < vm.quote.counterGroup[index].addons.length; i++) {
+					//console.log(vm.quote.counterGroup[index].addons[i], i, index);
+					vm.quote.counterGroup[index].totalPrice += vm.quote.counterGroup[index].addons[i].totalPrice;
+					vm.quote.totalPrice += vm.quote.counterGroup[index].addons[i].totalPrice;
+				};	
 
 				//Group MATERIAL Cost - Cost of all counters combined
 				vm.quote.counterGroup[index].GMC = material[sheets.pricing] * vm.quote.counterGroup[index].sheets;
 				vm.quote.totalPrice += vm.quote.counterGroup[index].GMC;
 				// GMC square foot total divided by the total area of sheets required
-				vm.quote.counterGroup[index].GMCPSF = vm.quote.counterGroup[index].GMC / (vm.quote.counterGroup[index].sheets * (material.length * material.width/144));
+				vm.quote.counterGroup[index].GMCPSF = vm.quote.counterGroup[index].GMC / vm.quote.counterGroup[index].TAC;
 				//Group Cost per Squarefoot
+				console.log("gmc", vm.quote.counterGroup[index].GMC, "tac", vm.quote.counterGroup[index].TAC, "totalPrice (tgc)", vm.quote.counterGroup[index].totalPrice);
 				vm.quote.counterGroup[index].GCPSF = vm.quote.counterGroup[index].totalPrice / vm.quote.counterGroup[index].TAC;
 				
 				//This is for after it's calculated once, because it adds up all OTHER counters, and then adds the new value for group total 
@@ -590,14 +597,7 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 						};	
 					};
 				};
-				console.log(vm.quote.totalPrice);
-
-				//STILL HAVE TO CALC ADDONS
-				for(var i = 0; i < vm.quote.counterGroup[index].addons.length; i++) {
-					//console.log(vm.quote.counterGroup[index].addons[i], i, index);
-					vm.quote.counterGroup[index].totalPrice += vm.quote.counterGroup[index].addons[i].totalPrice;
-					vm.quote.totalPrice += vm.quote.counterGroup[index].addons[i].totalPrice;
-				};				
+				console.log(vm.quote.totalPrice);		
 			};
 		};
 

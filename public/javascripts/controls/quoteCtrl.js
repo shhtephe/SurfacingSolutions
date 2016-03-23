@@ -547,16 +547,19 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 				console.log(vm.quote.counterGroup[index], index);
 				//clear values for each counter and the main group
 				vm.quote.counterGroup[index].TAC = 0;
+				vm.quote.TAC = 0;
 				vm.quote.totalPrice = 0;
 				//Go through each counter and add up all area values.
 				for (var i = 0; i <= vm.quote.counterGroup[index].counters.length - 1; i++) {
 					//Add square footage of one counter to the TOTAL Area
 					//console.log(i, vm.quote.counterGroup[index].counters.length, vm.quote.counterGroup[index].counters[i].squareFootage);
 					vm.quote.counterGroup[index].TAC += vm.quote.counterGroup[index].counters[i].squareFootage;
+					vm.quote.TAC += vm.quote.counterGroup[index].counters[i].squareFootage;
 				};
-
+				
 				//Round 'em.
 				vm.quote.counterGroup[index].TAC = vm.quote.counterGroup[index].TAC.toFixed(2);
+				vm.quote.TAC = vm.quote.TAC.toFixed(2);
 
 				if(typeof vm.quote.counterGroup[index].sheets === "undefined") {
 					//If the sheets have not been overriden, take entire area and estimate number of sheets required.
@@ -581,7 +584,9 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 
 				//Group MATERIAL Cost - Cost of all counters combined
 				vm.quote.counterGroup[index].GMC = material[sheets.pricing] * vm.quote.counterGroup[index].sheets;
+				vm.quote.GMC = vm.quote.counterGroup[index].GMC;
 				vm.quote.totalPrice += vm.quote.counterGroup[index].GMC;
+
 				// GMC square foot total divided by the total area of sheets required
 				vm.quote.counterGroup[index].GMCPSF = vm.quote.counterGroup[index].GMC / vm.quote.counterGroup[index].TAC;
 				//Group Cost per Squarefoot
@@ -594,10 +599,13 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 					for (var t = vm.quote.counterGroup.length - 1; t >= 0; t--) {
 						if(t !== index){
 							vm.quote.totalPrice += vm.quote.counterGroup[t].totalPrice;
+							vm.quote.TAC += vm.quote.counterGroup[t].TAC;
+							vm.quote.GMC += vm.quote.counterGroup[t].GMC;
 						};	
 					};
-				};
-				console.log(vm.quote.totalPrice);		
+					vm.quote.GMCPSF = vm.quote.GMC / vm.quote.TAC;
+					vm.quote.GCPSF = vm.quote.totalPrice / vm.quote.TAC;
+				};		
 			};
 		};
 

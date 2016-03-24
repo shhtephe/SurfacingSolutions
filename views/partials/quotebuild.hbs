@@ -24,7 +24,7 @@
 				<br>
 				<hr style="background:#000000; border:0; height:7px" />
 	      		<br>
-				<div ng-repeat="group in vm.quote.counterGroup track by $index">
+				<div ng-repeat="group in vm.quote.counterGroup track by $index | orderBy: reverse">
 <!--{/group|json/}-->
 					<u>Group {/group.groupNumber + 1/}</u><button type="button" class="btn btn-danger" style="float:right" ng-click="vm.removeGroup($index)">DELETE THIS GROUP</button>
 					<br>
@@ -544,9 +544,17 @@ make "counter 1" the description
 
 Group description text box not area, across "group 1" heading (group 1 - description text box)
 
+Line everything up in two columns
 
+reverse order for group
+
+Second group/addons breaks GMC psq / GTC psq
+
+TAC was added as "text"
 
 Group Title - Group description
+
+
 
 table
 	Item

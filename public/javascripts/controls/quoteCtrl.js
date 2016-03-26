@@ -394,7 +394,8 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 		};
 
 		vm.removeGroup = function(index) {
-			console.log(index, vm.quote.counterGroup[index].totalPrice);
+			console.log(index);
+			console.log(vm.quote.counterGroup[index].totalPrice);
 			vm.quote.totalPrice -= vm.quote.counterGroup[index].totalPrice;
 			vm.quote.counterGroup.splice(index, index+1);
 		};
@@ -463,24 +464,23 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 
 			//console.log(material.length, material.width);
 			console.log(typeof overridePricing);
-		if(typeof overridePricing === 'undefined') {
+			if(typeof overridePricing === 'undefined') {
 			//Chooses the best match for pricing. Will need to make this user selectable later.
 				if(material.fullSheet21 && sheets >= 21) {
-		//				returnObj.counterPrice = sheets * material.fullSheet21;
 					returnObj.pricing = "fullSheet21";
-				} else if (material.fullSheet5 && sheets > 5) {
-		//				returnObj.counterPrice = sheets * material.fullSheet5;
+				} else if (material.fullSheet5 && sheets >= 5) {
 					returnObj.pricing = "fullSheet5";
-				} else if (material.fullSheet1 && sheets >= 1) {
-		//				returnObj.counterPrice = sheets * material.fullSheet1;
+				} else if (material.fullSheet1 && sheets >= .51) {
 					returnObj.pricing = "fullSheet1";
-				} else if (material.halfSheet && sheets < .5) {
+				} else if (material.halfSheet && sheets >= .26) {
 					//it will round down to 0, so make it one sheet
 					returnObj.sheets = .5;
-		//				returnObj.counterPrice = sheets * material.halfSheet;		
 					returnObj.pricing = "halfSheet";
+				} else if (material.halfSheet && sheets <= .25) {
+					//it will round down to 0, so make it one sheet
+					returnObj.sheets = .5;
+					returnObj.pricing = "quarterSheet";
 				} else {
-		//				returnObj.counterPrice = sheets * material.fullSheet1;
 					returnObj.pricing = "fullSheet1";
 				};
 			} else {

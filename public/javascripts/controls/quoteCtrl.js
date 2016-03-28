@@ -498,22 +498,8 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 			if(typeof vm.quote.counterGroup[groupIndex].counters[index] === "undefined"){
 				//push counter into vm.quote
 				vm.quote.counterGroup[groupIndex].counters.push(pushObj);	
-			} else{
-	//Replace counter total.
-				//pushObj.matPrice = counterPrice;
-				//pushObj.totalPrice += counterPrice;
-	//Add Pricing default and commit number of 'sheets' required for Counter
-				//pushObj.pricing = sheets.pricing;
-				//pushObj.sheets = sheets.sheets;
-	//Add vm.quote total with new counter price but first replace old price.		
-				//vm.quote.totalPrice -= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
-				//vm.quote.totalPrice += pushObj.totalPrice;
-				//vm.quote.counterGroup[groupIndex].totalPrice -= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
-				//vm.quote.counterGroup[groupIndex].totalPrice += pushObj.totalPrice;
-	//replace the counter object with the edited one.
-				//vm.quote.counterGroup[groupIndex].counters.splice(index, 1, pushObj);
-
 			};
+			
 			console.log(vm.quote);
 			console.log(typeof modal, vm.quote.counterGroup[groupIndex].material);
 			//recalculate group if material is present

@@ -5,7 +5,7 @@
 			<div ng-controller="quoteCtrl" ng-init='vm.addCounter == false; vm.divMandatory = false; vm.divAddon = false;'>
 				<!--<br>
 				<br>
-{/products[30]/}
+{/vm.materials|json/}
 				<br>
 				<br>-->
 {/vm.quote|json/}
@@ -24,8 +24,8 @@
 				<br>
 				<hr style="background:#000000; border:0; height:7px" />
 	      		<br>
-				<div ng-repeat="group in vm.quote.counterGroup track by $index">
-<!--{/group|json/}-->
+				<div ng-repeat="group in vm.quote.counterGroup | orderBy:'-groupNumber' track by $index">
+{/group.groupNumber|json/}
 					<u>Group {/group.groupNumber + 1/}</u><button type="button" class="btn btn-danger" style="float:right" ng-click="vm.removeGroup($index)">DELETE THIS GROUP</button>
 					<br>
 					<button type="button" style="btn;" ng-click="vm.addCounter($index, group.counters.length)">Add a Counter</button>
@@ -524,29 +524,23 @@ add ability to multiply tables
 <!--
 Feedback: 
 
-TAC not rounding - should be fixed
-
-estimated sheets variable - done
-
-adding addons: TGC per foot does not go up or down - fixed!
-
-Second group does not calculate. only adds TGC. However third group did. - might have been a one off glitch. Seems to work now.
-
-TAC not rounding in third table as well. - same as above. one off glitch?
-
-Summary of summaries on TOTAL -COMING SOON
-
 Add calendar picker to terms below.
-
-remove whitespace of counters
 
 make "counter 1" the description
 
 Group description text box not area, across "group 1" heading (group 1 - description text box)
 
+Line everything up in two columns
 
+reverse order for group - added and working, I *THINK*
+
+Second group/addons breaks GMC psq / GTC psq
+
+TAC was added as "text"
 
 Group Title - Group description
+
+
 
 table
 	Item

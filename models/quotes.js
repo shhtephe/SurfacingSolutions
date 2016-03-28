@@ -10,6 +10,11 @@ var quote = new Schema({
 	jobDifficulty: Number,
 	description: String,
 	poNumber: String,
+	TAC: Number,
+	GMC: Number,
+	TGC: Number,
+	GMCPSF: Number,
+	GCPSF: Number,
 	mandatoryAddons: [{
 		distributor: String,
 		manufactuer: String,

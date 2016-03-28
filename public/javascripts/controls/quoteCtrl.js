@@ -394,7 +394,8 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 		};
 
 		vm.removeGroup = function(index) {
-			console.log(index, vm.quote.counterGroup[index].totalPrice);
+			console.log(index);
+			console.log(vm.quote.counterGroup[index].totalPrice);
 			vm.quote.totalPrice -= vm.quote.counterGroup[index].totalPrice;
 			vm.quote.counterGroup.splice(index, index+1);
 		};
@@ -463,24 +464,23 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 
 			//console.log(material.length, material.width);
 			console.log(typeof overridePricing);
-		if(typeof overridePricing === 'undefined') {
+			if(typeof overridePricing === 'undefined') {
 			//Chooses the best match for pricing. Will need to make this user selectable later.
 				if(material.fullSheet21 && sheets >= 21) {
-		//				returnObj.counterPrice = sheets * material.fullSheet21;
 					returnObj.pricing = "fullSheet21";
-				} else if (material.fullSheet5 && sheets > 5) {
-		//				returnObj.counterPrice = sheets * material.fullSheet5;
+				} else if (material.fullSheet5 && sheets >= 5) {
 					returnObj.pricing = "fullSheet5";
-				} else if (material.fullSheet1 && sheets >= 1) {
-		//				returnObj.counterPrice = sheets * material.fullSheet1;
+				} else if (material.fullSheet1 && sheets >= .51) {
 					returnObj.pricing = "fullSheet1";
-				} else if (material.halfSheet && sheets < .5) {
+				} else if (material.halfSheet && sheets >= .26) {
 					//it will round down to 0, so make it one sheet
 					returnObj.sheets = .5;
-		//				returnObj.counterPrice = sheets * material.halfSheet;		
 					returnObj.pricing = "halfSheet";
+				} else if (material.halfSheet && sheets <= .25) {
+					//it will round down to 0, so make it one sheet
+					returnObj.sheets = .5;
+					returnObj.pricing = "quarterSheet";
 				} else {
-		//				returnObj.counterPrice = sheets * material.fullSheet1;
 					returnObj.pricing = "fullSheet1";
 				};
 			} else {
@@ -533,16 +533,19 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 				console.log(vm.quote.counterGroup[index], index);
 				//clear values for each counter and the main group
 				vm.quote.counterGroup[index].TAC = 0;
+				vm.quote.TAC = 0;
 				vm.quote.totalPrice = 0;
 				//Go through each counter and add up all area values.
 				for (var i = 0; i <= vm.quote.counterGroup[index].counters.length - 1; i++) {
 					//Add square footage of one counter to the TOTAL Area
 					//console.log(i, vm.quote.counterGroup[index].counters.length, vm.quote.counterGroup[index].counters[i].squareFootage);
 					vm.quote.counterGroup[index].TAC += vm.quote.counterGroup[index].counters[i].squareFootage;
+					vm.quote.TAC += vm.quote.counterGroup[index].counters[i].squareFootage;
 				};
-
+				
 				//Round 'em.
 				vm.quote.counterGroup[index].TAC = vm.quote.counterGroup[index].TAC.toFixed(2);
+				vm.quote.TAC = vm.quote.TAC.toFixed(2);
 
 				if(typeof vm.quote.counterGroup[index].sheets === "undefined") {
 					//If the sheets have not been overriden, take entire area and estimate number of sheets required.
@@ -567,7 +570,9 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 
 				//Group MATERIAL Cost - Cost of all counters combined
 				vm.quote.counterGroup[index].GMC = material[sheets.pricing] * vm.quote.counterGroup[index].sheets;
+				vm.quote.GMC = vm.quote.counterGroup[index].GMC;
 				vm.quote.totalPrice += vm.quote.counterGroup[index].GMC;
+
 				// GMC square foot total divided by the total area of sheets required
 				vm.quote.counterGroup[index].GMCPSF = vm.quote.counterGroup[index].GMC / vm.quote.counterGroup[index].TAC;
 				//Group Cost per Squarefoot
@@ -580,10 +585,13 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 					for (var t = vm.quote.counterGroup.length - 1; t >= 0; t--) {
 						if(t !== index){
 							vm.quote.totalPrice += vm.quote.counterGroup[t].totalPrice;
+							vm.quote.TAC += vm.quote.counterGroup[t].TAC;
+							vm.quote.GMC += vm.quote.counterGroup[t].GMC;
 						};	
 					};
-				};
-				console.log(vm.quote.totalPrice);		
+					vm.quote.GMCPSF = vm.quote.GMC / vm.quote.TAC;
+					vm.quote.GCPSF = vm.quote.totalPrice / vm.quote.TAC;
+				};		
 			};
 		};
 

@@ -221,8 +221,8 @@
 				      	<hr style="background:#FFFFFF; border:0; height:7px" />
 					</div>
 					<!--END OF COUNTER LOOP-->
-					<button type="button" ng-click="vm.divAddons = true">Add Addons</button>
-					<div ng-show="vm.divAddons">
+					<button type="button" ng-click="vm.divAddons[$index] = true">Add Addons</button>
+					<div ng-show="vm.divAddons[$index]">
 						<br>Addons: 
 						<!--
 						Manufactuer
@@ -268,10 +268,10 @@
 									<br>Price: {/counter.counterWidth * counter.counterLength * counterAddonDescription.price/}
 								</li>	
 							</ul>
-						    <button type="button" ng-click="vm.saveAddon(counterAddonDescription, shape, counterLength, counterWidth, $index); vm.divAddons=false; counterAddonDistributor=''; counterAddonManufacturer=''; counterAddonType=''; counterAddonDescription='';" class="btn btn-default">Add Addons</button>
+						    <button type="button" ng-click="vm.saveAddon(counterAddonDescription, shape, counterLength, counterWidth, $index); vm.divAddons[$index]=false; counterAddonDistributor=''; counterAddonManufacturer=''; counterAddonType=''; counterAddonDescription='';" class="btn btn-default">Add Addons</button>
 						</div>
 						<br>
-						<button type="button" ng-click="vm.divAddons=false; counterAddonDistributor = ''" class="btn btn-danger">Cancel</button> 
+						<button type="button" ng-click="vm.divAddons[$index]=false; counterAddonDistributor = ''" class="btn btn-danger">Cancel</button> 
 					</div>
 					<br>
 <!--{/group.addons|json/}-->

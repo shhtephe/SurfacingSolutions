@@ -118,10 +118,11 @@ addons are PER GROUP not per table
 		};
 		
 
+		//nameKey = string to find | myArray = the array | property = which property to find it in)
 		vm.arraySearch = function (nameKey, myArray, property){
 		    //console.log(nameKey, myArray, property);
 		    for (var i=0; i < myArray.length; i++) {
-		    	//console.log("my array i", myArray[i], "property", property)
+		    	console.log("my array i", myArray[i], "property", property)
 		        if (myArray[i][property] === nameKey) {
 		            return i;
 		        };
@@ -153,33 +154,6 @@ addons are PER GROUP not per table
 			vm.quote.terms = terms;
 		};
 
-		vm.hideAddons = function(index) {  
-			console.log(vm.counterAddonDistributor);
-			vm.counterAddonDistributor = "",
-			vm.counterAddonManufacturer = "",
-			vm.counterAddonType = "",
-			vm.counterAddonDescription = ""
-		};
-
-		vm.showCounter = function() {  
-			vm.addCounter = true;
-		};
-
-		vm.showMandatory = function() {  
-			vm.divMandatory = true;
-		};
-
-		vm.hideCounter = function() {  
-			vm.addCounter = false;
-			vm.shape = "",
-			vm.counterWidth = "",
-			vm.counterLength = "",
-			vm.materialColourGroup = "",
-			vm.materialDistributor = "", 
-			vm.materialManufacturer = "",
-			vm.materialColourGroup = "";
-		};
-
 		vm.alerts = [];
 
 	  	vm.addAlert = function(type, msg) {
@@ -193,12 +167,16 @@ addons are PER GROUP not per table
 		    vm.alerts.splice(index, 1);
 	  	};
 
-	  	vm.changePricing = function(pricing, groupIndex, material) {
-		console.log(pricing, groupIndex, material);
-		var sheets = vm.quote.counterGroup[groupIndex].sheets;
-		var counterPrice = 0;
-		var group = vm.quote.counterGroup[groupIndex];
-		var addonsTotalPrice = 0;
+	  	vm.changePricing = function(pricing, groupNumber, material) {
+
+			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
+	  		var index = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
+
+			console.log(pricing, groupIndex, material);
+			var sheets = vm.quote.counterGroup[groupIndex].sheets;
+			var counterPrice = 0;
+			var group = vm.quote.counterGroup[groupIndex];
+			var addonsTotalPrice = 0;
 
 	  		if(pricing == "halfSheet"){
 				counterPrice = sheets * material.halfSheet;		
@@ -216,28 +194,20 @@ addons are PER GROUP not per table
 				counterPrice = sheets * material.isa;
 				vm.quote.counterGroup[groupIndex].material.pricing = "isa";
 			};
-console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counterGroup[groupIndex].material); 
+			console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counterGroup[groupIndex].material); 
 			for (var i=0; i < group.addons.length; i++) {
 				//console.log("i", i, counter.addons[i]);
 	    		addonsTotalPrice += group.addons[i].totalPrice;
 			};  
 
-			/*
-			pretty sure that calcgroup takes care of this!
-			//remove the price of the entire counter
-			vm.quote.totalPrice -= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
-			//set new value with addons added to price
-			vm.quote.counterGroup[groupIndex].counters[index].totalPrice = counterPrice + addonsTotalPrice;
-			//update new grand total
-			vm.quote.totalPrice += vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
-			*/
-			//recalculate group if material is present
 			if( vm.quote.counterGroup[groupIndex].material) {
 				vm.calcGroup(groupIndex, vm.quote.counterGroup[groupIndex].material, pricing);
 			};
 	  	};
 
-	  	vm.saveMandatoryAddon = function(addon, index) {
+	  	vm.saveMandatoryAddon = function(addon, groupNumber) {
+	  		//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
+	  		var index = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
 	  		var addons = vm.quote.mandatoryAddons;
 			var pushObj = {};
 			var search = vm.arraySearch(addon.description, addons, "description");
@@ -358,6 +328,8 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 		};
 		
 		vm.removeAddon = function(addon, counterIndex, addonIndex){		
+						//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
+	  		var addonindex = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
 			vm.quote.totalPrice -= addon.totalPrice;
 		
 			vm.quote.counterGroup[counterIndex].totalPrice -= addon.totalPrice;
@@ -401,9 +373,11 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 		};
 
 
-		vm.saveMaterial = function(material, index){
+		vm.saveMaterial = function(material, groupNumber){
 			//console.log(material);
-
+			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
+	  		var index = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
+	  		console.log(index);
 			vm.quote.counterGroup[index].material = {
 				itemCode: material.itemCode,
 				thickness: material.thickness,
@@ -423,7 +397,9 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 			vm.calcGroup(index, material);
 		};
 
-		vm.editMaterialSave = function(material, index){
+		vm.editMaterialSave = function(material, groupNumber){
+			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
+	  		var index = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
 			console.log(material, index);
 			var pushObj = {};
 
@@ -455,8 +431,6 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 
 		vm.calcSheets = function(material, sheets, overridePricing){
 		//Calculate how many sheets are needed. Will need to revamp this: check width and length of sheets as well as square footage
-
-
 			var returnObj = {
 				sheets : 0,
 				pricing: ''
@@ -492,7 +466,9 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 			return(returnObj);
 		};
 
-		vm.commitCounter = function(modal, pushObj, index, groupIndex){
+		vm.commitCounter = function(modal, pushObj, index, groupNumber){
+						//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
+	  		var groupIndex = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
 			console.log(groupIndex, index, typeof vm.quote.counterGroup[groupIndex].counters[index], pushObj);
 			//Commits data to arrays depending on whether it's an edit or a new save.
 			if(typeof vm.quote.counterGroup[groupIndex].counters[index] === "undefined"){
@@ -508,7 +484,9 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 			};
 		};
 
-		vm.deleteCounter = function(groupIndex, index) {
+		vm.deleteCounter = function(groupNumber, index) {
+			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
+	  		var groupIndex = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
 			vm.quote.counterGroup[groupIndex].totalPrice -= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
 			vm.quote.counterGroup[groupIndex].TAC -= vm.quote.counterGroup[groupIndex].counters[index].squareFootage;
 			vm.quote.totalPrice-= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
@@ -520,7 +498,9 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 			};
 		};
 
-		vm.calcGroup = function(index, material, overridePricing){
+		vm.calcGroup = function(groupNumber, material, overridePricing){
+			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
+	  		var index = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
 			//So I think this is going to be more of a 'hub' for all the update functions: calculate sheets, calculate counters, calculate addons etc etc.
 			//It'll check to see what data it has, and then will calculate what it can. Will probably need to make a flag set when all the info is there
 			//So it'll catch you if click on the quote page with missing info "Quote is incomplete - group 1 requires material. Are you sure you want to continue?"
@@ -530,7 +510,8 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 				var group = vm.quote.counterGroup[index];
 				var sheets = {};
 
-				console.log(vm.quote.counterGroup[index], index);
+				console.log(vm.quote.counterGroup[index]);
+				console.log(index);
 				//clear values for each counter and the main group
 				vm.quote.counterGroup[index].TAC = 0;
 				vm.quote.TAC = 0;
@@ -595,7 +576,11 @@ console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counter
 			};
 		};
 
-		vm.calcCounter = function(width, length, shape, index, groupIndex, description, modal) {
+		vm.calcCounter = function(width, length, shape, index, groupNumber, description, modal) {
+		//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
+	  	var groupIndex = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
+		//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
+	  	var index = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
 		console.log("Width", width, "Length", length, "Shape", shape, "Index", index, "Group Index", groupIndex, "description", description);
 
 		//Obviously, we set some variables. 

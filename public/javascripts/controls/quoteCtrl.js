@@ -170,7 +170,7 @@ addons are PER GROUP not per table
 	  	vm.changePricing = function(pricing, groupNumber, material) {
 
 			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
-	  		var index = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
+	  		var groupIndex = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
 
 			console.log(pricing, groupIndex, material);
 			var sheets = vm.quote.counterGroup[groupIndex].sheets;
@@ -330,9 +330,9 @@ addons are PER GROUP not per table
 			};
 		};
 		
-		vm.removeAddon = function(addon, counterIndex, addonIndex){		
-						//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
-	  		var addonindex = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
+		vm.removeAddon = function(addon, groupNumber, addonIndex){		
+			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
+	  		var counterIndex = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
 			vm.quote.totalPrice -= addon.totalPrice;
 		
 			vm.quote.counterGroup[counterIndex].totalPrice -= addon.totalPrice;
@@ -453,7 +453,7 @@ addons are PER GROUP not per table
 					//it will round down to 0, so make it one sheet
 					returnObj.sheets = .5;
 					returnObj.pricing = "halfSheet";
-				} else if (material.halfSheet && sheets <= .25) {
+				} else if (material.quarterSheet && sheets <= .25) {
 					//it will round down to 0, so make it one sheet
 					returnObj.sheets = .5;
 					returnObj.pricing = "quarterSheet";
@@ -524,15 +524,15 @@ addons are PER GROUP not per table
 					//Add square footage of one counter to the TOTAL Area
 					//console.log(i, vm.quote.counterGroup[index].counters.length, vm.quote.counterGroup[index].counters[i].squareFootage);
 					vm.quote.counterGroup[index].TAC += vm.quote.counterGroup[index].counters[i].squareFootage;
-					vm.quote.TAC += vm.quote.counterGroup[index].counters[i].squareFootage;
+					vm.quote.TAC += parseFloat(vm.quote.counterGroup[index].counters[i].squareFootage);
 				};
 				
 				//Round 'em.
 				vm.quote.counterGroup[index].TAC = vm.quote.counterGroup[index].TAC.toFixed(2);
-				vm.quote.TAC = vm.quote.TAC.toFixed(2);
+				vm.quote.TAC = parseFloat(vm.quote.TAC.toFixed(2));
 
+				//If the sheets have not been overriden, take entire area and estimate number of sheets required.
 				if(typeof vm.quote.counterGroup[index].sheets === "undefined") {
-					//If the sheets have not been overriden, take entire area and estimate number of sheets required.
 					vm.quote.counterGroup[index].sheets = vm.quote.counterGroup[index].TAC / (material.length * material.width/144);
 					vm.quote.counterGroup[index].sheets = vm.quote.counterGroup[index].sheets.toFixed(2);	
 					vm.quote.counterGroup[index].estimatedSheets = vm.quote.counterGroup[index].sheets;
@@ -552,6 +552,7 @@ addons are PER GROUP not per table
 					vm.quote.totalPrice += vm.quote.counterGroup[index].addons[i].totalPrice;
 				};	
 
+				console.log(material[sheets.pricing], vm.quote.counterGroup[index].sheets);
 				//Group MATERIAL Cost - Cost of all counters combined
 				vm.quote.counterGroup[index].GMC = material[sheets.pricing] * vm.quote.counterGroup[index].sheets;
 				vm.quote.GMC = vm.quote.counterGroup[index].GMC;
@@ -565,12 +566,11 @@ addons are PER GROUP not per table
 				
 				//This is for after it's calculated once, because it adds up all OTHER counters, and then adds the new value for group total 
 				if(typeof vm.quote.counterGroup[index].totalPrice !== 'undefined'){
-					//vm.quote.totalPrice = 0;
 					for (var t = vm.quote.counterGroup.length - 1; t >= 0; t--) {
 						if(t !== index){
-							vm.quote.totalPrice += vm.quote.counterGroup[t].totalPrice;
-							vm.quote.TAC += vm.quote.counterGroup[t].TAC;
-							vm.quote.GMC += vm.quote.counterGroup[t].GMC;
+							vm.quote.TAC += parseFloat(vm.quote.counterGroup[t].TAC);
+							vm.quote.totalPrice += parseFloat(vm.quote.counterGroup[t].totalPrice);
+							vm.quote.GMC += parseFloat(vm.quote.counterGroup[t].GMC);
 						};	
 					};
 					vm.quote.GMCPSF = vm.quote.GMC / vm.quote.TAC;

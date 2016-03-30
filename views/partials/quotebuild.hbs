@@ -26,7 +26,7 @@
 	      		<br>
 				<div ng-repeat="group in vm.quote.counterGroup | orderBy:'-groupNumber' track by $index">
 <!--{/group.groupNumber|json/}-->
-					<u>Group {/group.groupNumber + 1/}</u><button type="button" class="btn btn-danger" style="float:right" ng-click="vm.removeGroup($index)">DELETE THIS GROUP</button>
+					<u>Group {/group.groupNumber + 1/}</u><button type="button" class="btn btn-danger" style="float:right" ng-click="vm.removeGroup(group.groupNumber)">DELETE THIS GROUP</button>
 					<br>
 					<button type="button" style="btn;" ng-click="vm.addCounter(group.groupNumber, group.counters.length)">Add a Counter</button>
 					<br>
@@ -96,7 +96,7 @@
 									</td>
 								</tr>
 							</table>
-							<span ng-show="vm.editMaterial[$index]">
+							<span ng-show="vm.editMaterial[group.groupNumber]">
 								Choose a Manufacturer:
 								<select name="materialManufacturer" ng-model="materialManufacturer" ng-options="material.manufacturer for material in vm.materials | filter: {distributor: materialDistributor.distributor} | unique: 'manufacturer' | orderBy:'manufacturer'">
 									<option value="">----Select----</option>
@@ -143,11 +143,11 @@
 										</li>
 									</ul>
 <!--{/materialDescription | json/}-->
-									<button type="button" ng-click="vm.editMaterialSave(materialDescription, $index); vm.editMaterial[$index] = false; materialManufacturer==''; materialDescription" ng-show="vm.editMaterial[$index]" class="btn btn-default">Save Edit</button>
+									<button type="button" ng-click="vm.editMaterialSave(materialDescription, group.groupNumber); vm.editMaterial[group.groupNumber] = false; materialManufacturer==''; materialDescription" ng-show="vm.editMaterial[group.groupNumber]" class="btn btn-default">Save Edit</button>
 								</div>
 				      		</span>
-							<br><button type="button" ng-click="vm.editMaterial[$index] = true" ng-hide="vm.editMaterial[$index]" class="btn btn-default">Edit this Material</button>
-							<button type="button" ng-click="vm.editMaterial[$index] = false" ng-show="vm.editMaterial[$index]" class="btn btn-default">Cancel</button>
+							<br><button type="button" ng-click="vm.editMaterial[group.groupNumber] = true" ng-hide="vm.editMaterial[group.groupNumber]" class="btn btn-default">Edit this Material</button>
+							<button type="button" ng-click="vm.editMaterial[group.groupNumber] = false" ng-show="vm.editMaterial[group.groupNumber]" class="btn btn-default">Cancel</button>
 						</div>
 					</div>
 					<!--End Material Collapsable-->
@@ -221,8 +221,8 @@
 				      	<hr style="background:#FFFFFF; border:0; height:7px" />
 					</div>
 					<!--END OF COUNTER LOOP-->
-					<button type="button" ng-click="vm.divAddons[$index] = true">Add Addons</button>
-					<div ng-show="vm.divAddons[$index]">
+					<button type="button" ng-click="vm.divAddons[group.groupNumber] = true">Add Addons</button>
+					<div ng-show="vm.divAddons[group.groupNumber]">
 						<br>Addons: 
 						<!--
 						Manufactuer
@@ -268,10 +268,10 @@
 									<br>Price: {/counter.counterWidth * counter.counterLength * counterAddonDescription.price/}
 								</li>	
 							</ul>
-						    <button type="button" ng-click="vm.saveAddon(counterAddonDescription, shape, counterLength, counterWidth, $index); vm.divAddons[$index]=false; counterAddonDistributor=''; counterAddonManufacturer=''; counterAddonType=''; counterAddonDescription='';" class="btn btn-default">Add Addons</button>
+						    <button type="button" ng-click="vm.saveAddon(counterAddonDescription, shape, counterLength, counterWidth, group.groupNumber); vm.divAddons[group.groupNumber]=false; counterAddonDistributor=''; counterAddonManufacturer=''; counterAddonType=''; counterAddonDescription='';" class="btn btn-default">Add Addons</button>
 						</div>
 						<br>
-						<button type="button" ng-click="vm.divAddons[$index]=false; counterAddonDistributor = ''" class="btn btn-danger">Cancel</button> 
+						<button type="button" ng-click="vm.divAddons[group.groupNumber]=false; counterAddonDistributor = ''" class="btn btn-danger">Cancel</button> 
 					</div>
 					<br>
 <!--{/group.addons|json/}-->
@@ -357,23 +357,23 @@
 		      				</tr>
 			      			<tr>
 			      				<td ng-show="group.material.halfSheet">
-			      					<input type="radio" name="counterPricing{/$index/}" ng-model="group.material.pricing" ng-change="vm.changePricing(group.material.pricing, $index, group.material)" value="halfSheet">
+			      					<input type="radio" name="counterPricing{/group.groupNumber/}" ng-model="group.material.pricing" ng-change="vm.changePricing(group.material.pricing, group.groupNumber, group.material)" value="halfSheet">
 			      					{/group.material.halfSheet | currency:$/}/sheet
 			      				</td>
 			      				<td ng-show="group.material.fullSheet1">
-			      					<input type="radio" name="counterPricing{/$index/}" ng-model="group.material.pricing" ng-change="vm.changePricing(group.material.pricing, $index, group.material)" value="fullSheet1">
+			      					<input type="radio" name="counterPricing{/group.groupNumber/}" ng-model="group.material.pricing" ng-change="vm.changePricing(group.material.pricing, group.groupNumber, group.material)" value="fullSheet1">
 			      					{/group.material.fullSheet1 | currency:$/}/sheet
 			      				</td>
 			      				<td ng-show="group.material.fullSheet5">
-			      					<input type="radio" name="counterPricing{/$index/}" ng-model="group.material.pricing" ng-change="vm.changePricing(group.material.pricing, $index, group.material)" value="fullSheet5">
+			      					<input type="radio" name="counterPricing{/group.groupNumber/}" ng-model="group.material.pricing" ng-change="vm.changePricing(group.material.pricing, group.groupNumber, group.material)" value="fullSheet5">
 			      					{/group.material.fullSheet5 | currency:$/}/sheet
 			      				</td>
 			      				<td ng-show="group.material.fullSheet21">
-			      					<input type="radio" name="counterPricing{/$index/}" ng-model="group.material.pricing" ng-change="vm.changePricing(group.material.pricing, $index, group.material)" value="fullSheet21">
+			      					<input type="radio" name="counterPricing{/group.groupNumber/}" ng-model="group.material.pricing" ng-change="vm.changePricing(group.material.pricing, group.groupNumber, group.material)" value="fullSheet21">
 			      					{/group.material.fullSheet21 | currency:$/}/sheet
 			      				</td>
 			      				<td ng-show="group.material.isa">
-			      					<input type="radio" name="counterPricing{/$index/}" ng-model="group.material.pricing" ng-change="vm.changePricing(group.material.pricing, $index, group.material)" value="isa">
+			      					<input type="radio" name="counterPricing{/group.groupNumber/}" ng-model="group.material.pricing" ng-change="vm.changePricing(group.material.pricing, group.groupNumber, group.material)" value="isa">
 			      					{/group.material.isa | currency:$/}/sheet
 			      				</td>
 			      			</tr>

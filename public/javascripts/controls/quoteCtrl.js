@@ -122,7 +122,7 @@ addons are PER GROUP not per table
 		vm.arraySearch = function (nameKey, myArray, property){
 		    //console.log(nameKey, myArray, property);
 		    for (var i=0; i < myArray.length; i++) {
-		    	console.log("my array i", myArray[i], "property", property)
+		    	//console.log("my array i", myArray[i], "property", property)
 		        if (myArray[i][property] === nameKey) {
 		            return i;
 		        };
@@ -193,6 +193,9 @@ addons are PER GROUP not per table
 			} else if(pricing == "isa") {
 				counterPrice = sheets * material.isa;
 				vm.quote.counterGroup[groupIndex].material.pricing = "isa";
+			} else if(pricing == "quarterSheet") {
+				counterPrice = sheets * material.quarterSheet;
+				vm.quote.counterGroup[groupIndex].material.pricing = "quarterSheet";
 			};
 			console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counterGroup[groupIndex].material); 
 			for (var i=0; i < group.addons.length; i++) {
@@ -374,7 +377,7 @@ addons are PER GROUP not per table
 
 
 		vm.saveMaterial = function(material, groupNumber){
-			//console.log(material);
+			console.log(material, groupNumber);
 			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
 	  		var index = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
 	  		console.log(index);
@@ -437,7 +440,7 @@ addons are PER GROUP not per table
 			};
 
 			//console.log(material.length, material.width);
-			console.log(typeof overridePricing);
+			console.log(typeof overridePricing, sheets);
 			if(typeof overridePricing === 'undefined') {
 			//Chooses the best match for pricing. Will need to make this user selectable later.
 				if(material.fullSheet21 && sheets >= 21) {
@@ -579,8 +582,6 @@ addons are PER GROUP not per table
 		vm.calcCounter = function(width, length, shape, index, groupNumber, description, modal) {
 		//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
 	  	var groupIndex = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
-		//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
-	  	var index = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
 		console.log("Width", width, "Length", length, "Shape", shape, "Index", index, "Group Index", groupIndex, "description", description);
 
 		//Obviously, we set some variables. 

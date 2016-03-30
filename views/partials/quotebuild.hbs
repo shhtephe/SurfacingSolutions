@@ -25,10 +25,10 @@
 				<hr style="background:#000000; border:0; height:7px" />
 	      		<br>
 				<div ng-repeat="group in vm.quote.counterGroup | orderBy:'-groupNumber' track by $index">
-{/group.groupNumber|json/}
+<!--{/group.groupNumber|json/}-->
 					<u>Group {/group.groupNumber + 1/}</u><button type="button" class="btn btn-danger" style="float:right" ng-click="vm.removeGroup($index)">DELETE THIS GROUP</button>
 					<br>
-					<button type="button" style="btn;" ng-click="vm.addCounter($index, group.counters.length)">Add a Counter</button>
+					<button type="button" style="btn;" ng-click="vm.addCounter(group.groupNumber, group.counters.length)">Add a Counter</button>
 					<br>
 					<span style="float: right" >
 						Group Description:
@@ -37,7 +37,7 @@
 					<br>
 					<br>
 					<br>
-					<button type="button" ng-show="vm.quote.counterGroup[$index].material" class="btn btn-default" ng-click="isMaterialCollapsed = !isMaterialCollapsed">Material - {/group.material.description/}</button>
+					<button type="button" ng-show="vm.quote.counterGroup[group.groupNumber].material" class="btn btn-default" ng-click="isMaterialCollapsed = !isMaterialCollapsed">Material - {/group.material.description/}</button>
 					<!--Material Collapsable-->
 					<br>
 					<br>
@@ -154,7 +154,7 @@
 					<br>
 					<!--START OF COUNTER LOOP-->
 					<div ng-repeat="counter in group.counters track by $index">
-						</u> <button type="button" class="btn btn-danger" style="float:right" ng-click="vm.deleteCounter($parent.$index, $index)">DELETE THIS COUNTER</button>
+						</u> <button type="button" class="btn btn-danger" style="float:right" ng-click="vm.deleteCounter(group.groupNumber, $index)">DELETE THIS COUNTER</button>
 				  			<button type="button" class="btn btn-default" ng-click="isCounterCollapsed = !isCounterCollapsed"><span ng-hide="counter.description">Counter {/$index + 1/}</span> <span ng-show="counter.description">{/counter.description/}</span></button>
 				  			<div uib-collapse="!isCounterCollapsed">
 								<div class="well well-lg">
@@ -212,7 +212,7 @@
 					  				</table>
 					  				<br><button type="button" ng-click="vm.editCounter[$index] = true" ng-hide="vm.editCounter[$index]" class="btn btn-default">Edit this Counter</button>
 					  				<button type="button" ng-click="vm.editCounter[$index]=false" ng-show="vm.editCounter[$index]" class="btn btn-default">Cancel</button>
-					  				<button type="button" ng-click="vm.calcCounter(counter.counterWidth, counter.counterLength, counter.counterShape, $index, $parent.$index); vm.editCounter[$index]=false" ng-show="vm.editCounter[$index]" class="btn btn-default">Save Counter</button>
+					  				<button type="button" ng-click="vm.calcCounter(counter.counterWidth, counter.counterLength, counter.counterShape, $index, group.groupNumber); vm.editCounter[$index]=false" ng-show="vm.editCounter[$index]" class="btn btn-default">Save Counter</button>
 <!--<br> {/counter.material | json/} <br>-->
 									<!--This is removed until I retool it to work properly-->			
 							      	<!--<span ng-show="counter.totalPrice">Counter Subtotal: {/counter.totalPrice |currency:$/}</span>-->
@@ -279,7 +279,7 @@
 						<br>{/addon.productType/} - {/addon.description/} : 
 						<span ng-show="addon.formula =='item' || addon.formula == 'linear'">{/addon.quantity/}</span>
 						<span ng-show="addon.formula =='square'">{/counter.counterWidth * counter.counterLength/}</span>
-						@{/addon.price | currency:$/} <a ng-click="vm.removeAddon(addon, $parent.$index, $index)">remove</a>
+						@{/addon.price | currency:$/} <a ng-click="vm.removeAddon(addon, group.groupNumber, $index)">remove</a>
 					</div>
 					<br>
 					<!--Material Selection-->
@@ -332,7 +332,7 @@
 								</li>
 							</ul>
 						</div>
-						<button type="button" ng-click="vm.saveMaterial(materialDescription , $index); materialDistributor=''; materialManufacturer=''; materialColourGroup=''; materialDescription=''" ng-show="materialManufacturer && materialDescription" class="btn btn-default">Save Material</button>
+						<button type="button" ng-click="vm.saveMaterial(materialDescription , group.groupNumber); materialDistributor=''; materialManufacturer=''; materialColourGroup=''; materialDescription=''" ng-show="materialManufacturer && materialDescription" class="btn btn-default">Save Material</button>
 					</div>
 					<!--End Material Selection-->
 					<span ng-show="group.counters && group.material">
@@ -399,7 +399,7 @@
 							</tr>
 						</table>
 						<br>
-						Sheets required: <input type:"number" ng-model='group.sheets' name='group.sheets' ng-change="vm.calcGroup($index, group.material)">
+						Sheets required: <input type:"number" ng-model='group.sheets' name='group.sheets' ng-change="vm.calcGroup(group.groupNumber, group.material)">
 					</span> 	
 					<hr style="background:#000000; border:0; height:7px" />
 				</div>
@@ -431,7 +431,7 @@
 				<br>
 	      			<div ng-repeat="addon in vm.quote.mandatoryAddons track by $index">
 						<br>{/addon.productType/} - {/addon.description/} : {/addon.quantity/}
-						@{/addon.price | currency:$/} <a ng-click="vm.removeAddon(addon, -1, $index)">remove</a>
+						@{/addon.price | currency:$/} <a ng-click="vm.removeAddon(addon, -1, group.groupNumber)">remove</a>
 					</div>
 		      	<br>
 				<table>

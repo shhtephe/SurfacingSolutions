@@ -468,6 +468,13 @@
 				<uib-alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</uib-alert>
 				<br><br><br>
 <!--<pre>{/quote | json/}</pre>-->
+				<!--date picker-->
+		        <p class="input-group">
+		          <input type="text" class="form-control" uib-datepicker-popup="{/format/}" ng-model="vm.quote.termDate" is-open="vm.popup1.opened" datepicker-options="vm.dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
+		          <span class="input-group-btn">
+		            <button type="button" class="btn btn-default" ng-click="vm.open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+		          </span>
+		        </p>
 			</div>
         </div>
     </div>

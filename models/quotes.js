@@ -5,6 +5,7 @@ var Schema = mongoose.Schema;
 
 var quote = new Schema({
 	quoteID: Number,
+	termDate: String,
 	custCode: Number,
 	totalPrice: Number,
 	jobDifficulty: Number,

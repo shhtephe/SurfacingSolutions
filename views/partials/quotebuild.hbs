@@ -458,8 +458,18 @@
 				<br><br>
 				<b><u>Terms</u></b>
 				<div ng-repeat="term in vm.terms">
-					<input type="checkbox" ng-checked="vm.checkTerms(term)" ng-model="term[$index].value" ng-click="vm.buildTerms(term)">{/term.term | termDate:vm.quote/}
+					<input type="checkbox" ng-checked="vm.checkTerms(term)" ng-model="term[$index].value" ng-click="vm.buildTerms(term)">{/term.term/} <span ng-show="term.calendar=='TRUE'">{/vm.quote.termDate[$index].date | date:'shortDate'/}</span>		
+					<!--date picker-->
+			        <span ng-show="term.calendar=='TRUE'">
+				        <p class="input-group">
+				          <input style="width:150px" type="text" class="form-control" uib-datepicker-popup="{/vm.format/}" ng-model="vm.quote.termDate[$index].date" is-open="vm.popup1.opened" datepicker-options="vm.dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"/>
+				          <span class="input-group-btn">
+				            <button type="button" class="btn btn-default" ng-click="vm.open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+				          </span>
+				        </p>
+			        </span>
 				</div>
+				{/vm.quote.terms/}
 				<br><br>
 				Please click <a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotefinal" target="">here</a> to view the invoice.
 				<button type="button" style="btn; float:right" ng-click="vm.saveQuote(vm.quote.description)">Update/Save Quote</button>
@@ -468,13 +478,6 @@
 				<uib-alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</uib-alert>
 				<br><br><br>
 <!--<pre>{/quote | json/}</pre>-->
-				<!--date picker-->
-		        <p class="input-group">
-		          <input type="text" class="form-control" uib-datepicker-popup="{/format/}" ng-model="vm.quote.termDate" is-open="vm.popup1.opened" datepicker-options="vm.dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
-		          <span class="input-group-btn">
-		            <button type="button" class="btn btn-default" ng-click="vm.open1()"><i class="glyphicon glyphicon-calendar"></i></button>
-		          </span>
-		        </p>
 			</div>
         </div>
     </div>
@@ -517,6 +520,9 @@
 	</div>
 	</script>
 <!--
+
+//This is to add creation date: | termDate:vm.quote
+
 List of things I would like to add:
 Move Screen and center where the user should click, so they don't get lost.
 

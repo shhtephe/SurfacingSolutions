@@ -132,7 +132,7 @@ addons are PER GROUP not per table
 		vm.buildTerms = function(term){
 			var terms = vm.quote.terms;
 			var pushObj = {};
-			console.log("Term", term, "Terms", terms);
+			console.log("Term", term, "Terms", terms, "Calendar", term.calendar);
 			//If there are no terms, add empty terms to quote
 			if (typeof terms === "undefined") {
 				terms = [];
@@ -147,7 +147,8 @@ addons are PER GROUP not per table
 				//console.log("Couldn't find entry");
 				//Couldn't find it, so add it to the terms
 				pushObj = {
-					term: term.term
+					term: term.term,
+					calendar: term.calendar
 				};
 				terms.push(pushObj);
 			};

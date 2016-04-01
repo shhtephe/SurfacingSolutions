@@ -5,7 +5,9 @@ var Schema = mongoose.Schema;
 
 var quote = new Schema({
 	quoteID: Number,
-	termDate: String,
+	termDate: [{
+		date: String
+	}],
 	custCode: Number,
 	totalPrice: Number,
 	jobDifficulty: Number,
@@ -28,7 +30,8 @@ var quote = new Schema({
 		totalPrice: Number
 	}],
 	terms: [{
-		term: String
+		term: String,
+		
 	}],
 	counterGroup: [{
 		groupNumber: Number,

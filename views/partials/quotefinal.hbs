@@ -153,8 +153,10 @@ Phone: {/vm.customer.homePhone/}</textarea>
 		
 		<div id="terms">
 		  <h5>Terms</h5>
+		  {/vm.quote.termDate/}
 		  <div ng-repeat="term in vm.quote.terms">
-			{/term.term | termDate: vm.quote/}
+		  	{/$index/}{/vm.quote.termDate[$index]/}
+			{/term.term/}{/vm.quote.termDate[$index].date | date:'shortDate'/}
   		  </div>
 		</div>
 	</div>

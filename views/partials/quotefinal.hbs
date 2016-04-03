@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <div ng-controller="quoteCtrl">
-{/vm.quote/}
+<!--{/vm.quote/}
 <br>
 <br>
 {/vm.customer/}
 <br>
-<br>
+<br>-->
 <alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</alert>
 	<div id="page-wrap">
 	<a href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}"><button type="button" style="btn">Back</button></a> 

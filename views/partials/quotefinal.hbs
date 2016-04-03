@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <div ng-controller="quoteCtrl">
-<!--
 {/vm.quote/}
 <br>
 <br>
 {/vm.customer/}
 <br>
-<br>-->
+<br>
 <alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</alert>
 	<div id="page-wrap">
 	<a href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}"><button type="button" style="btn">Back</button></a> 
@@ -37,17 +36,11 @@
 
 		
 		<div style="clear:both"></div>
-		
-		<div id='customer' align='left'>
-			<textarea id="customer">{/vm.customer.companyName/}</textarea>
-			<br> 
-		</div>
-		<div id='customer' align='right'>
-			<textarea id="customer">{/vm.quote.description/}</textarea>
-		</div>
-		<br> <br> <br> 
+		<br>
 		<div id="customer">
-            <textarea id="customerInfo">{/vm.customer.lastName/}, {/vm.customer.firstName/}
+            <textarea id="customerInfo">{/vm.quote.description/}
+{/vm.customer.companyName/}
+{/vm.customer.lastName/}, {/vm.customer.firstName/}
 {/vm.customer.addressLine1/} {/vm.customer.addressLine2/}
 {/vm.customer.city/}, {/vm.customer.province/} {/vm.customer.postal/}
 
@@ -93,7 +86,7 @@ Phone: {/vm.customer.homePhone/}</textarea>
 					</td>
 				    <td class="description">
 				    	<span ng-hide="counter.addon">
-				    		<textarea>{/counter.description/}</textarea>
+				    		{/counter.description/}
 			    		</span>
 			    		<span ng-show="counter.addon">
 				    		<textarea>{/counter.itemCode/}</textarea>
@@ -101,16 +94,14 @@ Phone: {/vm.customer.homePhone/}</textarea>
 		    		</td>
 				    <td>
 				    	<span ng-hide="counter.addon">
-				    		<textarea class="cost">{/counter.material.price | currency:$/}</textarea>		    		
+				    		{/group.material[group.material.pricing] | currency:$/}/Sheet
 			    		</span>
 			    		<span ng-show="counter.addon">
 				    		<textarea>{/counter.price | currency:$/}</textarea>
 			    		</span>
 			    	</td>
 				    <td>
-			    		<span ng-show="counter.addon">
-				    		<textarea>{/counter.quantity/}</textarea>
-			    		</span>		    	
+		        		{/counter.squareFootage | number:2/} SQFT    				    	
 		    		</td>
 				    <td>	
 				    	<span class="price">{/counter.totalPrice | currency: $/}</span>
@@ -150,13 +141,24 @@ Phone: {/vm.customer.homePhone/}</textarea>
 		  </tr>
 		
 		</table>
-		
 		<div id="terms">
 		  <h5>Terms</h5>
-		  {/vm.quote.termDate/}
 		  <div ng-repeat="term in vm.quote.terms">
-		  	{/$index/}{/vm.quote.termDate[$index]/}
-			{/term.term/}{/vm.quote.termDate[$index].date | date:'shortDate'/}
+		  	<br>
+				<div class="row">
+					<div class="col-md-8">{/term.term/}<!--<span ng-show="term.calendar==true">{/term.date | date:'shortDate'/}</span>--></div>
+					<!--date picker-->
+  					<div class="col-md-3">
+			        	<span ng-show="term.calendar=='TRUE'">
+					        <span class="input-group">
+					          <input type="text" class="form-control" uib-datepicker-popup="{/vm.format/}" ng-change="" ng-model="term.date" is-open="vm.popup1.opened" datepicker-options="vm.dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"/>
+					          <span class="input-group-btn">
+					            <button type="button" class="btn btn-default" ng-click="vm.open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+					          </span>
+					        </span>
+				        </span>
+		    		</div>
+		    	</div>
   		  </div>
 		</div>
 	</div>

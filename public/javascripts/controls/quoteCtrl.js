@@ -274,7 +274,7 @@ addons are PER GROUP not per table
 			//var squareFootage = 0; This should be coming from the group total which gets calculated.
 
 			addon.quantity = Number(addon.quantity);
-			console.log(addon, squareFootage);
+			//console.log(addon, squareFootage);
 
 			vm.calcAddon(addon, shape, length, width);
 

@@ -243,18 +243,19 @@
 						</div>
 						<div ng-show="counterAddonManufacturer && counterAddonType">
 							<br>
-							Choose a Item Code:
+							Choose an Item Code:
 							<select name="counterAddonDescription" ng-model="counterAddonDescription" ng-options="product.itemCode + ' - ' + product.description for product in vm.products | filter:{manufacturer:counterAddonManufacturer.manufacturer, type:counterAddonType.type} | unique: 'itemCode' | orderBy:'itemCode'">
 								<option value="">----Select----</option>
 							</select>
+							{/product/}
 						</div>
 						<div ng-show="counterAddonManufacturer && counterAddonType && counterAddonDescription">
 							<br>
 							<ul class="list-group">
 								<li class="list-group-item">	
 									Price /<span ng-show="counterAddonDescription.formula=='item'">Item</span>
-									<span ng-show="counterAddonDescription.formula=='square'">Square Foot</span>
-									<span ng-show="counterAddonDescription.formula=='linear'">Linear Foot</span>: {/counterAddonDescription.price/}<br> 
+									<span ng-show="counterAddonDescription.formula=='sqft'">Square Foot</span>
+									<span ng-show="counterAddonDescription.formula=='linear'">Linear Foot</span>: {/counterAddonDescription.price| currency:$/}<br> 
 								</li>	
 								<li class="list-group-item">	
 									Formula: {/counterAddonDescription.formula/}
@@ -268,7 +269,7 @@
 									<br>Price: {/counter.counterWidth * counter.counterLength * counterAddonDescription.price/}
 								</li>	
 							</ul>
-						    <button type="button" ng-click="vm.saveAddon(counterAddonDescription, shape, counterLength, counterWidth, group.groupNumber); vm.divAddons[group.groupNumber]=false; counterAddonDistributor=''; counterAddonManufacturer=''; counterAddonType=''; counterAddonDescription='';" class="btn btn-default">Add Addons</button>
+						    <button type="button" ng-click="vm.saveAddon(counterAddonDescription, shape, group.TAC, group.groupNumber); vm.divAddons[group.groupNumber]=false; counterAddonDistributor=''; counterAddonManufacturer=''; counterAddonType=''; counterAddonDescription='';" class="btn btn-default">Add Addons</button>
 						</div>
 						<br>
 						<button type="button" ng-click="vm.divAddons[group.groupNumber]=false; counterAddonDistributor = ''" class="btn btn-danger">Cancel</button> 
@@ -277,6 +278,7 @@
 <!--{/group.addons|json/}-->
 					<div ng-repeat="addon in group.addons track by $index">
 						<br>{/addon.productType/} - {/addon.description/} : 
+						<span ng-hide="addon.formula =='item' || addon.formula == 'linear' || addon.formula =='square'">*Not Calculated*</span>
 						<span ng-show="addon.formula =='item' || addon.formula == 'linear'">{/addon.quantity/}</span>
 						<span ng-show="addon.formula =='square'">{/counter.counterWidth * counter.counterLength/}</span>
 						@{/addon.price | currency:$/} <a ng-click="vm.removeAddon(addon, group.groupNumber, $index)">remove</a>
@@ -543,14 +545,47 @@ TAC was added as "text" - fixed
 
 Group Title - Group description
 
+mandatory addons not removing properly
+
+mandatory addons not calculating GMC/sqft and TGC/sqft
+
+make all calcs update to difficulty multiplier
+
+Area of Quote	Sheets Used	Quote Cost	Quote Material Cost	 Quote Material Cost per Square Foot	Total Cost per Square Foot
+
+Add the multiplier to the group
+
+group description text box "enter description here" until you type in it
 
 
+client review view
 table
 	Item
+	description - group description
+	quantity (sqft)
+	TGC/SQFT (alias cost/SQFT)
+	TGC
+
+Customer review
+table
+	Item
+	description - group description
+	quantity (sqft)
+	TGC/SQFT (alias cost/SQFT)
+	TGC
+below counters
+addon columns
+	item
 	description
-	unit cost in dollars
+	unit cost
 	quantity
 	price
-below counters
+
+client view mandatory addons only
+
 addons with item/description etc
+
+global addons below
+and then totals
+
 -->

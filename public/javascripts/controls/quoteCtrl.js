@@ -260,44 +260,23 @@ addons are PER GROUP not per table
 		};
 
 		vm.saveAddon = function(addon, shape, length, width, groupIndex) {
-			console.log(typeof vm.quote.counterGroup[groupIndex].addons);
+			console.log(typeof vm.quote.counterGroup[groupIndex].addons, addon, shape, length, width, groupIndex);
 
+			//create addons array if it doesn't exist - for initilization
 			if(typeof vm.quote.counterGroup[groupIndex].addons === "undefined"){
 				var addons = [];
 			}else{
 				var addons = vm.quote.counterGroup[groupIndex].addons;
 			};
+			//declare variables
 			var pushObj = {};
 			var search = vm.arraySearch(addon.description, addons, "description");
-			var totalPrice = 0;
-			var counterLength = length;
-			var counterWidth = width;
-			var squareFootage = 0;
-			addon.quantity = Number(addon.quantity);
-			//console.log(addon.formula, addon.quantity, addon.price);
+			//var squareFootage = 0; This should be coming from the group total which gets calculated.
 
-			if (addon.formula === "item") {
-				totalPrice =  addon.quantity * addon.price;
-			}else if(addon.formula === "square"){
-				console.log(vm.quote.counters[index]);
-				if(shape === "rectangle"){
-					squareFootage = counterLength * counterWidth;
-					addon.quantity = squareFootage;
-					totalPrice = addon.price * squareFootage;
-					console.log(counterLength, counterWidth, squareFootage, totalPrice, addon.price);
-				} else if(shape === "circle"){
-					squareFootage = (Math.PI * (Math.pow(counterWidth, 2)));
-					squareFootage = squareFootage.toFixed(2);
-					addon.quantity = squareFootage;
-					totalPrice = addon.price * squareFootage;
-				};
-			}else if(addon.formula === "linear"){	
-					addon.quantity = squareFootage;
-					totalPrice = addon.linear * price;
-			}else{
-				console.log("This shouldn't ever run, I think!");
-				totalPrice = addon.quantity * addon.price;
-			};
+			addon.quantity = Number(addon.quantity);
+			console.log(addon, squareFootage);
+
+			vm.calcAddon(addon, shape, length, width);
 
 			//Searches for the item by going through the list
 			if (typeof search === "undefined") {
@@ -323,8 +302,6 @@ addons are PER GROUP not per table
 				//Found it, so update the value
 				vm.quote.counterGroup[groupIndex].addons[search].quantity = addon.quantity;
 				vm.quote.counterGroup[groupIndex].addons[search].totalPrice = totalPrice;
-				//below code will be done when modal is saved and we're back on the normal page
-				//vm.quote.counters[index].totalPrice += addons[search].totalPrice;
 			};
 			//recalculate group if material is present
 			if( vm.quote.counterGroup[groupIndex].material) {
@@ -332,6 +309,34 @@ addons are PER GROUP not per table
 			};
 		};
 		
+		vm.calcAddon = function(addon){
+			var counterLength = length;
+			var counterWidth = width;
+			var totalPrice = 0;
+			//calculation - need to seperate this into another function
+			if (addon.formula === "item") {
+				totalPrice =  addon.quantity * addon.price;
+			}else if(addon.formula === "sqft"){
+				console.log(vm.quote.counters[index]);
+				if(shape === "rectangle"){
+					squareFootage = counterLength * counterWidth;
+					addon.quantity = squareFootage;
+					totalPrice = addon.price * squareFootage;
+					console.log(counterLength, counterWidth, squareFootage, totalPrice, addon.price);
+				} else if(shape === "circle"){
+					squareFootage = (Math.PI * (Math.pow(counterWidth, 2)));
+					squareFootage = squareFootage.toFixed(2);
+					addon.quantity = squareFootage;
+					totalPrice = addon.price * squareFootage;
+				};
+			}else if(addon.formula === "linear"){	
+					addon.quantity = squareFootage;
+					totalPrice = addon.linear * price;
+			}else{
+				console.error("Unknown addon formula type!!!");
+				totalPrice = addon.quantity * addon.price;
+			};
+		};
 		vm.removeAddon = function(addon, groupNumber, addonIndex){		
 			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
 	  		var counterIndex = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');

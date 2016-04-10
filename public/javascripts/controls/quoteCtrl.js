@@ -361,7 +361,8 @@ addons are PER GROUP not per table
 					TAC: 0,
 					counters: [],
 					addons:[],
-					totalPrice: 0
+					totalPrice: 0,
+					quantity: 1
 				};
 			} else {
 				pushObj = {
@@ -369,7 +370,8 @@ addons are PER GROUP not per table
 					TAC: 0,
 					counters: [],
 					addons: [],
-					totalPrice: 0
+					totalPrice: 0,
+					quantity: 1
 				};
 			};
 			vm.quote.counterGroup.push(pushObj);
@@ -530,7 +532,7 @@ addons are PER GROUP not per table
 				for (var i = 0; i <= vm.quote.counterGroup[index].counters.length - 1; i++) {
 					//Add square footage of one counter to the TOTAL Area
 					//console.log(i, vm.quote.counterGroup[index].counters.length, vm.quote.counterGroup[index].counters[i].squareFootage);
-					vm.quote.counterGroup[index].TAC += vm.quote.counterGroup[index].counters[i].squareFootage;
+					vm.quote.counterGroup[index].TAC += vm.quote.counterGroup[index].counters[i].squareFootage * vm.quote.counterGroup[index].quantity;
 					vm.quote.TAC += parseFloat(vm.quote.counterGroup[index].counters[i].squareFootage);
 				};
 				
@@ -538,33 +540,34 @@ addons are PER GROUP not per table
 				vm.quote.counterGroup[index].TAC = vm.quote.counterGroup[index].TAC.toFixed(2);
 				vm.quote.TAC = parseFloat(vm.quote.TAC.toFixed(2));
 
-				//If the sheets have not been overriden, take entire area and estimate number of sheets required.
+				//If the sheets have not been overriden, take entire area and estimate number of sheets required. ELSE just multiple by the quantity!
 				if(typeof vm.quote.counterGroup[index].sheets === "undefined") {
-					vm.quote.counterGroup[index].sheets = vm.quote.counterGroup[index].TAC / (material.length * material.width/144);
+					vm.quote.counterGroup[index].sheets = (vm.quote.counterGroup[index].TAC / (material.length * material.width/144)) * vm.quote.counterGroup[index].quantity;
 					vm.quote.counterGroup[index].sheets = vm.quote.counterGroup[index].sheets.toFixed(2);	
-					vm.quote.counterGroup[index].estimatedSheets = vm.quote.counterGroup[index].sheets;
 				};
+				//multiply the estimated sheets by the quantity
+				vm.quote.counterGroup[index].estimatedSheets = vm.quote.counterGroup[index].sheets * vm.quote.counterGroup[index].quantity;
 				
 				console.log(parseFloat(vm.quote.counterGroup[index].sheets));
 
 				//Below is the math for taking the total area of the group and getting pricing/estimating charges. The sheet estimation will be overriden when there's the sheets have been entered.
 				sheets = vm.calcSheets(material, vm.quote.counterGroup[index].sheets, overridePricing);
 				vm.quote.counterGroup[index].material.pricing = sheets.pricing;
-				vm.quote.counterGroup[index].totalPrice = vm.quote.counterGroup[index].sheets * material[sheets.pricing];	
+				vm.quote.counterGroup[index].totalPrice = vm.quote.counterGroup[index].sheets * material[sheets.pricing] * vm.quote.counterGroup[index].quantity;	
 
 				//calculate addons
 				for(var i = 0; i < vm.quote.counterGroup[index].addons.length; i++) {
 					//console.log(vm.quote.counterGroup[index].addons[i], i, index);
-					vm.quote.counterGroup[index].totalPrice += vm.quote.counterGroup[index].addons[i].totalPrice;
-					vm.quote.totalPrice += vm.quote.counterGroup[index].addons[i].totalPrice;
+					vm.quote.counterGroup[index].totalPrice += vm.quote.counterGroup[index].addons[i].totalPrice * vm.quote.counterGroup[index].quantity;
+					vm.quote.totalPrice += vm.quote.counterGroup[index].addons[i].totalPrice * vm.quote.counterGroup[index].quantity;
 				};	
 
 				console.log(material[sheets.pricing], vm.quote.counterGroup[index].sheets);
 				//Group MATERIAL Cost - Cost of all counters combined
-				vm.quote.counterGroup[index].GMC = material[sheets.pricing] * vm.quote.counterGroup[index].sheets;
-				vm.quote.GMC = vm.quote.counterGroup[index].GMC;
+				vm.quote.counterGroup[index].GMC = material[sheets.pricing] * vm.quote.counterGroup[index].sheets * vm.quote.counterGroup[index].quantity;
 				vm.quote.totalPrice += vm.quote.counterGroup[index].GMC;
-
+				vm.quote.GMC = vm.quote.counterGroup[index].GMC;
+				
 				// GMC square foot total divided by the total area of sheets required
 				vm.quote.counterGroup[index].GMCPSF = vm.quote.counterGroup[index].GMC / vm.quote.counterGroup[index].TAC;
 				//Group Cost per Squarefoot

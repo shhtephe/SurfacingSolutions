@@ -402,6 +402,7 @@
 						</table>
 						<br>
 						Sheets required: <input type:"number" ng-model='group.sheets' name='group.sheets' ng-change="vm.calcGroup(group.groupNumber, group.material)">
+						Quantity: <input type:"number" ng-model='group.quantity' name='group.quantity' ng-change="vm.calcGroup(group.groupNumber, group.material)">
 					</span> 	
 					<hr style="background:#000000; border:0; height:7px" />
 				</div>
@@ -449,14 +450,13 @@
 					<tr>
 						<td>{/vm.quote.TAC/} SQFT</td>
 						<td>{/vm.quote.estimatedSheets/}</td>
-						<td>{/vm.quote.totalPrice | currency:$/}</td>
-						<td>{/vm.quote.GMC | currency:$/}</td>
-						<td>{/vm.quote.GMCPSF | currency:$/}/SQFT</td>
-						<td>{/vm.quote.GCPSF | currency:$/}/SQFT</td>
+						<td>{/vm.quote.totalPrice * vm.quote.jobDifficulty | currency:$/}</td>
+						<td>{/vm.quote.GMC * vm.quote.jobDifficulty | currency:$/}</td>
+						<td>{/vm.quote.GMCPSF * vm.quote.jobDifficulty | currency:$/}/SQFT</td>
+						<td>{/vm.quote.GCPSF * vm.quote.jobDifficulty | currency:$/}/SQFT</td>
 					</tr>
 				</table>
 				<br>Job Difficulty: <input type="number" ng-model="vm.quote.jobDifficulty" name="vm.quote.jobDifficulty"><br>
-				<span style="float: left;">Total Price: {/vm.quote.totalPrice * vm.quote.jobDifficulty | currency:$/}</span>
 				<br><br>
 				<b><u>Terms</u></b>
 				<div ng-repeat="term in vm.terms">
@@ -499,10 +499,6 @@
 		<div ng-show="shape == 'rectangle' || shape == 'circle'">
 			Width in inches: <input type="text" ng-model="counterWidth" name="counterWidth">
 		</div>
-		<br>
-		<br>
-		<br><u>Selected Addons:</u> 
-		<br>
 	</div>
 	<div class="modal-footer">
 		<button type="button" style="btn" ng-click="vm.cancel()">Cancel</button>
@@ -524,18 +520,20 @@ Dynamic ul's for item code, thickness, etc. if they're empty, they don't show up
 Things to do:
 Add selectable price for counter (half sheet/full sheet/ multidiscount) - THIS HAS BEEN DONE
 
-add ability to multiply tables
+
 -->
 <!--
 Feedback: 
+
+add ability to multiply groups
+
+Line everything up in two columns
 
 Add calendar picker to terms below. - picker added, but needs to save.
 
 make "counter 1" the description - Done
 
 Group description text box not area, across "group 1" heading (group 1 - description text box)
-
-Line everything up in two columns
 
 reverse order for group - added and working, I *THINK*
 

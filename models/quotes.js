@@ -42,6 +42,7 @@ var quote = new Schema({
 		totalPrice: Number,
 		estimatedSheets: Number,
 		sheets: Number,
+		quantity: Number
 		addons: [{
 			distributor: String,
 			manufacturer: String,

@@ -260,7 +260,7 @@ addons are PER GROUP not per table
 		};
 
 		vm.saveAddon = function(addon, shape, length, width, groupIndex) {
-			console.log(typeof vm.quote.counterGroup[groupIndex].addons, addon, shape, length, width, groupIndex);
+			//console.log(typeof vm.quote.counterGroup[groupIndex].addons, addon, shape, length, width, groupIndex);
 
 			//create addons array if it doesn't exist - for initilization
 			if(typeof vm.quote.counterGroup[groupIndex].addons === "undefined"){

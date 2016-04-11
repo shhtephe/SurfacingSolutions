@@ -26,21 +26,15 @@
 	      		<br>
 				<div ng-repeat="group in vm.quote.counterGroup | orderBy:'-groupNumber' track by $index">
 <!--{/group.groupNumber|json/}-->
-					<u>Group {/group.groupNumber + 1/}</u><button type="button" class="btn btn-danger" style="float:right" ng-click="vm.removeGroup(group.groupNumber)">DELETE THIS GROUP</button>
-					<br>
-					<button type="button" style="btn;" ng-click="vm.addCounter(group.groupNumber, group.counters.length)">Add a Counter</button>
-					<br>
-					<span style="float: right" >
-						Group Description:
-						<br><textarea rows="4" columns="150" ng-model="group.description"></textarea>
+					<span class="col-md-8">
+						<u>Group {/group.groupNumber + 1/}</u> - <input style="width:80%" type="text" ng-model="group.description"></input>
 					</span>
+					<button type="button" class="btn btn-danger" style="float:right" ng-click="vm.removeGroup(group.groupNumber)">DELETE THIS GROUP</button>
 					<br>
 					<br>
 					<br>
 					<button type="button" ng-show="vm.quote.counterGroup[group.groupNumber].material" class="btn btn-default" ng-click="isMaterialCollapsed = !isMaterialCollapsed">Material - {/group.material.description/}</button>
 					<!--Material Collapsable-->
-					<br>
-					<br>
 		  			<div uib-collapse="!isMaterialCollapsed">
 						<div class="well well-lg">
 							<table class="table table-hover table-bordered">
@@ -150,6 +144,9 @@
 							<button type="button" ng-click="vm.editMaterial[group.groupNumber] = false" ng-show="vm.editMaterial[group.groupNumber]" class="btn btn-default">Cancel</button>
 						</div>
 					</div>
+					<button type="button" style="btn;" ng-click="vm.addCounter(group.groupNumber, group.counters.length)">Add a Counter</button>
+					<br>
+					<br>
 					<!--End Material Collapsable-->
 					<br>
 					<!--START OF COUNTER LOOP-->
@@ -440,12 +437,12 @@
 				<table>
 					<caption><u>Total Summary:</u></caption>
 					<tr>
-						<td>Total Area of Counters</td>
-						<td>Estimated Sheets</td>
-						<td>Total Group Cost</td>
-						<td>Group Material Cost</td>
-						<td>Group Material Cost Per ft2</td>
-						<td>Total Group Cost Per ft2</td>
+						<td>Area of Quote</td>
+						<td>Sheets Used</td>
+						<td>Quote Cost</td>
+						<td>Quote Material Cost</td>
+						<td>Quote Material Cost/Square Foot</td>
+						<td>Total Cost/Square Foot</td>
 					</tr>
 					<tr>
 						<td>{/vm.quote.TAC/} SQFT</td>
@@ -525,29 +522,40 @@ Add selectable price for counter (half sheet/full sheet/ multidiscount) - THIS H
 <!--
 Feedback: 
 
-add ability to multiply groups
+Done:
+
+	make "counter 1" the description - Done
+
+	add ability to multiply groups - done
+
+	Group description text box not area, across "group 1" heading (group 1 - description text box) - done
+
+	reverse order for group - added and working, I *THINK*
+
+	Second group/addons breaks GMC psq / GTC psq - Fixed
+
+	TAC was added as "text" - fixed
+
+
+Pending: 
+
+	Add calendar picker to terms below. - picker added, but needs to save.
+
+	mandatory addons not removing properly
+
+	mandatory addons not calculating GMC/sqft and TGC/sqft
+
+	make all calcs update to difficulty multiplier
+
+
+Not done:
 
 Line everything up in two columns
 
-Add calendar picker to terms below. - picker added, but needs to save.
-
-make "counter 1" the description - Done
-
-Group description text box not area, across "group 1" heading (group 1 - description text box)
-
-reverse order for group - added and working, I *THINK*
-
-Second group/addons breaks GMC psq / GTC psq - Fixed
-
-TAC was added as "text" - fixed
-
 Group Title - Group description
 
-mandatory addons not removing properly
 
-mandatory addons not calculating GMC/sqft and TGC/sqft
 
-make all calcs update to difficulty multiplier
 
 Area of Quote	Sheets Used	Quote Cost	Quote Material Cost	 Quote Material Cost per Square Foot	Total Cost per Square Foot
 

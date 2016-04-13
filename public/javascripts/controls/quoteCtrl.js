@@ -259,9 +259,9 @@ addons are PER GROUP not per table
 
 		};
 
-		vm.saveAddon = function(addon, shape, length, width, groupIndex) {
+		vm.saveAddon = function(addon, shape, TAC, groupIndex) {
 			//console.log(typeof vm.quote.counterGroup[groupIndex].addons, addon, shape, length, width, groupIndex);
-
+			console.log(vm.quote.counterGroup[groupIndex], groupIndex, TAC);
 			//create addons array if it doesn't exist - for initilization
 			if(typeof vm.quote.counterGroup[groupIndex].addons === "undefined"){
 				var addons = [];
@@ -273,10 +273,19 @@ addons are PER GROUP not per table
 			var search = vm.arraySearch(addon.description, addons, "description");
 			//var squareFootage = 0; This should be coming from the group total which gets calculated.
 
+			//if formula is sqft or linear, the quantity is different This is to make the calculating easier, so it's just the quantity that's being handled, not TAC, width, length etc
+			if(addon.formula === "sqft"){
+				addon.quantity = TAC;
+			} else if (addon.formula === "linear"){
+				//need to talk to Ed about how to implement this
+				console.log("that happened");
+				addon.quantity = 1;
+			};
+
 			addon.quantity = Number(addon.quantity);
 			//console.log(addon, squareFootage);
 
-			vm.calcAddon(addon, shape, length, width);
+			var totalPrice = vm.calcAddon(addon, shape, TAC, groupIndex);
 
 			//Searches for the item by going through the list
 			if (typeof search === "undefined") {
@@ -309,15 +318,15 @@ addons are PER GROUP not per table
 			};
 		};
 		
-		vm.calcAddon = function(addon){
-			var counterLength = length;
-			var counterWidth = width;
+		vm.calcAddon = function(addon, shape, squareFootage, index){
+			//var counterLength = length;
+			//var counterWidth = width;
 			var totalPrice = 0;
 			//calculation - need to seperate this into another function
 			if (addon.formula === "item") {
 				totalPrice =  addon.quantity * addon.price;
 			}else if(addon.formula === "sqft"){
-				console.log(vm.quote.counters[index]);
+				//console.log(vm.quote.counters[index]);
 				if(shape === "rectangle"){
 					squareFootage = counterLength * counterWidth;
 					addon.quantity = squareFootage;
@@ -333,9 +342,10 @@ addons are PER GROUP not per table
 					addon.quantity = squareFootage;
 					totalPrice = addon.linear * price;
 			}else{
-				console.error("Unknown addon formula type!!!");
+				console.error("Unknown addon formula type!!!", addon.formula);
 				totalPrice = addon.quantity * addon.price;
 			};
+			return(totalPrice);
 		};
 		vm.removeAddon = function(addon, groupNumber, addonIndex){		
 			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.

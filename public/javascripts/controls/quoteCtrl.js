@@ -447,7 +447,7 @@ addons are PER GROUP not per table
 			vm.quote.counterGroup[index].material = pushObj;
 			//vm.quote.counterGroup[index].material.splice(index, 1, pushObj);
 			if( vm.quote.counterGroup[index].material) {
-				vm.calcGroup(index, vm.quote.groupIndex[index].material);
+				vm.calcGroup(index, material);
 			};
 		};
 

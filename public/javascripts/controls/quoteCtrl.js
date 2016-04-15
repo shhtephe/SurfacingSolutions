@@ -350,10 +350,18 @@ addons are PER GROUP not per table
 		vm.removeAddon = function(addon, groupNumber, addonIndex){		
 			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
 	  		var counterIndex = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
-			vm.quote.totalPrice -= addon.totalPrice;
-		
-			vm.quote.counterGroup[counterIndex].totalPrice -= addon.totalPrice;
-			vm.quote.counterGroup[counterIndex].addons.splice(addonIndex, 1);
+	  		//if groupNumber is -1 it's a mandatory addon and comes from a different array.
+			console.log(addon, groupNumber, addonIndex);
+			if (groupNumber == -1) {
+				vm.quote.totalPrice -= addon.totalPrice;
+				vm.quote.mandatoryAddons.splice(addonIndex, 1);
+			} else {
+				vm.quote.counterGroup[counterIndex].totalPrice -= addon.totalPrice;
+				vm.quote.totalPrice -= addon.totalPrice;
+				vm.quote.counterGroup[counterIndex].addons.splice(addonIndex, 1);	
+
+			};
+			
 			//recalculate group if material is present
 			if( vm.quote.counterGroup[groupIndex].material) {
 				vm.calcGroup(groupIndex, vm.quote.counterGroup[groupIndex].material);

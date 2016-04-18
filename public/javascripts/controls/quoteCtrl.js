@@ -286,7 +286,7 @@ addons are PER GROUP not per table
 			//console.log(addon, squareFootage);
 
 			var totalPrice = vm.calcAddon(addon, shape, TAC, groupIndex);
-
+			console.log("This is the total price", totalPrice);
 			//Searches for the item by going through the list
 			if (typeof search === "undefined") {
 				//Couldn't find it, so add a new value
@@ -322,29 +322,20 @@ addons are PER GROUP not per table
 			//var counterLength = length;
 			//var counterWidth = width;
 			var totalPrice = 0;
+			console.log(addon.quantity, addon.price, addon.formula);
 			//calculation - need to seperate this into another function
 			if (addon.formula === "item") {
 				totalPrice =  addon.quantity * addon.price;
 			}else if(addon.formula === "sqft"){
 				//console.log(vm.quote.counters[index]);
-				if(shape === "rectangle"){
-					squareFootage = counterLength * counterWidth;
-					addon.quantity = squareFootage;
-					totalPrice = addon.price * squareFootage;
-					console.log(counterLength, counterWidth, squareFootage, totalPrice, addon.price);
-				} else if(shape === "circle"){
-					squareFootage = (Math.PI * (Math.pow(counterWidth, 2)));
-					squareFootage = squareFootage.toFixed(2);
-					addon.quantity = squareFootage;
-					totalPrice = addon.price * squareFootage;
-				};
+				totalPrice = addon.price * addon.quantity;
 			}else if(addon.formula === "linear"){	
-					addon.quantity = squareFootage;
-					totalPrice = addon.linear * price;
+					totalPrice = addon.quantity * addon.price;
 			}else{
 				console.error("Unknown addon formula type!!!", addon.formula);
 				totalPrice = addon.quantity * addon.price;
 			};
+			console.log(totalPrice);
 			return(totalPrice);
 		};
 		vm.removeAddon = function(addon, groupNumber, addonIndex){		
@@ -364,7 +355,7 @@ addons are PER GROUP not per table
 			
 			//recalculate group if material is present
 			if( vm.quote.counterGroup[groupIndex].material) {
-				vm.calcGroup(groupIndex, vm.quote.counterGroup[groupIndex].material);
+				vm.calcGroup(groupIndex, vm.quote.counterGroup[groupNumber].material);
 			};
 		};
 

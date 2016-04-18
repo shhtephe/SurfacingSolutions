@@ -354,8 +354,8 @@ addons are PER GROUP not per table
 			};
 			
 			//recalculate group if material is present
-			if( vm.quote.counterGroup[groupIndex].material) {
-				vm.calcGroup(groupIndex, vm.quote.counterGroup[groupNumber].material);
+			if(vm.quote.counterGroup[groupNumber].material && groupNumber !== -1) {
+				vm.calcGroup(groupNumber, vm.quote.counterGroup[groupNumber].material);
 			};
 		};
 

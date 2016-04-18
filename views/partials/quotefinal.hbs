@@ -151,7 +151,7 @@ Phone: {/vm.customer.homePhone/}</textarea>
   					<div class="col-md-3">
 			        	<span ng-show="term.calendar=='TRUE'">
 					        <span class="input-group">
-					          <input type="text" class="form-control" uib-datepicker-popup="{/vm.format/}" ng-change="" ng-model="term.date" is-open="vm.popup1.opened" datepicker-options="vm.dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"/>
+					          <input type="text" class="form-control" uib-datepicker-popup="{/vm.format/}" ng-change="vm.saveQuote()" ng-model="term.date" is-open="vm.popup1.opened" datepicker-options="vm.dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"/>
 					          <span class="input-group-btn">
 					            <button type="button" class="btn btn-default" ng-click="vm.open1()"><i class="glyphicon glyphicon-calendar"></i></button>
 					          </span>

@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <div ng-controller="quoteCtrl">
-
-<!--{/vm.quote.counters[0]/}
+<!--{/vm.quote/}
 <br>
 <br>
 {/vm.customer/}
@@ -149,11 +148,10 @@ Phone: {/vm.customer.homePhone/}</textarea>
 		  </tr>
 		
 		</table>
-		
 		<div id="terms">
 		  <h5>Terms</h5>
 		  <div ng-repeat="term in vm.quote.terms">
-			{/term.term | termDate: vm.quote/}
+			{/term.term/}<span ng-show="term.date">{/term.date | date/}</span>
   		  </div>
 		</div>
 	</div>

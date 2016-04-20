@@ -15,6 +15,7 @@ var quote = new Schema({
 	TGC: Number,
 	GMCPSF: Number,
 	GCPSF: Number,
+	totalLength: Number,
 	mandatoryAddons: [{
 		distributor: String,
 		manufactuer: String,
@@ -43,6 +44,7 @@ var quote = new Schema({
 		estimatedSheets: Number,
 		sheets: Number,
 		quantity: Number,
+		totalLength: Number,
 		addons: [{
 			distributor: String,
 			manufacturer: String,

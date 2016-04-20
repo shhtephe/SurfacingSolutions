@@ -210,7 +210,7 @@ addons are PER GROUP not per table
 			};
 	  	};
 
-	  	vm.saveMandatoryAddon = function(addon, groupNumber) {
+	  	/*vm.saveMandatoryAddon = function(addon, groupNumber) {
 	  		//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
 	  		var index = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
 	  		var addons = vm.quote.mandatoryAddons;
@@ -257,16 +257,24 @@ addons are PER GROUP not per table
 				vm.quote.totalPrice += addons[addons.length-1].totalPrice;
 			};
 
-		};
+		};*/
 
 		vm.saveAddon = function(addon, shape, TAC, groupIndex) {
 			//console.log(typeof vm.quote.counterGroup[groupIndex].addons, addon, shape, length, width, groupIndex);
 			console.log(vm.quote.counterGroup[groupIndex], groupIndex, TAC);
 			//create addons array if it doesn't exist - for initilization
-			if(typeof vm.quote.counterGroup[groupIndex].addons === "undefined"){
-				var addons = [];
-			}else{
-				var addons = vm.quote.counterGroup[groupIndex].addons;
+			if(groupIndex == -1){
+				if(typeof vm.quote.mandatoryAddons === "undefined"){
+					var addons = [];
+				}else{
+					var addons = vm.quote.mandatoryAddons;
+				};
+			} else {
+				if(typeof vm.quote.counterGroup[groupIndex].addons === "undefined"){
+					var addons = [];
+				}else{
+					var addons = vm.quote.counterGroup[groupIndex].addons;
+				};
 			};
 			//declare variables
 			var pushObj = {};
@@ -277,9 +285,11 @@ addons are PER GROUP not per table
 			if(addon.formula === "sqft"){
 				addon.quantity = TAC;
 			} else if (addon.formula === "linear"){
-				//need to talk to Ed about how to implement this
-				console.log("that happened");
-				addon.quantity = 1;
+				if(groupIndex == -1){
+					addon.quantity = vm.quote.totalLength;
+				} else {
+					addon.quantity = vm.quote.counterGroup[groupIndex].totalLength;
+				};
 			};
 
 			addon.quantity = Number(addon.quantity);
@@ -301,20 +311,30 @@ addons are PER GROUP not per table
 					quantity: addon.quantity,
 					totalPrice: totalPrice
 				};
-
+				if(groupIndex == -1) {
+					vm.quote.mandatoryAddons.push(pushObj);
+					
+				} else {
+					vm.quote.counterGroup[groupIndex].addons.push(pushObj);
+				};
 				console.log("Addons:", addons, "pushObj", pushObj, vm.quote);
-
-				vm.quote.counterGroup[groupIndex].addons.push(pushObj);
-
-				totalPrice += vm.quote.counterGroup[groupIndex].addons[vm.quote.counterGroup[groupIndex].addons.length-1].totalPrice;
+				
 			} else {
 				//Found it, so update the value
-				vm.quote.counterGroup[groupIndex].addons[search].quantity = addon.quantity;
-				vm.quote.counterGroup[groupIndex].addons[search].totalPrice = totalPrice;
+				if(groupIndex == -1) {
+					vm.quote.mandatoryAddons[search].quantity = addon.quantity;
+					vm.quote.mandatoryAddons[search].totalPrice = totalPrice;					
+				} else {
+					vm.quote.counterGroup[groupIndex].addons[search].quantity = addon.quantity;
+					vm.quote.counterGroup[groupIndex].addons[search].totalPrice = totalPrice;
+				};
 			};
-			//recalculate group if material is present
-			if( vm.quote.counterGroup[groupIndex].material) {
-				vm.calcGroup(groupIndex, vm.quote.counterGroup[groupIndex].material);
+			
+			if(groupIndex != -1) {
+				//recalculate group if material is present
+				if( vm.quote.counterGroup[groupIndex].material) {
+					vm.calcGroup(groupIndex, vm.quote.counterGroup[groupIndex].material);
+				};
 			};
 		};
 		
@@ -371,7 +391,8 @@ addons are PER GROUP not per table
 					counters: [],
 					addons:[],
 					totalPrice: 0,
-					quantity: 1
+					quantity: 1,
+					totalLength: 0
 				};
 			} else {
 				pushObj = {
@@ -380,7 +401,8 @@ addons are PER GROUP not per table
 					counters: [],
 					addons: [],
 					totalPrice: 0,
-					quantity: 1
+					quantity: 1,
+					totalLength: 0
 				};
 			};
 			vm.quote.counterGroup.push(pushObj);
@@ -510,7 +532,8 @@ addons are PER GROUP not per table
 	  		var groupIndex = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
 			vm.quote.counterGroup[groupIndex].totalPrice -= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
 			vm.quote.counterGroup[groupIndex].TAC -= vm.quote.counterGroup[groupIndex].counters[index].squareFootage;
-			vm.quote.totalPrice-= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
+			vm.quote.totalPrice -= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
+			vm.quote.counterGroup[groupIndex].totalLength -= vm.quote.counterGroup[groupIndex].counters[index].counterLength;
 			//console.log(vm.quote.counters[index].totalPrice);
 			vm.quote.counterGroup[groupIndex].counters.splice(index, index+1);
 			//recalculate group if material is present
@@ -564,11 +587,16 @@ addons are PER GROUP not per table
 				vm.quote.counterGroup[index].material.pricing = sheets.pricing;
 				vm.quote.counterGroup[index].totalPrice = vm.quote.counterGroup[index].sheets * material[sheets.pricing] * vm.quote.counterGroup[index].quantity;	
 
-				//calculate addons
+				//calculate addons in group
 				for(var i = 0; i < vm.quote.counterGroup[index].addons.length; i++) {
 					//console.log(vm.quote.counterGroup[index].addons[i], i, index);
 					vm.quote.counterGroup[index].totalPrice += vm.quote.counterGroup[index].addons[i].totalPrice * vm.quote.counterGroup[index].quantity;
 					vm.quote.totalPrice += vm.quote.counterGroup[index].addons[i].totalPrice * vm.quote.counterGroup[index].quantity;
+				};	
+
+				//calculate Mandatory Addons
+				for(var i = 0; i < vm.quote.mandatoryAddons.length; i++) {
+					vm.quote.totalPrice += vm.quote.mandatoryAddons[i].totalPrice * vm.quote.counterGroup[index].quantity;
 				};	
 
 				console.log(material[sheets.pricing], vm.quote.counterGroup[index].sheets);
@@ -576,7 +604,8 @@ addons are PER GROUP not per table
 				vm.quote.counterGroup[index].GMC = material[sheets.pricing] * vm.quote.counterGroup[index].sheets * vm.quote.counterGroup[index].quantity;
 				vm.quote.totalPrice += vm.quote.counterGroup[index].GMC;
 				vm.quote.GMC = vm.quote.counterGroup[index].GMC;
-				
+				vm.quote.totalLength = parseFloat(vm.quote.counterGroup[index].totalLength);
+
 				// GMC square foot total divided by the total area of sheets required
 				vm.quote.counterGroup[index].GMCPSF = vm.quote.counterGroup[index].GMC / vm.quote.counterGroup[index].TAC;
 				//Group Cost per Squarefoot
@@ -590,12 +619,16 @@ addons are PER GROUP not per table
 							vm.quote.TAC += parseFloat(vm.quote.counterGroup[t].TAC);
 							vm.quote.totalPrice += parseFloat(vm.quote.counterGroup[t].totalPrice);
 							vm.quote.GMC += parseFloat(vm.quote.counterGroup[t].GMC);
+							vm.quote.totalLength += parseFloat(vm.quote.counterGroup[t].totalLength);
 						};	
 					};
 					vm.quote.GMCPSF = vm.quote.GMC / vm.quote.TAC;
 					vm.quote.GCPSF = vm.quote.totalPrice / vm.quote.TAC;
 				};		
-			};
+					/*for (var i = vm.quote.addons.length - 1; i >= 0; i--) {
+						vm.calcMandatory(vm.quote.addons[i]);
+					};*/
+			};			
 		};
 
 		vm.calcCounter = function(width, length, shape, index, groupNumber, description, modal) {
@@ -609,8 +642,8 @@ addons are PER GROUP not per table
 			var counterPrice = 0;
 			var totalPrice = 0;
 			var pushObj = {};
-			var pushMandatory = {};
-			var pushMandatoryDropDown = {};
+//			var pushMandatory = {};
+//			var pushMandatoryDropDown = {};
 			var pricing = "";
 //			var counterIndex = vm.quote.counterGroup[groupIndex].counters.length;
 
@@ -634,13 +667,15 @@ addons are PER GROUP not per table
 
 			//console.log("Push Object", pushObj);
 
-	//Checks the shape of the table, and then calculates square footage.
+			//Checks the shape of the table, and then calculates square footage.
 			if(shape === "rectangle"){
 				pushObj.squareFootage = (length * width/144); //measurements are in inches, then converted to feet
 			} else if(shape === "circle"){
 				pushObj.squareFootage = (Math.PI * (Math.pow(width, 2)))/144;
 				console.log(pushObj.squareFootage);
 			};
+
+			vm.quote.counterGroup[groupNumber].totalLength += parseFloat(length);
 			console.log(pushObj.squareFootage);
 			//"Save" the counter to vm.quote
 			vm.commitCounter(modal, pushObj, index, groupIndex);

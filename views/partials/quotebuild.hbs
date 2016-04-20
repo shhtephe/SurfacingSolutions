@@ -7,8 +7,8 @@
 				<br>
 {/vm.materials|json/}
 				<br>
-				<br>
-{/vm.quote|json/}-->
+				<br>-->
+{/vm.quote|json/}
 				<br><br>
 				<span style="float:right">
 					Quote Description:
@@ -262,8 +262,8 @@
 									<br>
 								</li>
 								<li ng-show="counterAddonDescription.formula=='square'" class="list-group-item">
-									Square Footage: {/counter.counterWidth * counter.counterLength/} 
-									<br>Price: {/counter.counterWidth * counter.counterLength * counterAddonDescription.price/}
+									Square Footage: {/counter.TAC/} 
+									<br>Price: {/counter.TAC * counterAddonDescription.price/}
 								</li>	
 							</ul>
 						    <button type="button" ng-click="vm.saveAddon(counterAddonDescription, shape, group.TAC, group.groupNumber); vm.divAddons[group.groupNumber]=false; counterAddonDistributor=''; counterAddonManufacturer=''; counterAddonType=''; counterAddonDescription='';" class="btn btn-default">Add Addons</button>
@@ -277,8 +277,8 @@
 						<br>{/addon.productType/} - {/addon.description/} : 
 						<span ng-hide="group.material.length !== ''">*Not Calculated*</span>
 						<span ng-show="group.material.length !== ''">{/addon.quantity/}</span>
-						<span ng-show="addon.formula =='square'">{/counter.counterWidth * counter.counterLength/}</span>
-						@{/addon.price | currency:$/} <a ng-click="vm.removeAddon(addon, group.groupNumber, $index)">remove</a>
+						<span ng-show="addon.formula =='square'">{/group.TAC/}</span>
+						@{/addon.price | currency:$/} | {/addon.totalPrice | currency:$/} <a ng-click="vm.removeAddon(addon, group.groupNumber, $index)">remove</a>
 					</div>
 					<br>
 					<!--Material Selection-->
@@ -418,19 +418,38 @@
 						</select>
 					</div>
 					<div ng-show="mandatoryType && mandatoryDescription">
-						<br>{/mandatoryDescription.type/} - {/mandatoryDescription.price | currency:$/}/{/mandatoryDescription.formula/}
-						<br>Quantity: <input ng-model="mandatoryDescription.quantity"> Total: {/mandatoryDescription.totalPrice |currency:$/}
 						<br>
-						<br>
-						<button type="button" ng-click="vm.saveMandatoryAddon(mandatoryDescription); mandatoryType=''; mandatoryDescription=''; mandatoryDescription.quantity=''; vm.divMandatory = false" class="btn btn-default">Add Mandatory</button>
+						<ul class="list-group">
+							<li class="list-group-item">	
+								Price /<span ng-show="mandatoryDescription.formula=='item'">Item</span>
+								<span ng-show="mandatoryDescription.formula=='sqft'">Square Foot</span>
+								<span ng-show="mandatoryDescription.formula=='linear'">Linear Foot</span>: {/mandatoryDescription.price| currency:$/}<br> 
+							</li>	
+							<li class="list-group-item">	
+								Formula: {/mandatoryDescription.formula/}
+							</li>
+							<li ng-show="mandatoryDescription.formula=='item'" class="list-group-item">	
+								Quantity: <input type="text" ng-model="mandatoryDescription.quantity">
+								<br>
+							</li>
+							<li ng-show="mandatoryDescription.formula=='square'" class="list-group-item">
+								Square Footage: {/vm.quote.TAC/} 
+								<br>Price: {/counter.counterWidth * counter.counterLength * mandatoryDescription.price/}
+							</li>	
+						</ul>
 					</div>
+					<br>
+					<button type="button" ng-click="vm.saveAddon(mandatoryDescription, null, vm.quote.TAC, -1); mandatoryType=''; mandatoryDescription=''; mandatoryDescription.quantity=''; vm.divMandatory = false" class="btn btn-default">Add Mandatory</button>
 					<br> <button type="button" ng-click="vm.divMandatory = false" class="btn btn-danger">Cancel</button>
 				</div>
 		      	<br>
 				<u>Mandatory Charges:</u>
 				<br>
 	      			<div ng-repeat="addon in vm.quote.mandatoryAddons track by $index">
-						<br>{/addon.productType/} - {/addon.description/} : {/addon.quantity/}
+						<br>{/addon.productType/} - {/addon.description/} : 
+						<span ng-hide="group.material.length !== ''">*Not Calculated*</span>
+						<span ng-show="group.material.length !== ''">{/addon.quantity/}</span>
+						<span ng-show="addon.formula =='square'">{/counter.counterWidth * counter.counterLength/}</span>
 						@{/addon.price | currency:$/} <a ng-click="vm.removeAddon(addon, -1, group.groupNumber)">remove</a>
 					</div>
 		      	<br>

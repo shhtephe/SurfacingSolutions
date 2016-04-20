@@ -278,6 +278,7 @@ addons are PER GROUP not per table
 			};
 			//declare variables
 			var pushObj = {};
+			//Searches for the item by going through the list
 			var search = vm.arraySearch(addon.description, addons, "description");
 			//var squareFootage = 0; This should be coming from the group total which gets calculated.
 
@@ -294,10 +295,9 @@ addons are PER GROUP not per table
 
 			addon.quantity = Number(addon.quantity);
 			//console.log(addon, squareFootage);
-
 			var totalPrice = vm.calcAddon(addon, shape, TAC, groupIndex);
+
 			console.log("This is the total price", totalPrice);
-			//Searches for the item by going through the list
 			if (typeof search === "undefined") {
 				//Couldn't find it, so add a new value
 				pushObj = {
@@ -313,6 +313,7 @@ addons are PER GROUP not per table
 				};
 				if(groupIndex == -1) {
 					vm.quote.mandatoryAddons.push(pushObj);
+					vm.calcMandatoryAddon(vm.quote.mandatoryAddons[vm.quote.mandatoryAddons.length-1]);
 					
 				} else {
 					vm.quote.counterGroup[groupIndex].addons.push(pushObj);
@@ -323,7 +324,8 @@ addons are PER GROUP not per table
 				//Found it, so update the value
 				if(groupIndex == -1) {
 					vm.quote.mandatoryAddons[search].quantity = addon.quantity;
-					vm.quote.mandatoryAddons[search].totalPrice = totalPrice;					
+					vm.quote.mandatoryAddons[search].totalPrice = totalPrice;
+					vm.calcMandatoryAddon(vm.quote.mandatoryAddons[vm.quote.mandatoryAddons.length-1]);					
 				} else {
 					vm.quote.counterGroup[groupIndex].addons[search].quantity = addon.quantity;
 					vm.quote.counterGroup[groupIndex].addons[search].totalPrice = totalPrice;
@@ -337,7 +339,14 @@ addons are PER GROUP not per table
 				};
 			};
 		};
-		
+		//It's not really calculating, more adding it to the totals
+		vm.calcMandatoryAddon = function(addon) {
+			vm.quote.totalPrice += addon.totalPrice;
+			//update the material and total cost psqf
+			vm.quote.GMCPSF = vm.quote.GMC / vm.quote.TAC;
+			vm.quote.GCPSF = vm.quote.totalPrice / vm.quote.TAC;
+		};
+
 		vm.calcAddon = function(addon, shape, squareFootage, index){
 			//var counterLength = length;
 			//var counterWidth = width;
@@ -624,11 +633,8 @@ addons are PER GROUP not per table
 					};
 					vm.quote.GMCPSF = vm.quote.GMC / vm.quote.TAC;
 					vm.quote.GCPSF = vm.quote.totalPrice / vm.quote.TAC;
-				};		
-					/*for (var i = vm.quote.addons.length - 1; i >= 0; i--) {
-						vm.calcMandatory(vm.quote.addons[i]);
-					};*/
-			};			
+				};	
+			};	
 		};
 
 		vm.calcCounter = function(width, length, shape, index, groupNumber, description, modal) {

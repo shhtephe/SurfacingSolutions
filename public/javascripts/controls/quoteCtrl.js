@@ -580,6 +580,8 @@ addons are PER GROUP not per table
 					vm.quote.totalPrice += vm.quote.counterGroup[index].addons[i].totalPrice * vm.quote.counterGroup[index].quantity;
 				};	
 
+				
+
 				console.log(material[sheets.pricing], vm.quote.counterGroup[index].sheets);
 				//Group MATERIAL Cost - Cost of all counters combined
 				vm.quote.counterGroup[index].GMC = material[sheets.pricing] * vm.quote.counterGroup[index].sheets * vm.quote.counterGroup[index].quantity;

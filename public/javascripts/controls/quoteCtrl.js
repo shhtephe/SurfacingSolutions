@@ -258,6 +258,26 @@ addons are PER GROUP not per table
 			};
 
 		};*/
+		vm.removeAddon = function(addon, groupNumber, addonIndex){		
+			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
+	  		var counterIndex = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
+	  		//if groupNumber is -1 it's a mandatory addon and comes from a different array.
+			console.log(addon, groupNumber, addonIndex);
+			if (groupNumber == -1) {
+				vm.quote.totalPrice -= addon.totalPrice;
+				vm.quote.mandatoryAddons.splice(addonIndex, 1);
+			} else {
+				vm.quote.counterGroup[counterIndex].totalPrice -= addon.totalPrice;
+				vm.quote.totalPrice -= addon.totalPrice;
+				vm.quote.counterGroup[counterIndex].addons.splice(addonIndex, 1);	
+
+			};
+			
+			//recalculate group if material is present
+			if(groupNumber !== -1) {
+				vm.calcGroup(groupNumber, vm.quote.counterGroup[groupNumber].material);
+			};
+		};
 
 		vm.saveAddon = function(addon, shape, TAC, groupIndex) {
 			//console.log(typeof vm.quote.counterGroup[groupIndex].addons, addon, shape, length, width, groupIndex);
@@ -366,26 +386,6 @@ addons are PER GROUP not per table
 			};
 			console.log(totalPrice);
 			return(totalPrice);
-		};
-		vm.removeAddon = function(addon, groupNumber, addonIndex){		
-			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
-	  		var counterIndex = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
-	  		//if groupNumber is -1 it's a mandatory addon and comes from a different array.
-			console.log(addon, groupNumber, addonIndex);
-			if (groupNumber == -1) {
-				vm.quote.totalPrice -= addon.totalPrice;
-				vm.quote.mandatoryAddons.splice(addonIndex, 1);
-			} else {
-				vm.quote.counterGroup[counterIndex].totalPrice -= addon.totalPrice;
-				vm.quote.totalPrice -= addon.totalPrice;
-				vm.quote.counterGroup[counterIndex].addons.splice(addonIndex, 1);	
-
-			};
-			
-			//recalculate group if material is present
-			if(vm.quote.counterGroup[groupNumber].material && groupNumber !== -1) {
-				vm.calcGroup(groupNumber, vm.quote.counterGroup[groupNumber].material);
-			};
 		};
 
 		vm.addGroup = function() {

@@ -209,55 +209,7 @@ addons are PER GROUP not per table
 				vm.calcGroup(groupIndex, vm.quote.counterGroup[groupIndex].material, pricing);
 			};
 	  	};
-
-	  	/*vm.saveMandatoryAddon = function(addon, groupNumber) {
-	  		//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
-	  		var index = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
-	  		var addons = vm.quote.mandatoryAddons;
-			var pushObj = {};
-			var search = vm.arraySearch(addon.description, addons, "description");
-			var oldPrice = 0;
-			console.log(addon);
-
-			var totalPrice = 0;
-
-			console.log(addon.formula, addon.quantity, addon.price);
-			totalPrice =  addon.quantity * addon.price;
-
-			if (typeof search !== "undefined") {
-				//Found the term, so overwrite the value
-				console.log("Found it", vm.arraySearch(addon, addons, "description"));
-				//store old addon price
-				oldPrice = addons[search].totalPrice;
-				//remove it from quote total
-				console.log("oldprice", oldPrice, vm.quote.totalPrice);
-				vm.quote.totalPrice -= oldPrice;
-				console.log("Set price", vm.quote.totalPrice)
-				//set new values
-				addons[search].quantity = addon.quantity;
-				addons[search].totalPrice = totalPrice;
-				//update new quote price
-				vm.quote.totalPrice += addons[search].totalPrice;
-			} else {
-				console.log("Didn't found it", vm.arraySearch(addon, addons, "description"));
-				pushObj = {
-					distributor: addon.distributor,
-					manufacturer: addon.manufacturer,
-					productType: addon.type,
-					description: addon.description,
-					itemCode: addon.itemCode,
-					price: addon.price,
-					formula: addon.formula,
-					quantity: addon.quantity,
-					totalPrice: totalPrice,
-				};
-				addons.push(pushObj);
-				//console.log("Addons:", addons);
-				//console.log("pushObj", pushObj);
-				vm.quote.totalPrice += addons[addons.length-1].totalPrice;
-			};
-
-		};*/
+	  	
 		vm.removeAddon = function(addon, groupNumber, addonIndex){		
 			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
 	  		var counterIndex = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');

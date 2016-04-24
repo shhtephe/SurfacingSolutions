@@ -497,6 +497,7 @@ addons are PER GROUP not per table
 			};
 
 			//update TAC value
+			vm.quote.counterGroup[groupIndex].counters[index].squareFootage = parseFloat(vm.quote.counterGroup[groupIndex].counters[index].squareFootage);
 			vm.quote.counterGroup[groupNumber].TAC += vm.quote.counterGroup[groupIndex].counters[index].squareFootage;
 			//Because there's a new counter added, we need to update the "quantity" of each addon within the group
 			for (var i = vm.quote.counterGroup[groupIndex].addons.length - 1; i >= 0; i--) {

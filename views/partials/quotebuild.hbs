@@ -244,7 +244,6 @@
 							<select name="counterAddonDescription" ng-model="counterAddonDescription" ng-options="product.itemCode + ' - ' + product.description for product in vm.products | filter:{manufacturer:counterAddonManufacturer.manufacturer, type:counterAddonType.type} | unique: 'itemCode' | orderBy:'itemCode'">
 								<option value="">----Select----</option>
 							</select>
-							{/product/}
 						</div>
 						<div ng-show="counterAddonManufacturer && counterAddonType && counterAddonDescription">
 							<br>
@@ -274,7 +273,6 @@
 					<br>
 <!--{/group.addons|json/}-->
 					<div ng-repeat="addon in group.addons track by $index">
-						{/addon.formula/}
 						<br>{/addon.productType/} - {/addon.description/} : 
 						<span ng-show="group.material.length !== ''">{/addon.quantity/}</span>
 							<span ng-show="addon.formula == 'linear'">'</span>

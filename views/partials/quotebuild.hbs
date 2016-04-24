@@ -5,11 +5,11 @@
 			<div ng-controller="quoteCtrl" ng-init='vm.addCounter == false; vm.divMandatory = false; vm.divAddon = false;'>
 				<!--<br>
 				<br>
-{/vm.materials|json/}-->
+{/vm.materials|json/}
 				<br>
 				<br>
 {/vm.quote|json/}
-				<br><br>
+				<br><br>-->
 				<span style="float:right">
 					Quote Description:
 					<br>
@@ -137,7 +137,7 @@
 										</li>
 									</ul>
 <!--{/materialDescription | json/}-->
-									<button type="button" ng-click="vm.editMaterialSave(materialDescription, group.groupNumber); vm.editMaterial[group.groupNumber] = false; materialManufacturer==''; materialDescription" ng-show="vm.editMaterial[group.groupNumber]" class="btn btn-default">Save Edit</button>
+									<button type="button" ng-click="vm.editMaterialSave(materialDescription, group.groupNumber); vm.editMaterial[group.groupNumber] = false; materialManufacturer==''; materialDescription; isCounterCollapsed = isCounterCollapsed" ng-show="vm.editMaterial[group.groupNumber]" class="btn btn-default">Save Edit</button>
 								</div>
 				      		</span>
 							<br><button type="button" ng-click="vm.editMaterial[group.groupNumber] = true" ng-hide="vm.editMaterial[group.groupNumber]" class="btn btn-default">Edit this Material</button>
@@ -274,10 +274,11 @@
 					<br>
 <!--{/group.addons|json/}-->
 					<div ng-repeat="addon in group.addons track by $index">
+						{/addon.formula/}
 						<br>{/addon.productType/} - {/addon.description/} : 
-						<span ng-hide="group.material.length !== ''">*Not Calculated*</span>
 						<span ng-show="group.material.length !== ''">{/addon.quantity/}</span>
-						<span ng-show="addon.formula =='square'">{/group.TAC/}</span>
+							<span ng-show="addon.formula == 'linear'">'</span>
+							<span ng-show="addon.formula =='sqft'">'<sup>2</sup></span>
 						@{/addon.price | currency:$/} | {/addon.totalPrice | currency:$/} <a ng-click="vm.removeAddon(addon, group.groupNumber, $index)">remove</a>
 					</div>
 					<br>

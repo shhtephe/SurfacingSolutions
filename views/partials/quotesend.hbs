@@ -33,20 +33,12 @@
               <img id="image" src="images/ssilogo.png" alt="logo" />
             </div>
 		</div>
-
-		
 		<div style="clear:both"></div>
-		
-		<div id='customer' align='left'>
-			<textarea id="customer">{/vm.customer.companyName/}</textarea>
-			<br> 
-		</div>
-		<div id='customer' align='right'>
-			<textarea id="customer">{/vm.quote.description/}</textarea>
-		</div>
-		<br> <br> <br> 
+		<br>
 		<div id="customer">
-            <textarea id="customerInfo">{/vm.customer.lastName/}, {/vm.customer.firstName/}
+            <textarea id="customerInfo">{/vm.quote.description/}
+{/vm.customer.companyName/}
+{/vm.customer.lastName/}, {/vm.customer.firstName/}
 {/vm.customer.addressLine1/} {/vm.customer.addressLine2/}
 {/vm.customer.city/}, {/vm.customer.province/} {/vm.customer.postal/}
 
@@ -70,12 +62,12 @@ Phone: {/vm.customer.homePhone/}</textarea>
                     <td class="meta-head">Payment Terms</td>
                     <td><div class="due">Net 30</div></td>
                 </tr>
+
             </table>
-		
 		</div>
-		
-		<table id="items">
-		
+		<!-- group table -->		
+		<table id="items" ng-repeat='group in vm.quote.counterGroup'>
+			<caption>Group {/$index+1/} - {/group.description/}</caption>
 		  <thead>
 		      <th>Item</th>
 		      <th>Description</th>
@@ -84,69 +76,70 @@ Phone: {/vm.customer.homePhone/}</textarea>
 		      <th>Price</th>
 		  </thead>
 		    <tbody>
-		    <tr ng-repeat="counter in vm.quote.counters">
+		    <tr ng-repeat="counter in group.counters">
 				<td class="item-name">
-					<span ng-hide="counter.addon">{/counter.material.manufacturer/} - {/counter.material.description/}</span>
-					<span class="label label-info" ng-show="counter.addon">Addon</span>
-				</td>
-			    <td class="description">
-			    	<span ng-hide="counter.addon">
-			    		<textarea>{/counter.description/}</textarea>
-		    		</span>
-		    		<span ng-show="counter.addon">
-			    		<textarea>{/counter.description/}</textarea>
-		    		</span>
-	    		</td>
-			    <td>
-			    	<span ng-hide="counter.addon">
-			    		<textarea class="cost">{/counter.material.price | currency:$/}</textarea>		    		
-		    		</span>
-		    		<span ng-show="counter.addon">
-			    		<textarea>{/counter.price | currency:$/}</textarea>
-		    		</span>
-		    	</td>
-			    <td>
-		    		<span ng-show="counter.addon">
-			    		<textarea>{/counter.quantity/}</textarea>
-		    		</span>		    	
-	    		</td>
-			    <td>	
-			    	<span class="price">{/counter.totalPrice | currency: $/}</span>
-		    	</td>
+						<span ng-hide="counter.addon">{/group.material.manufacturer/} - {/group.material.description/}</span>
+						<span class="label label-info" ng-show="counter.addon">Addon</span>
+					</td>
+				    <td class="description">
+				    	<span ng-hide="counter.addon">
+				    		{/counter.description/}
+			    		</span>
+			    		<span ng-show="counter.addon">
+				    		<textarea>{/counter.itemCode/}</textarea>
+			    		</span>
+		    		</td>
+				    <td>
+				    	<span ng-hide="counter.addon">
+				    		{/group.material[group.material.pricing] | currency:$/}/Sheet
+			    		</span>
+			    		<span ng-show="counter.addon">
+				    		<textarea>{/counter.totalPrice | currency:$/}</textarea>
+			    		</span>
+			    	</td>
+				    <td>
+		        		{/counter.squareFootage | number:2/} SQFT    				    	
+		    		</td>
+				    <td>	
+				    	<span ng-show="counter.addon"class="price">{/counter.totalPrice | currency: $/}</span>
+				    	<span ng-hide="counter.addon"class="price">{/counter.totalPrice | currency: $/}</span>	
+			    	</td>
 			</tr>
-			<tr ng-repeat="addon in vm.quote.mandatoryAddons ">	
-				<td class="item-name">
-					<textarea>{/addon.productType/}</textarea>
-				</td>
-			    <td class="description">
-			    	<textarea>{/addon.description/}</textarea>
-	    		</td>
-			    <td>
-			    	<textarea>{/addon.price | currency:$/}</textarea>
-		    	</td>
-			    <td>
-			    	<textarea>{/addon.quantity/}</textarea>
-	    		</td>
-			    <td>	
-			    	<span class="price">{/addon.totalPrice | currency: $/}</span>
-		    	</td>
-			</tr>
+			<!-- Group totals and summation -->
 			<tr>
 		    	<td colspan="3" class="blank"> </td>
+		    	<td colspan="1" class="total-line">GMC</td>
+		    	<td class="total-value"><div id="subtotal">{/group.GMC * vm.quote.jobDifficulty| currency:$/}</div></td>
+		  	</tr>
+			<tr>
+		    	<td colspan="3" class="blank"> </td>
+		    	<td colspan="1" class="total-line">Addons</td>
+		    	<td class="total-value"><div id="subtotal">{/(group.totalPrice - group.GMC) * vm.quote.jobDifficulty| currency:$/}</div></td>
+		  	</tr>
+			<tr>
+		    	<td colspan="3" class="blank"> </td>
+		    	<td colspan="1" class="total-line">Total</td>
+		    	<td class="total-value"><div id="subtotal">{/group.totalPrice * vm.quote.jobDifficulty| currency:$/}</div></td>
+		  	</tr>
+		</table>
+		<!-- Total summary section -->
+		<table id="items">
+			<caption>Total</caption>
+			<tr>
+		    	<td width="75%" class="blank"> </td>
 		    	<td colspan="1" class="total-line">Subtotal</td>
 		    	<td class="total-value"><div id="subtotal">{/vm.quote.totalPrice * vm.quote.jobDifficulty| currency:$/}</div></td>
 		  	</tr>
-		  <tr>
-		      <td colspan="3" class="blank"> </td>
-		      <td colspan="1" class="total-line">HST (13%)</td>
-		      <td class="total-value"><div id="total">{/vm.quote.totalPrice * 0.13 | currency:$/}</div></td>
-		  </tr>
-		  <tr>
-		      <td colspan="3" class="blank"> </td>
-		      <td colspan="1" class="total-line">Total</td>
-		      <td class="total-value"><div id="total">{/vm.quote.totalPrice * 1.13 | currency:$/}</div></td>
-		  </tr>
-		
+			<tr>
+		    	<td width="75%" class="blank"> </td>
+			    <td colspan="1" class="total-line">HST (13%)</td>
+			    <td class="total-value"><div id="total">{/vm.quote.totalPrice * 0.13 | currency:$/}</div></td>
+			</tr>
+			<tr>
+		    	<td width="75%" class="blank"> </td>
+			    <td colspan="1" class="total-line">Total</td>
+			    <td class="total-value"><div id="total">{/vm.quote.totalPrice * 1.13 | currency:$/}</div></td>
+			</tr>
 		</table>
 		<div id="terms">
 		  <h5>Terms</h5>

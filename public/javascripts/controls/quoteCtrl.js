@@ -474,6 +474,7 @@ addons are PER GROUP not per table
 				console.log("Pricing override");
 				returnObj.pricing = overridePricing;
 			};
+
 			returnObj.sheets = returnObj.sheets.toFixed(2);
 			console.log(returnObj);
 			return(returnObj);
@@ -526,10 +527,10 @@ addons are PER GROUP not per table
 		vm.calcGroup = function(groupNumber, material, overridePricing){
 			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
 	  		var index = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
-			//So I think this is going to be more of a 'hub' for all the update functions: calculate sheets, calculate counters, calculate addons etc etc.
-			//It'll check to see what data it has, and then will calculate what it can. Will probably need to make a flag set when all the info is there
-			//So it'll catch you if click on the quote page with missing info "Quote is incomplete - group 1 requires material. Are you sure you want to continue?"
-			console.log(isNaN(parseFloat(vm.quote.counterGroup[index].sheets)), typeof vm.quote.counterGroup[index].sheets);
+
+	  		//This is a big old tangle of code now. I need to break all this stuff apart.
+	  		//
+			console.log(isNaN(parseFloat(vm.quote.counterGroup[index].sheets)), typeof vm.quote.counterGroup[index].sheets, vm.quote.counterGroup[index].sheets);
 			//If sheets entered is not a number or undefined, don't calculate.
 			if(isNaN(parseFloat(vm.quote.counterGroup[index].sheets)) === false || typeof vm.quote.counterGroup[index].sheets === "undefined"){
 				var group = vm.quote.counterGroup[index];
@@ -553,20 +554,22 @@ addons are PER GROUP not per table
 				vm.quote.counterGroup[index].TAC = vm.quote.counterGroup[index].TAC.toFixed(2);
 				vm.quote.TAC = parseFloat(vm.quote.TAC.toFixed(2));
 
-				//If the sheets have not been overriden, take entire area and estimate number of sheets required. ELSE just multiple by the quantity!
-				if(typeof vm.quote.counterGroup[index].sheets === "undefined") {
-					vm.quote.counterGroup[index].sheets = (vm.quote.counterGroup[index].TAC / (material.length * material.width/144)) * vm.quote.counterGroup[index].quantity;
-					vm.quote.counterGroup[index].sheets = vm.quote.counterGroup[index].sheets.toFixed(2);	
-				};
-				//multiply the estimated sheets by the quantity
-				vm.quote.counterGroup[index].estimatedSheets = vm.quote.counterGroup[index].sheets * vm.quote.counterGroup[index].quantity;
-				
-				console.log(parseFloat(vm.quote.counterGroup[index].sheets));
-
 				//Below is the math for taking the total area of the group and getting pricing/estimating charges. The sheet estimation will be overriden when there's the sheets have been entered.
 				sheets = vm.calcSheets(material, vm.quote.counterGroup[index].sheets, overridePricing);
 				vm.quote.counterGroup[index].material.pricing = sheets.pricing;
 				vm.quote.counterGroup[index].totalPrice = vm.quote.counterGroup[index].sheets * material[sheets.pricing] * vm.quote.counterGroup[index].quantity;	
+
+				//If the sheets have not been overriden, take entire area and estimate number of sheets required.
+				if(typeof vm.quote.counterGroup[index].sheets === "undefined" || isNaN(vm.quote.counterGroup[index].sheets) === false) {
+					vm.quote.counterGroup[index].sheets = (vm.quote.counterGroup[index].TAC / (material.length * material.width/144)) * vm.quote.counterGroup[index].quantity;
+					vm.quote.counterGroup[index].sheets = vm.quote.counterGroup[index].sheets.toFixed(2);	
+					vm.quote.counterGroup[index].estimatedSheets = parseFloat(vm.quote.counterGroup[index].sheets).toFixed(2);	
+				};
+
+				console.log(vm.quote.counterGroup[index].estimatedSheets * vm.quote.counterGroup[index].quantity, vm.quote.counterGroup[index].quantity);
+				//multiply the estimated sheets by the quantity
+				vm.quote.counterGroup[index].estimatedSheets = vm.quote.counterGroup[index].estimatedSheets * vm.quote.counterGroup[index].quantity;
+				vm.quote.counterGroup[index].sheets = vm.quote.counterGroup[index].sheets * vm.quote.counterGroup[index].quantity;
 
 				//calculate addons in group
 				for(var i = 0; i < vm.quote.counterGroup[index].addons.length; i++) {
@@ -577,6 +580,7 @@ addons are PER GROUP not per table
 
 				//calculate Mandatory Addons
 				for(var i = 0; i < vm.quote.mandatoryAddons.length; i++) {
+					vm.updateAddon = (vm.quote.mandatoryAddons[i], vm.quote.TAC, -1);
 					vm.quote.totalPrice += vm.quote.mandatoryAddons[i].totalPrice * vm.quote.counterGroup[index].quantity;
 				};	
 

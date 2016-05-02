@@ -234,16 +234,17 @@
 						<div ng-show="counterAddonManufacturer">
 							<br>
 							Choose a Product Type:
-							<select name="counterAddonType" ng-model="counterAddonType" ng-options="product.type for product in vm.products | filter:{manufacturer:counterAddonManufacturer.manufacturer} | unique: 'type' | orderBy:'type'">
+							<select name="counterAddonType" ng-model="counterAddonType" ng-options="product.type for product in vm.products | filter:{manufacturer:counterAddonManufacturer.manufacturer, nonMandatory:true} | unique: 'type' | orderBy:'type'">
 								<option value="">----Select----</option>
 							</select>
 						</div>
 						<div ng-show="counterAddonManufacturer && counterAddonType">
 							<br>
 							Choose an Item Code:
-							<select name="counterAddonDescription" ng-model="counterAddonDescription" ng-options="product.itemCode + ' - ' + product.description for product in vm.products | filter:{manufacturer:counterAddonManufacturer.manufacturer, type:counterAddonType.type} | unique: 'itemCode' | orderBy:'itemCode'">
+							<select name="counterAddonDescription" ng-model="counterAddonDescription" ng-options="product.itemCode + ' - ' + product.description for product in vm.products | filter:{manufacturer:counterAddonManufacturer.manufacturer, type:counterAddonType.type, nonMandatory:true} | unique: 'itemCode' | orderBy:'itemCode'">
 								<option value="">----Select----</option>
 							</select>
+							{/counterAddonDescription/}
 						</div>
 						<div ng-show="counterAddonManufacturer && counterAddonType && counterAddonDescription">
 							<br>

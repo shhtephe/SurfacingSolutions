@@ -9,7 +9,9 @@ var products = new Schema({
 	description: String,
 	itemCode: String,
 	price: Number,
-	formula: String
+	formula: String,
+	mandatory: Boolean,
+	nonMandatory: Boolean
 });
 
 products.plugin(timestamps);

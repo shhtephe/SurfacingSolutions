@@ -206,9 +206,14 @@ addons are PER GROUP not per table
 	    		addonsTotalPrice += group.addons[i].totalPrice;
 			};  
 
+			//calculate the GCPSF for group and total
+			vm.updateGCPSF(groupNumber);
+			
+			/*
 			if( vm.quote.counterGroup[groupIndex].material) {
 				vm.calcGroup(groupIndex, vm.quote.counterGroup[groupIndex].material, pricing);
 			};
+			*/
 	  	};
 	  	
 		vm.removeAddon = function(addon, groupNumber, addonIndex){		
@@ -223,7 +228,6 @@ addons are PER GROUP not per table
 				vm.quote.counterGroup[counterIndex].totalPrice -= addon.totalPrice;
 				vm.quote.totalPrice -= addon.totalPrice;
 				vm.quote.counterGroup[counterIndex].addons.splice(addonIndex, 1);	
-
 			};
 			
 			//recalculate group if material is present
@@ -255,14 +259,16 @@ addons are PER GROUP not per table
 			var search = vm.arraySearch(addon.description, addons, "description");
 			//var squareFootage = 0; This should be coming from the group total which gets calculated.
 
-			//Update addons
+			//Update addons quantity values
 			vm.updateAddon(addon, TAC, groupIndex);
 
 			addon.quantity = parseFloat(addon.quantity);
 			//console.log(addon, squareFootage);
-			var totalPrice = vm.calcAddon(addon, shape, TAC, groupIndex);
 
-			console.log("This is the total price", totalPrice);
+			//Calculates the total price
+			var totalPrice = vm.calcAddonTotal(addon, shape, TAC, groupIndex);
+
+			//if it can't find an existing addon to update, it makes a new one
 			if (typeof search === "undefined") {
 				//Couldn't find it, so add a new value
 				pushObj = {
@@ -276,6 +282,7 @@ addons are PER GROUP not per table
 					quantity: addon.quantity,
 					totalPrice: totalPrice
 				};
+				//depending on whether it's mandatory or not
 				if(groupIndex == -1) {
 					vm.quote.mandatoryAddons.push(pushObj);
 					vm.calcMandatoryAddon(vm.quote.mandatoryAddons[vm.quote.mandatoryAddons.length-1]);
@@ -286,7 +293,7 @@ addons are PER GROUP not per table
 				console.log("Addons:", addons, "pushObj", pushObj, vm.quote);
 				
 			} else {
-				//Found it, so update the value
+				//Found it, so update the value | depending on mandatory or not
 				if(groupIndex == -1) {
 					vm.quote.mandatoryAddons[search].quantity = addon.quantity;
 					vm.quote.mandatoryAddons[search].totalPrice = totalPrice;
@@ -296,13 +303,17 @@ addons are PER GROUP not per table
 					vm.quote.counterGroup[groupIndex].addons[search].totalPrice = totalPrice;
 				};
 			};
-			
-			if(groupIndex != -1) {
+			console.log(totalPrice);
+			vm.quote.counterGroup[groupIndex].totalPrice += totalPrice;
+			vm.quote.totalPrice += totalPrice;
+			//because I'm making this more modular, I need to add functions to tally the stuff up, instead of running this function. 
+			//This function did too much, and was unnecessary.
+			/*if(groupIndex != -1) {
 				//recalculate group if material is present
 				if( vm.quote.counterGroup[groupIndex].material) {
 					vm.calcGroup(groupIndex, vm.quote.counterGroup[groupIndex].material);
 				};
-			};
+			};*/
 		};
 
 		vm.addGroup = function() {
@@ -592,6 +603,8 @@ addons are PER GROUP not per table
 			vm.updateGroupAddons(groupNumber, shape, pushObj.squareFootage);
 			//vm.updateMandatoryAddons(index);
 
+			//calculate the GCPSF for group and total
+			vm.updateGCPSF(groupNumber);
 			/*
 
 			TAC DOES NOT CALC. GO THROUGH THE WHOLE ADDING COUNTER PIECES PROCESS FROM START TO FINISH.
@@ -602,8 +615,17 @@ addons are PER GROUP not per table
 
 		};
 
+		vm.updateGCPSF = function(groupIndex) {
+			//Update the group GMCPSF/GCPSF
+			vm.quote.counterGroup[groupIndex].GMCPSF = vm.quote.counterGroup[groupIndex].GMC / vm.quote.counterGroup[groupIndex].TAC;
+			vm.quote.counterGroup[groupIndex].GCPSF = vm.quote.counterGroup[groupIndex].totalPrice / vm.quote.counterGroup[groupIndex].TAC;
+			//Update the total GMCPSF/GCPSF
+			vm.quote.GMCPSF = vm.quote.GMC / vm.quote.TAC;
+			vm.quote.GCPSF = vm.quote.totalPrice / vm.quote.TAC;
+		}
+
 		//recalculates the addon totalprice (requires squarefootage to be calculated)
-		vm.calcAddon = function(addon, shape, squareFootage, index){
+		vm.calcAddonTotal = function(addon, shape, squareFootage, index){
 			//var counterLength = length;
 			//var counterWidth = width;
 			var totalPrice = 0;
@@ -630,7 +652,7 @@ addons are PER GROUP not per table
 			//calculate addons in group
 			for(var i = 0; i < vm.quote.counterGroup[index].addons.length; i++) {
 				//Update "quantity" (linear, sqft) because of new counter dimensions
-				vm.updateAddon(vm.quote.counterGroup[index].addons[i], TAC, groupIndex);
+				vm.updateAddon(vm.quote.counterGroup[index].addons[i], vm.quote.counterGroup[index].TAC, index);
 				vm.calcAddon(vm.quote.counterGroup[index].addons[i], shape, squareFootage, index);
 				
 				vm.quote.counterGroup[index].totalPrice += vm.quote.counterGroup[index].addons[i].totalPrice * vm.quote.counterGroup[index].quantity;
@@ -650,8 +672,8 @@ addons are PER GROUP not per table
 		};
 
 		//It's not really calculating, more adding it to the totals - Doesn't need to be it's own function
-		vm.calcMandatoryAddon = function(addon) {
-			vm.quote.totalPrice += addon.totalPrice;
+		vm.calcAddon = function(addon) {
+			//vm.quote.totalPrice += addon.totalPrice;
 			//update the material and total cost psqf
 			vm.quote.GMCPSF = vm.quote.GMC / vm.quote.TAC;
 			vm.quote.GCPSF = vm.quote.totalPrice / vm.quote.TAC;

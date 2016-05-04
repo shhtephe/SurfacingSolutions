@@ -209,11 +209,11 @@ addons are PER GROUP not per table
 			//calculate the GCPSF for group and total
 			vm.updateGCPSF(groupNumber);
 			
-			/*
-			if( vm.quote.counterGroup[groupIndex].material) {
+			
+			/*if( vm.quote.counterGroup[groupIndex].material) {
 				vm.calcGroup(groupIndex, vm.quote.counterGroup[groupIndex].material, pricing);
-			};
-			*/
+			};*/
+			
 	  	};
 	  	
 		vm.removeAddon = function(addon, groupNumber, addonIndex){		
@@ -229,11 +229,16 @@ addons are PER GROUP not per table
 				vm.quote.totalPrice -= addon.totalPrice;
 				vm.quote.counterGroup[counterIndex].addons.splice(addonIndex, 1);	
 			};
-			
+
+			//calculate the GCPSF for group and total			
+			vm.updateGCPSF(groupNumber);
+
+			/*
 			//recalculate group if material is present
 			if(groupNumber !== -1) {
 				vm.calcGroup(groupNumber, vm.quote.counterGroup[groupNumber].material);
 			};
+			*/
 		};
 
 		vm.saveAddon = function(addon, shape, TAC, groupIndex) {
@@ -285,7 +290,7 @@ addons are PER GROUP not per table
 				//depending on whether it's mandatory or not
 				if(groupIndex == -1) {
 					vm.quote.mandatoryAddons.push(pushObj);
-					vm.calcMandatoryAddon(vm.quote.mandatoryAddons[vm.quote.mandatoryAddons.length-1]);
+					vm.quote.totalPrice += totalPrice;
 					
 				} else {
 					vm.quote.counterGroup[groupIndex].addons.push(pushObj);
@@ -306,6 +311,10 @@ addons are PER GROUP not per table
 			console.log(totalPrice);
 			vm.quote.counterGroup[groupIndex].totalPrice += totalPrice;
 			vm.quote.totalPrice += totalPrice;
+
+			//calculate the GCPSF for group and total			
+			vm.updateGCPSF(groupIndex);
+
 			//because I'm making this more modular, I need to add functions to tally the stuff up, instead of running this function. 
 			//This function did too much, and was unnecessary.
 			/*if(groupIndex != -1) {
@@ -466,15 +475,21 @@ addons are PER GROUP not per table
 			};
 		};
 
+
+		/*
+		This function does the following:
+		checks if "sheets" or quantity has a numberic value or will not run.
+		
+		*/
 		vm.calcGroup = function(groupNumber, material, overridePricing){
 			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
 	  		var index = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
 
 	  		//This is a big old tangle of code now. I need to break all this stuff apart.
 	  		//
-			console.log(isNaN(parseFloat(vm.quote.counterGroup[index].sheets)), typeof vm.quote.counterGroup[index].sheets, vm.quote.counterGroup[index].sheets);
+			console.log(isNaN(parseFloat(vm.quote.counterGroup[index].sheets)), typeof vm.quote.counterGroup[index].sheets, vm.quote.counterGroup[index].sheets, parseFloat(vm.quote.counterGroup[index].quantity));
 			//If sheets entered is not a number or undefined, don't calculate.
-			if(isNaN(parseFloat(vm.quote.counterGroup[index].sheets)) === false || typeof vm.quote.counterGroup[index].sheets === "undefined"){
+			if(isNaN(parseFloat(vm.quote.counterGroup[index].sheets)) === false || typeof vm.quote.counterGroup[index].sheets === "undefined" || parseFloat(vm.quote.counterGroup[index].quantity != 0)){
 				
 				//Define the sheets object
 				var sheets = {};
@@ -489,7 +504,7 @@ addons are PER GROUP not per table
 				vm.quote.totalPrice = 0;
 				*/
 
-				/* This has been added to when a counter is added (and should also be for when a counter is removed)
+				/* This has been merged to when calcCounter is added (and should also be for when a counter is removed)
 				//Go through each counter and add up all TAC values for both group and whole quote.
 				for (var i = 0; i <= vm.quote.counterGroup[index].counters.length - 1; i++) {
 					//Add square footage of one counter to the TOTAL Area
@@ -525,7 +540,7 @@ addons are PER GROUP not per table
 				//Group MATERIAL Cost - Cost of all counters combined
 				vm.quote.counterGroup[index].GMC = material[sheets.pricing] * vm.quote.counterGroup[index].sheets * vm.quote.counterGroup[index].quantity;
 				vm.quote.totalPrice += vm.quote.counterGroup[index].GMC;
-				vm.quote.GMC = vm.quote.counterGroup[index].GMC;
+				//vm.quote.GMC = vm.quote.counterGroup[index].GMC;
 				vm.quote.totalLength = parseFloat(vm.quote.counterGroup[index].totalLength);
 
 				// GMC square foot total divided by the total area of sheets required
@@ -535,6 +550,7 @@ addons are PER GROUP not per table
 				vm.quote.counterGroup[index].GCPSF = vm.quote.counterGroup[index].totalPrice / vm.quote.counterGroup[index].TAC;
 				
 				//This is for after it's calculated once, because it adds up all OTHER counters, and then adds the new value for group total 
+				/*
 				if(typeof vm.quote.counterGroup[index].totalPrice !== 'undefined'){
 					for (var t = vm.quote.counterGroup.length - 1; t >= 0; t--) {
 						if(t !== index){
@@ -547,6 +563,7 @@ addons are PER GROUP not per table
 					vm.quote.GMCPSF = vm.quote.GMC / vm.quote.TAC;
 					vm.quote.GCPSF = vm.quote.totalPrice / vm.quote.TAC;
 				};	
+				*/
 			};	
 		};
 
@@ -615,14 +632,6 @@ addons are PER GROUP not per table
 
 		};
 
-		vm.updateGCPSF = function(groupIndex) {
-			//Update the group GMCPSF/GCPSF
-			vm.quote.counterGroup[groupIndex].GMCPSF = vm.quote.counterGroup[groupIndex].GMC / vm.quote.counterGroup[groupIndex].TAC;
-			vm.quote.counterGroup[groupIndex].GCPSF = vm.quote.counterGroup[groupIndex].totalPrice / vm.quote.counterGroup[groupIndex].TAC;
-			//Update the total GMCPSF/GCPSF
-			vm.quote.GMCPSF = vm.quote.GMC / vm.quote.TAC;
-			vm.quote.GCPSF = vm.quote.totalPrice / vm.quote.TAC;
-		}
 
 		//recalculates the addon totalprice (requires squarefootage to be calculated)
 		vm.calcAddonTotal = function(addon, shape, squareFootage, index){
@@ -646,6 +655,14 @@ addons are PER GROUP not per table
 			return(totalPrice);
 		};
 
+		vm.updateGCPSF = function(groupIndex) {
+			//Update the group GMCPSF/GCPSF
+			vm.quote.counterGroup[groupIndex].GMCPSF = vm.quote.counterGroup[groupIndex].GMC / vm.quote.counterGroup[groupIndex].TAC;
+			vm.quote.counterGroup[groupIndex].GCPSF = vm.quote.counterGroup[groupIndex].totalPrice / vm.quote.counterGroup[groupIndex].TAC;
+			//Update the total GMCPSF/GCPSF
+			vm.quote.GMCPSF = vm.quote.GMC / vm.quote.TAC;
+			vm.quote.GCPSF = vm.quote.totalPrice / vm.quote.TAC;
+		};
 
 		vm.updateGroupAddons = function(index, shape, squareFootage){
 			
@@ -673,7 +690,7 @@ addons are PER GROUP not per table
 
 		//It's not really calculating, more adding it to the totals - Doesn't need to be it's own function
 		vm.calcAddon = function(addon) {
-			//vm.quote.totalPrice += addon.totalPrice;
+			vm.quote.totalPrice += addon.totalPrice;
 			//update the material and total cost psqf
 			vm.quote.GMCPSF = vm.quote.GMC / vm.quote.TAC;
 			vm.quote.GCPSF = vm.quote.totalPrice / vm.quote.TAC;

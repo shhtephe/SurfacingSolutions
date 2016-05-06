@@ -201,18 +201,19 @@ addons are PER GROUP not per table
 			};
 			console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counterGroup[groupIndex].material); 
 
-			for (var i=0; i < group.addons.length; i++) {
+			
+			//This adds up all the addons in the group when you change pricing (I don't think I need this)
+			/*for (var i=0; i < group.addons.length; i++) {
 				//console.log("i", i, counter.addons[i]);
 	    		addonsTotalPrice += group.addons[i].totalPrice;
-			};  
+			};*/
 
 			//calculate the GCPSF for group and total
-			vm.updateGCPSF(groupNumber);
-			
-			
-			/*if( vm.quote.counterGroup[groupIndex].material) {
+			//vm.updateGCPSF(groupNumber);
+						
+			if(vm.quote.counterGroup[groupIndex].material) {
 				vm.calcGroup(groupIndex, vm.quote.counterGroup[groupIndex].material, pricing);
-			};*/
+			};
 			
 	  	};
 	  	
@@ -487,9 +488,10 @@ addons are PER GROUP not per table
 
 	  		//This is a big old tangle of code now. I need to break all this stuff apart.
 	  		//
-			console.log(isNaN(parseFloat(vm.quote.counterGroup[index].sheets)), typeof vm.quote.counterGroup[index].sheets, vm.quote.counterGroup[index].sheets, parseFloat(vm.quote.counterGroup[index].quantity));
+			console.log((parseFloat(vm.quote.counterGroup[index].quantity) != 0) && parseFloat(vm.quote.counterGroup[index].quantity) != 0);
+			console.log((isNaN(parseFloat(vm.quote.counterGroup[index].sheets)) === false || typeof vm.quote.counterGroup[index].sheets === "undefined") && (vm.quote.counterGroup[index].quantity != 0 && vm.quote.counterGroup[index].quantity != NaN));
 			//If sheets entered is not a number or undefined, don't calculate.
-			if(isNaN(parseFloat(vm.quote.counterGroup[index].sheets)) === false || typeof vm.quote.counterGroup[index].sheets === "undefined" || parseFloat(vm.quote.counterGroup[index].quantity != 0)){
+			if((isNaN(parseFloat(vm.quote.counterGroup[index].sheets)) === false || typeof vm.quote.counterGroup[index].sheets === "undefined") && (parseFloat(vm.quote.counterGroup[index].quantity) != 0) || parseFloat(vm.quote.counterGroup[index].quantity) != 0){
 				
 				//Define the sheets object
 				var sheets = {};
@@ -529,6 +531,9 @@ addons are PER GROUP not per table
 					vm.quote.counterGroup[index].estimatedSheets = parseFloat(vm.quote.counterGroup[index].sheets).toFixed(2);	
 				};
 
+				//Update the addon quantities for the group and mandatory addon quantities and recalculate them 
+				vm.updateGroupAddons(groupNumber, shape, vm.quote.counterGroup[index].TAC);
+
 				//console.log(vm.quote.counterGroup[index].estimatedSheets * vm.quote.counterGroup[index].quantity, vm.quote.counterGroup[index].quantity);
 				
 				//multiply the estimated sheets by the quantity
@@ -540,7 +545,7 @@ addons are PER GROUP not per table
 				//Group MATERIAL Cost - Cost of all counters combined
 				vm.quote.counterGroup[index].GMC = material[sheets.pricing] * vm.quote.counterGroup[index].sheets * vm.quote.counterGroup[index].quantity;
 				vm.quote.totalPrice += vm.quote.counterGroup[index].GMC;
-				//vm.quote.GMC = vm.quote.counterGroup[index].GMC;
+				vm.quote.GMC = vm.quote.counterGroup[index].GMC;
 				vm.quote.totalLength = parseFloat(vm.quote.counterGroup[index].totalLength);
 
 				// GMC square foot total divided by the total area of sheets required
@@ -549,10 +554,11 @@ addons are PER GROUP not per table
 				console.log("gmc", vm.quote.counterGroup[index].GMC, "tac", vm.quote.counterGroup[index].TAC, "totalPrice (tgc)", vm.quote.counterGroup[index].totalPrice);
 				vm.quote.counterGroup[index].GCPSF = vm.quote.counterGroup[index].totalPrice / vm.quote.counterGroup[index].TAC;
 				
-				//This is for after it's calculated once, because it adds up all OTHER counters, and then adds the new value for group total 
-				/*
+				//This is for after it's calculated once, because it adds up all OTHER counters in their groups, and then adds the new value for group total 
+				//console.log(typeof vm.quote.counterGroup[index].totalPrice);
 				if(typeof vm.quote.counterGroup[index].totalPrice !== 'undefined'){
 					for (var t = vm.quote.counterGroup.length - 1; t >= 0; t--) {
+						console.log(vm.quote.counterGroup[t].TAC, vm.quote.counterGroup[t].totalPrice, vm.quote.counterGroup[t].GMC);
 						if(t !== index){
 							vm.quote.TAC += parseFloat(vm.quote.counterGroup[t].TAC);
 							vm.quote.totalPrice += parseFloat(vm.quote.counterGroup[t].totalPrice);
@@ -560,10 +566,10 @@ addons are PER GROUP not per table
 							vm.quote.totalLength += parseFloat(vm.quote.counterGroup[t].totalLength);
 						};	
 					};
+					console.log(vm.quote.GMC, vm.quote.TAC, vm.quote.totalPrice);
 					vm.quote.GMCPSF = vm.quote.GMC / vm.quote.TAC;
 					vm.quote.GCPSF = vm.quote.totalPrice / vm.quote.TAC;
 				};	
-				*/
 			};	
 		};
 
@@ -617,7 +623,7 @@ addons are PER GROUP not per table
 			vm.commitCounter(modal, pushObj, index, groupNumber);
 
 			//Update the addon quantities for the group and mandatory addon quantities and recalculate them 
-			vm.updateGroupAddons(groupNumber, shape, pushObj.squareFootage);
+			vm.updateGroupAddons(groupNumber, shape, vm.quote.counterGroup[groupNumber].TAC);
 			//vm.updateMandatoryAddons(index);
 
 			//calculate the GCPSF for group and total

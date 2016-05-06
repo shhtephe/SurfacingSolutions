@@ -382,17 +382,17 @@
 							<tr>
 								<td>Total Area of Counters</td>
 								<td>Estimated Sheets</td>
-								<td>Total Group Cost</td>
 								<td>Group Material Cost</td>
 								<td>Group Material Cost Per ft2</td>
+								<td>Total Group Cost</td>
 								<td>Total Group Cost Per ft2</td>
 							</tr>
 							<tr>
 								<td>{/group.TAC/} SQFT</td>
 								<td>{/group.estimatedSheets/}</td>
-								<td>{/group.totalPrice * vm.quote.jobDifficulty | currency:$/}</td>
 								<td>{/group.GMC * vm.quote.jobDifficulty | currency:$/}</td>
 								<td>{/group.GMCPSF * vm.quote.jobDifficulty | currency:$/}/SQFT</td>
+								<td>{/group.totalPrice * vm.quote.jobDifficulty | currency:$/}</td>
 								<td>{/group.GCPSF * vm.quote.jobDifficulty | currency:$/}/SQFT</td>
 							</tr>
 						</table>
@@ -457,17 +457,17 @@
 					<tr>
 						<td>Area of Quote</td>
 						<td>Sheets Used</td>
-						<td>Quote Cost</td>
 						<td>Quote Material Cost</td>
 						<td>Quote Material Cost/Square Foot</td>
+						<td>Quote Cost</td>
 						<td>Total Cost/Square Foot</td>
 					</tr>
 					<tr>
 						<td>{/vm.quote.TAC/} SQFT</td>
 						<td>{/vm.quote.estimatedSheets/}</td>
-						<td>{/vm.quote.totalPrice * vm.quote.jobDifficulty | currency:$/}</td>
 						<td>{/vm.quote.GMC * vm.quote.jobDifficulty | currency:$/}</td>
 						<td>{/vm.quote.GMCPSF * vm.quote.jobDifficulty | currency:$/}/SQFT</td>
+						<td>{/vm.quote.totalPrice * vm.quote.jobDifficulty | currency:$/}</td>
 						<td>{/vm.quote.GCPSF * vm.quote.jobDifficulty | currency:$/}/SQFT</td>
 					</tr>
 				</table>

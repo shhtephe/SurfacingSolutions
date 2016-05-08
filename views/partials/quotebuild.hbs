@@ -151,7 +151,7 @@
 					<br>
 					<!--START OF COUNTER LOOP-->
 					<div ng-repeat="counter in group.counters track by $index">
-						</u> <button type="button" class="btn btn-danger" style="float:right" ng-click="vm.deleteCounter(group.groupNumber, $index)">DELETE THIS COUNTER</button>
+						</u> <button type="button" class="btn btn-danger" style="float:right" ng-click="vm.removeCounter(group.groupNumber, $index)">DELETE THIS COUNTER</button>
 				  			<button type="button" class="btn btn-default" ng-click="isCounterCollapsed = !isCounterCollapsed"><span ng-hide="counter.description">Counter {/$index + 1/}</span> <span ng-show="counter.description">{/counter.description/}</span></button>
 				  			<div uib-collapse="!isCounterCollapsed">
 								<div class="well well-lg">

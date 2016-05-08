@@ -45,7 +45,7 @@ addons are PER GROUP not per table
 
 		//baby's first modal
 		vm.addCounter = function (groupIndex, counters, size) {
-			console.log(groupIndex, counters, size);
+			//console.log(groupIndex, counters, size);
 	    	var modalInstance = $uibModal.open({
 		      animation: true,
 		      templateUrl: 'addcounter.html',
@@ -59,7 +59,7 @@ addons are PER GROUP not per table
       	  	});
 
       	  	modalInstance.result.then(function (counter) {
-				console.log(counter.width, counter.length, counter.shape, counter.counters, counter.groupIndex, counter.description, true);
+				//console.log(counter.width, counter.length, counter.shape, counter.counters, counter.groupIndex, counter.description, true);
       			//Save the countertop and put all the data back onto the main controller
       			vm.calcCounter(counter.width, counter.length, counter.shape, counter.counters, counter.groupIndex, counter.description, true);
       			//do the same thing with each addon
@@ -74,7 +74,7 @@ addons are PER GROUP not per table
 	    	var vm = this;
 	    	vm.groupIndex = groupIndex;
 	    	vm.counters = counters;
-	    	console.log(vm.counters, vm.groupIndex);
+	    	//console.log(vm.counters, vm.groupIndex);
 	    	//remove?
 			/*vm.arraySearchModal = function (nameKey, myArray, property){
 			    //console.log(nameKey, myArray, property);
@@ -88,7 +88,7 @@ addons are PER GROUP not per table
 			*/
 
 	    	vm.saveCounterModal = function(width, length, shape, description, counters, groupIndex) {
-	    		console.log(counters, groupIndex);
+	    		//console.log(counters, groupIndex);
 	    		var counter = {
 	    			width: width,
 	    			length: length, 
@@ -169,17 +169,50 @@ addons are PER GROUP not per table
 		    vm.alerts.splice(index, 1);
 	  	};
 
-	  	vm.changePricing = function(pricing, groupNumber, material) {
+		vm.addGroup = function() {
+			//Create pushObj Array
+			var pushObj = {};
+
+			//check to see if first group
+			if(typeof vm.quote.counterGroup[0] === "undefined") {
+				pushObj = 
+				{
+					groupNumber: 0,
+					TAC: 0,
+					counters: [],
+					addons:[],
+					totalPrice: 0,
+					quantity: 1,
+					totalLength: 0
+				};
+			} else {
+				pushObj = {
+					groupNumber : vm.quote.counterGroup.length,
+					TAC: 0,
+					counters: [],
+					addons: [],
+					totalPrice: 0,
+					quantity: 1,
+					totalLength: 0
+				};
+			};
+			//Set total TAC if it hasn't been yet.
+			if(typeof vm.quote.TAC == 'undefined'){
+				vm.quote.TAC = 0;
+			};
+			vm.quote.counterGroup.push(pushObj);
+		};
+
+		vm.changePricing = function(pricing, groupNumber, material) {
 
 			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
 	  		var groupIndex = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
-
-			console.log(pricing, groupIndex, material);
+	  		//Set variables for ease of use ;)
 			var sheets = vm.quote.counterGroup[groupIndex].sheets;
 			var counterPrice = 0;
 			var group = vm.quote.counterGroup[groupIndex];
 			var addonsTotalPrice = 0;
-
+			//Chooses based on which pricing model you choose how much to charge
 	  		if(pricing == "halfSheet"){
 				counterPrice = sheets * material.halfSheet;		
 				vm.quote.counterGroup[groupIndex].material.pricing = "halfSheet";
@@ -199,47 +232,219 @@ addons are PER GROUP not per table
 				counterPrice = sheets * material.quarterSheet;
 				vm.quote.counterGroup[groupIndex].material.pricing = "quarterSheet";
 			};
-			console.log(vm.quote.counterGroup[groupIndex].material.pricing, vm.quote.counterGroup[groupIndex].material); 
-
-			
-			//This adds up all the addons in the group when you change pricing (I don't think I need this)
-			/*for (var i=0; i < group.addons.length; i++) {
-				//console.log("i", i, counter.addons[i]);
-	    		addonsTotalPrice += group.addons[i].totalPrice;
-			};*/
-
-			//calculate the GCPSF for group and total
-			//vm.updateGCPSF(groupNumber);
 						
 			if(vm.quote.counterGroup[groupIndex].material) {
 				vm.calcGroup(groupIndex, vm.quote.counterGroup[groupIndex].material, pricing);
 			};
 			
 	  	};
-	  	
-		vm.removeAddon = function(addon, groupNumber, addonIndex){		
+
+		vm.removeGroup = function(index) {
+			//subtract the group total from quote total
+			vm.quote.totalPrice -= vm.quote.counterGroup[index].totalPrice;
+			//Subtract total length from quote
+			vm.quote.totalLength -= vm.quote.counterGroup[index].totalLength;
+			//Subtract TAC from quote
+			vm.quote.TAC -= vm.quote.counterGroup[index].TAC;
+			//Remove from Array
+			vm.quote.counterGroup.splice(index, index+1);
+		};
+
+	  	//This is called from the add counter modal. Passes the values from the modal to the main page.
+		vm.calcCounter = function(width, length, shape, index, groupIndex, description, modal) {
 			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
-	  		var counterIndex = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
-	  		//if groupNumber is -1 it's a mandatory addon and comes from a different array.
-			console.log(addon, groupNumber, addonIndex);
-			if (groupNumber == -1) {
-				vm.quote.totalPrice -= addon.totalPrice;
-				vm.quote.mandatoryAddons.splice(addonIndex, 1);
-			} else {
-				vm.quote.counterGroup[counterIndex].totalPrice -= addon.totalPrice;
-				vm.quote.totalPrice -= addon.totalPrice;
-				vm.quote.counterGroup[counterIndex].addons.splice(addonIndex, 1);	
+		  	var groupIndex = vm.arraySearch(groupIndex, vm.quote.counterGroup, 'groupNumber');
+
+		//Obviously, we set some variables. 
+			var squareFootage = 0;
+			var pushObj = {};
+			var pricing = "";
+
+			//Saves me from worrying about which dimension to multiply
+			if(shape === "circle"){
+				length = width;
 			};
 
-			//calculate the GCPSF for group and total			
-			vm.updateGCPSF(groupNumber);
+			//For whatever reason, they're sometimes text :(
+			width = parseFloat(width);
+			length = parseFloat(length);
 
-			/*
+			//Create an object containing all core counter information
+			pushObj = {
+				description: description,
+				counterShape: shape,
+				counterLength: length,
+				counterWidth: width,
+				squareFootage: 0,
+				counterPrice: 0
+			};
+
+			//Calculates square footage.
+			if(shape === "rectangle"){
+				pushObj.squareFootage = (length * width/144); //measurements are in inches, then converted to feet
+			} else if(shape === "circle"){
+				pushObj.squareFootage = (Math.PI * (Math.pow(width, 2)))/144;
+			};
+			//Truncate the squarefootage to 2 decimals
+			pushObj.squareFootage = parseFloat(pushObj.squareFootage.toFixed(2));
+			//Add the linear footage to the total linear footage for the group3
+			vm.quote.counterGroup[groupIndex].totalLength += parseFloat(length);
+			vm.quote.totalLength += parseFloat(length);
+
+			//Add the counter's area to both group and total TAC
+			vm.quote.counterGroup[groupIndex].TAC += (pushObj.squareFootage * vm.quote.counterGroup[groupIndex].quantity);
+			vm.quote.TAC += (pushObj.squareFootage * vm.quote.counterGroup[groupIndex].quantity);
+			//"Save" the counter to vm.quote
+			vm.commitCounter(modal, pushObj, index, groupIndex);
+
+			//Update the addon quantities for the group and mandatory addon quantities and recalculate them 
+			vm.updateGroupAddons(groupIndex, shape, vm.quote.counterGroup[groupIndex].TAC);
+			//Do the same as above for mandatory addons
+			vm.updateMandatoryAddons(groupIndex, shape, vm.quote.TAC);
 			//recalculate group if material is present
-			if(groupNumber !== -1) {
-				vm.calcGroup(groupNumber, vm.quote.counterGroup[groupNumber].material);
+			if(typeof vm.quote.counterGroup[groupIndex].material !== 'undefined') {
+				vm.calcGroup(groupIndex, vm.quote.counterGroup[groupIndex].material);
 			};
-			*/
+		};
+
+		vm.commitCounter = function(modal, pushObj, index, groupIndex){
+			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
+	  		var groupIndex = vm.arraySearch(groupIndex, vm.quote.counterGroup, 'groupNumber');
+			//console.log(groupIndex, index, typeof vm.quote.counterGroup[groupIndex].counters[index], pushObj);
+			
+			//Commits data to arrays depending on whether it's an edit or a new save.
+			if(typeof vm.quote.counterGroup[groupIndex].counters[index] === "undefined"){
+				//push counter into vm.quote
+				vm.quote.counterGroup[groupIndex].counters.push(pushObj);	
+			};
+			
+			//recalculate group if material is present
+			if(typeof vm.quote.counterGroup[groupIndex].material !== 'undefined') {
+				vm.calcGroup(groupIndex, vm.quote.counterGroup[groupIndex].material);
+			};
+			
+			//Because there's a new counter added, we need to update the "quantity" of each addon within the group
+			for (var i = vm.quote.counterGroup[groupIndex].addons.length - 1; i >= 0; i--) {
+				vm.saveAddon(vm.quote.counterGroup[groupIndex].addons[i], vm.quote.counterGroup[groupIndex].shape, vm.quote.counterGroup[groupIndex].TAC, groupIndex);
+			};			
+		};
+
+		vm.removeCounter = function(groupNumber, index) {
+			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
+	  		var groupIndex = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
+	  		//Subtract counter totalPrice from group
+			vm.quote.counterGroup[groupIndex].totalPrice -= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
+			//Subtract total price from quote
+			vm.quote.totalPrice -= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
+			//Subtract squarefootage from group
+			vm.quote.counterGroup[groupIndex].TAC -= vm.quote.counterGroup[groupIndex].counters[index].squareFootage;
+			//Subtract squarefootage from quote
+			vm.quote.TAC -= vm.quote.counterGroup[groupIndex].counters[index].squareFootage;
+			//subtract total length from group
+			vm.quote.counterGroup[groupIndex].totalLength -= vm.quote.counterGroup[groupIndex].counters[index].counterLength;
+			//Subtract total length from quote
+			vm.quote.totalLength -= vm.quote.counterGroup[groupIndex].counters[index].counterLength;
+			//Remove from array
+			vm.quote.counterGroup[groupIndex].counters.splice(index, index+1);
+			
+			//Update the addon quantities for the group and mandatory addon quantities and recalculate them 
+			vm.updateGroupAddons(groupIndex, shape, vm.quote.counterGroup[groupIndex].TAC);
+			//Do the same as above for mandatory addons
+			vm.updateMandatoryAddons(groupIndex, shape, vm.quote.TAC);
+			
+			/* I DON'T KNOW WETHER THIS STAYS OR NOT - It actually might stay. Whoa.*/
+			//recalculate group if material is present
+			/*if(typeof vm.quote.counterGroup[groupIndex].material !== 'undefined') {
+				vm.calcGroup(groupIndex, vm.quote.counterGroup[groupIndex].material);
+			};*/
+		};
+
+		//Any time the counter dimensions change, the addon "quantities" will change (SQFT and LINEAR)
+		vm.updateGroupAddons = function(index, shape, squareFootage){
+			//Set the total price to GMC, effectively removing the addon values, which will be recalculated.
+			vm.quote.counterGroup[index].totalPrice = vm.quote.counterGroup[index].GMC;
+			//for each addon in the group...
+			for(var i = 0; i < vm.quote.counterGroup[index].addons.length; i++) {
+				//Set the addon to a variable:
+				var addon = vm.quote.counterGroup[index].addons[i];
+				//Update "quantity" (linear, sqft) because of new counter dimensions
+				vm.quote.counterGroup[index].addons[i].quantity = vm.updateAddon(addon, vm.quote.counterGroup[index].TAC, index);
+				//calculate the total price value
+				vm.quote.counterGroup[index].addons[i].totalPrice = vm.calcAddonTotal(addon, shape, squareFootage, index);
+				//Add this to the group total price
+				vm.quote.counterGroup[index].totalPrice += vm.quote.counterGroup[index].addons[i].totalPrice * vm.quote.counterGroup[index].quantity;;
+				//Add to quote total price
+				vm.quote.totalPrice += vm.quote.counterGroup[index].addons[i].totalPrice * vm.quote.counterGroup[index].quantity;
+			};
+		};
+
+		vm.updateMandatoryAddons = function(index, shape, squareFootage){
+			//Set the total price to GMC, effectively removing the addon values, which will be recalculated.
+			vm.quote.totalPrice = vm.GMC;
+			//for each addon in the group...
+			for(var i = 0; i < vm.quote.mandatoryAddons.length; i++) {
+				//Set the addon to a variable:
+				var addon = vm.quote.mandatoryAddons[i];
+				//Update "quantity" (linear, sqft) because of new counter dimensions
+				vm.mandatoryAddons[i].quantity = vm.updateMandatoryAddon(addon, vm.quote.TAC, index);
+				//calculate the total price value
+				vm.quote.mandatoryAddons[i].totalPrice = vm.calcAddonTotal(addon, shape, squareFootage, index);
+				//Add this to the group total price
+				vm.quote.counterGroup[index].totalPrice += vm.quote.counterGroup[index].addons[i].totalPrice * vm.quote.counterGroup[index].quantity;;
+				//Add to quote total price
+				vm.quote.totalPrice += vm.quote.counterGroup[index].addons[i].totalPrice * vm.quote.counterGroup[index].quantity;
+			};	
+		};
+
+		vm.calcAddonTotal = function(addon, shape, squareFootage, index){
+			//var counterLength = length;
+			//var counterWidth = width;
+			var totalPrice = 0;
+			console.log(addon.quantity, addon.price, addon.formula);
+			//calculation - need to seperate this into another function
+			if (addon.formula === "item") {
+				totalPrice =  addon.quantity * addon.price;
+			}else if(addon.formula === "sqft"){
+				//console.log(vm.quote.counters[index]);
+				totalPrice = addon.price * addon.quantity;
+			}else if(addon.formula === "linear"){	
+					totalPrice = addon.quantity * addon.price;
+			}else{
+				console.error("Unknown addon formula type!!!", addon.formula);
+				totalPrice = addon.quantity * addon.price;
+			};
+			console.log(totalPrice);
+			return(totalPrice);
+		};
+
+		//updates the "quantity" value so it can be calculated - requires TAC for Sqft and total Length for linear
+		vm.updateMandatoryAddon = function(addon, TAC, groupIndex) {
+			console.log(TAC);
+			//If formula is sqft or linear, the quantity is different This is to make the calculating easier, so it's just the quantity that's being handled, not TAC, width, length etc
+			if(addon.formula === "sqft"){
+				addon.quantity = TAC;
+			} else if (addon.formula === "linear"){
+				addon.quantity = vm.quote.totalLength / 12;
+			};
+			//Force as float and truncate to 2 decimal places
+			addon.quantity = parseFloat(addon.quantity);
+			addon.quantity = addon.quantity.toFixed(2);
+			return addon.quantity;
+		};
+
+		//updates the "quantity" value so it can be calculated - requires TAC for Sqft and total Length for linear
+		vm.updateAddon = function(addon, TAC, groupIndex) {
+			console.log(TAC);
+			//if formula is sqft or linear, the quantity is different This is to make the calculating easier, so it's just the quantity that's being handled, not TAC, width, length etc
+			if(addon.formula === "sqft"){
+				addon.quantity = TAC;
+			} else if (addon.formula === "linear"){
+				addon.quantity = vm.quote.counterGroup[groupIndex].totalLength / 12;
+			};
+			//Force as float and truncate to 2 decimal places
+			addon.quantity = parseFloat(addon.quantity);
+			addon.quantity = addon.quantity.toFixed(2);
+			return addon.quantity;
 		};
 
 		vm.saveAddon = function(addon, shape, TAC, groupIndex) {
@@ -274,7 +479,7 @@ addons are PER GROUP not per table
 			//Calculates the total price
 			var totalPrice = vm.calcAddonTotal(addon, shape, TAC, groupIndex);
 
-			//if it can't find an existing addon to update, it makes a new one
+			//If it can't find an existing addon to update, it makes a new one
 			if (typeof search === "undefined") {
 				//Couldn't find it, so add a new value
 				pushObj = {
@@ -295,9 +500,7 @@ addons are PER GROUP not per table
 					
 				} else {
 					vm.quote.counterGroup[groupIndex].addons.push(pushObj);
-				};
-				console.log("Addons:", addons, "pushObj", pushObj, vm.quote);
-				
+				};				
 			} else {
 				//Found it, so update the value | depending on mandatory or not
 				if(groupIndex == -1) {
@@ -309,69 +512,48 @@ addons are PER GROUP not per table
 					vm.quote.counterGroup[groupIndex].addons[search].totalPrice = totalPrice;
 				};
 			};
-			console.log(totalPrice);
 			vm.quote.counterGroup[groupIndex].totalPrice += totalPrice;
 			vm.quote.totalPrice += totalPrice;
 
-			//calculate the GCPSF for group and total			
-			vm.updateGCPSF(groupIndex);
-
 			//because I'm making this more modular, I need to add functions to tally the stuff up, instead of running this function. 
 			//This function did too much, and was unnecessary.
-			/*if(groupIndex != -1) {
+			if(groupIndex != -1) {
 				//recalculate group if material is present
 				if( vm.quote.counterGroup[groupIndex].material) {
 					vm.calcGroup(groupIndex, vm.quote.counterGroup[groupIndex].material);
 				};
-			};*/
-		};
-
-		vm.addGroup = function() {
-			var pushObj = {};
-
-			//check to see if first group
-			if(typeof vm.quote.counterGroup[0] === "undefined") {
-				pushObj = 
-				{
-					groupNumber: 0,
-					TAC: 0,
-					counters: [],
-					addons:[],
-					totalPrice: 0,
-					quantity: 1,
-					totalLength: 0
-				};
 			} else {
-				pushObj = {
-					groupNumber : vm.quote.counterGroup.length,
-					TAC: 0,
-					counters: [],
-					addons: [],
-					totalPrice: 0,
-					quantity: 1,
-					totalLength: 0
-				};
+				//vm.calcMandatoryAddons
 			};
-			//Set total TAC if it hasn't been yet.
-			if(typeof vm.quote.TAC == 'undefined'){
-				vm.quote.TAC = 0;
-			};
-			vm.quote.counterGroup.push(pushObj);
 		};
 
-		vm.removeGroup = function(index) {
-			console.log(index);
-			console.log(vm.quote.counterGroup[index].totalPrice);
-			vm.quote.totalPrice -= vm.quote.counterGroup[index].totalPrice;
-			vm.quote.counterGroup.splice(index, index+1);
-		};
+		vm.removeAddon = function(addon, groupNumber, addonIndex){		
+			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
+	  		var counterIndex = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
+	  		//if groupNumber is -1 it's a mandatory addon and comes from a different array.
+			console.log(addon, groupNumber, addonIndex);
+			if (groupNumber == -1) {
+				vm.quote.totalPrice -= addon.totalPrice;
+				vm.quote.mandatoryAddons.splice(addonIndex, 1);
+			} else {
+				vm.quote.counterGroup[counterIndex].totalPrice -= addon.totalPrice;
+				vm.quote.totalPrice -= addon.totalPrice;
+				vm.quote.counterGroup[counterIndex].addons.splice(addonIndex, 1);	
+			};
 
+			//recalculate group if material is present
+			if(groupNumber !== -1) {
+				vm.calcGroup(groupNumber, vm.quote.counterGroup[groupNumber].material);
+			} else {
+				//vm.calcMandatoryAddons
+			};
+		};
 
 		vm.saveMaterial = function(material, groupNumber){
 			console.log(material, groupNumber);
 			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
 	  		var index = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
-	  		console.log(index);
+	  		//Add all the info for the material
 			vm.quote.counterGroup[index].material = {
 				itemCode: material.itemCode,
 				thickness: material.thickness,
@@ -388,13 +570,14 @@ addons are PER GROUP not per table
 				description: material.description
 			};
 			//console.log(vm.quote.counterGroup[index].material);
+			//Calculate the totals, since we have the material
 			vm.calcGroup(index, material);
 		};
 
 		vm.editMaterialSave = function(material, groupNumber){
 			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
 	  		var index = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
-			console.log(material, index);
+	  		//Create pushObj
 			var pushObj = {};
 
 			//Create an object containing all core counter information, also leaving addons space
@@ -415,23 +598,95 @@ addons are PER GROUP not per table
 				description: material.description,
 				addons: []
 			};
-			console.log(vm.quote.counterGroup[index]);
+			//replace the material with the pushObj
 			vm.quote.counterGroup[index].material = pushObj;
-			//vm.quote.counterGroup[index].material.splice(index, 1, pushObj);
+			//If the material exists, calculate the totals
 			if( vm.quote.counterGroup[index].material) {
 				vm.calcGroup(index, material);
 			};
 		};
+		
+		/*
+		This function does the following:
+		checks if "sheets" or quantity has a numberic value or will not run.
+		
+		*/
+		vm.calcGroup = function(groupNumber, material, overridePricing){
+			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
+	  		var index = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
+
+			//If sheets entered is not a number or undefined, don't calculate.
+			if((isNaN(parseFloat(vm.quote.counterGroup[index].sheets)) === false || typeof vm.quote.counterGroup[index].sheets === "undefined") && (parseFloat(vm.quote.counterGroup[index].quantity) != 0) || parseFloat(vm.quote.counterGroup[index].quantity) != 0){
+				
+				//Define the sheets object
+				var sheets = {};
+				//Round 'em.
+				//vm.quote.counterGroup[index].TAC = parseFloat(vm.quote.counterGroup[index].TAC.toFixed(2));
+				//vm.quote.TAC = parseFloat(vm.quote.TAC.toFixed(2));
+
+				//Below is the math for taking the total area of the group and getting pricing/estimating charges. The sheet estimation will be overriden when the sheets have been entered.
+				sheets = vm.calcSheets(material, vm.quote.counterGroup[index].sheets, overridePricing);
+				//Set pricing to the estimate value
+				vm.quote.counterGroup[index].material.pricing = sheets.pricing;
+				//Add to the total price of the group the sheet estimate * pricing * quantity
+				vm.quote.counterGroup[index].totalPrice += vm.quote.counterGroup[index].sheets * material[sheets.pricing] * vm.quote.counterGroup[index].quantity;	
+
+				//If the sheets have not been overriden, take entire area and estimate number of sheets required.
+				if(typeof vm.quote.counterGroup[index].sheets === "undefined" || isNaN(vm.quote.counterGroup[index].sheets) === false) {
+					vm.quote.counterGroup[index].sheets = (vm.quote.counterGroup[index].TAC / (material.length * material.width/144)) * vm.quote.counterGroup[index].quantity;
+					vm.quote.counterGroup[index].sheets = vm.quote.counterGroup[index].sheets.toFixed(2);	
+					vm.quote.counterGroup[index].estimatedSheets = parseFloat(vm.quote.counterGroup[index].sheets).toFixed(2);	
+				};
+
+				//Update the addon quantities for the group and mandatory addon quantities and recalculate them 
+				vm.updateGroupAddons(groupNumber, shape, vm.quote.counterGroup[index].TAC);
+				vm.updateMandatoryAddons(groupNumber, shape, vm.quote.counterGroup[index].TAC);
+				
+				//multiply the estimated sheets by the quantity
+				vm.quote.counterGroup[index].estimatedSheets = vm.quote.counterGroup[index].estimatedSheets * vm.quote.counterGroup[index].quantity;
+				vm.quote.counterGroup[index].sheets = vm.quote.counterGroup[index].sheets * vm.quote.counterGroup[index].quantity;
+
+				//Group MATERIAL Cost - Cost of all counters combined
+				vm.quote.counterGroup[index].GMC = material[sheets.pricing] * vm.quote.counterGroup[index].sheets * vm.quote.counterGroup[index].quantity;
+				//TGC - Total Group Cost
+				vm.quote.totalPrice += vm.quote.counterGroup[index].GMC;
+				vm.quote.GMC = vm.quote.counterGroup[index].GMC;
+				vm.quote.totalLength = parseFloat(vm.quote.counterGroup[index].totalLength);
+
+				//GMCPSF = total divided by the total area of sheets required
+				vm.quote.counterGroup[index].GMCPSF = vm.quote.counterGroup[index].GMC / vm.quote.counterGroup[index].TAC;
+				//Group Cost per Squarefoot
+				//console.log("gmc", vm.quote.counterGroup[index].GMC, "tac", vm.quote.counterGroup[index].TAC, "totalPrice (tgc)", vm.quote.counterGroup[index].totalPrice);
+				vm.quote.counterGroup[index].GCPSF = vm.quote.counterGroup[index].totalPrice / vm.quote.counterGroup[index].TAC;
+				
+				//This is for after it's calculated once, because it adds up all OTHER counters in their groups, and then adds the new value for group total 
+				//console.log(typeof vm.quote.counterGroup[index].totalPrice);
+				if(typeof vm.quote.counterGroup[index].totalPrice !== 'undefined'){
+					for (var t = vm.quote.counterGroup.length - 1; t >= 0; t--) {
+						console.log(vm.quote.counterGroup[t].TAC, vm.quote.counterGroup[t].totalPrice, vm.quote.counterGroup[t].GMC);
+						if(t !== index){
+							vm.quote.TAC += parseFloat(vm.quote.counterGroup[t].TAC);
+							vm.quote.totalPrice += parseFloat(vm.quote.counterGroup[t].totalPrice);
+							vm.quote.GMC += parseFloat(vm.quote.counterGroup[t].GMC);
+							vm.quote.totalLength += parseFloat(vm.quote.counterGroup[t].totalLength);
+						};	
+					};
+					console.log(vm.quote.GMC, vm.quote.TAC, vm.quote.totalPrice, vm.quote.counterGroup[index].GMC);
+					vm.quote.GMCPSF = vm.quote.GMC / vm.quote.TAC;
+					vm.quote.GCPSF = vm.quote.totalPrice / vm.quote.TAC;
+				};	
+			};	
+		};
 
 		vm.calcSheets = function(material, sheets, overridePricing){
-		//Calculate how many sheets are needed. Will need to revamp this: check width and length of sheets as well as square footage
+		//Create sheets object
 			var returnObj = {
 				sheets : 0,
 				pricing: ''
 			};
-
-			//console.log(material.length, material.width);
-			console.log(typeof overridePricing, sheets);
+			/*I don't know if overridePricing is even being used, but keeping it in case it breaks anything.
+			Checks to see how many sheets are required
+			*/
 			if(typeof overridePricing === 'undefined') {
 			//Chooses the best match for pricing. Will need to make this user selectable later.
 				if(material.fullSheet21 && sheets >= 21) {
@@ -461,297 +716,13 @@ addons are PER GROUP not per table
 			return(returnObj);
 		};
 
-		vm.deleteCounter = function(groupNumber, index) {
-			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
-	  		var groupIndex = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
-			vm.quote.counterGroup[groupIndex].totalPrice -= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
-			vm.quote.counterGroup[groupIndex].TAC -= vm.quote.counterGroup[groupIndex].counters[index].squareFootage;
-			vm.quote.totalPrice -= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
-			vm.quote.counterGroup[groupIndex].totalLength -= vm.quote.counterGroup[groupIndex].counters[index].counterLength;
-			//console.log(vm.quote.counters[index].totalPrice);
-			vm.quote.counterGroup[groupIndex].counters.splice(index, index+1);
-			//recalculate group if material is present
-			if(typeof vm.quote.counterGroup[groupIndex].material !== 'undefined') {
-				vm.calcGroup(groupIndex, vm.quote.counterGroup[groupIndex].material);
-			};
-		};
 
 
-		/*
-		This function does the following:
-		checks if "sheets" or quantity has a numberic value or will not run.
-		
-		*/
-		vm.calcGroup = function(groupNumber, material, overridePricing){
-			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
-	  		var index = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
-
-	  		//This is a big old tangle of code now. I need to break all this stuff apart.
-	  		//
-			console.log((parseFloat(vm.quote.counterGroup[index].quantity) != 0) && parseFloat(vm.quote.counterGroup[index].quantity) != 0);
-			console.log((isNaN(parseFloat(vm.quote.counterGroup[index].sheets)) === false || typeof vm.quote.counterGroup[index].sheets === "undefined") && (vm.quote.counterGroup[index].quantity != 0 && vm.quote.counterGroup[index].quantity != NaN));
-			//If sheets entered is not a number or undefined, don't calculate.
-			if((isNaN(parseFloat(vm.quote.counterGroup[index].sheets)) === false || typeof vm.quote.counterGroup[index].sheets === "undefined") && (parseFloat(vm.quote.counterGroup[index].quantity) != 0) || parseFloat(vm.quote.counterGroup[index].quantity) != 0){
-				
-				//Define the sheets object
-				var sheets = {};
-				//debug stuff
-				console.log(vm.quote.counterGroup[index]);
-				console.log(index);
-
-				/*
-				//clear values for each counter and the main group because we'll be adding them up each time (I should remove this and just add the stuff that's needed)
-				vm.quote.counterGroup[index].TAC = 0;
-				vm.quote.TAC = 0;
-				vm.quote.totalPrice = 0;
-				*/
-
-				/* This has been merged to when calcCounter is added (and should also be for when a counter is removed)
-				//Go through each counter and add up all TAC values for both group and whole quote.
-				for (var i = 0; i <= vm.quote.counterGroup[index].counters.length - 1; i++) {
-					//Add square footage of one counter to the TOTAL Area
-					//console.log(i, vm.quote.counterGroup[index].counters.length, vm.quote.counterGroup[index].counters[i].squareFootage);
-					vm.quote.counterGroup[index].TAC += vm.quote.counterGroup[index].counters[i].squareFootage * vm.quote.counterGroup[index].quantity;
-					vm.quote.TAC += parseFloat(vm.quote.counterGroup[index].counters[i].squareFootage);
-				};
-				*/
-				//Round 'em.
-				vm.quote.counterGroup[index].TAC = parseFloat(vm.quote.counterGroup[index].TAC.toFixed(2));
-				vm.quote.TAC = parseFloat(vm.quote.TAC.toFixed(2));
-
-				//Below is the math for taking the total area of the group and getting pricing/estimating charges. The sheet estimation will be overriden when the sheets have been entered.
-				sheets = vm.calcSheets(material, vm.quote.counterGroup[index].sheets, overridePricing);
-				vm.quote.counterGroup[index].material.pricing = sheets.pricing;
-				vm.quote.counterGroup[index].totalPrice = vm.quote.counterGroup[index].sheets * material[sheets.pricing] * vm.quote.counterGroup[index].quantity;	
-
-				//If the sheets have not been overriden, take entire area and estimate number of sheets required.
-				if(typeof vm.quote.counterGroup[index].sheets === "undefined" || isNaN(vm.quote.counterGroup[index].sheets) === false) {
-					vm.quote.counterGroup[index].sheets = (vm.quote.counterGroup[index].TAC / (material.length * material.width/144)) * vm.quote.counterGroup[index].quantity;
-					vm.quote.counterGroup[index].sheets = vm.quote.counterGroup[index].sheets.toFixed(2);	
-					vm.quote.counterGroup[index].estimatedSheets = parseFloat(vm.quote.counterGroup[index].sheets).toFixed(2);	
-				};
-
-				//Update the addon quantities for the group and mandatory addon quantities and recalculate them 
-				vm.updateGroupAddons(groupNumber, shape, vm.quote.counterGroup[index].TAC);
-
-				//console.log(vm.quote.counterGroup[index].estimatedSheets * vm.quote.counterGroup[index].quantity, vm.quote.counterGroup[index].quantity);
-				
-				//multiply the estimated sheets by the quantity
-				vm.quote.counterGroup[index].estimatedSheets = vm.quote.counterGroup[index].estimatedSheets * vm.quote.counterGroup[index].quantity;
-				vm.quote.counterGroup[index].sheets = vm.quote.counterGroup[index].sheets * vm.quote.counterGroup[index].quantity;
-
-				//console.log(material[sheets.pricing], vm.quote.counterGroup[index].sheets);
-
-				//Group MATERIAL Cost - Cost of all counters combined
-				vm.quote.counterGroup[index].GMC = material[sheets.pricing] * vm.quote.counterGroup[index].sheets * vm.quote.counterGroup[index].quantity;
-				vm.quote.totalPrice += vm.quote.counterGroup[index].GMC;
-				vm.quote.GMC = vm.quote.counterGroup[index].GMC;
-				vm.quote.totalLength = parseFloat(vm.quote.counterGroup[index].totalLength);
-
-				// GMC square foot total divided by the total area of sheets required
-				vm.quote.counterGroup[index].GMCPSF = vm.quote.counterGroup[index].GMC / vm.quote.counterGroup[index].TAC;
-				//Group Cost per Squarefoot
-				console.log("gmc", vm.quote.counterGroup[index].GMC, "tac", vm.quote.counterGroup[index].TAC, "totalPrice (tgc)", vm.quote.counterGroup[index].totalPrice);
-				vm.quote.counterGroup[index].GCPSF = vm.quote.counterGroup[index].totalPrice / vm.quote.counterGroup[index].TAC;
-				
-				//This is for after it's calculated once, because it adds up all OTHER counters in their groups, and then adds the new value for group total 
-				//console.log(typeof vm.quote.counterGroup[index].totalPrice);
-				if(typeof vm.quote.counterGroup[index].totalPrice !== 'undefined'){
-					for (var t = vm.quote.counterGroup.length - 1; t >= 0; t--) {
-						console.log(vm.quote.counterGroup[t].TAC, vm.quote.counterGroup[t].totalPrice, vm.quote.counterGroup[t].GMC);
-						if(t !== index){
-							vm.quote.TAC += parseFloat(vm.quote.counterGroup[t].TAC);
-							vm.quote.totalPrice += parseFloat(vm.quote.counterGroup[t].totalPrice);
-							vm.quote.GMC += parseFloat(vm.quote.counterGroup[t].GMC);
-							vm.quote.totalLength += parseFloat(vm.quote.counterGroup[t].totalLength);
-						};	
-					};
-					console.log(vm.quote.GMC, vm.quote.TAC, vm.quote.totalPrice);
-					vm.quote.GMCPSF = vm.quote.GMC / vm.quote.TAC;
-					vm.quote.GCPSF = vm.quote.totalPrice / vm.quote.TAC;
-				};	
-			};	
-		};
-
-		vm.calcCounter = function(width, length, shape, index, groupNumber, description, modal) {
-			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
-		  	var groupIndex = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
-			//console.log("Width", width, "Length", length, "Shape", shape, "Index", index, "Group Index", groupIndex, "description", description);
-
-		//Obviously, we set some variables. 
-			var squareFootage = 0;
-			var pushObj = {};
-			var pricing = "";
-
-			//Makes doing math later down easier.
-			if(shape === "circle"){
-				length = width;
-			};
-			//For whatever reason, they're text :(
-			width = parseFloat(width);
-			length = parseFloat(length);
-
-			//Create an object containing all core counter information
-			pushObj = {
-				description: description,
-				counterShape: shape,
-				counterLength: length,
-				counterWidth: width,
-				squareFootage: 0,
-				counterPrice: 0
-			};
-
-			//Checks the shape of the table, and then calculates square footage.
-			if(shape === "rectangle"){
-				pushObj.squareFootage = (length * width/144); //measurements are in inches, then converted to feet
-			} else if(shape === "circle"){
-				pushObj.squareFootage = (Math.PI * (Math.pow(width, 2)))/144;
-			};
-			//Truncate the squarefootage to 2 decimals
-			pushObj.squareFootage = parseFloat(pushObj.squareFootage.toFixed(2));
-			console.log(pushObj.squareFootage)
-			//Add the linear footage to the total length
-			vm.quote.counterGroup[groupNumber].totalLength += parseFloat(length);
-			//console.log(pushObj.squareFootage);
-
-			//update TAC value
-			//Add the counter's area to both group and total TAC
-			vm.quote.counterGroup[groupNumber].TAC += pushObj.squareFootage * vm.quote.counterGroup[groupNumber].quantity;
-			vm.quote.TAC += pushObj.squareFootage;
-
-			//"Save" the counter to vm.quote
-			vm.commitCounter(modal, pushObj, index, groupNumber);
-
-			//Update the addon quantities for the group and mandatory addon quantities and recalculate them 
-			vm.updateGroupAddons(groupNumber, shape, vm.quote.counterGroup[groupNumber].TAC);
-			//vm.updateMandatoryAddons(index);
-
-			//calculate the GCPSF for group and total
-			vm.updateGCPSF(groupNumber);
-			/*
-
-			TAC DOES NOT CALC. GO THROUGH THE WHOLE ADDING COUNTER PIECES PROCESS FROM START TO FINISH.
-			THEN DO THE SAME THING WITH THE REMOVAL OF A COUNTER. THESE SHOULD BE ALL IN SMALL CHUNKS, AS BEST AS YOU CAN!
-			YOU CAN DO THIS, FUTURESTEVE
-
-			*/
-
-		};
 
 
-		//recalculates the addon totalprice (requires squarefootage to be calculated)
-		vm.calcAddonTotal = function(addon, shape, squareFootage, index){
-			//var counterLength = length;
-			//var counterWidth = width;
-			var totalPrice = 0;
-			console.log(addon.quantity, addon.price, addon.formula);
-			//calculation - need to seperate this into another function
-			if (addon.formula === "item") {
-				totalPrice =  addon.quantity * addon.price;
-			}else if(addon.formula === "sqft"){
-				//console.log(vm.quote.counters[index]);
-				totalPrice = addon.price * addon.quantity;
-			}else if(addon.formula === "linear"){	
-					totalPrice = addon.quantity * addon.price;
-			}else{
-				console.error("Unknown addon formula type!!!", addon.formula);
-				totalPrice = addon.quantity * addon.price;
-			};
-			console.log(totalPrice);
-			return(totalPrice);
-		};
 
-		vm.updateGCPSF = function(groupIndex) {
-			//Update the group GMCPSF/GCPSF
-			vm.quote.counterGroup[groupIndex].GMCPSF = vm.quote.counterGroup[groupIndex].GMC / vm.quote.counterGroup[groupIndex].TAC;
-			vm.quote.counterGroup[groupIndex].GCPSF = vm.quote.counterGroup[groupIndex].totalPrice / vm.quote.counterGroup[groupIndex].TAC;
-			//Update the total GMCPSF/GCPSF
-			vm.quote.GMCPSF = vm.quote.GMC / vm.quote.TAC;
-			vm.quote.GCPSF = vm.quote.totalPrice / vm.quote.TAC;
-		};
-
-		vm.updateGroupAddons = function(index, shape, squareFootage){
-			
-			//calculate addons in group
-			for(var i = 0; i < vm.quote.counterGroup[index].addons.length; i++) {
-				//Update "quantity" (linear, sqft) because of new counter dimensions
-				vm.updateAddon(vm.quote.counterGroup[index].addons[i], vm.quote.counterGroup[index].TAC, index);
-				vm.calcAddon(vm.quote.counterGroup[index].addons[i], shape, squareFootage, index);
-				
-				vm.quote.counterGroup[index].totalPrice += vm.quote.counterGroup[index].addons[i].totalPrice * vm.quote.counterGroup[index].quantity;
-				vm.quote.totalPrice += vm.quote.counterGroup[index].addons[i].totalPrice * vm.quote.counterGroup[index].quantity;
-			};	
-		};
-
-
-		vm.calcMandatoryAddons = function(index){
-			//calculate Mandatory addon total prices
-			for(var i = 0; i < vm.quote.mandatoryAddons.length; i++) {
-				vm.updateAddon = (vm.quote.mandatoryAddons[i], vm.quote.TAC, -1);
-				vm.quote.totalPrice += vm.quote.mandatoryAddons[i].totalPrice * vm.quote.counterGroup[index].quantity;
-				//
-				vm.calcMandatoryAddon(vm.quote.mandatoryAddons[i]);
-			};	
-		};
-
-		//It's not really calculating, more adding it to the totals - Doesn't need to be it's own function
-		vm.calcAddon = function(addon) {
-			vm.quote.totalPrice += addon.totalPrice;
-			//update the material and total cost psqf
-			vm.quote.GMCPSF = vm.quote.GMC / vm.quote.TAC;
-			vm.quote.GCPSF = vm.quote.totalPrice / vm.quote.TAC;
-		};
-
-		//updates the "quantity" value so it can be calculated - requires TAC for Sqft and total Length for linear
-		vm.updateAddon = function(addon, TAC, groupIndex) {
-			console.log(TAC);
-			//if formula is sqft or linear, the quantity is different This is to make the calculating easier, so it's just the quantity that's being handled, not TAC, width, length etc
-			if(addon.formula === "sqft"){
-				addon.quantity = TAC;
-			} else if (addon.formula === "linear"){
-				if(groupIndex == -1){
-					addon.quantity = vm.quote.totalLength / 12;
-				} else {
-					addon.quantity = vm.quote.counterGroup[groupIndex].totalLength / 12;
-				};
-			};
-			//Force as float and truncate to 2 decimal places
-			addon.quantity = parseFloat(addon.quantity);
-			addon.quantity = addon.quantity.toFixed(2);
-		};
-
-
-		vm.commitCounter = function(modal, pushObj, index, groupNumber){
-			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
-	  		var groupIndex = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
-			console.log(groupIndex, index, typeof vm.quote.counterGroup[groupIndex].counters[index], pushObj);
-			
-			//Commits data to arrays depending on whether it's an edit or a new save.
-			if(typeof vm.quote.counterGroup[groupIndex].counters[index] === "undefined"){
-				//push counter into vm.quote
-				vm.quote.counterGroup[groupIndex].counters.push(pushObj);	
-			};
-			
-			//recalculate group if material is present
-			if(typeof vm.quote.counterGroup[groupIndex].material !== 'undefined') {
-				vm.calcGroup(groupIndex, vm.quote.counterGroup[groupIndex].material);
-			};
-			
-			//Because there's a new counter added, we need to update the "quantity" of each addon within the group
-			for (var i = vm.quote.counterGroup[groupIndex].addons.length - 1; i >= 0; i--) {
-				vm.saveAddon(vm.quote.counterGroup[groupIndex].addons[i], vm.quote.counterGroup[groupIndex].shape, vm.quote.counterGroup[groupIndex].TAC, groupIndex);
-			};
-			//... and for all the mandatory ones as well.
-			//vm.updateAddon = function(addon, TAC, groupIndex)
-			
-		};
 
 		vm.saveQuote = function() {
-			//console.log(vm.quote.jobDifficulty.$dirty);
-			/*if(vm.quote.jobDifficulty.$dirty === true){
-				console.log("value has changed");
-			};*/
-
 			//save the quote
 			//Need to declare that it's sending a json doc
 			$http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';

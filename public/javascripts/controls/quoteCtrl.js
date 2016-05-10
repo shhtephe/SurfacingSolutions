@@ -602,10 +602,11 @@ addons are PER GROUP not per table
 
 				//Estimate the number of sheets
 				vm.quote.counterGroup[index].estimatedSheets = (vm.quote.counterGroup[index].TAC / (material.length * material.width/144)) * vm.quote.counterGroup[index].quantity;
-				vm.quote.counterGroup[index].estimatedSheets = vm.quote.counterGroup[index].estimatedSheets.toFixed(2);
+				vm.quote.counterGroup[index].estimatedSheets = parseFloat(vm.quote.counterGroup[index].estimatedSheets.toFixed(2));
+				console.log(vm.quote.counterGroup[index].estimatedSheets);
 				//If sheets has not been entered (is null) make sheets = estimated, then proceed with calculating
-				console.log(vm.quote.counterGroup[index].sheets);
-				if (typeof vm.quote.counterGroup[index].sheets == 'undefined') {
+				console.log(vm.quote.counterGroup[index].sheets, typeof vm.quote.counterGroup[index].sheets === 'undefined');
+				if (typeof vm.quote.counterGroup[index].sheets === 'undefined') {
 					vm.quote.counterGroup[index].sheets = vm.quote.counterGroup[index].estimatedSheets
 				};
 				//Calculate totals with material and number of sheets
@@ -613,8 +614,8 @@ addons are PER GROUP not per table
 				//Set the quote pricing string
 				vm.quote.counterGroup[index].material.pricing = sheets.pricing;
 				//multiply the sheets by the quantity, also estimated sheets
-				vm.quote.counterGroup[index].sheets = vm.quote.counterGroup[index].sheets * vm.quote.counterGroup[index].quantity;
-				vm.quote.counterGroup[index].estimatedSheets = vm.quote.counterGroup[index].estimatedSheets * vm.quote.counterGroup[index].quantity;
+				//vm.quote.counterGroup[index].sheets = vm.quote.counterGroup[index].sheets * vm.quote.counterGroup[index].quantity;
+				//vm.quote.counterGroup[index].estimatedSheets = vm.quote.counterGroup[index].estimatedSheets * vm.quote.counterGroup[index].quantity;
 				//Group MATERIAL Cost - Cost of all counters combined
 				vm.quote.counterGroup[index].GMC = material[sheets.pricing] * vm.quote.counterGroup[index].sheets * vm.quote.counterGroup[index].quantity;
 				//Set total quote GMC

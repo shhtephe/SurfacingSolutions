@@ -397,7 +397,7 @@
 							</tr>
 						</table>
 						<br>
-						Sheets required: <input type="number" ng-model='group.sheets' name='group.sheets' ng-change="vm.calcGroup(group.groupNumber, group.material)">
+						Sheets required: <input type="number" ng-model='group.sheets' name='group.sheets * group.quantity' ng-change="vm.calcGroup(group.groupNumber, group.material)">
 						Quantity: <input type="number" ng-model='group.quantity' name='group.quantity' ng-change="vm.calcGroup(group.groupNumber, group.material)">
 					</span> 	
 					<hr style="background:#000000; border:0; height:7px" />

@@ -179,6 +179,9 @@ addons are PER GROUP not per table
 				{
 					groupNumber: 0,
 					TAC: 0,
+					GMC: 0,
+					GMCPSF: 0,
+					GCPSF: 0,
 					counters: [],
 					addons:[],
 					totalPrice: 0,
@@ -189,6 +192,9 @@ addons are PER GROUP not per table
 				pushObj = {
 					groupNumber : vm.quote.counterGroup.length,
 					TAC: 0,
+					GMC: 0,
+					GMCPSF: 0,
+					GCPSF: 0,
 					counters: [],
 					addons: [],
 					totalPrice: 0,
@@ -246,7 +252,7 @@ addons are PER GROUP not per table
 			//Subtract TAC from quote
 			vm.quote.TAC -= vm.quote.counterGroup[index].TAC;
 			//Update Mandatory addons with new TAC
-			vm.updateMandatoryAddons(groupIndex, vm.quote.TAC);
+			vm.updateMandatoryAddons(index, vm.quote.TAC);
 			//Remove from Array
 			vm.quote.counterGroup.splice(index, index+1);
 		};
@@ -620,6 +626,7 @@ addons are PER GROUP not per table
 				vm.quote.counterGroup[index].GMC = material[sheets.pricing] * vm.quote.counterGroup[index].sheets * vm.quote.counterGroup[index].quantity;
 				//Set total quote GMC
 				vm.quote.GMC = vm.quote.counterGroup[index].GMC;
+				console.log(vm.quote.counterGroup[index].GMC, index, vm.quote.GMC);
 				//Set the total price to GMC then add up the addons to get total cost
 				vm.quote.counterGroup[index].totalPrice = vm.quote.counterGroup[index].GMC;	
 				//Set the total price as the material price, then add the addons
@@ -640,7 +647,6 @@ addons are PER GROUP not per table
 				for (var i = vm.quote.mandatoryAddons.length - 1; i >= 0; i--) {
 					vm.quote.totalPrice += vm.quote.mandatoryAddons[i].totalPrice;
 				};			
-
 				//Calc GMCPSF = total material price divided by the total area of sheets required
 				vm.quote.counterGroup[index].GMCPSF = vm.quote.counterGroup[index].GMC / vm.quote.counterGroup[index].TAC;	
 				//Calc GCPSF = total price divided by total area of sheets required
@@ -649,6 +655,7 @@ addons are PER GROUP not per table
 				if(typeof vm.quote.counterGroup[index].totalPrice !== 'undefined'){
 					for (var t = vm.quote.counterGroup.length - 1; t >= 0; t--) {
 						if(t !== index){
+							console.log(t, vm.quote.counterGroup[t].TAC, vm.quote.counterGroup[t].totalPrice, vm.quote.counterGroup[t].GMC, vm.quote.counterGroup[t].totalLength);
 							vm.quote.TAC += parseFloat(vm.quote.counterGroup[t].TAC);
 							vm.quote.totalPrice += parseFloat(vm.quote.counterGroup[t].totalPrice);
 							vm.quote.GMC += parseFloat(vm.quote.counterGroup[t].GMC);
@@ -681,9 +688,8 @@ addons are PER GROUP not per table
 				sheets : 0,
 				pricing: ''
 			};
-			/*I don't know if overridePricing is even being used, but keeping it in case it breaks anything.
-			Checks to see how many sheets are required
-			*/
+			/*I don't know if overridePricing is even being used, but keeping it in case it breaks anything.*/
+			//Checks to see how many sheets are required
 			if(typeof overridePricing === 'undefined') {
 			//Chooses the best match for pricing. Will need to make this user selectable later.
 				if(material.fullSheet21 && sheets >= 21) {
@@ -707,17 +713,11 @@ addons are PER GROUP not per table
 				console.log("Pricing override");
 				returnObj.pricing = overridePricing;
 			};
-
+			//set the fraction of sheets to 2 digits.
 			returnObj.sheets = returnObj.sheets.toFixed(2);
 			console.log(returnObj);
 			return(returnObj);
 		};
-
-
-
-
-
-
 
 		vm.saveQuote = function() {
 			//save the quote

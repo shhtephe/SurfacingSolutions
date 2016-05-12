@@ -338,7 +338,7 @@ addons are PER GROUP not per table
 			//Subtract squarefootage from group
 			vm.quote.counterGroup[groupIndex].TAC -= vm.quote.counterGroup[groupIndex].counters[index].squareFootage;
 			//Subtract squarefootage from quote
-			vm.quote.TAC -= vm.quote.counterGroup[groupIndex].counters[index].squareFootage;
+			vm.quote.TAC -= vm.quote.counterGroup[groupIndex].counters[index].squareFootage * vm.quote.counterGroup[groupIndex].quantity;
 			//subtract total length from group
 			vm.quote.counterGroup[groupIndex].totalLength -= vm.quote.counterGroup[groupIndex].counters[index].counterLength;
 			//Subtract total length from quote
@@ -605,7 +605,6 @@ addons are PER GROUP not per table
 				//Define the sheets object
 				var sheets = {};
 
-
 				//Estimate the number of sheets
 				vm.quote.counterGroup[index].estimatedSheets = (vm.quote.counterGroup[index].TAC / (material.length * material.width/144)) * vm.quote.counterGroup[index].quantity;
 				vm.quote.counterGroup[index].estimatedSheets = parseFloat(vm.quote.counterGroup[index].estimatedSheets.toFixed(2));
@@ -631,7 +630,8 @@ addons are PER GROUP not per table
 				vm.quote.counterGroup[index].totalPrice = vm.quote.counterGroup[index].GMC;	
 				//Set the total price as the material price, then add the addons
 				vm.quote.totalPrice = vm.quote.counterGroup[index].GMC;
-
+				//set the quote TAC
+				vm.quote.TAC = vm.quote.counterGroup[index].TAC * vm.quote.counterGroup[index].quantity;
 				//set total length to a float
 				vm.quote.totalLength = parseFloat(vm.quote.counterGroup[index].totalLength);
 				//Update the addon quantities for the group and mandatory addon quantities and recalculate them **THIS MIGHT BE FIRING TWICE IN DIFFERENT SPOTS. MIGHT REMOVE**
@@ -656,7 +656,7 @@ addons are PER GROUP not per table
 					for (var t = vm.quote.counterGroup.length - 1; t >= 0; t--) {
 						if(t !== index){
 							console.log(t, vm.quote.counterGroup[t].TAC, vm.quote.counterGroup[t].totalPrice, vm.quote.counterGroup[t].GMC, vm.quote.counterGroup[t].totalLength);
-							vm.quote.TAC += parseFloat(vm.quote.counterGroup[t].TAC);
+							vm.quote.TAC += parseFloat(vm.quote.counterGroup[t].TAC) * vm.quote.counterGroup[t].quantity;
 							vm.quote.totalPrice += parseFloat(vm.quote.counterGroup[t].totalPrice);
 							vm.quote.GMC += parseFloat(vm.quote.counterGroup[t].GMC);
 							vm.quote.totalLength += parseFloat(vm.quote.counterGroup[t].totalLength);

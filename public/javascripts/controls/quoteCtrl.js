@@ -360,7 +360,7 @@ addons are PER GROUP not per table
 				//Set the addon to a variable:
 				var addon = vm.quote.counterGroup[index].addons[i];
 				//Update "quantity" (linear, sqft) because of new counter dimensions
-				vm.quote.counterGroup[index].addons[i].quantity = vm.updateAddon(addon, vm.quote.counterGroup[index].TAC, index);
+				vm.quote.counterGroup[index].addons[i].quantity = vm.updateAddon(addon, vm.quote.counterGroup[index].TAC, index, vm.quote.counterGroup[index].quantity);
 				//calculate the total price value
 				vm.quote.counterGroup[index].addons[i].totalPrice = vm.calcAddonTotal(addon, shape, squareFootage, index);
 			};
@@ -421,13 +421,13 @@ addons are PER GROUP not per table
 		};
 
 		//updates the "quantity" value so it can be calculated - requires TAC for Sqft and total Length for linear
-		vm.updateAddon = function(addon, TAC, groupIndex) {
+		vm.updateAddon = function(addon, TAC, groupIndex, quantity) {
 			console.log(TAC);
 			//if formula is sqft or linear, the quantity is different This is to make the calculating easier, so it's just the quantity that's being handled, not TAC, width, length etc
 			if(addon.formula === "sqft"){
-				addon.quantity = TAC;
+				addon.quantity = TAC * quantity;
 			} else if (addon.formula === "linear"){
-				addon.quantity = vm.quote.counterGroup[groupIndex].totalLength / 12;
+				addon.quantity = (vm.quote.counterGroup[groupIndex].totalLength / 12) * quantity;
 			};
 			//Force as float and truncate to 2 decimal places
 			addon.quantity = parseFloat(addon.quantity);
@@ -462,7 +462,7 @@ addons are PER GROUP not per table
 			if(groupIndex == -1){
 				vm.updateMandatoryAddon(addon, TAC, groupIndex);
 			} else {
-				vm.updateAddon(addon, TAC, groupIndex);
+				vm.updateAddon(addon, TAC, groupIndex, vm.quote.counterGroup[groupIndex].quantity);
 			};
 
 			addon.quantity = parseFloat(addon.quantity);
@@ -633,7 +633,7 @@ addons are PER GROUP not per table
 				//set the quote TAC
 				vm.quote.TAC = vm.quote.counterGroup[index].TAC * vm.quote.counterGroup[index].quantity;
 				//set total length to a float
-				vm.quote.totalLength = parseFloat(vm.quote.counterGroup[index].totalLength);
+				vm.quote.totalLength = parseFloat(vm.quote.counterGroup[index].totalLength) * vm.quote.counterGroup[index].quantity;
 				//Update the addon quantities for the group and mandatory addon quantities and recalculate them **THIS MIGHT BE FIRING TWICE IN DIFFERENT SPOTS. MIGHT REMOVE**
 				vm.updateGroupAddons(groupIndex, shape, vm.quote.counterGroup[index].TAC);
 				vm.updateMandatoryAddons(groupIndex, vm.quote.counterGroup[index].TAC);
@@ -648,6 +648,7 @@ addons are PER GROUP not per table
 					vm.quote.totalPrice += vm.quote.mandatoryAddons[i].totalPrice;
 				};			
 				//Calc GMCPSF = total material price divided by the total area of sheets required
+				console.log(vm.quote.counterGroup[index].GMC / vm.quote.counterGroup[index].TAC, vm.quote.counterGroup[index].GMC, vm.quote.counterGroup[index].TAC);
 				vm.quote.counterGroup[index].GMCPSF = vm.quote.counterGroup[index].GMC / vm.quote.counterGroup[index].TAC;	
 				//Calc GCPSF = total price divided by total area of sheets required
 				vm.quote.counterGroup[index].GCPSF = vm.quote.counterGroup[index].totalPrice / vm.quote.counterGroup[index].TAC;

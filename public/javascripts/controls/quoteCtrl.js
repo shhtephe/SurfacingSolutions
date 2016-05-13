@@ -649,9 +649,9 @@ addons are PER GROUP not per table
 				};			
 				//Calc GMCPSF = total material price divided by the total area of sheets required
 				console.log(vm.quote.counterGroup[index].GMC / vm.quote.counterGroup[index].TAC, vm.quote.counterGroup[index].GMC, vm.quote.counterGroup[index].TAC);
-				vm.quote.counterGroup[index].GMCPSF = vm.quote.counterGroup[index].GMC / vm.quote.counterGroup[index].TAC;	
+				vm.quote.counterGroup[index].GMCPSF = vm.quote.counterGroup[index].GMC / (vm.quote.counterGroup[index].TAC * vm.quote.counterGroup[index].quantity);
 				//Calc GCPSF = total price divided by total area of sheets required
-				vm.quote.counterGroup[index].GCPSF = vm.quote.counterGroup[index].totalPrice / vm.quote.counterGroup[index].TAC;
+				vm.quote.counterGroup[index].GCPSF = vm.quote.counterGroup[index].totalPrice / (vm.quote.counterGroup[index].TAC * vm.quote.counterGroup[index].quantity);
 				//This is for after it's calculated once, because it adds up all OTHER counters in their groups, and then adds the new value for group total 
 				if(typeof vm.quote.counterGroup[index].totalPrice !== 'undefined'){
 					for (var t = vm.quote.counterGroup.length - 1; t >= 0; t--) {

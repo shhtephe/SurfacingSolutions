@@ -624,7 +624,7 @@ addons are PER GROUP not per table
 				//Group MATERIAL Cost - Cost of all counters combined
 				vm.quote.counterGroup[index].GMC = material[sheets.pricing] * vm.quote.counterGroup[index].sheets * vm.quote.counterGroup[index].quantity;
 				//Set total quote GMC
-				vm.quote.GMC = vm.quote.counterGroup[index].GMC;
+				vm.quote.GMC = parseFloat(vm.quote.counterGroup[index].GMC);
 				console.log(vm.quote.counterGroup[index].GMC, index, vm.quote.GMC);
 				//Set the total price to GMC then add up the addons to get total cost
 				vm.quote.counterGroup[index].totalPrice = vm.quote.counterGroup[index].GMC;	
@@ -635,8 +635,8 @@ addons are PER GROUP not per table
 				//set total length to a float
 				vm.quote.totalLength = parseFloat(vm.quote.counterGroup[index].totalLength) * vm.quote.counterGroup[index].quantity;
 				//Update the addon quantities for the group and mandatory addon quantities and recalculate them **THIS MIGHT BE FIRING TWICE IN DIFFERENT SPOTS. MIGHT REMOVE**
-				vm.updateGroupAddons(groupIndex, shape, vm.quote.counterGroup[index].TAC);
-				vm.updateMandatoryAddons(groupIndex, vm.quote.counterGroup[index].TAC);
+				vm.updateGroupAddons(index, shape, vm.quote.counterGroup[index].TAC);
+				vm.updateMandatoryAddons(index, vm.quote.counterGroup[index].TAC);
 				
 				//Add the total price for each addon to the group total price
 				for (var i = vm.quote.counterGroup[index].addons.length - 1; i >= 0; i--) {
@@ -655,8 +655,8 @@ addons are PER GROUP not per table
 				//This is for after it's calculated once, because it adds up all OTHER counters in their groups, and then adds the new value for group total 
 				if(typeof vm.quote.counterGroup[index].totalPrice !== 'undefined'){
 					for (var t = vm.quote.counterGroup.length - 1; t >= 0; t--) {
-						if(t !== index){
-							console.log(t, vm.quote.counterGroup[t].TAC, vm.quote.counterGroup[t].totalPrice, vm.quote.counterGroup[t].GMC, vm.quote.counterGroup[t].totalLength);
+						if(t !== index && vm.quote.counterGroup[t].material === true){
+							//console.log(t, vm.quote.counterGroup[t].TAC, vm.quote.counterGroup[t].totalPrice, vm.quote.counterGroup[t].GMC, vm.quote.counterGroup[t].totalLength);
 							vm.quote.TAC += parseFloat(vm.quote.counterGroup[t].TAC) * vm.quote.counterGroup[t].quantity;
 							vm.quote.totalPrice += parseFloat(vm.quote.counterGroup[t].totalPrice);
 							vm.quote.GMC += parseFloat(vm.quote.counterGroup[t].GMC);
@@ -664,7 +664,7 @@ addons are PER GROUP not per table
 						};	
 					};
 					//After adding all the other groups, then calc the quote GMCPSF and GCPSF
-					console.log(vm.quote.GMC, vm.quote.TAC, vm.quote.totalPrice)
+					//console.log(vm.quote.GMC, vm.quote.TAC, vm.quote.totalPrice)
 					vm.quote.GMCPSF = vm.quote.GMC / vm.quote.TAC;
 					vm.quote.GCPSF = vm.quote.totalPrice / vm.quote.TAC;
 				};	

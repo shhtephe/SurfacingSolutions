@@ -624,7 +624,7 @@ addons are PER GROUP not per table
 				//Group MATERIAL Cost - Cost of all counters combined
 				vm.quote.counterGroup[index].GMC = material[sheets.pricing] * vm.quote.counterGroup[index].sheets * vm.quote.counterGroup[index].quantity;
 				//Set total quote GMC
-				vm.quote.GMC = parseFloat(vm.quote.counterGroup[index].GMC);
+				vm.quote.GMC = vm.quote.counterGroup[index].GMC;
 				console.log(vm.quote.counterGroup[index].GMC, index, vm.quote.GMC);
 				//Set the total price to GMC then add up the addons to get total cost
 				vm.quote.counterGroup[index].totalPrice = vm.quote.counterGroup[index].GMC;	
@@ -655,8 +655,9 @@ addons are PER GROUP not per table
 				//This is for after it's calculated once, because it adds up all OTHER counters in their groups, and then adds the new value for group total 
 				if(typeof vm.quote.counterGroup[index].totalPrice !== 'undefined'){
 					for (var t = vm.quote.counterGroup.length - 1; t >= 0; t--) {
-						if(t !== index && vm.quote.counterGroup[t].material === true){
-							//console.log(t, vm.quote.counterGroup[t].TAC, vm.quote.counterGroup[t].totalPrice, vm.quote.counterGroup[t].GMC, vm.quote.counterGroup[t].totalLength);
+						console.log(typeof(vm.quote.counterGroup[t].material), vm.quote.counterGroup[t].material === 'object')
+						if(t !== index && typeof(vm.quote.counterGroup[t].material) === 'object'){
+							console.log(t, vm.quote.counterGroup[t].TAC, vm.quote.counterGroup[t].totalPrice, vm.quote.counterGroup[t].GMC, vm.quote.counterGroup[t].totalLength);
 							vm.quote.TAC += parseFloat(vm.quote.counterGroup[t].TAC) * vm.quote.counterGroup[t].quantity;
 							vm.quote.totalPrice += parseFloat(vm.quote.counterGroup[t].totalPrice);
 							vm.quote.GMC += parseFloat(vm.quote.counterGroup[t].GMC);

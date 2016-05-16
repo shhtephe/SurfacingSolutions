@@ -274,7 +274,8 @@
 <!--{/group.addons|json/}-->
 					<div ng-repeat="addon in group.addons track by $index">
 						<br>{/addon.productType/} - {/addon.description/} : 
-						<span ng-show="group.material.length !== ''">{/addon.quantity/}</span>
+						<span ng-show="group.material.length !== '' && addon.formula !=='item'">{/addon.quantity/}</span>
+						<span ng-show="addon.formula ==='item'">{/addon.quantity * group.quantity/}</span>
 							<span ng-show="addon.formula == 'linear'">'</span>
 							<span ng-show="addon.formula =='sqft'">'<sup>2</sup></span>
 						@{/addon.price | currency:$/} | {/addon.totalPrice | currency:$/} <a ng-click="vm.removeAddon(addon, group.groupNumber, $index)">remove</a>

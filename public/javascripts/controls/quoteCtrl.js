@@ -385,9 +385,9 @@ addons are PER GROUP not per table
 			console.log(addon.quantity, addon.price, addon.formula);
 			//calculation - need to seperate this into another function
 			if (addon.formula === "item") {
-				totalPrice =  addon.quantity * addon.price;
+				totalPrice =  addon.quantity * addon.price * vm.quote.counterGroup[index].quantity;
 			}else if(addon.formula === "sqft"){
-				//console.log(vm.quote.counters[index]);
+				//console.log(vm.quote.counterGroup[index]);
 				totalPrice = addon.price * addon.quantity;
 			}else if(addon.formula === "linear"){	
 					totalPrice = addon.quantity * addon.price;
@@ -422,7 +422,7 @@ addons are PER GROUP not per table
 
 		//updates the "quantity" value so it can be calculated - requires TAC for Sqft and total Length for linear
 		vm.updateAddon = function(addon, TAC, groupIndex, quantity) {
-			console.log(TAC);
+			console.log(addon.formula);
 			//if formula is sqft or linear, the quantity is different This is to make the calculating easier, so it's just the quantity that's being handled, not TAC, width, length etc
 			if(addon.formula === "sqft"){
 				addon.quantity = TAC * quantity;

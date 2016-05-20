@@ -70,7 +70,8 @@ var quote = new Schema({
 				manufacturer: String,
 				colourGroup: String,
 				pricing: String,
-				description: String
+				description: String,
+				customPrice: Number
 		},
 		counters: [{
 			quantity: Number,

@@ -237,6 +237,10 @@ addons are PER GROUP not per table
 			} else if(pricing == "quarterSheet") {
 				counterPrice = sheets * material.quarterSheet;
 				vm.quote.counterGroup[groupIndex].material.pricing = "quarterSheet";
+			} else if(pricing == "custom") {
+				console.log(material.customPrice);
+				counterPrice = sheets * material.customPrice;
+				vm.quote.counterGroup[groupIndex].material.pricing = "customPrice";
 			};
 						
 			if(vm.quote.counterGroup[groupIndex].material) {
@@ -622,7 +626,8 @@ addons are PER GROUP not per table
 				//vm.quote.counterGroup[index].sheets = vm.quote.counterGroup[index].sheets * vm.quote.counterGroup[index].quantity;
 				//vm.quote.counterGroup[index].estimatedSheets = vm.quote.counterGroup[index].estimatedSheets * vm.quote.counterGroup[index].quantity;
 				//Group MATERIAL Cost - Cost of all counters combined
-				vm.quote.counterGroup[index].GMC = material[sheets.pricing] * vm.quote.counterGroup[index].sheets * vm.quote.counterGroup[index].quantity;
+				console.log(material[sheets.pricing], sheets.pricing, material);
+				vm.quote.counterGroup[index].GMC = material[sheets.pricing] * vm.quote.counterGroup[index].sheets;
 				//Set total quote GMC
 				vm.quote.GMC = vm.quote.counterGroup[index].GMC;
 				console.log(vm.quote.counterGroup[index].GMC, index, vm.quote.GMC);

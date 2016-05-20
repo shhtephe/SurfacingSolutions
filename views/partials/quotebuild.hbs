@@ -6,10 +6,10 @@
 				<!--<br>
 				<br>
 {/vm.materials|json/}-->
-				<br>
+<!--				<br>
 				<br>
 {/vm.quote|json/}
-				<br><br>
+				<br><br>-->
 				<span style="float:right">
 					Quote Description:
 					<br>
@@ -359,6 +359,9 @@
 		      					<td ng-show="group.material.isa">
 		      						ISA Discount
 		      					</td>
+		      					<td>
+		      						Custom Price
+		      					</td>
 		      				</tr>
 			      			<tr>
 			      				<td ng-show="group.material.halfSheet">
@@ -380,6 +383,10 @@
 			      				<td ng-show="group.material.isa">
 			      					<input type="radio" name="counterPricing{/group.groupNumber/}" ng-model="group.material.pricing" ng-change="vm.changePricing(group.material.pricing, group.groupNumber, group.material)" value="isa">
 			      					{/group.material.isa | currency:$/}/sheet
+			      				</td>
+			      				<td>
+			      					<input type="radio" name="counterPricing{/group.groupNumber/}" ng-model="group.material.pricing" ng-change="vm.changePricing(group.material.pricing, group.groupNumber, group.material)" value="customPrice">
+			      					<input type="number" ng-model='group.material.customPrice' name="counterPricing{/group.groupNumber/}" style="width:75px">{/group.material.isa | currency:$/}/sheet
 			      				</td>
 			      			</tr>
 			      		</table>
@@ -620,5 +627,24 @@ addons with item/description etc
 
 global addons below
 and then totals
+-->
+<!--
+changing quantity after changing material causes a NaN in estimated sheets
+Shows as blank on refresh
+
+Sheets required = just straight multiply sheet cost by sheets required and not by quantity
+
+Collapse counters to one group
+Group description as description
+
+Unit cost = counter group cost
+quantity = quantity
+area
+price/sqft
+
+No group total 
+
+global addon section
+
 
 -->

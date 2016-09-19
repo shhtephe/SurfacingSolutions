@@ -10,7 +10,6 @@
 	function customerCtrl(dataFactory, $stateParams, $location) {
 		var vm = this;
 		var custCode = $stateParams.custCode;
-
 		dataFactory.getCustomer(custCode)
 			.then(function(data) {
 				vm.quotes = data.quotes;

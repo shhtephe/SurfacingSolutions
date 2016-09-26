@@ -378,7 +378,7 @@ addons are PER GROUP not per table
 				//Update "quantity" (linear, sqft) because of new counter dimensions
 				vm.quote.mandatoryAddons[i].quantity = vm.updateMandatoryAddon(addon, vm.quote.TAC, index);
 				//calculate the total price value
-				vm.quote.mandatoryAddons[i].totalPrice = vm.calcAddonTotal(addon, shape, squareFootage, index);
+				vm.quote.mandatoryAddons[i].totalPrice = vm.calcAddonTotal(addon, null, squareFootage, index);
 			};	
 		};
 

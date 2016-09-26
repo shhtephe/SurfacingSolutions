@@ -303,6 +303,8 @@ addons are PER GROUP not per table
 
 			//Add the counter's area to both group and total TAC
 			vm.quote.counterGroup[groupIndex].TAC += (pushObj.squareFootage * vm.quote.counterGroup[groupIndex].quantity);
+			//Round TAC to 2 digits
+			vm.quote.counterGroup[groupIndex].TAC.toFixed(2);
 			vm.quote.TAC += (pushObj.squareFootage * vm.quote.counterGroup[groupIndex].quantity);
 			//"Save" the counter to vm.quote
 			vm.commitCounter(modal, pushObj, index, groupIndex);
@@ -400,7 +402,7 @@ addons are PER GROUP not per table
 				totalPrice = addon.quantity * addon.price;
 			};
 			console.log(totalPrice);
-			return(totalPrice);
+			return(totalPrice.toFixed(2));
 		};
 
 		//updates the "quantity" value so it can be calculated - requires TAC for Sqft and total Length for linear
@@ -628,6 +630,7 @@ addons are PER GROUP not per table
 				//Group MATERIAL Cost - Cost of all counters combined
 				console.log(material[sheets.pricing], sheets.pricing, material);
 				vm.quote.counterGroup[index].GMC = material[sheets.pricing] * vm.quote.counterGroup[index].sheets;
+				vm.quote.counterGroup[index].GMC = vm.quote.counterGroup[index].GMC.toFixed(2);
 				//Set total quote GMC
 				vm.quote.GMC = vm.quote.counterGroup[index].GMC;
 				console.log(vm.quote.counterGroup[index].GMC, index, vm.quote.GMC);

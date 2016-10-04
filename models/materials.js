@@ -6,6 +6,7 @@ var Schema = mongoose.Schema;
 var materials = new Schema({
 	manufacturer: String,
 	distributor: String,
+	materialType: String,
 	description: String,
 	itemCode: String,
 	colourGroup: String,

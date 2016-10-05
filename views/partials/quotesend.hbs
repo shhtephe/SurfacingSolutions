@@ -223,7 +223,7 @@ Phone: {/vm.customer.homePhone/}</textarea>
 		<div id="terms">
 		  <h5>Terms</h5>
 		  <div ng-repeat="term in vm.quote.terms">
-			{/term.term/}<span ng-show="term.date">{/term.date | date/}</span>
+			{/term.term | dateFilter:term/}
   		  </div>
 		</div>
 	</div>

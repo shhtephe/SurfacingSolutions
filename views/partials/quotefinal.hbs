@@ -6,6 +6,7 @@
 {/vm.customer/}
 <br>
 <br>-->
+{/vm.quote.terms/}
 <alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</alert>
 	<div id="page-wrap">
 	<a href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}"><button type="button" style="btn">Back</button></a> 
@@ -209,7 +210,7 @@ Phone: {/vm.customer.homePhone/}</textarea>
 					<div class="col-md-8">{/term.term/}<!--<span ng-show="term.calendar==true">{/term.date | date:'shortDate'/}</span>--></div>
 					<!--date picker-->
   					<div class="col-md-3">
-			        	<span ng-show="term.calendar=='TRUE'">
+			        	<span ng-show="term.calendar=='true'">
 					        <span class="input-group">
 					          <input type="text" class="form-control" uib-datepicker-popup="{/vm.format/}" ng-change="vm.saveQuote()" ng-model="term.date" is-open="vm.popup1.opened" datepicker-options="vm.dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"/>
 					          <span class="input-group-btn">

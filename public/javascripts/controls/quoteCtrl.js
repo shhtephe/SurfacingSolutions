@@ -133,26 +133,23 @@ addons are PER GROUP not per table
 			var terms = vm.quote.terms;
 			var pushObj = {};
 			console.log("Calendar", term.calendar);
-			//If there are no terms, add empty terms to quote
+			//If there are no terms, create terms array
 			if (typeof terms === "undefined") {
 				terms = [];
 			};
-			//console.log("Search", vm.arraySearch(term.terms, terms, "term"));
+			//Search array for the term
 			if (typeof vm.arraySearch(term.term, terms, "term") !== "undefined") {
-				//make sure it matches
-				//console.log("Found Entry");
 				//Found it, so remove it from the terms
 				terms.splice(vm.arraySearch(term.term, terms, "term"), 1);
 			} else {
-				//console.log("Couldn't find entry");
 				//Couldn't find it, so add it to the terms
+				console.log(term);
 				pushObj = {
 					term: term.term,
 					calendar: term.calendar
 				};
 				terms.push(pushObj);
 			};
-			console.log(terms);
 			vm.quote.terms = terms;
 		};
 
@@ -746,14 +743,19 @@ addons are PER GROUP not per table
 	  		});
 		};
 	};
+
 	angular.module('surfacingSolutions')
-	.filter('termDate', function() {
-    return function(term, quote) {
-      var date = " " + quote.createdAt.substring(0, 10);
-      if(term == "This quotation is based on the measurements and specifications provided on "){
-      		term += date;
-		}
-      return term;
-    }
+	.filter('dateFilter', function() {
+    return function(input, term) {
+    	if(term.calendar == "false"){
+    		return term.term;
+    	} else {
+    		var output = "";
+    		//replace *date* with actual date
+    		output = term.term.replace("*date*", term.date.substring(0, 10));
+			return output;
+    	};
+    };
   });
+
 }());

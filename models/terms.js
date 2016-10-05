@@ -3,7 +3,8 @@ var timestamps = require('mongoose-timestamp');
 var Schema = mongoose.Schema;
 
 var terms = new Schema({
-		terms: String
+		terms: String,
+		calendar: Boolean
 });
 
 terms.plugin(timestamps);

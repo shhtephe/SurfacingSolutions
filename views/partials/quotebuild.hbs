@@ -240,7 +240,7 @@
 						<div ng-show="counterAddonManufacturer">
 							<br>
 							Choose a Product Type:
-							<select name="counterAddonType" ng-model="counterAddonType" ng-options="product.type for product in vm.products | filter:{manufacturer:counterAddonManufacturer.manufacturer, nonMandatory:true} | unique: 'type' | orderBy:'type'">
+							<select name="counterAddonType" ng-model="counterAddonType" ng-options="product.productType for product in vm.products | filter:{manufacturer:counterAddonManufacturer.manufacturer, nonMandatory:true} | unique: 'productType' | orderBy:'productType'">
 								<option value="">----Select----</option>
 							</select>
 						</div>

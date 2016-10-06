@@ -422,11 +422,11 @@
 				<div ng-show="vm.divMandatory == true">
 					<br>Mandatory charges: 
 					<br> Choose a Type:
-					<select name="mandatoryType" ng-model="mandatoryType" ng-options="product.type for product in vm.products | filter:{distributor:'SSL', mandatory:'true'} | unique: 'type' ">
+					<select name="mandatoryType" ng-model="mandatoryType" ng-options="product.productType for product in vm.products | filter:{distributor:'SSL', mandatory:'true'} | unique: 'productType' ">
 						<option value="">----Select----</option>
 					</select>
 					<div ng-show="mandatoryType">
-						<br>Choose a Product<select name="mandatoryDescription" ng-model="mandatoryDescription" ng-options="product.description for product in vm.products | filter:{type:mandatoryType.type}">
+						<br>Choose a Product<select name="mandatoryDescription" ng-model="mandatoryDescription" ng-options="product.description for product in vm.products | filter:{productType:mandatoryType.productType}">
 						<option value="">----Select----</option>
 						</select>
 					</div>

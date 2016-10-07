@@ -59,9 +59,9 @@ addons are PER GROUP not per table
       	  	});
 
       	  	modalInstance.result.then(function (counter) {
-				//console.log(counter.width, counter.length, counter.shape, counter.counters, counter.groupIndex, counter.description, true);
+				//console.log(parseFloat(counter.width), parseFloat(counter.length), counter.shape, counter.counters, counter.groupIndex, counter.description, true);
       			//Save the countertop and put all the data back onto the main controller
-      			vm.calcCounter(counter.width, counter.length, counter.shape, counter.counters, counter.groupIndex, counter.description, true);
+      			vm.calcCounter(parseFloat(counter.width), parseFloat(counter.length), counter.shape, counter.counters, counter.groupIndex, counter.description, true);
       			//do the same thing with each addon
       			//console.log(counter.addons, counter.counters)
       			 				
@@ -273,9 +273,9 @@ addons are PER GROUP not per table
 				length = width;
 			};
 
-			//For whatever reason, they're sometimes text :(
-			width = parseFloat(width);
-			length = parseFloat(length);
+			//For whatever reason, they're sometimes text :( This might be fixed - TO DELETE?
+			/*width = parseFloat(width);
+			length = parseFloat(length);*/
 
 			//Create an object containing all core counter information
 			pushObj = {
@@ -293,16 +293,17 @@ addons are PER GROUP not per table
 				pushObj.squareFootage = (Math.PI * (Math.pow(width, 2)))/144;
 			};
 			//Truncate the squarefootage to 2 decimals
-			pushObj.squareFootage = parseFloat(pushObj.squareFootage.toFixed(2));
-			//Add the linear footage to the total linear footage for the group3
-			vm.quote.counterGroup[groupIndex].totalLength += parseFloat(length);
-			vm.quote.totalLength += parseFloat(length);
+			pushObj.squareFootage = pushObj.squareFootage.toFixed(2);
+			//Add the linear footage to the total linear footage for the group
+			vm.quote.counterGroup[groupIndex].totalLength += length;
+			vm.quote.totalLength += length;
 
-			//Add the counter's area to both group and total TAC
-			vm.quote.counterGroup[groupIndex].TAC += (pushObj.squareFootage * vm.quote.counterGroup[groupIndex].quantity);
-			//Round TAC to 2 digits
-			vm.quote.counterGroup[groupIndex].TAC.toFixed(2);
-			vm.quote.TAC += (pushObj.squareFootage * vm.quote.counterGroup[groupIndex].quantity);
+			//Create variable for individual counter's TAC to be added to the group. Truncated to 2 decimal places
+			var currentCounter = pushObj.squareFootage * vm.quote.counterGroup[groupIndex].quantity;
+			//Add the counter's area to both group and total TAC (parse float to make sure it's a number, and to fixed to round to 2 digits.)
+			vm.quote.counterGroup[groupIndex].TAC = (parseFloat(currentCounter) + parseFloat(vm.quote.counterGroup[groupIndex].TAC)).toFixed(2);
+			//Add to TAC as well (parse float to make sure it's a number, and to fixed to round to 2 digits.)
+			vm.quote.TAC = (parseFloat(vm.quote.TAC) + parseFloat(currentCounter)).toFixed(2);
 			//"Save" the counter to vm.quote
 			vm.commitCounter(modal, pushObj, index, groupIndex);
 			//Update the addon quantities for the group and mandatory addon quantities and recalculate them 
@@ -637,6 +638,7 @@ addons are PER GROUP not per table
 				vm.quote.totalPrice = vm.quote.counterGroup[index].GMC;
 				//set the quote TAC
 				vm.quote.TAC = vm.quote.counterGroup[index].TAC * vm.quote.counterGroup[index].quantity;
+				vm.quote.TAC = vm.quote.TAC.toFixed(2);
 				//set total length to a float
 				vm.quote.totalLength = parseFloat(vm.quote.counterGroup[index].totalLength) * vm.quote.counterGroup[index].quantity;
 				//Update the addon quantities for the group and mandatory addon quantities and recalculate them **THIS MIGHT BE FIRING TWICE IN DIFFERENT SPOTS. MIGHT REMOVE**

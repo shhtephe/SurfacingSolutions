@@ -293,15 +293,16 @@ addons are PER GROUP not per table
 				pushObj.squareFootage = (Math.PI * (Math.pow(width, 2)))/144;
 			};
 			//Truncate the squarefootage to 2 decimals
-			pushObj.squareFootage = pushObj.squareFootage.toFixed(2);
+			pushObj.squareFootage = parseFloat(pushObj.squareFootage.toFixed(2));
 			//Add the linear footage to the total linear footage for the group
 			vm.quote.counterGroup[groupIndex].totalLength += length;
 			vm.quote.totalLength += length;
-
 			//Create variable for individual counter's TAC to be added to the group. Truncated to 2 decimal places
 			var currentCounter = pushObj.squareFootage * vm.quote.counterGroup[groupIndex].quantity;
+			console.log(currentCounter, parseFloat(vm.quote.counterGroup[groupIndex].TAC.toFixed(2)));
 			//Add the counter's area to both group and total TAC (parse float to make sure it's a number, and to fixed to round to 2 digits.)
-			vm.quote.counterGroup[groupIndex].TAC = (parseFloat(currentCounter) + parseFloat(vm.quote.counterGroup[groupIndex].TAC)).toFixed(2);
+			vm.quote.counterGroup[groupIndex].TAC = parseFloat((currentCounter +  vm.quote.counterGroup[groupIndex].TAC).toFixed(2));
+			console.log(vm.quote.counterGroup[groupIndex].TAC);
 			//Add to TAC as well (parse float to make sure it's a number, and to fixed to round to 2 digits.)
 			vm.quote.TAC = (parseFloat(vm.quote.TAC) + parseFloat(currentCounter)).toFixed(2);
 			//"Save" the counter to vm.quote
@@ -481,7 +482,7 @@ addons are PER GROUP not per table
 				pushObj = {
 					distributor: addon.distributor,
 					manufacturer: addon.manufacturer,
-					productType: addon.type,
+					productType: addon.productType,
 					description: addon.description,
 					itemCode: addon.itemCode,
 					price: addon.price,
@@ -602,13 +603,12 @@ addons are PER GROUP not per table
 		vm.calcGroup = function(groupIndex, material, overridePricing){
 			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
 	  		var index = vm.arraySearch(groupIndex, vm.quote.counterGroup, 'groupNumber');
-
 			//If sheets entered is not a number or undefined, don't calculate.
 			if((isNaN(parseFloat(vm.quote.counterGroup[index].sheets)) === false || typeof vm.quote.counterGroup[index].sheets === "undefined") && (parseFloat(vm.quote.counterGroup[index].quantity) != 0) || parseFloat(vm.quote.counterGroup[index].quantity) != 0){
 				
 				//Define the sheets object
 				var sheets = {};
-
+				console.log(vm.quote.counterGroup[index].TAC, material.length, material.width, vm.quote.counterGroup[index].quantity);
 				//Estimate the number of sheets
 				vm.quote.counterGroup[index].estimatedSheets = (vm.quote.counterGroup[index].TAC / (material.length * material.width/144)) * vm.quote.counterGroup[index].quantity;
 				vm.quote.counterGroup[index].estimatedSheets = parseFloat(vm.quote.counterGroup[index].estimatedSheets.toFixed(2));
@@ -616,7 +616,9 @@ addons are PER GROUP not per table
 				//If sheets has not been entered (is null) make sheets = estimated, then proceed with calculating
 				console.log(vm.quote.counterGroup[index].sheets, typeof vm.quote.counterGroup[index].sheets === 'undefined');
 				if (typeof vm.quote.counterGroup[index].sheets === 'undefined') {
-					vm.quote.counterGroup[index].sheets = vm.quote.counterGroup[index].estimatedSheets
+					vm.quote.counterGroup[index].sheets = vm.quote.counterGroup[index].estimatedSheets;
+					//round and parse the value as a float
+		  			vm.quote.counterGroup[index].sheets = parseFloat(vm.quote.counterGroup[index].sheets.toFixed(2));
 				};
 				//Calculate totals with material and number of sheets
 				sheets = vm.calcSheets(material, parseFloat(vm.quote.counterGroup[index].sheets), overridePricing);
@@ -626,9 +628,9 @@ addons are PER GROUP not per table
 				//vm.quote.counterGroup[index].sheets = vm.quote.counterGroup[index].sheets * vm.quote.counterGroup[index].quantity;
 				//vm.quote.counterGroup[index].estimatedSheets = vm.quote.counterGroup[index].estimatedSheets * vm.quote.counterGroup[index].quantity;
 				//Group MATERIAL Cost - Cost of all counters combined
-				console.log(material[sheets.pricing], sheets.pricing, material);
+				console.log(material[sheets.pricing], sheets.pricing, material, vm.quote.counterGroup[index].sheets);
 				vm.quote.counterGroup[index].GMC = material[sheets.pricing] * vm.quote.counterGroup[index].sheets;
-				vm.quote.counterGroup[index].GMC = vm.quote.counterGroup[index].GMC.toFixed(2);
+				vm.quote.counterGroup[index].GMC = parseFloat(vm.quote.counterGroup[index].GMC.toFixed(2));
 				//Set total quote GMC
 				vm.quote.GMC = vm.quote.counterGroup[index].GMC;
 				console.log(vm.quote.counterGroup[index].GMC, index, vm.quote.GMC);
@@ -655,7 +657,7 @@ addons are PER GROUP not per table
 					vm.quote.totalPrice += vm.quote.mandatoryAddons[i].totalPrice;
 				};			
 				//Calc GMCPSF = total material price divided by the total area of sheets required
-				console.log(vm.quote.counterGroup[index].GMC / vm.quote.counterGroup[index].TAC, vm.quote.counterGroup[index].GMC, vm.quote.counterGroup[index].TAC);
+				console.log(parseFloat(vm.quote.counterGroup[index].GMC) / parseFloat(vm.quote.counterGroup[index].TAC), parseFloat(vm.quote.counterGroup[index].GMC), vm.quote.counterGroup[index].TAC);
 				vm.quote.counterGroup[index].GMCPSF = vm.quote.counterGroup[index].GMC / (vm.quote.counterGroup[index].TAC * vm.quote.counterGroup[index].quantity);
 				//Calc GCPSF = total price divided by total area of sheets required
 				vm.quote.counterGroup[index].GCPSF = vm.quote.counterGroup[index].totalPrice / (vm.quote.counterGroup[index].TAC * vm.quote.counterGroup[index].quantity);

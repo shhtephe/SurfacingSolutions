@@ -83,6 +83,7 @@ var quote = new Schema({
 			counterThickness2: Number,
 			totalPrice: Number,
 			squareFootage: Number,
+			linearFootage: Number,
 			matPrice: Number,
 			jobDifficulty: Number
 		}]

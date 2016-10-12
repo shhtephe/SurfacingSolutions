@@ -6,8 +6,8 @@
 				<!--<br>
 				<br>
 {/vm.materials|json/}-->
-<!--				<br>
 				<br>
+				<!--<br>
 {/vm.quote|json/}
 				<br><br>-->
 				<span style="float:right">
@@ -185,8 +185,8 @@
 									  				<span ng-show="counter.counterShape==='rectangle'">	
 									  					{/(counter.counterLength/12 * counter.counterWidth/12) | number : 2/} 
 								  					</span> 
-								  					<span ng-hide="counter.counterShape==='rectangle'">	
-									  					{/((counter.counterLength /12 * counter.counterLength /12) * vm.Math) | number : 2/} 
+								  					<span ng-hide="counter.counterShape==='rectangle'">
+									  					{/((counter.counterLength /12 * counter.counterLength /12) * vm.math) | number : 2/} 
 								  					</span>
 									  			</td>	
 								  				<span ng-hide="vm.editCounter[$index]">
@@ -257,7 +257,8 @@
 								<li class="list-group-item">	
 									Price /<span ng-show="counterAddonDescription.formula=='item'">Item</span>
 									<span ng-show="counterAddonDescription.formula=='sqft'">Square Foot</span>
-									<span ng-show="counterAddonDescription.formula=='linear'">Linear Foot</span>: {/counterAddonDescription.price| currency:$/}<br> 
+									<span ng-show="counterAddonDescription.formula=='LinearLW'">Linear Foot</span>
+									<span ng-show="counterAddonDescription.formula=='LinearLSUM'">Linear Foot</span>: {/counterAddonDescription.price| currency:$/}<br> 
 								</li>	
 								<li class="list-group-item">	
 									Formula: {/counterAddonDescription.formula/}

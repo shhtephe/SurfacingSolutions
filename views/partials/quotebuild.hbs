@@ -464,7 +464,7 @@
 						<span ng-show="group.material.length !== ''">{/addon.quantity/}</span>
 							<span ng-show="addon.formula == 'linear'">'</span>
 							<span ng-show="addon.formula =='sqft'">'<sup>2</sup></span>
-						@{/addon.price | currency:$/} | {/addon.totalPrice | currency:$/}<a ng-click="vm.removeAddon(addon, -1, group.groupNumber)">remove</a>
+						@{/addon.price | currency:$/} | {/addon.totalPrice | currency:$/} <a ng-click="vm.removeAddon(addon, -1, group.groupNumber)">remove</a>
 					</div>
 		      	<br>
 				<table>

@@ -439,8 +439,9 @@ addons are PER GROUP not per table
 				};
 				addon.quantity = vm.quote.totalLength / 12;
 			};
+			addon.quantity = parseFloat(addon.quantity);
 			//Force as float and truncate to 2 decimal places
-			addon.quantity = parseFloat(addon.quantity.fotFixed(2));
+			addon.quantity = parseFloat(addon.quantity.toFixed(2));
 			return addon.quantity;
 		};
 
@@ -637,7 +638,7 @@ addons are PER GROUP not per table
 				
 				//Define the sheets object
 				var sheets = {};
-				console.log(vm.quote.counterGroup[index].TAC, material.length, material.width, vm.quote.counterGroup[index].quantity);
+				console.log(vm.quote.counterGroup[index].TAC, material.length, material.width, vm.quote.counterGroup[index].quantity, material);
 				//Estimate the number of sheets
 				vm.quote.counterGroup[index].estimatedSheets = (vm.quote.counterGroup[index].TAC / (material.length * material.width/144)) * vm.quote.counterGroup[index].quantity;
 				vm.quote.counterGroup[index].estimatedSheets = parseFloat(vm.quote.counterGroup[index].estimatedSheets.toFixed(2));

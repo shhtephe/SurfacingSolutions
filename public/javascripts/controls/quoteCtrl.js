@@ -254,6 +254,9 @@ addons are PER GROUP not per table
 			vm.quote.totalPrice -= vm.quote.counterGroup[index].totalPrice;
 			//Subtract total length from quote
 			vm.quote.totalLength -= vm.quote.counterGroup[index].totalLength;
+			//Subtract LSUM and linearFootage from quote
+			vm.quote.LSUM -= vm.quote.counterGroup[groupIndex].counters[index].LSUM
+			vm.quote.linearFootage -= vm.quote.counterGroup[groupIndex].counters[index].linearFootage;
 			//Subtract TAC from quote
 			vm.quote.TAC -= vm.quote.counterGroup[index].TAC;
 			//Update Mandatory addons with new TAC
@@ -288,7 +291,8 @@ addons are PER GROUP not per table
 				counterLength: length,
 				counterWidth: width,
 				squareFootage: 0,
-				linearFootage: 0
+				linearFootage: 0,
+				LSUM: 0
 			};
 
 			//Calculates square footage.
@@ -299,12 +303,30 @@ addons are PER GROUP not per table
 			};
 			//Truncate the squarefootage to 2 decimals
 			pushObj.squareFootage = parseFloat(pushObj.squareFootage.toFixed(2));
+			//Calc LSUM for counter to be used for calculations for addons
 			if(shape === "rectangle") {
-				pushObj.linearFootage = (length * 2) / 144;
+				pushObj.LSUM = (length * 2) / 144;
+				pushObj.LSUM = Math.round((pushObj.LSUM + 0.00001) * 100) / 100;
 			} else {
-				pushObj.linearFootage = ((2 * Math.PI) * (length /2)) /144;
+				pushObj.LSUM = ((2 * Math.PI) * (length /2)) /144;
+				pushObj.LSUM = Math.round((pushObj.LSUM + 0.00001) * 100) / 100;
 			};
-			console.log(pushObj.linearFootage)
+			//Add LSUM to group and total quote as well
+			vm.quote.counterGroup[groupIndex].LSUM += pushObj.LSUM;
+			vm.quote.LSUM += pushObj.LSUM;
+			if(shape === "rectangle") {
+				pushObj.linearFootage = ((length * 2) + (width * 2)) / 144;
+				pushObj.linearFootage = Math.round((pushObj.linearFootage + 0.00001) * 100) / 100;
+			} else {
+				pushObj.linearFootage = Math.round((2 * Math.PI) * (length /2)) /144;
+				pushObj.linearFootage = Math.round((pushObj.linearFootage + 0.00001) * 100) / 100;
+			};
+			//Add linearFootage to group as well
+			vm.quote.counterGroup[groupIndex].linearFootage += pushObj.linearFootage;
+			vm.quote.linearFootage += pushObj.linearFootage;
+			console.log(pushObj.linearFootage, pushObj.LSUM);
+
+
 			//Add the linear footage to the total linear footage for the group
 			vm.quote.counterGroup[groupIndex].totalLength += length;
 			vm.quote.totalLength += length;
@@ -356,6 +378,11 @@ addons are PER GROUP not per table
 			vm.quote.TAC -= parseFloat(vm.quote.counterGroup[groupIndex].counters[index].squareFootage) * parseFloat(vm.quote.counterGroup[groupIndex].quantity);
 			//subtract total length from group
 			vm.quote.counterGroup[groupIndex].totalLength -= vm.quote.counterGroup[groupIndex].counters[index].counterLength;
+			//subtract Linear Footage and LSUM from group and quote
+			vm.quote.counterGroup[groupIndex].LSUM -= vm.quote.counterGroup[groupIndex].counters[index].LSUM;
+			vm.quote.counterGroup[groupIndex].linearFootage -= vm.quote.counterGroup[groupIndex].counters[index].linearFootage;
+			vm.quote.LSUM -= vm.quote.counterGroup[groupIndex].counters[index].LSUM
+			vm.quote.linearFootage -= vm.quote.counterGroup[groupIndex].counters[index].linearFootage;
 			//Subtract total length from quote
 			vm.quote.totalLength -= vm.quote.counterGroup[groupIndex].counters[index].counterLength;
 			//Remove from array
@@ -452,19 +479,10 @@ addons are PER GROUP not per table
 			if(addon.formula === "sqft"){
 				addon.quantity = TAC * quantity;
 			} else if (addon.formula === "LinearLW"){
-				if(vm.quote.counterGroup[groupIndex].shape === "circle"){
-					addon.quantity = vm.quote.counterGroup[groupIndex].linearFootage * quantity;
-					console.log(addon.quantity);
-				} else {
-					addon.quantity = (vm.quote.counterGroup[groupIndex].totalLength / 12 * 2) * quantity;
-				};
-				
+				addon.quantity = vm.quote.counterGroup[groupIndex].linearFootage * quantity;
+				console.log(vm.quote.counterGroup[groupIndex], addon.quantity);	
 			} else if (addon.formula === "LinearLSUM"){
-				if(vm.quote.counterGroup[groupIndex].shape === "circle"){	
-					addon.quantity = (vm.quote.counterGroup[groupIndex].totalLength / 12) * quantity;
-				} else {
-
-				};
+				addon.quantity = vm.quote.counterGroup[groupIndex].LSUM * quantity;
 			};
 			//Force as float and truncate to 2 decimal places
 			addon.quantity = parseFloat(addon.quantity.toFixed(2));
@@ -473,7 +491,7 @@ addons are PER GROUP not per table
 
 		vm.saveAddon = function(addon, shape, TAC, groupIndex) {
 			//console.log(typeof vm.quote.counterGroup[groupIndex].addons, addon, shape, length, width, groupIndex);
-			console.log(vm.quote.counterGroup[groupIndex], groupIndex, TAC, addon.quantity);
+			console.log("SaveAddon ran: ",vm.quote.counterGroup[groupIndex], groupIndex, TAC, addon.quantity);
 			//create addons array if it doesn't exist - for initilization | -1 means 'mandatory addon'
 			if(groupIndex == -1){
 				if(typeof vm.quote.mandatoryAddons === "undefined"){
@@ -488,12 +506,10 @@ addons are PER GROUP not per table
 					var addons = vm.quote.counterGroup[groupIndex].addons;
 				};
 			};
-			//declare variables
+			//Create the object to put into the array
 			var pushObj = {};
 			//Searches for the item by going through the list
 			var search = vm.arraySearch(addon.description, addons, "description");
-			//var squareFootage = 0; This should be coming from the group total which gets calculated.
-
 			//Update addons quantity values
 			if(groupIndex == -1){
 				vm.updateMandatoryAddon(addon, TAC, groupIndex);

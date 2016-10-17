@@ -15,6 +15,8 @@ var quote = new Schema({
 	TGC: Number,
 	GMCPSF: Number,
 	GCPSF: Number,
+	linearFootage: Number,
+	LSUM: Number,
 	totalLength: Number,
 	mandatoryAddons: [{
 		distributor: String,
@@ -45,6 +47,8 @@ var quote = new Schema({
 		sheets: Number,
 		quantity: Number,
 		totalLength: Number,
+		LSUM: Number,
+		linearFootage: Number,
 		addons: [{
 			distributor: String,
 			manufacturer: String,
@@ -84,8 +88,8 @@ var quote = new Schema({
 			totalPrice: Number,
 			squareFootage: Number,
 			linearFootage: Number,
-			matPrice: Number,
-			jobDifficulty: Number
+			LSUM: Number,
+			matPrice: Number
 		}]
 	}]
 });

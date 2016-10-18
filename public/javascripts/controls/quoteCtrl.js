@@ -184,7 +184,9 @@ addons are PER GROUP not per table
 					addons:[],
 					totalPrice: 0,
 					quantity: 1,
-					totalLength: 0
+					totalLength: 0,
+					LSUM: 0,
+					linearFootage: 0
 				};
 			} else {
 				pushObj = {
@@ -197,7 +199,9 @@ addons are PER GROUP not per table
 					addons: [],
 					totalPrice: 0,
 					quantity: 1,
-					totalLength: 0
+					totalLength: 0,
+					LSUM: 0,
+					linearFootage: 0					
 				};
 			};
 			//Set total TAC if it hasn't been yet.
@@ -308,26 +312,33 @@ addons are PER GROUP not per table
 				pushObj.LSUM = (length * 2) / 144;
 				pushObj.LSUM = Math.round((pushObj.LSUM + 0.00001) * 100) / 100;
 			} else {
-				pushObj.LSUM = ((2 * Math.PI) * (length /2)) /144;
+				pushObj.LSUM = ((2 * Math.PI) * (length /2)) / 144;
 				pushObj.LSUM = Math.round((pushObj.LSUM + 0.00001) * 100) / 100;
 			};
-			//Add LSUM to group and total quote as well
+			//Add LSUM to group and total quote
 			vm.quote.counterGroup[groupIndex].LSUM += pushObj.LSUM;
+			if(typeof vm.quote.LSUM == "undefined"){
+				vm.quote.LSUM = 0;
+			};
 			vm.quote.LSUM += pushObj.LSUM;
 			if(shape === "rectangle") {
 				pushObj.linearFootage = ((length * 2) + (width * 2)) / 144;
 				pushObj.linearFootage = Math.round((pushObj.linearFootage + 0.00001) * 100) / 100;
 			} else {
-				pushObj.linearFootage = Math.round((2 * Math.PI) * (length /2)) /144;
+				pushObj.linearFootage = ((2 * Math.PI) * (length /2)) / 144;
 				pushObj.linearFootage = Math.round((pushObj.linearFootage + 0.00001) * 100) / 100;
 			};
-			//Add linearFootage to group as well
+			console.log(vm.quote.counterGroup[groupIndex].linearFootage);
+			//Add linearFootage to group and total quote
 			vm.quote.counterGroup[groupIndex].linearFootage += pushObj.linearFootage;
+			//If no value has been put here, 0 it.
+			if(typeof vm.quote.linearFootage == "undefined"){
+				vm.quote.linearFootage = 0;
+			};
 			vm.quote.linearFootage += pushObj.linearFootage;
-			console.log(pushObj.linearFootage, pushObj.LSUM);
+			console.log(vm.quote.counterGroup[groupIndex].linearFootage);
 
-
-			//Add the linear footage to the total linear footage for the group
+			//Add the linear footage to the total linear footage for the group - this might be replaced with linearFootage
 			vm.quote.counterGroup[groupIndex].totalLength += length;
 			vm.quote.totalLength += length;
 			//Create variable for individual counter's TAC to be added to the group. Truncated to 2 decimal places
@@ -352,12 +363,13 @@ addons are PER GROUP not per table
 		vm.commitCounter = function(modal, pushObj, index, groupIndex){
 			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
 	  		var groupIndex = vm.arraySearch(groupIndex, vm.quote.counterGroup, 'groupNumber');
-			//console.log(groupIndex, index, typeof vm.quote.counterGroup[groupIndex].counters[index], pushObj);
 			
 			//Commits data to arrays depending on whether it's an edit or a new save.
 			if(typeof vm.quote.counterGroup[groupIndex].counters[index] === "undefined"){
 				//push counter into vm.quote
+				console.log(pushObj);
 				vm.quote.counterGroup[groupIndex].counters.push(pushObj);	
+				console.log(vm.quote.counterGroup[groupIndex].counters[0]);
 			};
 			//Because there's a new counter added, we need to update the "quantity" of each addon within the group
 			for (var i = vm.quote.counterGroup[groupIndex].addons.length - 1; i >= 0; i--) {
@@ -474,13 +486,12 @@ addons are PER GROUP not per table
 
 		//updates the "quantity" value so it can be calculated - requires TAC for Sqft and total Length for linear
 		vm.updateAddon = function(addon, TAC, groupIndex, quantity) {
-			console.log(((2 * Math.PI * vm.quote.counterGroup[groupIndex].totalLength) / 2) / 12, quantity, addon.formula === "LinearLW");
+			console.log(vm.quote.counterGroup[groupIndex], addon.quantity, quantity, addon.formula === "LinearLW");
 			//if formula is sqft or linear(Lw/LSUM), the quantity is different This is to make the calculating easier, so it's just the quantity that's being handled, not TAC, width, length etc
 			if(addon.formula === "sqft"){
 				addon.quantity = TAC * quantity;
 			} else if (addon.formula === "LinearLW"){
 				addon.quantity = vm.quote.counterGroup[groupIndex].linearFootage * quantity;
-				console.log(vm.quote.counterGroup[groupIndex], addon.quantity);	
 			} else if (addon.formula === "LinearLSUM"){
 				addon.quantity = vm.quote.counterGroup[groupIndex].LSUM * quantity;
 			};

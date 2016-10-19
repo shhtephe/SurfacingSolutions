@@ -308,7 +308,7 @@ addons are PER GROUP not per table
 			pushObj.squareFootage = parseFloat(pushObj.squareFootage.toFixed(2));
 			//Calc LSUM for counter to be used for calculations for addons
 			if(shape === "rectangle") {
-				pushObj.LSUM = (length * 2) / 144;
+				pushObj.LSUM = (length) / 144;
 				pushObj.LSUM = Math.round((pushObj.LSUM + 0.00001) * 100) / 100;
 			} else {
 				pushObj.LSUM = ((2 * Math.PI) * (length /2)) / 144;
@@ -321,7 +321,7 @@ addons are PER GROUP not per table
 			};
 			vm.quote.LSUM += pushObj.LSUM;
 			if(shape === "rectangle") {
-				pushObj.linearFootage = ((length * 2) + (width * 2)) / 144;
+				pushObj.linearFootage = ((length) + (width)) / 144;
 				pushObj.linearFootage = Math.round((pushObj.linearFootage + 0.00001) * 100) / 100;
 			} else {
 				pushObj.linearFootage = ((2 * Math.PI) * (length /2)) / 144;

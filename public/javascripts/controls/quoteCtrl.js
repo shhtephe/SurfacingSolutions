@@ -259,8 +259,7 @@ addons are PER GROUP not per table
 			//Subtract total length from quote
 			vm.quote.totalLength -= vm.quote.counterGroup[index].totalLength;
 			//Subtract LSUM and linearFootage from quote
-			vm.quote.LSUM -= vm.quote.counterGroup[groupIndex].counters[index].LSUM
-			vm.quote.linearFootage -= vm.quote.counterGroup[groupIndex].counters[index].linearFootage;
+			vm.quote.linearFootage -= vm.quote.counterGroup[index].linearFootage;
 			//Subtract TAC from quote
 			vm.quote.TAC -= vm.quote.counterGroup[index].TAC;
 			//Update Mandatory addons with new TAC
@@ -451,9 +450,9 @@ addons are PER GROUP not per table
 			}else if(addon.formula === "sqft"){
 				//console.log(vm.quote.counterGroup[index]);
 				totalPrice = addon.price * addon.quantity;
-			}else if(addon.formula === "LinearLW"){	
+			}else if(addon.formula === "linearLW"){	
 					totalPrice = addon.quantity * addon.price;
-			}else if(addon.formula === "LinearLSUM"){	
+			}else if(addon.formula === "linearLSUM"){	
 					totalPrice = addon.quantity * addon.price;
 			}else{
 				console.error("Unknown addon formula type!!!", addon.formula);
@@ -465,19 +464,25 @@ addons are PER GROUP not per table
 
 		//updates the "quantity" value so it can be calculated - requires TAC for Sqft and total Length for linear
 		vm.updateMandatoryAddon = function(addon, TAC, groupIndex) {
-			console.log(TAC);
+			console.log(TAC, addon.formula, vm.quote.linearFootage);
 			//If formula is sqft or linear, the quantity is different This is to make the calculating easier, so it's just the quantity that's being handled, not TAC, width, length etc
 			if(addon.formula === "sqft"){
 				if(typeof TAC == 'undefined') {
 					TAC = 0; 
 				};
 				addon.quantity = TAC;
-			} else if (addon.formula === "linear"){
-				if(typeof vm.quote.totalLength == 'undefined') {
-					vm.quote.totalLength = 0;
+			} else if (addon.formula === "linearLW"){
+				if(typeof vm.quote.linearFootage == 'undefined') {
+					vm.quote.linearFootage = 0;
 				};
-				addon.quantity = vm.quote.totalLength / 12;
+				addon.quantity = vm.quote.linearFootage;
+			} else if(addon.formula === "linearLSUM"){
+				if(typeof vm.quote.linearLSUM == 'undefined') {
+					vm.quote.linearLSUM = 0;
+				};
+				addon.quantity = vm.quote.linearLSUM;
 			};
+			console.log(addon.quantity);
 			addon.quantity = parseFloat(addon.quantity);
 			//Force as float and truncate to 2 decimal places
 			addon.quantity = parseFloat(addon.quantity.toFixed(2));
@@ -486,16 +491,18 @@ addons are PER GROUP not per table
 
 		//updates the "quantity" value so it can be calculated - requires TAC for Sqft and total Length for linear
 		vm.updateAddon = function(addon, TAC, groupIndex, quantity) {
-			console.log(vm.quote.counterGroup[groupIndex], addon.quantity, quantity, addon.formula === "LinearLW");
+			console.log(vm.quote.counterGroup[groupIndex], addon.quantity, quantity, addon.formula === "linearLW");
 			//if formula is sqft or linear(Lw/LSUM), the quantity is different This is to make the calculating easier, so it's just the quantity that's being handled, not TAC, width, length etc
 			if(addon.formula === "sqft"){
 				addon.quantity = TAC * quantity;
-			} else if (addon.formula === "LinearLW"){
+			} else if (addon.formula === "linearLW"){
 				addon.quantity = vm.quote.counterGroup[groupIndex].linearFootage * quantity;
-			} else if (addon.formula === "LinearLSUM"){
+			} else if (addon.formula === "linearLSUM"){
 				addon.quantity = vm.quote.counterGroup[groupIndex].LSUM * quantity;
 			};
 			//Force as float and truncate to 2 decimal places
+			console.log(addon.quantity);
+			addon.quantity = parseFloat(addon.quantity);
 			addon.quantity = parseFloat(addon.quantity.toFixed(2));
 			return addon.quantity;
 		};

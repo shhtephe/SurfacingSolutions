@@ -183,7 +183,7 @@
 									  					{/(counter.counterLength/12 * counter.counterWidth/12) | number : 2/} 
 								  					</span> 
 								  					<span ng-hide="counter.counterShape==='rectangle'">
-									  					{/((counter.counterLength /12 * counter.counterLength /12) * vm.math) | number : 2/} 
+									  					{/((counter.counterLength /12 * counter.counterLength /12) * vm.math.PI) | number : 2/} 
 								  					</span>
 									  			</td>	
 								  				<span ng-hide="vm.editCounter[$index]">
@@ -400,7 +400,7 @@
 								<td>Total Group Cost Per ft2</td>
 							</tr>
 							<tr>
-								<td>{/group.TAC * group.quantity/} SQFT</td>
+								<td>{/vm.math.round(((group.TAC * group.quantity) + 0.00001) * 100) / 100/} SQFT</td>
 								<td>{/group.estimatedSheets/}</td>
 								<td>{/group.GMC * vm.quote.jobDifficulty | currency:$/}</td>
 								<td>{/group.GMCPSF * vm.quote.jobDifficulty | currency:$/}/SQFT</td>

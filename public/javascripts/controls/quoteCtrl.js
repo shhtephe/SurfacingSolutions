@@ -26,7 +26,7 @@ addons are PER GROUP not per table
 		//'this' replaces $scope
 		var vm = this;
 		//Used on quotebuild.hbs
-		vm.math = Math.PI;
+		vm.math = Math;
 		var custCode = $stateParams.custCode;
 		var quoteID = $stateParams.quoteID;
 
@@ -669,7 +669,10 @@ addons are PER GROUP not per table
 	  		var index = vm.arraySearch(groupIndex, vm.quote.counterGroup, 'groupNumber');
 			//If sheets entered is not a number or undefined, don't calculate.
 			if((isNaN(parseFloat(vm.quote.counterGroup[index].sheets)) === false || typeof vm.quote.counterGroup[index].sheets === "undefined") && (parseFloat(vm.quote.counterGroup[index].quantity) != 0) || parseFloat(vm.quote.counterGroup[index].quantity) != 0){
-				
+				//do not let quantity go into negatives
+				if(vm.quote.counterGroup[groupIndex].quantity < 0){
+					vm.quote.counterGroup[groupIndex].quantity = 0;
+				};
 				//Define the sheets object
 				var sheets = {};
 				console.log(vm.quote.counterGroup[index].TAC, material.length, material.width, vm.quote.counterGroup[index].quantity, material);

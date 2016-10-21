@@ -233,6 +233,25 @@ router.get('/customer/:customer/quotebuild/:quote/quotefinaldata', function(req,
 });
 
 router.post('/emailrender', function(req, res) {
+
+  console.log(req.body.data);
+
+  var Nightmare = require('nightmare');
+  var public_dir = 'public\\images\\emailquote';
+  var pageURL = "http://" + req.hostname + ":3000" + req.body.data.url;
+
+  
+  var google = new Nightmare()
+  .goto(pageURL)
+  .wait(5000)
+  .screenshot(public_dir + '/file.png')
+  .run(function(err, nightmare) {
+    if (err) return console.log(err);
+    console.log('Done!');
+  });
+
+  console.log(pageURL);
+
   /*var wkhtmltopdf = require('wkhtmltopdf');
   var fs = require('fs');
 
@@ -256,6 +275,7 @@ wkhtmltopdf( pageURL, {
     });
 */
 
+/*
   var userID = req.body.data.userID;
   var quoteID = req.body.data.quoteID;
   // get url to process
@@ -298,7 +318,7 @@ phantom.create(function (ph) {
       });
     });
   });
-
+*/
   /*// phantomjs screenshot
   var phantom = require('phantomjs');
   console.log('Var created');

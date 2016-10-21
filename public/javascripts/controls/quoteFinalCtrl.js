@@ -59,13 +59,14 @@
 
 
 		vm.email = function() {
+			console.log("Email ran");
 			vm.render();
 
 		};
 
 		vm.render = function() {
 			var data = {
-				url: '/#/customer/' + custCode + '/quote/' + quoteID + '/quotefinal',
+				url: '/#/customer/' + custCode + '/quotebuild/' + quoteID + '/quotesend',
 				userID : custCode,
 				quoteID : quoteID
 			};

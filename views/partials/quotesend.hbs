@@ -8,8 +8,9 @@
 <br>-->
 <alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</alert>
 	<div id="page-wrap">
+	<br>
 	<a href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotefinal"><button type="button" style="btn">Back</button></a>
-	<button type="button" style="btn" ng-click="vm.email()">Email PDF</button>
+	<button type="button" style="btn" ng-click="vm.email()">Email PDF - {/vm.customer.email/}</button>
 		<textarea id="header">Final Quote</textarea>	
 		<div id="surfacingIdentity">
 

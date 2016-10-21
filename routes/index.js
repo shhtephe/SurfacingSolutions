@@ -244,7 +244,7 @@ router.post('/emailrender', function(req, res) {
   var google = new Nightmare()
   .goto(pageURL)
   .wait(5000)
-  .screenshot(public_dir + '/file.png')
+  .screenshot(public_dir + '/testfile.png')
   .run(function(err, nightmare) {
     if (err) return console.log(err);
     console.log('Done!');

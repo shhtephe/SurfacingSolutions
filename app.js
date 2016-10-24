@@ -15,10 +15,10 @@ var customers = require('./routes/customers');
 var app = express();
 
 //Mail config stuff
-var mailer = require('express-mailer');
+/*var mailer = require('express-mailer');
 mailconfig = require('./mailconfig');
 var currentMailerOptions = mailconfig.mailer;
-mailer.extend(app, currentMailerOptions);
+mailer.extend(app, currentMailerOptions);*/
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

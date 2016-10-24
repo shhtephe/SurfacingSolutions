@@ -68,7 +68,8 @@
 			var data = {
 				url: '/#/customer/' + custCode + '/quotebuild/' + quoteID + '/quotesend',
 				userID : custCode,
-				quoteID : quoteID
+				quoteID : quoteID,
+				email: vm.customer.email
 			};
 
 			//Need to declare that it's sending a json doc

@@ -15,6 +15,12 @@ var mongoose = require('mongoose');
 //Recieve JSON from Angular
 var http = require('http');
 
+//Mail setup
+var mailer = require('express-mailer');
+mailconfig = require('../mailconfig');
+var currentMailerOptions = mailconfig.mailer;
+mailer.extend(express(), currentMailerOptions);
+
 //I might have to ditch the error handler. Currently used in router.param(quote)
 function errorHandler(err, req, res, next) {
   console.log(err);
@@ -238,13 +244,14 @@ router.post('/emailrender', function(req, res) {
     } 
     else {
       
+      //console.log(req.body);
       console.log('Screenshot Successful!');
       //Email PDF as attachment
       //EMAIL PIECE GOES HERE
+      console.log(mailer)
 
-
-      router.mailer.render('email', {
-        to: req.body.customer.email,
+      express().mailer.render('email', {
+        to: req.body.email,
         subject: 'Test Email',
         pretty: true
       },

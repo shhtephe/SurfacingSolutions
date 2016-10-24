@@ -1,16 +1,3 @@
-//not sure if this is needed anymore. Was for debugging email/pdf rendering
-(function() {
-    var childProcess = require("child_process");
-    var oldSpawn = childProcess.spawn;
-    function mySpawn() {
-        console.log('spawn called');
-        console.log(arguments);
-        var result = oldSpawn.apply(this, arguments);
-        return result;
-    }
-    childProcess.spawn = mySpawn;
-})();
-
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
@@ -24,8 +11,7 @@ var terms = require('../models/terms');
 
 //mongoose
 var mongoose = require('mongoose');
-//express-mailer
-mailer = require('express-mailer');
+
 //Recieve JSON from Angular
 var http = require('http');
 
@@ -233,157 +219,48 @@ router.get('/customer/:customer/quotebuild/:quote/quotefinaldata', function(req,
 });
 
 router.post('/emailrender', function(req, res) {
+  //Nightmare Wrapper 
+  var nightmare = require('nightmare');
 
-  console.log(req.body.data);
-
-  var Nightmare = require('nightmare');
   var public_dir = 'public\\images\\emailquote';
   var pageURL = "http://" + req.hostname + ":3000" + req.body.data.url;
 
-  
-  var google = new Nightmare()
+  //Create new nightmare ;)
+  var screenshot = new nightmare()
+  //.viewport(1200,1650)
   .goto(pageURL)
   .wait(5000)
-  .screenshot(public_dir + '/testfile.png')
+  //.screenshot(public_dir + '/testfile.png')
+  .pdf(public_dir + '/testfile.pdf') //Should name this file properly in case it isn't deleted
   .run(function(err, nightmare) {
-    if (err) return console.log(err);
-    console.log('Done!');
-  });
+    if (err){
+      return console.log(err);
+    } 
+    else {
+      
+      console.log('Screenshot Successful!');
+      //Email PDF as attachment
+      //EMAIL PIECE GOES HERE
 
-  console.log(pageURL);
 
-  /*var wkhtmltopdf = require('wkhtmltopdf');
-  var fs = require('fs');
-
-  console.log(req.cookies);
-
-  wkhtmltopdf.command = 'C:/wkhtmltopdf/bin/wkhtmltopdf.exe';
-
-  pageURL = "http://" + req.hostname + ":3000" + req.body.data.url;
-  console.log(pageURL);
-
-wkhtmltopdf( pageURL, { 
-    pageSize: 'letter',  
-    'window-status': 'ready',
-    
-  })
-  .pipe(fs.createWriteStream('out.pdf'))
-    .on('error', function( err ){ throw err })
-    .on('finish', function(){
-      console.log("Success");
-      res.sendStatus(200);
-    });
-*/
-
-/*
-  var userID = req.body.data.userID;
-  var quoteID = req.body.data.quoteID;
-  // get url to process
-  var url_to_process = "http://localhost:3000/#/customer/" + userID + "/quotebuild/" + quoteID + "/quotesend";
-  console.log(url_to_process);
-  if (userID === undefined || userID == '' || quoteID === undefined || quoteID == '') {
-    res.writeHead(404, {'Content-Type': 'text/plain'});
-    res.end("404 Not Found");
-  };
-
-//set public directory
-var public_dir = 'public\\images\\emailquote';
-
-console.log("require phantom");
-var phantom = require('phantom');
-console.log("set path");
-//phantom.path = 'C:/phantomjs/bin/phantomjs.exe';
-console.log("create function");
-phantom.create(function (ph) {
-  ph.createPage(function (page) {
-    page.open(url_to_process, function (status) {
-      console.log(status);
-      if (status == "success") {
-          // put images in public directory
-          var image_file_name = url_to_process + ".png";
-          console.log(image_file_name);
-          var image_path = public_dir + "\\" + image_file_name;
-          console.log(image_path);
-          page.render(image_path, function(){
-            console.log(status);
-            res.sendStatus(200);
-          });
-        }
-        else {
-          res.writeHead(404, {'Content-Type': 'text/plain'});
-          res.end("404 Not Found");
+      router.mailer.render('email', {
+        to: req.body.customer.email,
+        subject: 'Test Email',
+        pretty: true
+      },
+      function (err, email) {
+        if (err) {
+          console.log('Sending Mail Failed!');
+          console.log(err);
+          return;
         };
-        page.close();
-        ph.exit();
+        res.header('Content-Type', 'text/plain');
+        res.send(email);
       });
-    });
+
+      //Delete local PDF file    
+    };
   });
-*/
-  /*// phantomjs screenshot
-  var phantom = require('phantomjs');
-  console.log('Var created');
-  phantom.path = 'C:/phantomjs/bin/phantomjs.exe';
-  console.log('command set');
-
-  console.log(phantom);
-  
-  phantom.create(function(phantom){
-    console.log('Phantom.create initialised');
-    ph.createPage(function(page){
-      console.log('ph.createpage initialised');
-      console.log(url_to_process); 
-      page.open(url_to_process, function(status){
-        console.log('page.open initialised');
-        if (status == "success") {
-          // put images in public directory
-          var image_file_name = url_to_process.replace(/\W/g, '_') + ".png"
-          var image_path = public_dir + "/" + image_file_name
-          page.render(image_path, function(){
-            // redirect to static image
-            res.redirect('/'+image_file_name);
-          });
-        }
-        else {
-          res.writeHead(404, {'Content-Type': 'text/plain'});
-          res.end("404 Not Found");
-        };
-        page.close();
-        ph.exit();
-      });
-    });
-  });*/
-  /*
-  var done = false; //flag that tells us if we're done rendering
-  var userID = req.body.data.userID;
-  var quoteID = req.body.data.quoteID;
-  var page = require('webpage').create();
-  page.open('http://google.com', function (status) {
-      //If the page loaded successfully...
-      if(status === "success") {
-          //Render the page
-          page.render('google.pdf');
-          console.log("Site rendered...");
-
-          //Set the flag to true
-          done = true;
-      } else {
-        console.log('Site did not render');
-      };
-  });
-
-  //Start polling every 100ms to see if we are done
-  var intervalId = setInterval(function() {
-      if(done) {
-          //If we are done, let's say so and exit.
-          console.log("Done.");
-          phantom.exit();
-          res.sendStatus(200);
-      } else {
-          //If we're not done we're just going to say that we're polling
-          console.log("Polling...");
-      }
-  }, 100);
-*/
 });
 
 router.get('/admindata', function(req, res, next) {

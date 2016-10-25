@@ -222,7 +222,8 @@ router.post('/emailrender', function(req, res) {
   //Nightmare Wrapper 
   var nightmare = require('nightmare');
 
-  var public_dir = 'public\\images\\emailquote';
+  console.log(__dirname);
+  var public_dir = '.\\public\\images\\emailquote';
   var pageURL = "http://" + req.hostname + ":3000" + req.body.data.url;
 
   //Create new nightmare ;)
@@ -237,23 +238,37 @@ router.post('/emailrender', function(req, res) {
       return console.log("Screenshot error:", err);
     } 
     else {
-      console.log('Screenshot Successful!');
+      console.log('Screenshot Successful!', public_dir);
       //Email PDF as attachment
       //EMAIL PIECE GOES HERE
 
-      res.mailer.send('emailquote', {
+      var fs = require('fs'),
+        path = require('path'),
+        attachFileName = "testfile.pdf",
+        attachFilePath = path.join('.\\public\\images\\emailquote', attachFileName);
+
+
+      var emailOptions = {
         to: req.body.data.email,
-        subject: 'Test Email',
+        subject: "Test Email",
         pretty: true,
-        attachments: [{   
-            fileName:  '/testfile.pdf',
-            filePath: public_dir // stream this file
-        }] 
-      },
+        attachment: [
+        {
+            name: attachFileName,
+            path: attachFilePath
+        }, 
+        {
+            name: 'notes.txt',
+            content: 'Some notes about this e-mail',
+            contentType: 'text/plain' // optional, would be detected from the filename
+        }]
+      };
+
+
+      res.mailer.send('emailquote', emailOptions,
       function (err, email) {
         if (err) {
-          console.log('Sending Mail Failed!');
-          console.log(err);
+          console.log('Sending Mail Failed!', err);
           res.sendStatus(500)
           return;
         };

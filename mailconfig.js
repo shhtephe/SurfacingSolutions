@@ -4,9 +4,9 @@ var config = {
   development: {
     mailer: {
       from: 'shhtephe@hotmail.com',
-      host: 'smtp.live.com', // hostname
-      secureConnection: true, // use SSL
-      port: 465, // port for secure SMTP
+      host: 'smtp-mail.outlook.com', // hostname
+      secureConnection: false, // use SSL
+      port: 587, // port for secure SMTP
       auth: {
         user: 'shhtephe@hotmail.com',
         pass: 'Awesome!'
@@ -14,9 +14,9 @@ var config = {
     },
     mailerUpdate: {
       from: 'shhtephe@hotmail.com',
-      host: 'smtp.live.com', // hostname
-      secureConnection: true, // use SSL
-      port: 465, // port for secure SMTP
+      host: 'smtp-mail.outlook.com', // hostname
+      secureConnection: false, // use SSL
+      port: 587, // port for secure SMTP
       auth: {
         user: 'shhtephe@hotmail.com',
         pass: 'Awesome!'

@@ -15,12 +15,6 @@ var mongoose = require('mongoose');
 //Recieve JSON from Angular
 var http = require('http');
 
-//Mail setup
-var mailer = require('express-mailer');
-mailconfig = require('../mailconfig');
-var currentMailerOptions = mailconfig.mailer;
-mailer.extend(express(), currentMailerOptions);
-
 //I might have to ditch the error handler. Currently used in router.param(quote)
 function errorHandler(err, req, res, next) {
   console.log(err);
@@ -240,29 +234,31 @@ router.post('/emailrender', function(req, res) {
   .pdf(public_dir + '/testfile.pdf') //Should name this file properly in case it isn't deleted
   .run(function(err, nightmare) {
     if (err){
-      return console.log(err);
+      return console.log("Screenshot error:", err);
     } 
     else {
-      
-      //console.log(req.body);
       console.log('Screenshot Successful!');
       //Email PDF as attachment
       //EMAIL PIECE GOES HERE
-      console.log(mailer)
 
-      express().mailer.render('email', {
-        to: req.body.email,
+      res.mailer.send('emailquote', {
+        to: req.body.data.email,
         subject: 'Test Email',
-        pretty: true
+        pretty: true,
+        attachments: [{   
+            fileName:  '/testfile.pdf',
+            filePath: public_dir // stream this file
+        }] 
       },
       function (err, email) {
         if (err) {
           console.log('Sending Mail Failed!');
           console.log(err);
+          res.sendStatus(500)
           return;
         };
         res.header('Content-Type', 'text/plain');
-        res.send(email);
+        res.sendStatus(200);
       });
 
       //Delete local PDF file    

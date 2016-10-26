@@ -63,7 +63,7 @@ router.get('/customerdata/:customer', function(req, res, next) {
     if (err) { return next(err); }
     if (!quotes) { return next(new Error('can\'t find Quotes')); }
       req.customer = customer;
-      console.log(quotes);
+      //console.log(quotes);
       var vm = {
         customer: customer,
         quotes: quotes
@@ -126,16 +126,16 @@ router.param('quotedata', function(req, res, next, quoteID) {
           // saved!
           console.log("New quote saved");
           req.quote = quote;
-          console.log("Param Quote");
-          console.log(req.quote);
+          //console.log("Param Quote");
+          //console.log(req.quote);
           return next();
           };
         });
       });
     } else {
       req.quote = quote;
-      console.log("Param Quote");
-      console.log(req.quote);
+      //console.log("Param Quote");
+      //console.log(req.quote);
       return next();
     }
   });
@@ -190,11 +190,11 @@ router.get('/customer/:customer/quotebuild/:quote/quotesend', function(req, res,
 });
 
 router.get('/customer/:customer/quotebuild/:quote/quotefinaldata', function(req, res, next) {
-  console.log(req.quote);
+  //console.log(req.quote);
   if (typeof req.quote[0]==="undefined") {
       mongoose.model('products').find(function(err, products){
         mongoose.model('materials').find(function(err, materials){
-          console.log(materials);
+          //console.log(materials);
           res.render('partials/quotefinal', { 
             quote: req.quote,
             customer: req.customer,
@@ -222,7 +222,7 @@ router.post('/emailrender', function(req, res) {
   //Nightmare Wrapper 
   var nightmare = require('nightmare');
 
-  console.log(__dirname);
+  //console.log(__dirname);
   var public_dir = '.\\public\\images\\emailquote';
   var pageURL = "http://" + req.hostname + ":3000" + req.body.data.url;
 
@@ -247,15 +247,15 @@ router.post('/emailrender', function(req, res) {
         attachFileName = "testfile.pdf",
         attachFilePath = path.join('.\\public\\images\\emailquote', attachFileName);
 
-
+        console.log(attachFilePath);
       var emailOptions = {
         to: req.body.data.email,
         subject: "Test Email",
         pretty: true,
-        attachment: [
+        attachments: [
         {
-            name: attachFileName,
-            path: attachFilePath
+            fileName: attachFileName,
+            filePath: attachFilePath
         }, 
         {
             name: 'notes.txt',
@@ -277,6 +277,21 @@ router.post('/emailrender', function(req, res) {
       });
 
       //Delete local PDF file    
+      /*
+      var gutil = require('gulp-util');
+
+      fs.exists('./www/index.html', function(exists) {
+        if(exists) {
+          //Show in green
+          console.log(gutil.colors.green('File exists. Deleting now ...'));
+          fs.unlink('./www/index.html');
+        } else {
+          //Show in red
+          console.log(gutil.colors.red('File not found, so not deleting.'));
+        }
+      });
+      */
+
     };
   });
 });
@@ -339,10 +354,10 @@ router.post('/savematerials', function(req, res, next) {
       };
     };
   } else if(req.body.action === "delete"){
-    console.log("Parameter:", req.body.parameter);
+    //console.log("Parameter:", req.body.parameter);
     var ObjectId = require('mongoose').Types.ObjectId; 
     var query = { _id: new ObjectId(req.body.parameter)};
-  console.log('Query', query);
+    //console.log('Query', query);
     var search = mongoose.model('materials').find(query);
 
     search.remove().exec(function (err, searchMaterial){
@@ -353,9 +368,9 @@ router.post('/savematerials', function(req, res, next) {
     });
   } else if(req.body.action === "add"){
     bodyMaterials = req.body.parameter;
-    console.log('Body Materials', bodyMaterials);
+    //console.log('Body Materials', bodyMaterials);
 
-    console.log('Manufaturer', bodyMaterials.manufacturer);
+    //console.log('Manufaturer', bodyMaterials.manufacturer);
     //I didn't need to do this part, it's a bit redundant.
     var manufacturer = bodyMaterials.manufacturer,
         distributor = bodyMaterials.distributor,

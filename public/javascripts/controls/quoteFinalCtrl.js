@@ -4,9 +4,9 @@
 	angular.module('surfacingSolutions')
 	.controller('quoteFinalCtrl', quoteFinalCtrl);
 
-	quoteFinalCtrl.$inject = ['dataFactory', '$stateParams', '$http', '$window'];
+	quoteFinalCtrl.$inject = ['dataFactory', '$stateParams', '$http', '$window', '$mdDialog'];
 
-	function quoteFinalCtrl(dataFactory, $stateParams, $http, $window) {
+	function quoteFinalCtrl(dataFactory, $stateParams, $http, $window, $mdDialog) {
 		var vm = this;
 		vm.alerts = [];
 
@@ -58,9 +58,23 @@
 		};
 
 
-		vm.email = function() {
-			console.log("Email ran");
-			vm.render();
+		vm.email = function(ev) {
+			// Appending dialog to document.body to cover sidenav in docs app
+		    var confirm = $mdDialog.confirm()
+		          .title('Send Email')
+		          .textContent('Are you sure you want to send the quote?')
+		          .ariaLabel('Lucky day')
+		          .targetEvent(ev)
+		          .ok('Send Quote')
+		          .cancel('Cancel');
+
+		    $mdDialog.show(confirm).then(function() {
+		      	console.log("User chose send");
+				vm.render();
+		    }, function() {
+		      console.log("User Cancelled.");
+			});
+
 
 		};
 
@@ -183,8 +197,8 @@
 		return '';
 		};
 
-		$window.status = "ready";	
-		console.log($window.status);
+		//$window.status = "ready";	
+		//console.log($window.status);
 	};
 	angular.module('surfacingSolutions')
 	.filter('flattenRows', function() {

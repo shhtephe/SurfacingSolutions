@@ -1,4 +1,4 @@
-var app = angular.module('surfacingSolutions', ['ui.router', 'angular.filter', 'ui.bootstrap', 'ngAnimate', 'angucomplete-alt']);
+var app = angular.module('surfacingSolutions', ['ui.router', 'angular.filter', 'ui.bootstrap', 'ngAnimate', 'angucomplete-alt', 'ngMaterial']);
 
 app.config([
 '$interpolateProvider',
@@ -145,16 +145,7 @@ app.run(function ($rootScope, $state) {
 
     if (requireLogin && $rootScope.currentUser == false) {
       event.preventDefault();
-
-
-      /*loginModal()
-        .then(function () {
-          return $state.go(toState.name, toParams);
-        })
-        .catch(function () {
-          return $state.go('welcome');
-        });*/
-    }
+    };
   });
 
 });

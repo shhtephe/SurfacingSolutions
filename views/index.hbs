@@ -40,13 +40,13 @@
     <script type='text/javascript' src='javascripts/example.js'></script>
 
     <link rel='stylesheet' type='text/css' href='stylesheets/angucomplete-alt.css' />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <link rel='stylesheet' type='text/css' href='stylesheets/quotestyle.css' />
     <link rel='stylesheet' type='text/css' href='stylesheets/quoteprint.css' media="print" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <link rel='stylesheet' href='/stylesheets/style.css'/>
   </head>
   <!--put this in ng-init: currentUser = <%if (user) {%><%= true %><%}else{%><%= false %><%}%> -->
-  <body ng-app="surfacingSolutions"  ng-init="currentUser = {{#if user}} true {{else}} false {{/if}}">
+  <body ng-app="surfacingSolutions" ng-init="currentUser = {{#if user}} true {{else}} false {{/if}}">
     <div class="header">
       {{#if user}}
         Welcome, {{user.username}}!

@@ -4,9 +4,9 @@
 	angular.module('surfacingSolutions')
 	.controller('quoteFinalCtrl', quoteFinalCtrl);
 
-	quoteFinalCtrl.$inject = ['dataFactory', '$stateParams', '$http', '$window', '$mdDialog'];
+	quoteFinalCtrl.$inject = ['$scope', 'dataFactory', '$stateParams', '$http', '$window', '$mdDialog'];
 
-	function quoteFinalCtrl(dataFactory, $stateParams, $http, $window, $mdDialog) {
+	function quoteFinalCtrl($scope, dataFactory, $stateParams, $http, $window, $mdDialog) {
 		var vm = this;
 		vm.alerts = [];
 
@@ -57,25 +57,22 @@
 	  		});
 		};
 
-
-		vm.email = function(ev) {
+		$scope.email = function(ev) {
 			// Appending dialog to document.body to cover sidenav in docs app
 		    var confirm = $mdDialog.confirm()
 		          .title('Send Email')
 		          .textContent('Are you sure you want to send the quote?')
 		          .ariaLabel('Lucky day')
-		          .targetEvent(ev)
 		          .ok('Send Quote')
-		          .cancel('Cancel');
-
+		          .cancel('Cancel')
+		          .targetEvent(ev);
+			
 		    $mdDialog.show(confirm).then(function() {
 		      	console.log("User chose send");
 				vm.render();
 		    }, function() {
 		      console.log("User Cancelled.");
 			});
-
-
 		};
 
 		vm.render = function() {

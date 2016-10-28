@@ -7,7 +7,7 @@
 	<br>
 	<br>-->
 	<alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</alert>
-	<!--<div id="page-wrap">-->
+	<div id="page-wrap">
 		<br>
 		<a href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotefinal"><button type="button" style="btn">Back</button></a>
 		<button type="button" class="md-raised md-warn" ng-click="email($event)">Email PDF - {/vm.customer.email/}</button>
@@ -104,7 +104,7 @@ Phone: {/vm.customer.homePhone/}</textarea>
 		    		</td>
 				    <td>
 				    	<div align="right">
-				    		{/group.totalPrice | currency:$/}
+				    		{/group.totalPrice/ group.quantity | currency:$/}
 			    		</div>
 			    	</td>
 				    <td>
@@ -114,7 +114,7 @@ Phone: {/vm.customer.homePhone/}</textarea>
 		    		</td>
 				    <td>	
 				    	<div align="right" class="price">
-				    		{/group.quantity * group.totalPrice | currency: $/}
+				    		{/group.totalPrice | currency: $/}
 				    	</div>	
 			    	</td>
 			</tr>
@@ -145,7 +145,7 @@ Phone: {/vm.customer.homePhone/}</textarea>
 			<tr>
 		    	<td colspan="3" class="blank"> </td>
 		    	<td colspan="1" class="total-line">Total Area</td>
-		    	<td class="total-value"><div id="subtotal">{/vm.quote.TAC | number:2/} SQFT</div></td>
+		    	<td class="total-value"><div align="right" id="subtotal">{/vm.quote.TAC | number:2/} SQFT</div></td>
 		  	</tr>
 			<tr>
 		    	<td colspan="3" class="blank"> </td>
@@ -239,5 +239,5 @@ Phone: {/vm.customer.homePhone/}</textarea>
 				<font size=2>{/term.term | dateFilter:term/}</font>
 			</div>
 		</div>
-	<!--</div>-->
+	</div>
 </div>

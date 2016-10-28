@@ -44,12 +44,8 @@
       	  	});
 
       	  	modalInstance.result.then(function (counter) {
-				//console.log(parseFloat(counter.width), parseFloat(counter.length), counter.shape, counter.counters, counter.groupIndex, counter.description, true);
       			//Save the countertop and put all the data back onto the main controller
-      			vm.calcCounter(parseFloat(counter.width), parseFloat(counter.length), counter.shape, counter.counters, counter.groupIndex, counter.description, true);
-      			//do the same thing with each addon
-      			//console.log(counter.addons, counter.counters)
-      			 				
+      			vm.calcCounter(parseFloat(counter.width), parseFloat(counter.length), counter.shape, counter.counters, counter.groupIndex, counter.description, true);  			 				
 			}, function () {
       		console.log('Modal dismissed at: ' + new Date());
     		});
@@ -168,7 +164,6 @@
 					addons:[],
 					totalPrice: 0,
 					quantity: 1,
-					totalLength: 0,
 					LSUM: 0,
 					linearFootage: 0
 				};
@@ -183,7 +178,6 @@
 					addons: [],
 					totalPrice: 0,
 					quantity: 1,
-					totalLength: 0,
 					LSUM: 0,
 					linearFootage: 0					
 				};
@@ -238,18 +232,19 @@
 	  	};
 
 		vm.removeGroup = function(index) {
+			var groupIndex = vm.arraySearch(index, vm.quote.counterGroup, 'groupNumber');
 			//subtract the group total from quote total
-			vm.quote.totalPrice -= vm.quote.counterGroup[index].totalPrice;
-			//Subtract total length from quote
-			vm.quote.totalLength -= vm.quote.counterGroup[index].totalLength;
-			//Subtract LSUM and linearFootage from quote
-			vm.quote.linearFootage -= vm.quote.counterGroup[index].linearFootage;
+			console.log(vm.quote, vm.quote.counterGroup[groupIndex], groupIndex)
+			vm.quote.totalPrice -= vm.quote.counterGroup[groupIndex].totalPrice;
+			//Subtract LSUM and LW from quote
+			vm.quote.linearFootage -= vm.quote.counterGroup[groupIndex].linearFootage;
+			vm.quote.linearLSUM -= vm.quote.counterGroup[groupIndex].linearLSUM;
 			//Subtract TAC from quote
-			vm.quote.TAC -= vm.quote.counterGroup[index].TAC;
+			vm.quote.TAC -= vm.quote.counterGroup[groupIndex].TAC;
 			//Update Mandatory addons with new TAC
-			vm.updateMandatoryAddons(index, vm.quote.TAC);
+			vm.updateMandatoryAddons(groupIndex, vm.quote.TAC);
 			//Remove from Array
-			vm.quote.counterGroup.splice(index, index+1);
+			vm.quote.counterGroup.splice(groupIndex, groupIndex+1);
 		};
 
 	  	//This is called from the add counter modal. Passes the values from the modal to the main page.
@@ -288,7 +283,7 @@
 			} else if(shape === "circle"){
 				pushObj.squareFootage = (Math.PI * (Math.pow(width, 2)))/144;
 			};
-			//Truncate the squarefootage to 2 decimals
+			//Truncate the squareFootage to 2 decimals
 			pushObj.squareFootage = parseFloat(pushObj.squareFootage.toFixed(2));
 			//Calc LSUM for counter to be used for calculations for addons
 			if(shape === "rectangle") {
@@ -298,8 +293,6 @@
 				pushObj.LSUM = ((2 * Math.PI) * (length /2)) / 144;
 				pushObj.LSUM = Math.round((pushObj.LSUM + 0.00001) * 100) / 100;
 			};
-			//Add LSUM to group and total quote
-			vm.quote.counterGroup[groupIndex].LSUM += pushObj.LSUM;
 			if(typeof vm.quote.LSUM == "undefined"){
 				vm.quote.LSUM = 0;
 			};
@@ -311,26 +304,10 @@
 				pushObj.linearFootage = ((2 * Math.PI) * (length /2)) / 144;
 				pushObj.linearFootage = Math.round((pushObj.linearFootage + 0.00001) * 100) / 100;
 			};
-			console.log(vm.quote.counterGroup[groupIndex].linearFootage);
-			//Add linearFootage to group and total quote
-			vm.quote.counterGroup[groupIndex].linearFootage += pushObj.linearFootage;
 			//If no value has been put here, 0 it.
 			if(typeof vm.quote.linearFootage == "undefined"){
 				vm.quote.linearFootage = 0;
 			};
-			vm.quote.linearFootage += pushObj.linearFootage;
-			console.log(vm.quote.counterGroup[groupIndex].linearFootage);
-
-			//Add the linear footage to the total linear footage for the group - this might be replaced with linearFootage
-			vm.quote.counterGroup[groupIndex].totalLength += length;
-			vm.quote.totalLength += length;
-			//Create variable for individual counter's TAC to be added to the group. Truncated to 2 decimal places
-			var currentCounter = pushObj.squareFootage * vm.quote.counterGroup[groupIndex].quantity;
-			console.log(currentCounter, parseFloat(vm.quote.counterGroup[groupIndex].TAC.toFixed(2)));
-			//Add the counter's area to both group and total TAC (parse float to make sure it's a number, and to fixed to round to 2 digits.)
-			vm.quote.counterGroup[groupIndex].TAC = parseFloat((currentCounter +  vm.quote.counterGroup[groupIndex].TAC).toFixed(2));
-			//Add to TAC as well (parse float to make sure it's a number, and to fixed to round to 2 digits.)
-			vm.quote.TAC = (parseFloat(vm.quote.TAC) + parseFloat(currentCounter.toFixed(2)));
 			//"Save" the counter to vm.quote
 			vm.commitCounter(modal, pushObj, index, groupIndex);
 			//Update the addon quantities for the group and mandatory addon quantities and recalculate them 
@@ -346,14 +323,56 @@
 		vm.commitCounter = function(modal, pushObj, index, groupIndex){
 			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
 	  		var groupIndex = vm.arraySearch(groupIndex, vm.quote.counterGroup, 'groupNumber');
-			
 			//Commits data to arrays depending on whether it's an edit or a new save.
+			console.log(typeof vm.quote.counterGroup[groupIndex].counters[index] === "undefined", vm.quote.counterGroup[groupIndex].counters[index]);
 			if(typeof vm.quote.counterGroup[groupIndex].counters[index] === "undefined"){
 				//push counter into vm.quote
-				console.log(pushObj);
 				vm.quote.counterGroup[groupIndex].counters.push(pushObj);	
-				console.log(vm.quote.counterGroup[groupIndex].counters[0]);
+			} else{
+				vm.quote.counterGroup[groupIndex].counters[index] = pushObj;
+
+				if(typeof vm.quote.counterGroup[groupIndex].material !== 'undefined') {
+					vm.calcGroup(groupIndex, vm.quote.counterGroup[groupIndex].material);
+				};
 			};
+			//Add up all the LSUM, linearFootage and squareFootage values for all counters in the group
+			vm.quote.counterGroup[groupIndex].LSUM = 0;
+			vm.quote.counterGroup[groupIndex].linearFootage = 0;
+			vm.quote.counterGroup[groupIndex].squareFootage = 0;
+			for (var i = vm.quote.counterGroup[groupIndex].counters.length - 1; i >= 0; i--) {
+				vm.quote.counterGroup[groupIndex].LSUM += vm.quote.counterGroup[groupIndex].counters[i].LSUM;
+				vm.quote.counterGroup[groupIndex].linearFootage += vm.quote.counterGroup[groupIndex].counters[i].linearFootage;
+				vm.quote.counterGroup[groupIndex].squareFootage += vm.quote.counterGroup[groupIndex].counters[i].squareFootage;
+			};
+			vm.quote.counterGroup[groupIndex].LSUM = Math.round((vm.quote.counterGroup[groupIndex].LSUM + 0.00001) * 100) / 100;
+			vm.quote.counterGroup[groupIndex].linearFootage = Math.round((vm.quote.counterGroup[groupIndex].linearFootage + 0.00001) * 100) / 100;
+			vm.quote.counterGroup[groupIndex].squareFootage = Math.round((vm.quote.counterGroup[groupIndex].squareFootage + 0.00001) * 100) / 100;
+
+			//Add up all the LSUM and linearFootage values for all groups in the quote
+			vm.quote.LSUM = 0;
+			vm.quote.linearFootage = 0;
+			vm.quote.squareFootage = 0;
+			for (var i = vm.quote.counterGroup.length - 1; i >= 0; i--) {
+				vm.quote.LSUM += vm.quote.counterGroup[i].LSUM;
+				vm.quote.linearFootage += vm.quote.counterGroup[i].linearFootage;
+				vm.quote.squareFootage += vm.quote.counterGroup[i].squareFootage;
+			};
+			vm.quote.LSUM = Math.round((vm.quote.LSUM + 0.00001) * 100) / 100;
+			vm.quote.linearFootage = Math.round((vm.quote.linearFootage + 0.00001) * 100) / 100;
+			vm.quote.squareFootage = Math.round((vm.quote.squareFootage + 0.00001) * 100) / 100;
+
+			//Add up all TAC values for all counters in the group
+			vm.quote.counterGroup[groupIndex].TAC = 0;
+			for (var i = vm.quote.counterGroup[groupIndex].counters.length - 1; i >= 0; i--) {
+				vm.quote.counterGroup[groupIndex].TAC += vm.quote.counterGroup[groupIndex].counters[i].squareFootage;
+			};
+			vm.quote.counterGroup[groupIndex].TAC = Math.round((vm.quote.counterGroup[groupIndex].TAC + 0.00001) * 100) / 100;
+			//Add up all TAC values for all groups in the quote
+			vm.quote.TAC = 0;
+			for (var i = vm.quote.counterGroup.length - 1; i >= 0; i--) {
+				vm.quote.TAC +=  parseFloat(vm.quote.counterGroup[i].TAC.toFixed(2));
+			};
+			vm.quote.TAC = Math.round((vm.quote.TAC + 0.00001) * 100) / 100;
 			//Because there's a new counter added, we need to update the "quantity" of each addon within the group
 			for (var i = vm.quote.counterGroup[groupIndex].addons.length - 1; i >= 0; i--) {
 				vm.saveAddon(vm.quote.counterGroup[groupIndex].addons[i], vm.quote.counterGroup[groupIndex].shape, vm.quote.counterGroup[groupIndex].TAC, groupIndex);
@@ -367,23 +386,17 @@
 			vm.quote.counterGroup[groupIndex].totalPrice -= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
 			//Subtract total price from quote
 			vm.quote.totalPrice -= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
-			//Subtract squarefootage from group
+			//Subtract squareFootage from group
 			vm.quote.counterGroup[groupIndex].TAC -= vm.quote.counterGroup[groupIndex].counters[index].squareFootage;
-			//Subtract squarefootage from quote
+			//Subtract squareFootage from quote
 			vm.quote.TAC -= parseFloat(vm.quote.counterGroup[groupIndex].counters[index].squareFootage) * parseFloat(vm.quote.counterGroup[groupIndex].quantity);
-			//subtract total length from group
-			vm.quote.counterGroup[groupIndex].totalLength -= vm.quote.counterGroup[groupIndex].counters[index].counterLength;
 			//subtract Linear Footage and LSUM from group and quote
 			vm.quote.counterGroup[groupIndex].LSUM -= vm.quote.counterGroup[groupIndex].counters[index].LSUM;
 			vm.quote.counterGroup[groupIndex].linearFootage -= vm.quote.counterGroup[groupIndex].counters[index].linearFootage;
 			vm.quote.LSUM -= vm.quote.counterGroup[groupIndex].counters[index].LSUM
 			vm.quote.linearFootage -= vm.quote.counterGroup[groupIndex].counters[index].linearFootage;
-			//Subtract total length from quote
-			vm.quote.totalLength -= vm.quote.counterGroup[groupIndex].counters[index].counterLength;
 			//Remove from array
 			vm.quote.counterGroup[groupIndex].counters.splice(index, index+1);
-
-			/* I DON'T KNOW WETHER THIS STAYS OR NOT - It actually might stay. Whoa.*/
 			//recalculate group if material is present
 			if(typeof vm.quote.counterGroup[groupIndex].material !== 'undefined') {
 				vm.calcGroup(groupIndex, vm.quote.counterGroup[groupIndex].material);
@@ -415,37 +428,6 @@
 			};	
 		};
 
-		vm.calcAddonTotal = function(addon, shape, squareFootage, index){
-			//var counterLength = length;
-			//var counterWidth = width;
-			var totalPrice = 0;
-			//temp until I find where it's being set as a string
-			addon.quantity = parseFloat(addon.quantity);
-			addon.price = parseFloat(addon.price);
-			console.log(addon.quantity, addon.price, addon.formula);
-			//calculation
-			if (addon.formula === "item") {
-				if(index == -1){
-					totalPrice =  addon.quantity * addon.price;	
-				} else {
-					totalPrice =  addon.quantity * addon.price * vm.quote.counterGroup[index].quantity;	
-				};
-				
-			}else if(addon.formula === "sqft"){
-				//console.log(vm.quote.counterGroup[index]);
-				totalPrice = addon.price * addon.quantity;
-			}else if(addon.formula === "linearLW"){	
-					totalPrice = addon.quantity * addon.price;
-			}else if(addon.formula === "linearLSUM"){	
-					totalPrice = addon.quantity * addon.price;
-			}else{
-				console.error("Unknown addon formula type!!!", addon.formula);
-				totalPrice = addon.quantity * addon.price;
-			};
-			console.log(totalPrice);
-			return(totalPrice.toFixed(2));
-		};
-
 		//updates the "quantity" value so it can be calculated - requires TAC for Sqft and total Length for linear
 		vm.updateMandatoryAddon = function(addon, TAC, groupIndex) {
 			console.log(TAC, addon.formula, vm.quote.linearFootage);
@@ -475,7 +457,7 @@
 
 		//updates the "quantity" value so it can be calculated - requires TAC for Sqft and total Length for linear
 		vm.updateAddon = function(addon, TAC, groupIndex, quantity) {
-			console.log(vm.quote.counterGroup[groupIndex], addon.quantity, quantity, addon.formula === "linearLW");
+			console.log(vm.quote.counterGroup[groupIndex], addon.quantity, quantity);
 			//if formula is sqft or linear(Lw/LSUM), the quantity is different This is to make the calculating easier, so it's just the quantity that's being handled, not TAC, width, length etc
 			if(addon.formula === "sqft"){
 				addon.quantity = TAC * quantity;
@@ -484,11 +466,41 @@
 			} else if (addon.formula === "linearLSUM"){
 				addon.quantity = vm.quote.counterGroup[groupIndex].LSUM * quantity;
 			};
-			//Force as float and truncate to 2 decimal places
-			console.log(addon.quantity);
+
 			addon.quantity = parseFloat(addon.quantity);
 			addon.quantity = parseFloat(addon.quantity.toFixed(2));
 			return addon.quantity;
+		};
+
+		vm.calcAddonTotal = function(addon, shape, squareFootage, index){
+			//var counterLength = length;
+			//var counterWidth = width;
+			var totalPrice = 0;
+			//temp until I find where it's being set as a string
+			addon.quantity = parseFloat(addon.quantity);
+			addon.price = parseFloat(addon.price);
+			console.log(addon.quantity, addon.price, addon.formula);
+			//calculation
+			if (addon.formula === "item") {
+				if(index == -1){
+					totalPrice =  addon.quantity * addon.price;	
+				} else {
+					totalPrice =  addon.quantity * addon.price * vm.quote.counterGroup[index].quantity;	
+				};
+				
+			}else if(addon.formula === "sqft"){
+				//console.log(vm.quote.counterGroup[index]);
+				totalPrice = addon.price * addon.quantity;
+			}else if(addon.formula === "linearLW"){	
+					totalPrice = addon.quantity * addon.price;
+			}else if(addon.formula === "linearLSUM"){	
+					totalPrice = addon.quantity * addon.price;
+			}else{
+				console.error("Unknown addon formula type!!!", addon.formula);
+				totalPrice = addon.quantity * addon.price;
+			};
+			console.log(totalPrice);
+			return(totalPrice.toFixed(2));
 		};
 
 		vm.saveAddon = function(addon, shape, TAC, groupIndex) {
@@ -690,9 +702,7 @@
 				console.log(vm.quote.totalPrice);
 				//set the quote TAC
 				vm.quote.TAC = vm.quote.counterGroup[index].TAC * vm.quote.counterGroup[index].quantity;
-				vm.quote.TAC = parseFloat(vm.quote.TAC.toFixed(2));
-				//set total length to a float
-				vm.quote.totalLength = parseFloat(vm.quote.counterGroup[index].totalLength) * vm.quote.counterGroup[index].quantity;
+				vm.quote.TAC = Math.round((vm.quote.TAC + 0.00001) * 100) / 100;
 				//Update the addon quantities for the group and mandatory addon quantities and recalculate them **THIS MIGHT BE FIRING TWICE IN DIFFERENT SPOTS. MIGHT REMOVE**
 				vm.updateGroupAddons(index, shape, vm.quote.counterGroup[index].TAC);
 				vm.updateMandatoryAddons(index, vm.quote.counterGroup[index].TAC);
@@ -718,11 +728,10 @@
 					for (var t = vm.quote.counterGroup.length - 1; t >= 0; t--) {
 						console.log(typeof(vm.quote.counterGroup[t].material), vm.quote.counterGroup[t].material === 'object')
 						if(t !== index && typeof(vm.quote.counterGroup[t].material) === 'object'){
-							console.log(t, vm.quote.counterGroup[t].TAC, vm.quote.counterGroup[t].totalPrice, vm.quote.counterGroup[t].GMC, vm.quote.counterGroup[t].totalLength);
+							console.log(t, vm.quote.counterGroup[t].TAC, vm.quote.counterGroup[t].totalPrice, vm.quote.counterGroup[t].GMC);
 							vm.quote.TAC += parseFloat(vm.quote.counterGroup[t].TAC) * vm.quote.counterGroup[t].quantity;
 							vm.quote.totalPrice += parseFloat(vm.quote.counterGroup[t].totalPrice);
 							vm.quote.GMC += parseFloat(vm.quote.counterGroup[t].GMC);
-							vm.quote.totalLength += parseFloat(vm.quote.counterGroup[t].totalLength);
 						};	
 					};
 					//After adding all the other groups, then calc the quote GMCPSF and GCPSF

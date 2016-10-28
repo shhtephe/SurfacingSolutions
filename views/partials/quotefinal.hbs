@@ -93,9 +93,9 @@ Phone: {/vm.customer.homePhone/}</textarea>
 			    		</span>
 		    		</td>
 				    <td>
-				    	<span ng-hide="counter.addon">
-				    		{/group.material[group.material.pricing] | currency:$/}/Sheet
-			    		</span>
+				    	<div align="right" ng-hide="counter.addon">
+				    		{/group.material[group.material.pricing] | currency:$/}
+			    		</div>
 			    		<span ng-show="counter.addon">
 				    		<textarea>{/counter.price | currency:$/}</textarea>
 			    		</span>
@@ -104,8 +104,8 @@ Phone: {/vm.customer.homePhone/}</textarea>
 		        		{/group.TAC | number:2/} SQFT    				    	
 		    		</td>
 				    <td>	
-				    	<span ng-show="counter.addon"class="price">{/group.GMC | currency: $/}</span>
-				    	<span ng-hide="counter.addon"class="price">{/group.GMC | currency: $/}</span>	
+				    	<div align="right" ng-show="counter.addon"class="price">{/group.GMC | currency: $/}</div>
+				    	<div align="right" ng-hide="counter.addon"class="price">{/group.GMC | currency: $/}</div>	
 			    	</td>
 				</tr>
 			<!-- Addon section -->
@@ -117,7 +117,7 @@ Phone: {/vm.customer.homePhone/}</textarea>
 				    	{/addon.description/}
 		    		</td>
 				    <td>
-				    	{/addon.price | currency:$/}
+				    	<div align="right">{/addon.price | currency:$/}</div>
 			    	</td>
 				    <td>
 				    	{/addon.quantity/}
@@ -126,24 +126,24 @@ Phone: {/vm.customer.homePhone/}</textarea>
 				    		<span ng-show="addon.formula == 'item'"> items</span>
 		    		</td>
 				    <td>	
-				    	<span class="price">{/addon.totalPrice | currency: $/}</span>
+				    	<div align="right" class="price">{/addon.totalPrice | currency: $/}</div>
 			    	</td>
 				</tr>
 			<!-- totals and summation -->
 				<tr>
 			    	<td colspan="3" class="blank"> </td>
 			    	<td colspan="1" class="total-line">GMC</td>
-			    	<td class="total-value"><div id="subtotal">{/group.GMC * vm.quote.jobDifficulty| currency:$/}</div></td>
+			    	<td class="total-value"><div align="right" id="subtotal">{/group.GMC * vm.quote.jobDifficulty| currency:$/}</div></td>
 			  	</tr>
 				<tr>
 			    	<td colspan="3" class="blank"> </td>
 			    	<td colspan="1" class="total-line">Addons</td>
-			    	<td class="total-value"><div id="subtotal">{/(group.totalPrice - group.GMC) * vm.quote.jobDifficulty| currency:$/}</div></td>
+			    	<td class="total-value"><div align="right" id="subtotal">{/(group.totalPrice - group.GMC) * vm.quote.jobDifficulty| currency:$/}</div></td>
 			  	</tr>
 				<tr>
 			    	<td colspan="3" class="blank"> </td>
 			    	<td colspan="1" class="total-line">Total</td>
-			    	<td class="total-value"><div id="subtotal">{/group.totalPrice * vm.quote.jobDifficulty| currency:$/}</div></td>
+			    	<td class="total-value"><div align="right" id="subtotal">{/group.totalPrice * vm.quote.jobDifficulty| currency:$/}</div></td>
 			  	</tr>
 			</tbody>
 		</table>
@@ -186,17 +186,17 @@ Phone: {/vm.customer.homePhone/}</textarea>
 			<tr>
 		    	<td width="75%" class="blank"> </td>
 		    	<td colspan="1" class="total-line">Subtotal</td>
-		    	<td class="total-value"><div id="subtotal">{/vm.quote.totalPrice * vm.quote.jobDifficulty| currency:$/}</div></td>
+		    	<td class="total-value"><div align="right" id="subtotal">{/vm.quote.totalPrice * vm.quote.jobDifficulty| currency:$/}</div></td>
 		  	</tr>
 			<tr>
 		    	<td width="75%" class="blank"> </td>
 			    <td colspan="1" class="total-line">HST (13%)</td>
-			    <td class="total-value"><div id="total">{/vm.quote.totalPrice * 0.13 | currency:$/}</div></td>
+			    <td class="total-value"><div align="right" id="total">{/vm.quote.totalPrice * 0.13 | currency:$/}</div></td>
 			</tr>
 			<tr>
 		    	<td width="75%" class="blank"> </td>
 			    <td colspan="1" class="total-line">Total</td>
-			    <td class="total-value"><div id="total">{/vm.quote.totalPrice * 1.13 | currency:$/}</div></td>
+			    <td class="total-value"><div align="right" id="total">{/vm.quote.totalPrice * 1.13 | currency:$/}</div></td>
 			</tr>
 		</table>
 

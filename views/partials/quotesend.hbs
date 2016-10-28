@@ -10,10 +10,7 @@
 	<!--<div id="page-wrap">-->
 		<br>
 		<a href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotefinal"><button type="button" style="btn">Back</button></a>
-		<md-content layout="column" flex class="md-padding">
-			<md-button class="md-primary" ng-click="email($event)">Launch Dialog</md-button>
-        </md-content>
-		<md-button type="button" class="md-raised md-warn" ng-click="email($event)">Email PDF - {/vm.customer.email/}</md-button>
+		<button type="button" class="md-raised md-warn" ng-click="email($event)">Email PDF - {/vm.customer.email/}</button>
 		<textarea id="header">Final Quote</textarea>	
 		<!--<div style="visibility: hidden">
 		    <div class="md-dialog-container" id="myDialog">
@@ -49,7 +46,7 @@
 	            <input id="imageloc" type="text" size="50" value="" /><br />
 	            (max width: 540px, max height: 100px)
 	          </div>
-	          <img id="image" src="images/ssilogo.png" alt="logo" />
+	          <img id="image" src="images/ssilogo.png" alt="logo"/>
 	        </div>
 		</div>
 		<div style="clear:both"></div>

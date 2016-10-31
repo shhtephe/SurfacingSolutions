@@ -526,9 +526,9 @@
 			var search = vm.arraySearch(addon.description, addons, "description");
 			//Update addons quantity values
 			if(groupIndex == -1){
-				vm.updateMandatoryAddon(addon, TAC, groupIndex);
+				addon.quantity = vm.updateMandatoryAddon(addon, TAC, groupIndex);
 			} else {
-				vm.updateAddon(addon, TAC, groupIndex, vm.quote.counterGroup[groupIndex].quantity);
+				addon.quantity = vm.updateAddon(addon, TAC, groupIndex, vm.quote.counterGroup[groupIndex].quantity);
 			};
 
 			addon.quantity = parseFloat(addon.quantity);
@@ -716,9 +716,6 @@
 				for (var i = vm.quote.mandatoryAddons.length - 1; i >= 0; i--) {
 					vm.quote.totalPrice += parseFloat(vm.quote.mandatoryAddons[i].totalPrice);
 				};	
-				console.log(vm.quote.totalPrice);
-				//Calc GMCPSF = total material price divided by the total area of sheets required
-				console.log(parseFloat(vm.quote.counterGroup[index].GMC) / parseFloat(vm.quote.counterGroup[index].TAC), parseFloat(vm.quote.counterGroup[index].GMC), vm.quote.counterGroup[index].TAC);
 				//Calc group material cost per square foot
 				vm.quote.counterGroup[index].GMCPSF = vm.quote.counterGroup[index].GMC / (vm.quote.counterGroup[index].TAC * vm.quote.counterGroup[index].quantity);
 				//Calc GCPSF = total price divided by total area of sheets required

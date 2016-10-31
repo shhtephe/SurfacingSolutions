@@ -3,13 +3,13 @@ var environment =  process.env.NODE_ENV || 'development';
 var config = {
   development: {
     mailer: {
-      from: 'shhtephe@hotmail.com',
-      host: 'smtp-mail.outlook.com', // hostname
+      from: 'spete@surfacingsolutions.ca',
+      host: 'surfacing.dmtel.ca', // hostname
       secureConnection: false, // use SSL
       port: 587, // port for secure SMTP
       auth: {
-        user: 'shhtephe@hotmail.com',
-        pass: 'Awesome!'
+        user: 'pete@surfacingsolutions.ca',
+        pass: 'Soccerball11'
       }
     },
     mailerUpdate: {

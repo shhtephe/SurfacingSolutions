@@ -674,26 +674,25 @@
 				console.log(vm.quote.counterGroup[index].TAC, material.length, material.width, vm.quote.counterGroup[index].quantity, material);
 				//Estimate the number of sheets
 				vm.quote.counterGroup[index].estimatedSheets = (vm.quote.counterGroup[index].TAC / (material.length * material.width/144)) * vm.quote.counterGroup[index].quantity;
-				vm.quote.counterGroup[index].estimatedSheets = parseFloat(vm.quote.counterGroup[index].estimatedSheets.toFixed(2));
+				vm.quote.counterGroup[index].estimatedSheets = Math.round((vm.quote.counterGroup[index].estimatedSheets + 0.00001) * 100) / 100;
 				console.log(vm.quote.counterGroup[index].estimatedSheets);
 				//If sheets has not been entered (is null) make sheets = estimated, then proceed with calculating
 				console.log(vm.quote.counterGroup[index].sheets, typeof vm.quote.counterGroup[index].sheets === 'undefined');
 				if (typeof vm.quote.counterGroup[index].sheets === 'undefined') {
 					vm.quote.counterGroup[index].sheets = vm.quote.counterGroup[index].estimatedSheets;
-					//round and parse the value as a float
+					//round to 2 digits
 		  			vm.quote.counterGroup[index].sheets = parseFloat(vm.quote.counterGroup[index].sheets.toFixed(2));
 				};
 				//Calculate totals with material and number of sheets
-				sheets = vm.calcSheets(material, parseFloat(vm.quote.counterGroup[index].sheets), overridePricing);
+				sheets = vm.calcSheets(material, Math.round(((vm.quote.counterGroup[index].sheets + 0.00001) * 100) / 100), overridePricing);
 				//Set the quote pricing string
 				vm.quote.counterGroup[index].material.pricing = sheets.pricing;
-
-				console.log(material[sheets.pricing], sheets.pricing, material, vm.quote.counterGroup[index].sheets);
+				//console.log(material[sheets.pricing], sheets.pricing, material, vm.quote.counterGroup[index].sheets);
 				vm.quote.counterGroup[index].GMC = material[sheets.pricing] * vm.quote.counterGroup[index].sheets;
 				vm.quote.counterGroup[index].GMC = parseFloat(vm.quote.counterGroup[index].GMC.toFixed(2));
 				//Set total quote GMC
 				vm.quote.GMC = vm.quote.counterGroup[index].GMC;
-				console.log(vm.quote.counterGroup[index].GMC, index, vm.quote.GMC);
+				//console.log(vm.quote.counterGroup[index].GMC, index, vm.quote.GMC);
 				//Set the total price to GMC then add up the addons to get total cost
 				vm.quote.counterGroup[index].totalPrice = vm.quote.counterGroup[index].GMC;	
 				//Set the total price as the material price, then add the addons
@@ -702,20 +701,14 @@
 				console.log(vm.quote.totalPrice, vm.quote.counterGroup[index].TAC);
 				//set the quote TAC
 				vm.quote.TAC = vm.quote.counterGroup[index].TAC * vm.quote.counterGroup[index].quantity;
+
 				//Update the addon quantities for the group and mandatory addon quantities and recalculate them **THIS MIGHT BE FIRING TWICE IN DIFFERENT SPOTS. MIGHT REMOVE**
-				console.log(vm.quote.counterGroup[index].TAC);
 				vm.updateGroupAddons(index, shape, vm.quote.counterGroup[index].TAC);
-				vm.updateMandatoryAddons(index, vm.quote.counterGroup[index].TAC);
-				
 				//Add the total price for each addon to the group total price
 				for (var i = vm.quote.counterGroup[index].addons.length - 1; i >= 0; i--) {
 					vm.quote.counterGroup[index].totalPrice += parseFloat(vm.quote.counterGroup[index].addons[i].totalPrice);
 					vm.quote.totalPrice += parseFloat(vm.quote.counterGroup[index].addons[i].totalPrice);
 				};
-				//Do same as above for mandatory ones
-				for (var i = vm.quote.mandatoryAddons.length - 1; i >= 0; i--) {
-					vm.quote.totalPrice += parseFloat(vm.quote.mandatoryAddons[i].totalPrice);
-				};	
 				//Calc group material cost per square foot
 				vm.quote.counterGroup[index].GMCPSF = vm.quote.counterGroup[index].GMC / (vm.quote.counterGroup[index].TAC * vm.quote.counterGroup[index].quantity);
 				//Calc GCPSF = total price divided by total area of sheets required
@@ -733,6 +726,14 @@
 					};
 					//Round that TAC
 					vm.quote.TAC = Math.round((vm.quote.TAC + 0.00001) * 100) / 100;
+
+					//Once TAC has been calculated for the whole quote, get quantities for mandatory addons
+					vm.updateMandatoryAddons(index, vm.quote.TAC);
+					//Add up all Mandatory addons to the total price!
+					for (var i = vm.quote.mandatoryAddons.length - 1; i >= 0; i--) {
+						vm.quote.totalPrice += parseFloat(vm.quote.mandatoryAddons[i].totalPrice);
+					};	
+
 					//After adding all the other groups, then calc the quote GMCPSF and GCPSF
 					//console.log(vm.quote.GMC, vm.quote.TAC, vm.quote.totalPrice)
 					vm.quote.GMCPSF = vm.quote.GMC / vm.quote.TAC;

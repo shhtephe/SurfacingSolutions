@@ -6,7 +6,7 @@ var config = {
       from: 'spete@surfacingsolutions.ca',
       host: 'surfacing.dmtel.ca', // hostname
       secureConnection: false, // use SSL
-      port: 587, // port for secure SMTP
+      port: 465, // port for secure SMTP
       auth: {
         user: 'pete@surfacingsolutions.ca',
         pass: 'Soccerball11'
@@ -16,7 +16,7 @@ var config = {
       from: 'shhtephe@hotmail.com',
       host: 'smtp-mail.outlook.com', // hostname
       secureConnection: false, // use SSL
-      port: 587, // port for secure SMTP
+      port: 465, // port for secure SMTP
       auth: {
         user: 'shhtephe@hotmail.com',
         pass: 'Awesome!'
@@ -28,7 +28,7 @@ var config = {
       from: 'TestApplication@localhost',
       host: 'localhost', // hostname
       secureConnection: true, // use SSL
-      port: 8465, // test port for secure SMTP
+      port: 465, // test port for secure SMTP
       auth: {
         user: 'TestApplication',
         pass: 'TestApplication'
@@ -38,7 +38,7 @@ var config = {
       from: 'UpdatedTestApplication@localhost',
       host: 'localhost',
       secureConnection: true,
-      port: 8465,
+      port: 465,
       auth: {
         user: 'TestApplication',
         pass: 'TestApplication'

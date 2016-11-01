@@ -699,11 +699,11 @@
 				//Set the total price as the material price, then add the addons
 				console.log(vm.quote.totalPrice);
 				vm.quote.totalPrice = vm.quote.counterGroup[index].GMC;
-				console.log(vm.quote.totalPrice);
+				console.log(vm.quote.totalPrice, vm.quote.counterGroup[index].TAC);
 				//set the quote TAC
 				vm.quote.TAC = vm.quote.counterGroup[index].TAC * vm.quote.counterGroup[index].quantity;
-				vm.quote.TAC = Math.round((vm.quote.TAC + 0.00001) * 100) / 100;
 				//Update the addon quantities for the group and mandatory addon quantities and recalculate them **THIS MIGHT BE FIRING TWICE IN DIFFERENT SPOTS. MIGHT REMOVE**
+				console.log(vm.quote.counterGroup[index].TAC);
 				vm.updateGroupAddons(index, shape, vm.quote.counterGroup[index].TAC);
 				vm.updateMandatoryAddons(index, vm.quote.counterGroup[index].TAC);
 				
@@ -731,6 +731,8 @@
 							vm.quote.GMC += parseFloat(vm.quote.counterGroup[t].GMC);
 						};	
 					};
+					//Round that TAC
+					vm.quote.TAC = Math.round((vm.quote.TAC + 0.00001) * 100) / 100;
 					//After adding all the other groups, then calc the quote GMCPSF and GCPSF
 					//console.log(vm.quote.GMC, vm.quote.TAC, vm.quote.totalPrice)
 					vm.quote.GMCPSF = vm.quote.GMC / vm.quote.TAC;

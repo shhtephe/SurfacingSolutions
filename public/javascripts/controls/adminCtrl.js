@@ -56,12 +56,18 @@
         //console.log(vm.uniqueProductManufacturer);
         vm.uniqueProductDescription = vm.uniqueSort("description", vm.products);
         //console.log(vm.uniqueProductManufacturer);
+        vm.uniqueProductType = vm.uniqueSort("productType", vm.products);
+        //console.log(vm.uniqueProductType);
+        
 
         vm.uniqueMaterialDistributor = vm.uniqueSort("distributor", vm.materials);
         //console.log(vm.uniqueMaterialDistributor);
         vm.uniqueMaterialManufacturer = vm.uniqueSort("manufacturer", vm.materials);
         //console.log(vm.uniqueMaterialManufacturer);
         vm.uniqueMaterialDescription = vm.uniqueSort("description", vm.materials);
+        //console.log(vm.uniqueMaterialDescription);
+        vm.uniqueMaterialColourGroup = vm.uniqueSort("colourGroup", vm.materials);
+        //console.log(vm.uniqueMaterialColourGroup);
       };
 
       vm.addAlert = function(type, msg) {
@@ -160,7 +166,7 @@
           manufacturer : materialDescription.manufacturer.title,
           description : materialDescription.description,
           itemCode : materialDescription.itemCode,
-          colourGroup : materialDescription.colourGroup,
+          colourGroup : materialDescription.colourGroup.title,
           thickness : materialDescription.thickness,
           length : materialDescription.length,
           width : materialDescription.width,
@@ -244,7 +250,7 @@
         var product = {
           distributor : productDescription.distributor.title,
           manufacturer : productDescription.manufacturer.title,
-          type : productDescription.type,
+          productType : productDescription.productType.title,
           description : productDescription.description,
           itemCode : productDescription.itemCode,
           price : productDescription.price,

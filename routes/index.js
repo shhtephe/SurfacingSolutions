@@ -313,7 +313,7 @@ router.get('/admin', function(req, res, next) {
 });
 
 router.post('/savematerials', function(req, res, next) {
-  console.log('Material',req.body.material);
+  console.log('Material: ',req.body.material);
   //console.log(req.body.action);
   //console.log(req.body.parameter);
 
@@ -354,10 +354,10 @@ router.post('/savematerials', function(req, res, next) {
       };
     };
   } else if(req.body.action === "delete"){
-    //console.log("Parameter:", req.body.parameter);
+    console.log("Parameter:", req.body.parameter);
     var ObjectId = require('mongoose').Types.ObjectId; 
     var query = { _id: new ObjectId(req.body.parameter)};
-    //console.log('Query', query);
+    console.log('Query', query);
     var search = mongoose.model('materials').find(query);
 
     search.remove().exec(function (err, searchMaterial){
@@ -406,12 +406,12 @@ router.post('/savematerials', function(req, res, next) {
 
     newMaterial.save(function (err, materials) {
       if (err) {
-        console.log("Errors: " + err);
+        console.log("Material did not save: " + err);
         res.sendStatus(500);
       }
       else {
         // saved!
-        console.log("Saved!")
+        console.log("Material saved!")
         res.sendStatus(200);
       }
     });

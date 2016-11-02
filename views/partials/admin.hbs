@@ -4,6 +4,10 @@
             <div class="col-xs-offset-2 col-xs-8">
 			<div ng-controller="adminCtrl">
 				<uib-alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</uib-alert>
+				<md-content>
+				<md-tabs md-dynamic-height="" md-border-bottom="">
+				<md-tab label="MaterialsProducts">
+				<md-content class="md-padding">
 				<u>Edit Materials</u>
 				<br>
 				<button ng-hide="vm.newEditMaterial == true" type="button" ng-click="vm.showEditMaterial()" class="btn btn-default">Edit Material</button>
@@ -267,6 +271,13 @@
 					<button type="button" ng-click="vm.hideNewProduct()" class="btn btn-default">Cancel</button> 
 					<button type="button" ng-click="vm.addNewProduct(productDescription)" class="btn btn-default">Add</button> 
 				</div>
+				</md-content>
+				</md-tab>
+				<md-tab label="permissions">
+				This feature is coming soon! : D
+				</md-tab>
+				</md-tabs>
+				</md-content>
 				<!--<input type="text" ng-model="searchQuery"> <br>
 				<span ng-repeat="material in vm.products | filter:searchQuery">{/material | json/}<span>-->
 			</div>

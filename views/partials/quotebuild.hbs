@@ -483,8 +483,9 @@
 						<td>{/vm.quote.GCPSF * vm.quote.jobDifficulty | currency:$/}/SQFT</td>
 					</tr>
 				</table>
-				<br>Job Difficulty: <input type="number" ng-model="vm.quote.jobDifficulty" name="vm.quote.jobDifficulty"><br>
-				<br><br>
+				<br>Job Difficulty: <input type="number" ng-model="vm.quote.jobDifficulty" name="vm.quote.jobDifficulty">
+				<span ng-show="vm.quote.jobDifficulty === null"><font color="red">This field should have a number above 0</font></span>
+				<br><br><br>
 				<b><u>Terms</u></b>
 				<div ng-repeat="term in vm.terms">
 					<input type="checkbox" ng-checked="vm.checkTerms(term)" ng-model="term[$index].value" ng-click="vm.buildTerms(term)">{/term.term/}<span ng-show="term.calendar=='true'"><b> *date*</b></span>

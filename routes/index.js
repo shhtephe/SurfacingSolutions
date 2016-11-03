@@ -239,30 +239,36 @@ router.post('/emailrender', function(req, res) {
     } 
     else {
       console.log('Screenshot Successful!', public_dir);
-      //Email PDF as attachment
-      //EMAIL PIECE GOES HERE
-
-      var fs = require('fs'),
-        path = require('path'),
+        //Email PDF as attachment
+        
+        var path = require('path'),
         attachFileName = "testfile.pdf",
-        attachFilePath = path.join('.\\public\\images\\emailquote', attachFileName);
+        attachFilePath = path.join('.\\public\\images\\emailquote', attachFileName),
+        pdf = require('fs').readFileSync(attachFilePath);
+;
 
         console.log(attachFilePath);
-      var emailOptions = {
-        to: req.body.data.email,
-        subject: "Test Email",
-        pretty: true,
-        attachments: [
-        {
-            fileName: attachFileName,
-            filePath: attachFilePath
-        }, 
-        {
-            name: 'notes.txt',
-            content: 'Some notes about this e-mail',
-            contentType: 'text/plain' // optional, would be detected from the filename
-        }]
-      };
+        var emailOptions = {
+          to: req.body.data.email,
+          subject: "Test Email",
+          pretty: true,
+          /*attachments: [
+          {
+              fileName: attachFileName,
+              filePath: attachFilePath
+          }, 
+          {
+              name: 'notes.txt',
+              content: 'Some notes about this e-mail',
+              contentType: 'text/plain' // optional, would be detected from the filename
+          }]*/
+          attachments: [  
+             {  
+               filename: 'Hello.txt',
+               contents: 'hello world!'
+               }   
+             ]
+        };
 
 
       res.mailer.send('emailquote', emailOptions,

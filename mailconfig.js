@@ -5,7 +5,7 @@ var config = {
     mailer: {
       from: 'spete@surfacingsolutions.ca',
       host: 'surfacing.dmtel.ca', // hostname
-      secureConnection: false, // use SSL
+      secureConnection: true, // use SSL
       port: 465, // port for secure SMTP
       auth: {
         user: 'pete@surfacingsolutions.ca',
@@ -13,35 +13,35 @@ var config = {
       }
     },
     mailerUpdate: {
-      from: 'shhtephe@hotmail.com',
-      host: 'smtp-mail.outlook.com', // hostname
-      secureConnection: false, // use SSL
+      from: 'spete@surfacingsolutions.ca',
+      host: 'surfacing.dmtel.ca', // hostname
+      secureConnection: true, // use SSL
       port: 465, // port for secure SMTP
       auth: {
-        user: 'shhtephe@hotmail.com',
-        pass: 'Awesome!'
+        user: 'pete@surfacingsolutions.ca',
+        pass: 'Soccerball11'
       }
     }
   },
   test: {
     mailer: {
-      from: 'TestApplication@localhost',
-      host: 'localhost', // hostname
+      from: 'spete@surfacingsolutions.ca',
+      host: 'surfacing.dmtel.ca', // hostname
       secureConnection: true, // use SSL
-      port: 465, // test port for secure SMTP
+      port: 465, // port for secure SMTP
       auth: {
-        user: 'TestApplication',
-        pass: 'TestApplication'
+        user: 'pete@surfacingsolutions.ca',
+        pass: 'Soccerball11'
       }
     },
     mailerUpdate: {
-      from: 'UpdatedTestApplication@localhost',
-      host: 'localhost',
-      secureConnection: true,
-      port: 465,
+      from: 'spete@surfacingsolutions.ca',
+      host: 'surfacing.dmtel.ca', // hostname
+      secureConnection: true, // use SSL
+      port: 465, // port for secure SMTP
       auth: {
-        user: 'TestApplication',
-        pass: 'TestApplication'
+        user: 'pete@surfacingsolutions.ca',
+        pass: 'Soccerball11'
       }
     }
   }

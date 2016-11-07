@@ -80,7 +80,8 @@
 				url: '/#/customer/' + custCode + '/quotebuild/' + quoteID + '/quotesend',
 				userID : custCode,
 				quoteID : quoteID,
-				email: vm.customer.email
+				email : vm.customer.email,
+				firstName : vm.customer.firstName
 			};
 
 			//Need to declare that it's sending a json doc

@@ -239,65 +239,66 @@ router.post('/emailrender', function(req, res) {
     } 
     else {
       console.log('Screenshot Successful!', public_dir);
-        //Email PDF as attachment
-        
-        var path = require('path'),
-        attachFileName = "testfile.pdf",
-        attachFilePath = path.join('.\\public\\images\\emailquote', attachFileName),
-        pdf = require('fs').readFileSync(attachFilePath);
-;
-
-        console.log(attachFilePath);
-        var emailOptions = {
-          to: req.body.data.email,
-          subject: "Test Email",
-          pretty: true,
-          /*attachments: [
-          {
-              fileName: attachFileName,
-              filePath: attachFilePath
-          }, 
-          {
-              name: 'notes.txt',
-              content: 'Some notes about this e-mail',
-              contentType: 'text/plain' // optional, would be detected from the filename
-          }]*/
-          attachments: [  
-             {  
-               filename: 'Hello.txt',
-               contents: 'hello world!'
-               }   
-             ]
-        };
-
-
-      res.mailer.send('emailquote', emailOptions,
-      function (err, email) {
-        if (err) {
-          console.log('Sending Mail Failed!', err);
-          res.sendStatus(500)
-          return;
-        };
-        res.header('Content-Type', 'text/plain');
-        res.sendStatus(200);
-      });
+      //Email PDF as attachment
+      var fs = require('fs');
+      var path = require('path'),
+      attachFileName = "test.txt",
+      attachFilePath = path.join(public_dir, attachFileName),
+      pdf = fs.readFileSync(attachFilePath);
 
       //Delete local PDF file    
-      /*
-      var gutil = require('gulp-util');
 
-      fs.exists('./www/index.html', function(exists) {
+
+      var gutil = require('gulp-util'); //For Colour text in terminal
+      var nodemailer = require("nodemailer");
+
+      var smtpTransport = nodemailer.createTransport("SMTP",{
+          service: "Hotmail",
+          auth: {
+              user: "shhtephe@hotmail.com",
+              pass: "Awesome!"
+          }
+      });
+      //Email body
+      var body = req.body.data.firstName + ", please find attached our quote for services based on the information you provided.  If you have any questions please call our office and speak to your sales person.<br><br>Thank you for the opportunity and we look forward to working with you.<br><br>Peter Smith<br>Surfacing Solutions (2010) Limited<br>pete@surfacingsolutions.ca"
+      //Set email options up
+      var mailOptions = {
+          from: "shhtephe@hotmail.com", // sender address
+          to:  req.body.data.email, // list of receivers
+          subject: "Surfacing Solutions Quote", // Subject line
+          html: body, // html body
+          attachments: [{
+            filename: "test.txt",
+            path: ".\\public\\images\\emailquote\\test.txt"
+            //contentType: 'application/pdf'
+          }]
+      };
+
+      fs.exists(attachFilePath, function(exists) {
         if(exists) {
           //Show in green
-          console.log(gutil.colors.green('File exists. Deleting now ...'));
-          fs.unlink('./www/index.html');
+          console.log(gutil.colors.green('File exists...'));
+          // send mail with defined transport object
+          smtpTransport.sendMail(mailOptions, function(error, response){
+            if (err) {
+              console.log('Sending Mail Failed!', err);
+              res.sendStatus(500);
+              return;
+            } else {
+              console.log("Emailed");
+              res.header('Content-Type', 'text/plain');
+              res.sendStatus(200);
+            };
+            // if you don't want to use this transport object anymore, uncomment following line
+            smtpTransport.close(); // shut down the connection pool, no more messages
+            //and then delete the file afterwards
+            //fs.unlink('attachFilePath');
+          });
         } else {
           //Show in red
-          console.log(gutil.colors.red('File not found, so not deleting.'));
-        }
+          console.log(gutil.colors.red('File not found.'));
+        };
       });
-      */
-
     };
   });
 });

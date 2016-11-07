@@ -15,7 +15,7 @@ var config = {
     mailerUpdate: {
       from: 'spete@surfacingsolutions.ca',
       host: 'surfacing.dmtel.ca', // hostname
-      secureConnection: true, // use SSL
+      secureConnection: false, // use SSL
       port: 465, // port for secure SMTP
       auth: {
         user: 'pete@surfacingsolutions.ca',

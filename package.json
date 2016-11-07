@@ -33,6 +33,7 @@
     "nightmare": "^2.8.1",
     "node-gyp": "^1.0.3",
     "node-handlebars": "^0.9.7",
+    "nodemailer": "^2.6.4",
     "passport": "^0.2.1",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^1.0.0",

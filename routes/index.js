@@ -252,48 +252,52 @@ router.post('/emailrender', function(req, res) {
       var gutil = require('gulp-util'); //For Colour text in terminal
       var nodemailer = require("nodemailer");
 
-      var smtpTransport = nodemailer.createTransport("SMTP",{
+      var transporter = nodemailer.createTransport('smtps://pete%40surfacingsolutions.ca:Soccerball11@surfacing.dmtel.ca');
+
+      /*var smtpTransport = nodemailer.createTransport("SMTP",{
           service: "Hotmail",
           auth: {
               user: "shhtephe@hotmail.com",
               pass: "Awesome!"
           }
-      });
+      });*/
       //Email body
       var body = req.body.data.firstName + ", please find attached our quote for services based on the information you provided.  If you have any questions please call our office and speak to your sales person.<br><br>Thank you for the opportunity and we look forward to working with you.<br><br>Peter Smith<br>Surfacing Solutions (2010) Limited<br>pete@surfacingsolutions.ca"
       //Set email options up
       var mailOptions = {
-          from: "shhtephe@hotmail.com", // sender address
+          from: "pete@surfacingsolutions.ca", // sender address
           to:  req.body.data.email, // list of receivers
           subject: "Surfacing Solutions Quote", // Subject line
           html: body, // html body
           attachments: [{
-            filename: "test.txt",
-            path: ".\\public\\images\\emailquote\\test.txt"
+            filename: "testfile.pdf",
+            path: ".\\public\\images\\emailquote\\testfile.pdf"
             //contentType: 'application/pdf'
           }]
       };
+
+      transporter.sendMail(mailOptions, function(error, response){
+        if (error) {
+          console.log('Sending Mail Failed!', error);
+          res.sendStatus(500);
+          return;
+        } else {
+          console.log("Emailed", response);
+          res.header('Content-Type', 'text/plain');
+          res.sendStatus(200);
+        };
+        // if you don't want to use this transport object anymore, uncomment following line
+        transporter.close(); // shut down the connection pool, no more messages
+        //and then delete the file afterwards
+        //fs.unlink('attachFilePath');
+      });
+
 
       fs.exists(attachFilePath, function(exists) {
         if(exists) {
           //Show in green
           console.log(gutil.colors.green('File exists...'));
           // send mail with defined transport object
-          smtpTransport.sendMail(mailOptions, function(error, response){
-            if (err) {
-              console.log('Sending Mail Failed!', err);
-              res.sendStatus(500);
-              return;
-            } else {
-              console.log("Emailed");
-              res.header('Content-Type', 'text/plain');
-              res.sendStatus(200);
-            };
-            // if you don't want to use this transport object anymore, uncomment following line
-            smtpTransport.close(); // shut down the connection pool, no more messages
-            //and then delete the file afterwards
-            //fs.unlink('attachFilePath');
-          });
         } else {
           //Show in red
           console.log(gutil.colors.red('File not found.'));

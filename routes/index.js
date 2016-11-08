@@ -228,9 +228,11 @@ router.post('/emailrender', function(req, res) {
     var Xvfb = require('xvfb');
     var xvfb = new Xvfb();
     //This creates an emulated screen for nightmare to work in
+    console.log("Starting sync");
     xvfb.startSync();
   };
   //Nightmare Wrapper 
+  console.log("Starting Nightmare");
   var nightmare = require('nightmare');
   //var nightmare = Nightmare({ show: true });
 

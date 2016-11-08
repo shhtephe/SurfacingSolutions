@@ -218,7 +218,18 @@ router.get('/customer/:customer/quotebuild/:quote/quotefinaldata', function(req,
 });
 
 router.post('/emailrender', function(req, res) {
-  console.log("Email Render has ran.");
+  console.log("Email Render is running.");
+
+  var env = process.env.NODE_ENV;
+  console.log(env);
+
+  //Use screen emulator if in linux environment
+  if(env === 'production'){
+    var Xvfb = require('xvfb');
+    var xvfb = new Xvfb();
+    //This creates an emulated screen for nightmare to work in
+    xvfb.startSync();
+  };
   //Nightmare Wrapper 
   var nightmare = require('nightmare');
   //var nightmare = Nightmare({ show: true });
@@ -288,6 +299,9 @@ router.post('/emailrender', function(req, res) {
         // if you don't want to use this transport object anymore, uncomment following line
         transporter.close(); // shut down the connection pool, no more messages
       });
+    };
+    if(env === 'production'){
+      xvfb.stopSync();
     };
   });
 });

@@ -450,7 +450,7 @@
 						</ul>
 					</div>
 					<br>
-					<button type="button" ng-click="vm.saveAddon(mandatoryDescription, null, vm.quote.TAC, -1); mandatoryType=''; mandatoryDescription=''; mandatoryDescription.quantity=''; vm.divMandatory = false" class="btn btn-default">Add Mandatory</button>
+					<div ng-show="mandatoryType && mandatoryDescription"><button type="button" ng-click="vm.saveAddon(mandatoryDescription, null, vm.quote.TAC, -1); mandatoryType=''; mandatoryDescription=''; mandatoryDescription.quantity=''; vm.divMandatory = false" class="btn btn-default">Add Mandatory</button></div>
 					<br> <button type="button" ng-click="vm.divMandatory = false" class="btn btn-danger">Cancel</button>
 				</div>
 		      	<br>

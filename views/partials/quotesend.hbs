@@ -9,9 +9,11 @@
 	<alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</alert>
 	<md-content>
 	<div id="page-wrap">
+		<div ng-show= "currentUser">
+		<br>
 		<br>
 		<a href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotefinal"><button type="button" style="btn">Back</button></a>
-		<button type="button" class="md-raised md-warn" ng-click="email($event)">Email PDF - {/vm.customer.email/}</button>
+		<button type="button" class="md-raised md-warn" ng-click="email($event)">Email PDF - {/vm.customer.email/}</button></div>
 		<textarea id="header">Final Quote</textarea>	
 		<!--<div style="visibility: hidden">
 		    <div class="md-dialog-container" id="myDialog">

@@ -218,19 +218,19 @@ router.get('/customer/:customer/quotebuild/:quote/quotefinaldata', function(req,
 });
 
 router.post('/emailrender', function(req, res) {
+  console.log("Email Render has ran.");
   //Nightmare Wrapper 
   var nightmare = require('nightmare');
+  //var nightmare = Nightmare({ show: true });
 
-  //console.log(__dirname);
   var public_dir = '.\\public\\images\\emailquote';
-  var pageURL = "http://" + req.hostname + ":3000" + req.body.data.url;
 
+  var pageURL = "http://" + req.hostname + ":3000" + req.body.data.url;
+  console.log(pageURL, public_dir);
   //Create new nightmare ;)
   var screenshot = new nightmare()
-  //.viewport(1200,1650)
   .goto(pageURL)
   .wait(5000)
-  //.screenshot(public_dir + '/testfile.png')
   .pdf(public_dir + '/testfile.pdf') //Should name this file properly in case it isn't deleted
   .run(function(err, nightmare) {
     if (err){

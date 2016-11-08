@@ -44,8 +44,7 @@ router.param('customer', function(req, res, next, custCode) {
     if (!customer) { return next(new Error('can\'t find Customer')); }
 
     req.customer = customer;
-    console.log("Param customer");
-    console.log(req.customer);
+    console.log("Param customer", req.customer);
     return next();
   });
 });
@@ -238,29 +237,18 @@ router.post('/emailrender', function(req, res) {
       return console.log("Screenshot error:", err);
     } 
     else {
-      console.log('Screenshot Successful!', public_dir);
+      console.log('Screenshot Successful!');
       //Email PDF as attachment
       var fs = require('fs');
       var path = require('path'),
-      attachFileName = "test.txt",
+      attachFileName = "testfile.pdf",
       attachFilePath = path.join(public_dir, attachFileName),
       pdf = fs.readFileSync(attachFilePath);
 
-      //Delete local PDF file    
-
-
       var gutil = require('gulp-util'); //For Colour text in terminal
       var nodemailer = require("nodemailer");
-
       var transporter = nodemailer.createTransport('smtps://pete%40surfacingsolutions.ca:Soccerball11@surfacing.dmtel.ca');
 
-      /*var smtpTransport = nodemailer.createTransport("SMTP",{
-          service: "Hotmail",
-          auth: {
-              user: "shhtephe@hotmail.com",
-              pass: "Awesome!"
-          }
-      });*/
       //Email body
       var body = req.body.data.firstName + ", please find attached our quote for services based on the information you provided.  If you have any questions please call our office and speak to your sales person.<br><br>Thank you for the opportunity and we look forward to working with you.<br><br>Peter Smith<br>Surfacing Solutions (2010) Limited<br>pete@surfacingsolutions.ca"
       //Set email options up
@@ -270,8 +258,8 @@ router.post('/emailrender', function(req, res) {
           subject: "Surfacing Solutions Quote", // Subject line
           html: body, // html body
           attachments: [{
-            filename: "testfile.pdf",
-            path: ".\\public\\images\\emailquote\\testfile.pdf"
+            filename: attachFileName,
+            path: attachFilePath
             //contentType: 'application/pdf'
           }]
       };
@@ -286,22 +274,19 @@ router.post('/emailrender', function(req, res) {
           res.header('Content-Type', 'text/plain');
           res.sendStatus(200);
         };
+        //Delete file once we're done.
+        fs.exists(attachFilePath, function(exists) {
+          if(exists) {
+            //Show in green
+            console.log(gutil.colors.green('Deleting Temp File'));
+            fs.unlink(attachFilePath);
+          } else {
+            //Show in red
+            console.log(gutil.colors.red('File not found.'));
+          };
+        });
         // if you don't want to use this transport object anymore, uncomment following line
         transporter.close(); // shut down the connection pool, no more messages
-        //and then delete the file afterwards
-        //fs.unlink('attachFilePath');
-      });
-
-
-      fs.exists(attachFilePath, function(exists) {
-        if(exists) {
-          //Show in green
-          console.log(gutil.colors.green('File exists...'));
-          // send mail with defined transport object
-        } else {
-          //Show in red
-          console.log(gutil.colors.red('File not found.'));
-        };
       });
     };
   });
@@ -324,10 +309,10 @@ router.get('/admin', function(req, res, next) {
 });
 
 router.post('/savematerials', function(req, res, next) {
-  console.log('Material: ',req.body.material);
+  console.log('Save Materials Ran')
+  //console.log('Material: ',req.body.material);
   //console.log(req.body.action);
   //console.log(req.body.parameter);
-
 
   if(req.body.action === "update"){
     /*console.log(req.body.material.distributor);
@@ -365,10 +350,10 @@ router.post('/savematerials', function(req, res, next) {
       };
     };
   } else if(req.body.action === "delete"){
-    console.log("Parameter:", req.body.parameter);
+    //console.log("Parameter:", req.body.parameter);
     var ObjectId = require('mongoose').Types.ObjectId; 
     var query = { _id: new ObjectId(req.body.parameter)};
-    console.log('Query', query);
+    //console.log('Query', query);
     var search = mongoose.model('materials').find(query);
 
     search.remove().exec(function (err, searchMaterial){
@@ -436,9 +421,6 @@ router.post('/saveproducts', function(req, res, next) {
 
 
   if(req.body.action === "update"){
-    //console.log(req.body.product.distributor);
-    //console.log(req.body.product.manufacturer);
-    //console.log(req.body.product.type);
     console.log("Product: ", req.body.product);
     var product = req.body.product;
 
@@ -506,7 +488,7 @@ router.post('/saveproducts', function(req, res, next) {
       price : price,
       formula: formula
     });
-console.log("New Product: ", newProduct);
+    console.log("New Product: ", newProduct);
     newProduct.save(function (err, products) {
       if (err) {
         console.log("Errors: " + err);

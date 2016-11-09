@@ -263,7 +263,8 @@ router.post('/emailrender', function(req, res) {
       var transporter = nodemailer.createTransport('smtps://pete%40surfacingsolutions.ca:Soccerball11@surfacing.dmtel.ca');
 
       //Email body
-      var body = req.body.data.firstName + ", please find attached our quote for services based on the information you provided.  If you have any questions please call our office and speak to your sales person.<br><br>Thank you for the opportunity and we look forward to working with you.<br><br>Peter Smith<br>Surfacing Solutions (2010) Limited<br>pete@surfacingsolutions.ca"
+      var body = req.body.data.firstName + ", please find attached our quote for services based on the information you provided. If you have any questions please call our office and speak to your sales person.<br><br>Thank you for the opportunity and we look forward to working with you.<br><br>" + req.body.data.salesPerson.firstName + " " + req.body.data.salesPerson.lastName + "<br> Surfacing Solutions (2010) Limited""<br>e:" + req.body.data.salesPerson.email + " t: " + req.body.data.salesPerson.phoneNumber;
+
       //Set email options up
       var mailOptions = {
           from: "pete@surfacingsolutions.ca", // sender address

@@ -287,10 +287,10 @@
 			pushObj.squareFootage = parseFloat(pushObj.squareFootage.toFixed(2));
 			//Calc LSUM for counter to be used for calculations for addons
 			if(shape === "rectangle") {
-				pushObj.LSUM = (length) / 144;
+				pushObj.LSUM = (length) / 12;
 				pushObj.LSUM = Math.round((pushObj.LSUM + 0.00001) * 100) / 100;
 			} else {
-				pushObj.LSUM = ((2 * Math.PI) * (length /2)) / 144;
+				pushObj.LSUM = ((2 * Math.PI) * (length /2)) / 12;
 				pushObj.LSUM = Math.round((pushObj.LSUM + 0.00001) * 100) / 100;
 			};
 			if(typeof vm.quote.LSUM == "undefined"){
@@ -298,10 +298,10 @@
 			};
 			vm.quote.LSUM += pushObj.LSUM;
 			if(shape === "rectangle") {
-				pushObj.linearFootage = ((length) + (width)) / 144;
+				pushObj.linearFootage = ((length) + (width)) / 12;
 				pushObj.linearFootage = Math.round((pushObj.linearFootage + 0.00001) * 100) / 100;
 			} else {
-				pushObj.linearFootage = ((2 * Math.PI) * (length /2)) / 144;
+				pushObj.linearFootage = ((2 * Math.PI) * (length /2)) / 12;
 				pushObj.linearFootage = Math.round((pushObj.linearFootage + 0.00001) * 100) / 100;
 			};
 			//If no value has been put here, 0 it.

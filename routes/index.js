@@ -29,11 +29,13 @@ function errorHandler(err, req, res, next) {
 
 /* GET home page. */
 router.get('/home', function(req, res, next) {
+  console.log("Rendering Homepage");
   res.render('partials/home', { title: 'Express' });
 });
 
 //If route starts with 'customer', this will grab customer data and store it in req.customer, and pass it on to the next function
 router.param('customer', function(req, res, next, custCode) {
+  console.log("Fetching Customer Data");
   var query = {};
       query["custCode"] = custCode;
 
@@ -49,8 +51,9 @@ router.param('customer', function(req, res, next, custCode) {
   });
 });
 
-
+//Gets individual quotes for customer
 router.get('/customerdata/:customer', function(req, res, next) {
+  console.log("Loading Customer Quotes");
   req.customer.populate('customers', function(err, customer) {
     if (err) { return next(err); }
     var query = {};
@@ -72,7 +75,9 @@ router.get('/customerdata/:customer', function(req, res, next) {
   });
 });
 
+//Render's Customer page
 router.get('/customer/:customer', function(req, res, next) {
+  console.log("Rendering Customer page");
   res.render('partials/customer');
 });
 
@@ -338,7 +343,6 @@ router.post('/savematerials', function(req, res, next) {
     console.log("Mat Colleciton", material.matCollection);*/
     var material = req.body.material;
     
-
     var conditions = {distributor: req.body.material.distributor, manufacturer: req.body.material.manufacturer, colourGroup: req.body.material.colourGroup, description: req.body.material.description}
       , update = {
         itemCode : material.itemCode,
@@ -375,7 +379,7 @@ router.post('/savematerials', function(req, res, next) {
 
     search.remove().exec(function (err, searchMaterial){
       if (err) { return next(err); }
-      if (!searchMaterial) { return next(new Error('can\'t find Material')); }
+      if (!searchMaterial) { return next(new Error('Can\'t find material.')); }
       console.log("Entry Deleted");
       res.sendStatus(200);
     });

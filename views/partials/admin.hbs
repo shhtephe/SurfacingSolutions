@@ -37,7 +37,7 @@
 							<option value="">----Select----</option>
 						</select>
 					</div>
-					<form ng-submit="vm.updateMaterial(editMaterialDescription); editMaterialDistributor =''; editMaterialManufacturer=''; editMaterialColourGroup = ''; editMaterialDescription = '';" id="updateMaterialForm" name="updateMaterialForm">
+					<form ng-submit="vm.updateMaterial(editMaterialDescription); editMaterialDistributor =''; editMaterialManufacturer=''; editMaterialColourGroup = ''; editMaterialDescription = ''; vm.newEditMaterial = 'false'" id="updateMaterialForm" name="updateMaterialForm">
 						<div ng-show="editMaterialDistributor && editMaterialManufacturer && editMaterialColourGroup && editMaterialDescription">
 							<br>
 							<ul class="list-group"> 
@@ -87,14 +87,13 @@
 				<br>
 				<div ng-show="vm.newMaterial == true">
 					<form name="addMaterialForm"
-					ng-submit="vm.addNewMaterial(materialDescription); ">
+					ng-submit="vm.addNewMaterial(materialDescription); vm.$broadcast('angucomplete-alt:clearInput', 'newDistributor');">
 						<ul class="list-group"> 
 							<li class="list-group-item">	
 								Distributor: <br> 
 								<angucomplete-alt 
 								  field-required="true"
 								  id="newDistributor"
-								  ng-model="newDistributor"
 					              placeholder="Enter a Distributor."
 					              pause="100"
 					              selected-object="materialDescription.distributor"
@@ -202,8 +201,8 @@
 								</select>
 							</li>
 						</ul>
-					    <button type="button" ng-click="vm.updateProduct(editProductDescription)" class="btn btn-default">Update</button>
-					    <button type="button" ng-click="vm.deleteProduct(editProductDescription)" class="btn btn-danger">Delete</button> 
+					    <button type="button" ng-click="vm.updateProduct(editProductDescription); editProductType = ''; editProductDescription = ''; editProductDescription.itemCode = ''; editProductDescription.price = ''; editProductDescription.formula = ''" class="btn btn-default">Update</button>
+					    <button type="button" ng-click="vm.deleteProduct(editProductDescription); editProductType = ''; editProductDescription = ''; editProductDescription.itemCode = ''; editProductDescription.price = ''; editProductDescription.formula = ''" class="btn btn-danger">Delete</button> 
 					</div>
 				    <br>
 				    <button type="button" ng-click="vm.cancelSaveProduct()" class="btn btn-default">Cancel</button>

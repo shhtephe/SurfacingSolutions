@@ -81,12 +81,16 @@
 				userID : custCode,
 				quoteID : quoteID,
 				email : vm.customer.email,
-				cust.firstName : vm.customer.firstName,
+				customer : {
+					firstName : vm.customer.firstName
+				},
 				//These are placeholders right now
-				salesPerson.firstName : "Stephen",
-				salesPerson.lastName : "Salesly",
-				salesPerson.email : "Stephen@sales.com",
-				salesPerson.phoneNumber : "555-555-5555"
+				salesPerson : {
+					firstName : "Stephen",
+					lastName : "Salesly",
+					email : "Stephen@sales.com",
+					phoneNumber : "555-555-5555"
+				}
 			};
 
 			//Need to declare that it's sending a json doc

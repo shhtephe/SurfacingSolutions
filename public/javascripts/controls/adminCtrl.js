@@ -5,9 +5,9 @@
     .module('surfacingSolutions')
     .controller('adminCtrl', adminCtrl);
 
-    adminCtrl.$inject = ['dataFactory', '$stateParams', '$http'];
+    adminCtrl.$inject = ['dataFactory', '$stateParams', '$http', '$scope'];
 
-    function adminCtrl(dataFactory, $stateParams, $http) {
+    function adminCtrl(dataFactory, $stateParams, $http, $scope) {
     	
       var vm = this;
 

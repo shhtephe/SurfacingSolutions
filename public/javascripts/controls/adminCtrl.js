@@ -257,8 +257,6 @@
           formula : productDescription.formula
         };
         vm.products.push(product);
-        //console.log(vm.products);
-        //console.log(vm.product);
 
         vm.saveProducts("add", product);
       };

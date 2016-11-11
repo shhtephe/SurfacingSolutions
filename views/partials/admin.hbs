@@ -73,7 +73,7 @@
 								</li>
 							</ul>
 						    <input type="submit" id="materialUpdateSubmit" class="btn btn-default" value="Update">
-						    <button type="button" ng-click="vm.deleteMaterial(editMaterialDescription); vm.newEditMaterial = false" class="btn btn-danger">Delete</button> 
+						    <button type="button" ng-click="vm.deleteMaterial(editMaterialDescription); vm.newEditMaterial = false; editMaterialDistributor =''; editMaterialManufacturer=''; editMaterialColourGroup = ''; editMaterialDescription = ''; vm.newEditMaterial = 'false'" class="btn btn-danger">Delete</button> 
 						</div>
 					    <br>
 					    <button type="button" ng-click="vm.cancelSaveMaterial()" class="btn btn-default">Cancel</button> 
@@ -87,7 +87,7 @@
 				<br>
 				<div ng-show="vm.newMaterial == true">
 					<form name="addMaterialForm"
-					ng-submit="vm.addNewMaterial(materialDescription); vm.$broadcast('angucomplete-alt:clearInput', 'newDistributor');">
+					ng-submit="vm.addNewMaterial(materialDescription); materialDescription =''; materialDescription.itemCode =''; materialDescription.thickness = ''; materialDescription.width = ''; materialDescription.length = ''; materialDescription.fullSheet1 = ''; materialDescription.halfSheet = ''; materialDescription.fullSheet5 = ''; materialDescription.fullSheet21 = ''; materialDescription.isa = ''; materialDescription.matCollection = '';  searchStr = ''; vm.newMaterial == false; $scope.$broadcast('angucomplete-alt:clearInput');">
 						<ul class="list-group"> 
 							<li class="list-group-item">	
 								Distributor: <br> 
@@ -179,7 +179,7 @@
 					<div ng-show="editProductType">
 						<br>
 						Choose a Description:
-						<select name="editProductDescription" ng-model="editProductDescription" ng-options="product.description for product in vm.products | filter:{type:editProductType.type} | unique: 'description' | orderBy:'description'">
+						<select name="editProductDescription" ng-model="editProductDescription" ng-options="product.description for product in vm.products | filter:{productType:editProductType.productType} | unique: 'description' | orderBy:'description'">
 							<option value="">----Select----</option>
 						</select>
 					</div>
@@ -200,9 +200,15 @@
 								<option value="square">Square Footage</option>
 								</select>
 							</li>
+							<li class="list-group-item">
+								Mandatory: <input type="checkbox" ng-model="editProductDescription.mandatory">
+							</li>
+							<li class="list-group-item">
+								Non-Mandatory: <input type="checkbox" ng-model="editProductDescription.nonMandatory">
+							</li>
 						</ul>
-					    <button type="button" ng-click="vm.updateProduct(editProductDescription); editProductType = ''; editProductDescription = ''; editProductDescription.itemCode = ''; editProductDescription.price = ''; editProductDescription.formula = ''" class="btn btn-default">Update</button>
-					    <button type="button" ng-click="vm.deleteProduct(editProductDescription); editProductType = ''; editProductDescription = ''; editProductDescription.itemCode = ''; editProductDescription.price = ''; editProductDescription.formula = ''" class="btn btn-danger">Delete</button> 
+					    <button type="button" ng-click="vm.updateProduct(editProductDescription); editProductType = ''; editProductDescription = ''; editProductDescription.itemCode = ''; editProductDescription.price = ''; editProductDescription.formula = ''; vm.newEditProduct = false;" class="btn btn-default">Update</button>
+					    <button type="button" ng-click="vm.deleteProduct(editProductDescription); editProductType = ''; editProductDescription = ''; editProductDescription.itemCode = ''; editProductDescription.price = ''; editProductDescription.formula = ''; vm.newEditProduct = false;" class="btn btn-danger">Delete</button> 
 					</div>
 				    <br>
 				    <button type="button" ng-click="vm.cancelSaveProduct()" class="btn btn-default">Cancel</button>
@@ -271,6 +277,9 @@
 					<button type="button" ng-click="vm.hideNewProduct()" class="btn btn-default">Cancel</button> 
 					<button type="button" ng-click="vm.addNewProduct(productDescription)" class="btn btn-default">Add</button> 
 				</div>
+				<br>
+				<br>
+				<button type"button" ng-click="">Clear all angucompletes</button>
 				</md-content>
 				</md-tab>
 				<md-tab label="permissions">

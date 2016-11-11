@@ -331,7 +331,7 @@ router.get('/admin', function(req, res, next) {
 });
 
 router.post('/savematerials', function(req, res, next) {
-  console.log('Save Materials Ran')
+  console.log(req.body.action + ' materials Ran')
   //console.log('Material: ',req.body.material);
   //console.log(req.body.action);
   //console.log(req.body.parameter);
@@ -373,10 +373,9 @@ router.post('/savematerials', function(req, res, next) {
   } else if(req.body.action === "delete"){
     //console.log("Parameter:", req.body.parameter);
     var ObjectId = require('mongoose').Types.ObjectId; 
-    var query = { _id: new ObjectId(req.body.parameter)};
+    var query = req.body.parameter;
     //console.log('Query', query);
     var search = mongoose.model('materials').find(query);
-
     search.remove().exec(function (err, searchMaterial){
       if (err) { return next(err); }
       if (!searchMaterial) { return next(new Error('Can\'t find material.')); }

@@ -185,7 +185,7 @@
       };
 
       vm.deleteMaterial = function(editMaterialDescription){
-        //console.log(editMaterialDescription);
+        console.log(editMaterialDescription);
 
         var index = arraySearch(editMaterialDescription._id, vm.materials)
         //delete item
@@ -195,9 +195,24 @@
         vm.editMaterialManufacturer = "";
         vm.editMaterialColourGroup = "";
         vm.editMaterialDescription = "";
-        
+
+        //id won't be the same unless the page is refreshed.
+        var query = {
+          itemCode : editMaterialDescription.itemCode,
+          thickness : editMaterialDescription.thickness,
+          length : editMaterialDescription.length,
+          width : editMaterialDescription.width,
+          fullSheet1 : editMaterialDescription.fullSheet1,
+          halfSheet : editMaterialDescription.halfSheet,
+          fullSheet5 : editMaterialDescription.fullSheet5,
+          fullSheet21 : editMaterialDescription.fullSheet21,
+          isa : editMaterialDescription.isa,
+          matCollection : editMaterialDescription.matCollection,
+          formula : editMaterialDescription.formula
+        };
+        console.log(query);
         //commit changes to database
-        vm.saveMaterials("delete", editMaterialDescription._id);
+        vm.saveMaterials("delete", query);
       };
 
       vm.updateMaterial = function(editMaterialDescription){
@@ -287,8 +302,11 @@
         var index = arraySearch(editProductDescription._id, vm.products);
         console.log(index);
 
-        vm.products[index].itemCode = editProductDescription.itemCode,
-        vm.products[index].price = editProductDescription.price,
+        vm.products[index].itemCode = editProductDescription.itemCode;
+        vm.products[index].price = editProductDescription.price;
+        vm.products[index].mandatory = editProductDescription.mandatory;
+        vm.products[index].nonMandatory = editProductDescription.nonMandatory;
+
      
         //commit changes to database
         vm.saveProducts("update", index);

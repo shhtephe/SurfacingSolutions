@@ -261,7 +261,7 @@
       };
 
     vm.addNewProduct = function(productDescription){
-        //console.log(productDescription);
+        console.log(productDescription.description);
         var product = {
           distributor : productDescription.distributor.title,
           manufacturer : productDescription.manufacturer.title,
@@ -269,7 +269,9 @@
           description : productDescription.description,
           itemCode : productDescription.itemCode,
           price : productDescription.price,
-          formula : productDescription.formula
+          formula : productDescription.formula,
+          mandatory : productDescription.mandatory,
+          nonMandatory : productDescription.nonMandatory
         };
         vm.products.push(product);
 

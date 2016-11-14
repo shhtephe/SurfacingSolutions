@@ -217,7 +217,7 @@
 				<br>
 				<u>Add New Product</u>
 				<br>
-				<button ng-hide="vm.newMaterial == true" type="button" ng-click="vm.showNewProduct()" class="btn btn-default">Add New Product</button>
+				<button ng-hide="vm.newProduct == true" type="button" ng-click="vm.showNewProduct()" class="btn btn-default">Add New Product</button>
 				<br>
 				<div ng-show="vm.newProduct == true">
 						<ul class="list-group"> 
@@ -270,9 +270,12 @@
 								<option value="square">Square Footage</option>
 								</select>
 							</li>	
-							<!--<li>
-								<input type="checkbox" name="newProductMandatory" ng-model="productDescription.mandatory" value="mandatory">Mandatory?
-							</li>-->
+							<li class="list-group-item">
+								Mandatory: <input type="checkbox" name="newProductMandatory" ng-model="productDescription.mandatory" value="mandatory">
+							</li>
+							<li class="list-group-item">
+								Non-Mandatory: <input type="checkbox" name="newProductNonMandatory" ng-model="productDescription.nonMandatory" value="nonMandatory">
+							</li>
 						</ul>
 					<button type="button" ng-click="vm.hideNewProduct()" class="btn btn-default">Cancel</button> 
 					<button type="button" ng-click="vm.addNewProduct(productDescription)" class="btn btn-default">Add</button> 

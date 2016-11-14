@@ -489,24 +489,27 @@ router.post('/saveproducts', function(req, res, next) {
     bodyProducts = req.body.parameter;
     console.log("Body Products: ", bodyProducts);
 
-    console.log("Manufacturer: ", bodyProducts.manufacturer);
     //I didn't need to do this part, it's a bit redundant.
     var distributor = bodyProducts.distributor,
       manufacturer = bodyProducts.manufacturer,
-      type = bodyProducts.type,
+      productType = bodyProducts.productType,
       description = bodyProducts.description,
       itemCode = bodyProducts.itemCode,
       price = bodyProducts.price,
-      formula = bodyProducts.formula;
+      formula = bodyProducts.formula,
+      mandatory = bodyProducts.mandatory,
+      nonMandatory = bodyProducts.nonMandatory;
 
     var newProduct = new products({
       distributor : distributor,
       manufacturer : manufacturer,
-      type : type,
+      productType : productType,
       description : description,
       itemCode : itemCode,
       price : price,
-      formula: formula
+      formula : formula,
+      mandatory : mandatory,
+      nonMandatory : nonMandatory
     });
     console.log("New Product: ", newProduct);
     newProduct.save(function (err, products) {

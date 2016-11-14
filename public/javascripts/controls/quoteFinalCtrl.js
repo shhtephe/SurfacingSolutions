@@ -30,10 +30,27 @@
 				vm.customer = data.customer;
 				vm.products = data.products;
 				vm.materials = data.materials;
+
+				console.log(vm.quote);
+				//get totalprice for each group to add at "total"
+				var total = 0;
+				for (var i = vm.quote.counterGroup.length - 1; i >= 0; i--) {
+					total += vm.quote.counterGroup[i].totalPrice;
+				};
+				vm.getCountersTotal = total;
 			},
 			function(reason) {
 				console.log(reason);
 			});	
+
+		/*vm.getCountersTotal = function() {
+			console.log(vm.quote);
+			var total = 0;
+			for (var i = vm.quote.counterGroup.length - 1; i >= 0; i--) {
+				total += vm.quote.counters[i].totalPrice;
+			};
+			return total;
+		};*/
 
 		vm.saveQuote = function() {
 			//console.log(vm.quote.jobDifficulty.$dirty);

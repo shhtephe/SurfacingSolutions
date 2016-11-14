@@ -424,7 +424,7 @@
 				//Update "quantity" (linear, sqft) because of new counter dimensions
 				vm.quote.mandatoryAddons[i].quantity = vm.updateMandatoryAddon(addon, vm.quote.TAC, index);
 				//calculate the total price value
-				vm.quote.mandatoryAddons[i].totalPrice = vm.calcAddonTotal(addon, null, squareFootage, index);
+				vm.quote.mandatoryAddons[i].totalPrice = vm.calcAddonTotal(addon, null, squareFootage, -1);
 			};	
 		};
 
@@ -479,7 +479,7 @@
 			//temp until I find where it's being set as a string
 			addon.quantity = parseFloat(addon.quantity);
 			addon.price = parseFloat(addon.price);
-			console.log(addon.quantity, addon.price, addon.formula);
+			console.log(addon.quantity, addon.price, addon.formula, index);
 			//calculation
 			if (addon.formula === "item") {
 				if(index == -1){

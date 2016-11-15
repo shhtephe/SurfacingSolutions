@@ -4,13 +4,13 @@
             <div class="col-xs-offset-2 col-xs-8">
                 <div ng-controller="customerCtrl">
                     <!-- ng-init='customer=<%- JSON.stringify(customer) %>; quotes=<%- JSON.stringify(quotes) %>' -->
-				    <table id="Customer">
+				    <table id="Customer" width=100% class="table table-bordered table-striped">
                         <caption>
                             Customer: {/vm.customer.companyName/}
                             <br>Primary Contact: {/vm.customer.firstName/} {/vm.customer.lastName/}
                             <br>Business Number: {/vm.customer.mainPhone/} | Mobile Number: {/vm.customer.mobilePhone/}
                         </caption>
-                        <thead><th>Quotes:</th></thead>
+                        <thead><th>Quotes</th></thead>
                         <tr ng-repeat="quote in vm.quotes">
                             <td>   <a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/quote.quoteID/}">{/quote.quoteID/} - {/quote.createdAt | limitTo: 10/}</a> - {/quote.description/}
                             </td>

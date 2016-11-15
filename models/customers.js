@@ -13,9 +13,10 @@ var customers = new Schema({
 	city: String,
 	postal: String,
 	province: String,
-	homePhone: String,
+	mainPhone: String,
 	mobilePhone: String,
-	custCode: Number
+	custCode: Number,
+	rep: String
 });
 
 customers.plugin(timestamps);

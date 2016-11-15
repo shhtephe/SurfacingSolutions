@@ -21,9 +21,10 @@
 		//I think this was originally to create a new quote through angular.
 		vm.newQuote = function(){
 			var max = Math.max.apply(null, vm.quotes.map(function(item){
+				console.log(item);
 			   return item["quoteID"];
 			}));
-
+			console.log(max);
 			if(max > 0){
 				max ++;
 			}

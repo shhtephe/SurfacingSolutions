@@ -23,7 +23,7 @@ router.post('/create', function(req, res, next) {
       var vm = {
         title: 'Create a New User',
         input: req.body,
-        error: 'Something went wrong'
+        error: 'Something went wrong: ' + err
       };
     } else {
       var vm = {

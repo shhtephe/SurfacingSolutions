@@ -91,28 +91,26 @@ router.param('quotedata', function(req, res, next, quoteID) {
   var search = mongoose.model('quote').find(query);
   search.exec(function (err, quote){
     if (err) {return next(err); }
+    //console.log("Quote 0: ", typeof quote[0] === "undefined");
     if (typeof quote[0]==="undefined") {
       //Instead of just hitting next, create a new quote
       var query = {};
       query["custCode"] = req.customer.custCode;
       search = mongoose.model('quote').findOne().sort({quoteID : "desc"}).exec(function(err, quote){
-      
-      var quoteID 
-
+        var quoteID 
+        console.log("Quote: ", quote);
         if(quote == null){
-          quoteID=1;  
+          quoteID = 1;  
         }
         else {
           quoteID = quote.quoteID + 1
-        }
-
+        };
         var custCode = req.customer.custCode,
         totalPrice = 0,
         jobDifficulty = 0,
-        counters = []
+        counters = [];
 
-        console.log("quote ID!")
-        console.log(quoteID);
+        console.log("quote ID!", quoteID);
 
         var newQuote = new quotes({
           quoteID: quoteID,
@@ -120,19 +118,17 @@ router.param('quotedata', function(req, res, next, quoteID) {
           totalPrice: totalPrice,
           jobDifficulty: 1,
           counterGroup: []
-          
         });
 
         newQuote.save(function (err, quote) {
-          if (err) {return errorHandler(err);
-          }
+          if (err) {return errorHandler(err);}
           else {
-          // saved!
-          console.log("New quote saved");
-          req.quote = quote;
-          //console.log("Param Quote");
-          //console.log(req.quote);
-          return next();
+            // saved!
+            console.log("New quote saved");
+            req.quote = quote;
+            //console.log("Param Quote");
+            //console.log(req.quote);
+            return next();
           };
         });
       });
@@ -493,7 +489,7 @@ router.post('/saveproducts', function(req, res, next) {
     var distributor = bodyProducts.distributor,
       manufacturer = bodyProducts.manufacturer,
       productType = bodyProducts.productType,
-      description = bodyProducts.description,
+      description = bodyProducts.distributorescription,
       itemCode = bodyProducts.itemCode,
       price = bodyProducts.price,
       formula = bodyProducts.formula,

@@ -3,13 +3,23 @@
         <div class="container">
             <div class="col-xs-offset-2 col-xs-8">
                 <div ng-controller="customerCtrl">
-                	<!-- ng-init='customer=<%- JSON.stringify(customer) %>; quotes=<%- JSON.stringify(quotes) %>' -->
-				  <br>Customer:<br>{/vm.customer.firstName/} {/vm.customer.lastName/}<br><br>Quotes:<br>
-					<div ng-repeat="quote in vm.quotes">
-				    	<a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/quote.quoteID/}">{/quote.quoteID/} - {/quote.createdAt | limitTo: 10/}</a> - {/quote.description/}
-				  	</div>
-					<br>
-				<button type="button" class="btn" ng-click="vm.newQuote()">New Quote</button>
+                    <!-- ng-init='customer=<%- JSON.stringify(customer) %>; quotes=<%- JSON.stringify(quotes) %>' -->
+				    <table id="Customer">
+                        <caption>
+                            Customer: {/vm.customer.companyName/}
+                            <br>Primary Contact: {/vm.customer.firstName/} {/vm.customer.lastName/}
+                            <br>Business Number: {/vm.customer.mainPhone/} | Mobile Number: {/vm.customer.mobilePhone/}
+                        </caption>
+                        <thead><th>Quotes:</th></thead>
+                        <tr ng-repeat="quote in vm.quotes">
+                            <td>   <a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/quote.quoteID/}">{/quote.quoteID/} - {/quote.createdAt | limitTo: 10/}</a> - {/quote.description/}
+                            </td>
+                        </tr>
+                        
+                    </table>
+                    <br>
+
+    				<button type="button" class="btn" ng-click="vm.newQuote()">New Quote</button>
 				</div>
             </div>
         </div>

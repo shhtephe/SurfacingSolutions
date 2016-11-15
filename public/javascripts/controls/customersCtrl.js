@@ -21,6 +21,24 @@
 	  	vm.alerts = [
 	  	];
 
+	  	vm.buildCustomer = function(customer) {
+	  		var response = "";
+	  		if(customer.companyName !=="") {
+	  			response += (customer.companyName + " - ");
+	  		};
+	  		if (customer.lastName !=="" && customer.firstName !=="") {
+	  			response += (customer.lastName + " , " + customer.firstName);
+	  		} else if(customer.lastName !==""){
+	  			response += (customer.lastName + " - ");
+	  		} else if (customer.firstName !==""){
+				response += (customer.firstName + " - ");
+	  		};
+	  		if(customer.email !=="") {
+				response += (customer.email);
+	  		};
+	  		return response;
+	  	};
+
 		vm.init = function(customers) {
 			//console.log("customers: ", customers[0]);
 			if (typeof customers === undefined || customers[0] === undefined) {

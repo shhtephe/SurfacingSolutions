@@ -36,7 +36,7 @@
         "city": g,
         "postal":h,
         "province":i,
-        "homePhone":j,
+        "mainPhone":j,
         "mobilePhone":k
       };
       //console.log(data);

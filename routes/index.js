@@ -289,33 +289,34 @@ router.post('/emailrender', function(req, res) {
               path: attachFilePath
               //contentType: 'application/pdf'
             }]
-      };
-      transporter.sendMail(mailOptions, function(error, response){
-        if (error) {
-          console.log('Sending Mail Failed!', error);
-          res.sendStatus(500);
-          return;
-        } else {
-          console.log("Emailed", response);
-          res.header('Content-Type', 'text/plain');
-          res.sendStatus(200);
         };
-        //Delete file once we're done.
-        fs.exists(attachFilePath, function(exists) {
-          if(exists) {
-            //Show in green
-            console.log(gutil.colors.green('Deleting Temp File'));
-            fs.unlink(attachFilePath);
+        transporter.sendMail(mailOptions, function(error, response){
+          if (error) {
+            console.log('Sending Mail Failed!', error);
+            res.sendStatus(500);
+            return;
           } else {
-            //Show in red
-            console.log(gutil.colors.red('File not found.'));
+            console.log("Emailed", response);
+            res.header('Content-Type', 'text/plain');
+            res.sendStatus(200);
           };
+          //Delete file once we're done.
+          fs.exists(attachFilePath, function(exists) {
+            if(exists) {
+              //Show in green
+              console.log(gutil.colors.green('Deleting Temp File'));
+              fs.unlink(attachFilePath);
+            } else {
+              //Show in red
+              console.log(gutil.colors.red('File not found.'));
+            };
+          });
+          // if you don't want to use this transport object anymore, uncomment following line
+          transporter.close(); // shut down the connection pool, no more messages
         });
-        // if you don't want to use this transport object anymore, uncomment following line
-        transporter.close(); // shut down the connection pool, no more messages
-      });
-    };
-  });
+      };
+    });
+  };
 });
 
 router.get('/admindata', function(req, res, next) {

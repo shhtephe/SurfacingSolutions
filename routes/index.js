@@ -222,6 +222,7 @@ router.post('/emailrender', function(req, res) {
   console.log("Email Render is running.");
 
   var env = process.env.NODE_ENV;
+  console.log("Environments");
   console.log( "process.env: ", process.env, "Env Variable: ", env);
 
   //Use screen emulator if in linux environment
@@ -230,55 +231,65 @@ router.post('/emailrender', function(req, res) {
     var xvfb = new Xvfb();
     //This creates an emulated screen for nightmare to work in
     console.log("Starting sync");
-    xvfb.startSync();
+    xvfb.start(function(err, xvfbProcess) {
+      renderNightmare();
+      xvfb.stop(function(err) {
+        // the Xvfb is stopped 
+      });
+    });
+  } else {
+    renderNightmare();
   };
-  //Nightmare Wrapper 
-  console.log("Starting Nightmare");
-  var nightmare = require('nightmare');
-  //var nightmare = Nightmare({ show: true });
 
-  var public_dir = '.\\public\\images\\emailquote';
 
-  var pageURL = "http://" + req.hostname + ":3000" + req.body.data.url;
-  console.log(pageURL, public_dir);
-  //Create new nightmare ;)
-  var screenshot = new nightmare()
-  .goto(pageURL)
-  .wait(5000)
-  .pdf(public_dir + '/testfile.pdf') //Should name this file properly in case it isn't deleted
-  .run(function(err, nightmare) {
-    if (err){
-      return console.log("Screenshot error:", err);
-    } 
-    else {
-      console.log('Screenshot Successful!');
-      //Email PDF as attachment
-      var fs = require('fs');
-      var path = require('path'),
-      attachFileName = "testfile.pdf",
-      attachFilePath = path.join(public_dir, attachFileName),
-      pdf = fs.readFileSync(attachFilePath);
+  
+  renderNightmare = function() {
+    //Nightmare Wrapper 
+    console.log("Starting Nightmare");
+    var nightmare = require('nightmare');
+    //var nightmare = Nightmare({ show: true });
 
-      var gutil = require('gulp-util'); //For Colour text in terminal
-      var nodemailer = require("nodemailer");
-      var transporter = nodemailer.createTransport('smtps://pete%40surfacingsolutions.ca:Soccerball11@surfacing.dmtel.ca');
+    var public_dir = '.\\public\\images\\emailquote';
 
-      //Email body
-      var body = req.body.data.cust.firstName + ", please find attached our quote for services based on the information you provided. If you have any questions please call our office and speak to your sales person.<br><br>Thank you for the opportunity and we look forward to working with you.<br><br>" + req.body.data.salesPerson.firstName + " " + req.body.data.salesPerson.lastName + "<br> Surfacing Solutions (2010) Limited<br>e:" + req.body.data.salesPerson.email + " t: " + req.body.data.salesPerson.phoneNumber;
-      
-      //Set email options up
-      var mailOptions = {
-          from: "pete@surfacingsolutions.ca", // sender address
-          to:  req.body.data.email, // list of receivers
-          subject: "Surfacing Solutions Quote", // Subject line
-          html: body, // html body
-          attachments: [{
-            filename: attachFileName,
-            path: attachFilePath
-            //contentType: 'application/pdf'
-          }]
+    var pageURL = "http://" + req.hostname + ":3000" + req.body.data.url;
+    console.log(pageURL, public_dir);
+    //Create new nightmare ;)
+    var screenshot = new nightmare()
+    .goto(pageURL)
+    .wait(5000)
+    .pdf(public_dir + '/testfile.pdf') //Should name this file properly in case it isn't deleted
+    .run(function(err, nightmare) {
+      if (err){
+        return console.log("Screenshot error:", err);
+      } 
+      else {
+        console.log('Screenshot Successful!');
+        //Email PDF as attachment
+        var fs = require('fs');
+        var path = require('path'),
+        attachFileName = "testfile.pdf",
+        attachFilePath = path.join(public_dir, attachFileName),
+        pdf = fs.readFileSync(attachFilePath);
+
+        var gutil = require('gulp-util'); //For Colour text in terminal
+        var nodemailer = require("nodemailer");
+        var transporter = nodemailer.createTransport('smtps://pete%40surfacingsolutions.ca:Soccerball11@surfacing.dmtel.ca');
+
+        //Email body
+        var body = req.body.data.cust.firstName + ", please find attached our quote for services based on the information you provided. If you have any questions please call our office and speak to your sales person.<br><br>Thank you for the opportunity and we look forward to working with you.<br><br>" + req.body.data.salesPerson.firstName + " " + req.body.data.salesPerson.lastName + "<br> Surfacing Solutions (2010) Limited<br>e:" + req.body.data.salesPerson.email + " t: " + req.body.data.salesPerson.phoneNumber;
+        
+        //Set email options up
+        var mailOptions = {
+            from: "pete@surfacingsolutions.ca", // sender address
+            to:  req.body.data.email, // list of receivers
+            subject: "Surfacing Solutions Quote", // Subject line
+            html: body, // html body
+            attachments: [{
+              filename: attachFileName,
+              path: attachFilePath
+              //contentType: 'application/pdf'
+            }]
       };
-
       transporter.sendMail(mailOptions, function(error, response){
         if (error) {
           console.log('Sending Mail Failed!', error);
@@ -303,9 +314,6 @@ router.post('/emailrender', function(req, res) {
         // if you don't want to use this transport object anymore, uncomment following line
         transporter.close(); // shut down the connection pool, no more messages
       });
-    };
-    if(env === 'production'){
-      xvfb.stopSync();
     };
   });
 });

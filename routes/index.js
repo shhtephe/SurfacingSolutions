@@ -222,7 +222,7 @@ router.post('/emailrender', function(req, res) {
   console.log("Email Render is running.");
 
   var env = process.env.NODE_ENV;
-  console.log("Env Variable: ", env, "process.env: ", process.env);
+  console.log( "process.env: ", process.env, "Env Variable: ", env);
 
   //Use screen emulator if in linux environment
   if(env === 'production'){

@@ -220,20 +220,21 @@ router.get('/customer/:customer/quotebuild/:quote/quotefinaldata', function(req,
 
 renderNightmare = function(req, res) {
   //Nightmare Wrapper 
-  console.log("Starting Nightmare");
+  console.log("Declaring Nightmare");
   var nightmare = require('nightmare');
-  //var nightmare = Nightmare({ show: true });
 
   var public_dir = '.\\public\\images\\emailquote';
 
   var pageURL = "http://" + req.hostname + ":3000" + req.body.data.url;
-  console.log(pageURL, public_dir);
+  console.log("PageURL: ",pageURL);
+  console.log("public_dir: ", public_dir);
   //Create new nightmare ;)
   var screenshot = new nightmare()
   .goto(pageURL)
   .wait(5000)
   .pdf(public_dir + '/testfile.pdf') //Should name this file properly in case it isn't deleted
   .run(function(err, nightmare) {
+    console.log("The run function is running");
     if (err){
       return console.log("Screenshot error:", err);
     } 

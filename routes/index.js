@@ -305,16 +305,26 @@ router.post('/emailrender', function(req, res) {
 
   //Use screen emulator if in linux environment
   if(env === 'production'){
-    var Xvfb = require('xvfb');
-    var xvfb = new Xvfb();
+    //var Xvfb = require('xvfb');
+    //var xvfb = new Xvfb();
     //This creates an emulated screen for nightmare to work in
     console.log("Starting sync");
-    xvfb.start(function(err, xvfbProcess) {
+    var headless = require('headless');
+
+    headless(function(err, childProcess, servernum) {
+      if(err){
+        console.log("There was an error: ", err);
+      };
+      renderNightmare(req, res);
+    };
+
+    /*xvfb.start(function(err, xvfbProcess) {
       renderNightmare(req, res);
       xvfb.stop(function(err) {
         // the Xvfb is stopped 
       });
-    });
+    });*/
+    
   } else {
     renderNightmare(req, res);
   };

@@ -300,7 +300,6 @@ router.post('/emailrender', function(req, res) {
   console.log("Email Render is running.");
 
   var env = process.env.NODE_ENV;
-  console.log("Environments");
   console.log("Env Variable: ", env);
 
   //Use screen emulator if in linux environment
@@ -308,14 +307,17 @@ router.post('/emailrender', function(req, res) {
     //var Xvfb = require('xvfb');
     //var xvfb = new Xvfb();
     //This creates an emulated screen for nightmare to work in
-    console.log("Starting sync");
+    
     var headless = require('headless');
-
+    console.log("Starting sync");
     headless(function(err, childProcess, servernum) {
-        if(err){
-          console.log("There was an error: ", err);
-        };
-        renderNightmare(req, res);
+      console.log('Xvfb running on server number', servernum);
+      console.log('Xvfb pid', childProcess.pid);
+      console.log('err should be null', err);
+      if(err){
+        console.log("There was an error: ", err);
+      };
+      renderNightmare(req, res);
     });
     /*xvfb.start(function(err, xvfbProcess) {
       renderNightmare(req, res);

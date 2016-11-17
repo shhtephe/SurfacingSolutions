@@ -316,7 +316,6 @@ router.post('/emailrender', function(req, res) {
           console.log("There was an error: ", err);
         };
         renderNightmare(req, res);
-      };
     });
     /*xvfb.start(function(err, xvfbProcess) {
       renderNightmare(req, res);

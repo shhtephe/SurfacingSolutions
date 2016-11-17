@@ -312,12 +312,12 @@ router.post('/emailrender', function(req, res) {
     var headless = require('headless');
 
     headless(function(err, childProcess, servernum) {
-      if(err){
-        console.log("There was an error: ", err);
+        if(err){
+          console.log("There was an error: ", err);
+        };
+        renderNightmare(req, res);
       };
-      renderNightmare(req, res);
-    };
-
+    });
     /*xvfb.start(function(err, xvfbProcess) {
       renderNightmare(req, res);
       xvfb.stop(function(err) {

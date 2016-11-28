@@ -81,6 +81,23 @@ router.get('/customer/:customer', function(req, res, next) {
   res.render('partials/customer');
 });
 
+router.post('/removeQuote', function(req, res, next){
+  console.log("Deleting customer " + req.body.customer.custCode + "'s quote number " + req.body.quote.quoteID);
+  var ObjectId = require('mongoose').Types.ObjectId; 
+    var query = {  
+      custCode : req.body.customer.custCode,
+      quoteID : req.body.quote.quoteID
+    };
+    var search = mongoose.model('quote').find(query);
+    search.remove().exec(function (err, searchQuote){
+      if (err) { return next(err); }
+      if (!searchQuote) { return next(new Error('Can\'t find Quote.')); }
+      console.log("Entry Deleted");
+      res.sendStatus(200);
+    });
+
+});
+
 /*apparently will save me work, but I don't think it will.
 Supposed to run every time there's 'quote' in a url*/
 router.param('quotedata', function(req, res, next, quoteID) {
@@ -307,7 +324,6 @@ router.post('/emailrender', function(req, res) {
     //var Xvfb = require('xvfb');
     //var xvfb = new Xvfb();
     //This creates an emulated screen for nightmare to work in
-    
     var headless = require('headless');
     console.log("Starting sync");
     headless(function(err, childProcess, servernum) {
@@ -455,8 +471,6 @@ router.post('/saveproducts', function(req, res, next) {
   //console.log(req.body.product);
   console.log("Action: ", req.body.action);
   //console.log(req.body.parameter);
-
-
   if(req.body.action === "update"){
     console.log("Product: ", req.body.product);
     var product = req.body.product;
@@ -585,10 +599,10 @@ router.get('/register', function(req, res) {
 });
 
 router.post('/register', function(req, res) {
-    account.register(new account({ username : req.body.username }), req.body.password, function(err, account) {
+    account.register(new account({ username : req.body.username, accountType : req.body.accountType }), req.body.password, function(err, account) {
         if (err) {
-          return res.render("index", {info: "Sorry. That username already exists. Try again."});
-        }
+          return res.render("index", {info: "Sorry. That username already exists. Try again.", error : err});
+        };
 
         passport.authenticate('local')(req, res, function () {
             res.redirect('/');

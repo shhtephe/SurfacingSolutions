@@ -74,7 +74,7 @@
 	  		});
 		};
 
-		$scope.email = function(ev) {
+		vm.email = function(ev) {
 			// Appending dialog to document.body to cover sidenav in docs app
 		    var confirm = $mdDialog.confirm()
 		          .title('Send Email')

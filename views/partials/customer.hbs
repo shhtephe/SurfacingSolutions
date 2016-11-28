@@ -3,19 +3,21 @@
         <div class="container">
             <div class="col-xs-offset-2 col-xs-8">
                 <div ng-controller="customerCtrl">
+                    <uib-alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</uib-alert>
+                    <br>
                     <!-- ng-init='customer=<%- JSON.stringify(customer) %>; quotes=<%- JSON.stringify(quotes) %>' -->
 				    <table id="Customer" width=100% class="table table-bordered table-striped">
                         <caption>
                             Customer: {/vm.customer.companyName/}
+                            <br>Salesperson: {/vm.customer.rep/}
                             <br>Primary Contact: {/vm.customer.firstName/} {/vm.customer.lastName/}
                             <br>Business Number: {/vm.customer.mainPhone/} | Mobile Number: {/vm.customer.mobilePhone/}
                         </caption>
                         <thead><th>Quotes</th></thead>
                         <tr ng-repeat="quote in vm.quotes">
-                            <td>   <a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/quote.quoteID/}">{/quote.quoteID/} - {/quote.createdAt | limitTo: 10/}</a> - {/quote.description/}
+                            <td>   <a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/quote.quoteID/}">{/quote.quoteID/} - {/quote.createdAt | limitTo: 10/}</a> - {/quote.description/} - <a href="" ng-click="vm.removeQuote(quote, $index)">remove</a>
                             </td>
                         </tr>
-                        
                     </table>
                     <br>
 

@@ -14,7 +14,6 @@
 		var custCode = $stateParams.custCode;
 		var quoteID = $stateParams.quoteID;
 
-
 		dataFactory.getQuote(custCode, quoteID)
 			.then(function(data) {
 				vm.quote = data.quote;

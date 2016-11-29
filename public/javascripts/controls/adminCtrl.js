@@ -260,7 +260,7 @@
         });
       };
 
-    vm.addNewProduct = function(productDescription){
+      vm.addNewProduct = function(productDescription){
         console.log(productDescription.description);
         var product = {
           distributor : productDescription.distributor.title,
@@ -317,8 +317,7 @@
       //I don't think I use this one either.
     	vm.saveProducts = function(action, parameter){
         //console.log(action, parameter);
-
-      //declaring json data
+        //declaring json data
         $http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
         $http.post('/saveproducts', {"product": vm.products[parameter], "action": action, "parameter": parameter}).
           success(function(data, status, headers, config) {

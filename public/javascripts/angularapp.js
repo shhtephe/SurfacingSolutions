@@ -30,16 +30,17 @@ function($interpolateProvider, $stateProvider, $urlRouterProvider, $locationProv
       templateUrl: '/register',
             data: {
         requireLogin: true
-      }
-      //controller: 'loginCtrl'
+      },
+      controller: 'registerCtrl',
+      controllerAs: 'vm'
   })
     .state('admin', {
   		url: '/admin',
   		templateUrl: '/admin',
-  		controller: 'adminCtrl',
             data: {
         requireLogin: true
       },
+      controller: 'adminCtrl',
       controllerAs: 'vm'
 	})
     .state('search', {

@@ -599,14 +599,16 @@ router.get('/register', function(req, res) {
 });
 
 router.post('/register', function(req, res) {
+  console.log(req.body)
     account.register(new account({ username : req.body.username, accountType : req.body.accountType }), req.body.password, function(err, account) {
         if (err) {
-          return res.render("index", {info: "Sorry. That username already exists. Try again.", error : err});
+          console.log("Error", err);
+          return res.render('partials/register', {info: "Sorry there was an error", error : err});
         };
 
-        passport.authenticate('local')(req, res, function () {
-            res.redirect('/');
-        });
+        passport.authenticate('local',{failureRedirect: '/login'}), function(req, res){
+          res.redirect('/');
+        };
     });
 });
 

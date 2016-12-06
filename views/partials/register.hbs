@@ -13,11 +13,19 @@
             <div class="form-group">
               <input type="password" name="password" placeholder="Password" class="form-control"/>
             </div>
+            <div class="form-group">
+              UserType: 
+              <select name="accountType">
+                <option value="admin">Admin</option>
+                <option value="user" selected>User</option>
+              </select>
+            </div>
             <button type="submit" class="btn btn-default">Submit</button>&nbsp;
             <a href="/">
               <button type="button" class="btn btn-primary">Cancel</button>
             </a>
           </form><br/>
+          {{error}}
           <h4></h4>
         </div>
       </div>

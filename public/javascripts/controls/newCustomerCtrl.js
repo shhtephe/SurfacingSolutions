@@ -25,19 +25,20 @@
       vm.alerts.splice(index, 1);
     };
 
-    vm.submit = function(a, b, c, d, e, f, g, h, i, j, k) {  
+    vm.submit = function(customer, user) {
+      console.log("User ", user.userName, " created this account.")  ;
       var data = {
-        "firstName":a, 
-        "lastName":b, 
-        "companyName":c, 
-        "email":d, 
-        "addressLine1": e,
-        "addressLine2": f,
-        "city": g,
-        "postal":h,
-        "province":i,
-        "mainPhone":j,
-        "mobilePhone":k
+        "firstName":customer.firstName, 
+        "lastName":customer.lastName, 
+        "companyName":customer.companyName, 
+        "email":customer.email, 
+        "addressLine1":customer.addressLine1,
+        "addressLine2":customer.addressLine2,
+        "city":customer.city,
+        "postal":customer.postal,
+        "province":customer.province,
+        "mainPhone":customer.mainPhone,
+        "mobilePhone":customer.mobilePhone
       };
       //console.log(data);
 

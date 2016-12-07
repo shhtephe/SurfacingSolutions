@@ -584,7 +584,7 @@ router.get('/customers', function(req, res, next) {
 
 router.get('/customersdata', function(req, res, next) {
   mongoose.model('customers').find(function(err, data) {
-      res.json(data);
+      res.json(data); 
   }); 
 });
 
@@ -599,11 +599,17 @@ router.get('/register', function(req, res) {
 });
 
 router.post('/register', function(req, res) {
-  console.log(req.body)
-    account.register(new account({ username : req.body.username, accountType : req.body.accountType }), req.body.password, function(err, account) {
+  console.log(req.body.data)
+    account.register(new account(
+        { 
+          username : req.body.data.username, 
+          accountType : req.body.data.accountType, 
+          email : req.body.data.email, 
+          phoneNumber : req.body.data.phoneNumber
+        }), req.body.password, function(err, account) {
         if (err) {
           console.log("Error", err);
-          return res.render('partials/register', {info: "Sorry there was an error", error : err});
+          return res.json({info: "Sorry there was an error", error : err});
         };
 
         passport.authenticate('local',{failureRedirect: '/login'}), function(req, res){

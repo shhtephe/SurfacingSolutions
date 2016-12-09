@@ -52,13 +52,15 @@
     loggedIn: {{#if user}} true {{else}} false {{/if}}, 
     userName : '{{user.username}}',
     accountType : '{{user.accountType}}',
+    email : '{{user.email}}',
+    phoneNumber : '{{user.phoneNumber}}',
     _id : '{{user._id}}'
     }">
     <div class="header">
       {{#if user}}
         Welcome, {{user.username}}!
       {{/if}}<br>
-      {/currentUser/}
+      <!--{/currentUser|json/}-->
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container">
           <div class="navbar-header">

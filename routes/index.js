@@ -606,14 +606,13 @@ router.post('/register', function(req, res) {
           accountType : req.body.data.accountType, 
           email : req.body.data.email, 
           phoneNumber : req.body.data.phoneNumber
-        }), req.body.password, function(err, account) {
+        }), req.body.data.password, function(err, account) {
         if (err) {
           console.log("Error", err);
-          return res.json({info: "Sorry there was an error", error : err});
-        };
-
-        passport.authenticate('local',{failureRedirect: '/login'}), function(req, res){
-          res.redirect('/');
+          res.status(500).send({info: "Sorry there was an error", error : err.message});
+        }
+        else {
+          res.sendStatus(200)
         };
     });
 });

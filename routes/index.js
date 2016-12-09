@@ -276,6 +276,7 @@ renderNightmare = function(req, res) {
       var mailOptions = {
           from: "pete@surfacingsolutions.ca", // sender address
           to:  req.body.data.email, // list of receivers
+          cc: "quotes@surfacingsolutions.ca",
           subject: "Surfacing Solutions Quote", // Subject line
           html: body, // html body
           attachments: [{

@@ -424,7 +424,7 @@
 						<option value="">----Select----</option>
 					</select>
 					<div ng-show="mandatoryType">
-						<br>Choose a Product: <select name="mandatoryDescription" ng-model="mandatoryDescription" ng-options="product.description for product in vm.products | filter:{mandatory:'true', productType:mandatoryType.productType}">
+						<br>Choose a Product: <select name="mandatoryDescription" ng-model="mandatoryDescription" ng-options="product.description for product in vm.products | filter:{mandatory:'true', productType:mandatoryType.productType} | unique: 'description'">
 						<option value="">----Select----</option>
 						</select>
 					</div>

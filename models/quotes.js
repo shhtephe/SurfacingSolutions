@@ -15,6 +15,7 @@ var quote = new Schema({
 	TGC: Number,
 	GMCPSF: Number,
 	GCPSF: Number,
+	QGM: Number,
 	linearFootage: Number,
 	LSUM: Number,
 	totalLength: Number,

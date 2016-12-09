@@ -11,6 +11,14 @@
 		var vm = this;
 		//Used on quotebuild.hbs
 		vm.math = Math;
+
+		/*THIS IS THE TEMPORARY CONST DECLARATIONS*/
+		var 
+		LCPSF = 11.75,
+		CCPSF = 5.25,
+		TGM = 35
+
+
 		var custCode = $stateParams.custCode;
 		var quoteID = $stateParams.quoteID;
 
@@ -737,6 +745,10 @@
 					//console.log(vm.quote.GMC, vm.quote.TAC, vm.quote.totalPrice)
 					vm.quote.GMCPSF = vm.quote.GMC / vm.quote.TAC;
 					vm.quote.GCPSF = vm.quote.totalPrice / vm.quote.TAC;
+					//Gross Margin calculator
+					//console.log("("+vm.quote.totalPrice+"-("+vm.quote.GMC+"+("+vm.quote.TAC+"*"+LCPSF+")+"+vm.quote.TAC+"*"+CCPSF+"))/"+vm.quote.totalPrice);
+					vm.quote.QGM = (vm.quote.totalPrice - (vm.quote.GMC + (vm.quote.TAC * LCPSF) + (vm.quote.TAC * CCPSF))) / vm.quote.totalPrice;
+					vm.quote.QGM = Math.round((vm.quote.QGM + 0.00001) * 100) / 100;
 				};	
 			};	
 		};

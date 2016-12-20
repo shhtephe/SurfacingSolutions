@@ -33,7 +33,7 @@
 					<div ng-show="editMaterialDistributor && editMaterialManufacturer && editMaterialColourGroup">
 						<br>
 						Choose a Colour Description:
-						<select name="editMaterialDescription" ng-model="editMaterialDescription" ng-options="material.description + ' - ' + material.thickness + 'x' + material.width + 'x' + material.length for material in vm.materials | filter:{manufacturer:editMaterialManufacturer.manufacturer} | orderBy:'description'">
+						<select name="editMaterialDescription" ng-model="editMaterialDescription" ng-options="material.description + ' - ' + material.thickness + 'x' + material.width + 'x' + material.length for material in vm.materials | filter:{manufacturer:editMaterialManufacturer.manufacturer, colourGroup:editMaterialColourGroup.colourGroup} | orderBy:'description'">
 							<option value="">----Select----</option>
 						</select>
 					</div>

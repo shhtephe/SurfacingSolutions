@@ -88,46 +88,28 @@
 				<div ng-show="vm.newMaterial == true">
 					<form name="addMaterialForm"
 					ng-submit="vm.addNewMaterial(materialDescription); materialDescription =''; materialDescription.itemCode =''; materialDescription.thickness = ''; materialDescription.width = ''; materialDescription.length = ''; materialDescription.fullSheet1 = ''; materialDescription.halfSheet = ''; materialDescription.fullSheet5 = ''; materialDescription.fullSheet21 = ''; materialDescription.isa = ''; materialDescription.matCollection = '';  searchStr = ''; vm.newMaterial == false; $scope.$broadcast('angucomplete-alt:clearInput');">
+
 						<ul class="list-group"> 
-							<li class="list-group-item">	
-								Distributor: <br> 
-								<angucomplete-alt 
-								  field-required="true"
-								  id="newDistributor"
-					              placeholder="Enter a Distributor."
-					              pause="100"
-					              selected-object="materialDescription.distributor"
-					              local-data="vm.uniqueMaterialDistributor"
-					              search-fields="distributor"
-					              title-field="distributor"
-					              minlength="1"
-					              input-class="form-control form-control-small"></angucomplete-alt>
+							<li class="list-group-item">
+								Distributor: <br>
+								<input type="text" class="form-control" data-ng-model="materialDescription.distributor" list="addMaterialDistributors">
+								<datalist id="addMaterialDistributors">
+									<option  data-ng-repeat="distributor in vm.uniqueMaterialDistributor" value="{/distributor.distributor/}">
+								</datalist>	 
 							</li>
 							<li class="list-group-item">	
 								Manufacturer: <br>
-								<angucomplete-alt id="newManufacturer"
-					              placeholder="Enter a Manufacturer."
-					              pause="100"
-					              selected-object="materialDescription.manufacturer"
-					              local-data="vm.uniqueMaterialManufacturer"
-					              search-fields="manufacturer"
-					              title-field="manufacturer"
-					              minlength="1"
-					              input-class="form-control form-control-small"></angucomplete-alt><br> 
+								<input type="text" class="form-control" data-ng-model="materialDescription.manufacturer" list="addMaterialManufacturers">
+								<datalist id="addMaterialManufacturers">
+									<option  data-ng-repeat="manufacturer in vm.uniqueMaterialManufacturer" value="{/manufacturer.manufacturer/}">
+								</datalist>	 
 							</li>
 							<li class="list-group-item">	
 								Colour Group: <br> 
-								<angucomplete-alt 
-								  field-required="true"
-								  id="newColourGroup"
-					              placeholder="Enter a Colour Group."
-					              pause="100"
-					              selected-object="materialDescription.colourGroup"
-					              local-data="vm.uniqueMaterialColourGroup"
-					              search-fields="colourGroup"
-					              title-field="colourGroup"
-					              minlength="1"
-					              input-class="form-control form-control-small"></angucomplete-alt>
+								<input type="text" class="form-control" data-ng-model="materialDescription.colourGroup" list="addMaterialColourGroups">
+								<datalist id="addMaterialColourGroups">
+									<option  data-ng-repeat="colourGroup in vm.uniqueMaterialColourGroup" value="{/colourGroup.colourGroup/}">
+								</datalist>
 							</li>
 							<li class="list-group-item">	
 								Colour Description: <input type="text" name="materialDescription" ng-model="materialDescription.description"> <br> 
@@ -222,37 +204,25 @@
 				<div ng-show="vm.newProduct == true">
 						<ul class="list-group"> 
 							<li class="list-group-item">	
-								Distributor: <angucomplete-alt id="newDistributor"
-					              placeholder="Enter a Distributor."
-					              pause="100"
-					              selected-object="productDescription.distributor"
-					              local-data="vm.uniqueProductDistributor"
-					              search-fields="distributor"
-					              title-field="distributor"
-					              minlength="1"
-					              input-class="form-control form-control-small"></angucomplete-alt> <br>
+								Distributor: <br>
+								<input type="text" class="form-control" data-ng-model="productDescription.distributor" placeholder="Enter a Distributor" list="addProductDistributors">
+								<datalist id="addProductDistributors">
+									<option  data-ng-repeat="distributor in vm.uniqueProductDistributor" value="{/distributor.distributor/}">
+								</datalist>
 							</li>
 							<li class="list-group-item">	
-								Manufacturer: <angucomplete-alt id="newManufacturer"
-					              placeholder="Enter a Distributor."
-					              pause="100"
-					              selected-object="productDescription.manufacturer"
-					              local-data="vm.uniqueProductManufacturer"
-					              search-fields="manufacturer"
-					              title-field="manufacturer"
-					              minlength="1"
-					              input-class="form-control form-control-small"></angucomplete-alt> <br> 
+								Manufacturer: <br>
+								<input type="text" class="form-control" data-ng-model="productDescription.manufacturer" placeholder="Enter a Manufacturer" list="addProductManufacturers">
+								<datalist id="addProductManufacturers">
+									<option  data-ng-repeat="manufacturer in vm.uniqueProductManufacturer" value="{/manufacturer.manufacturer/}">
+								</datalist>
 							</li>
 							<li class="list-group-item">	
-								Product Type: <angucomplete-alt id="newProductType"
-					              placeholder="Enter a Product Type."
-					              pause="100"
-					              selected-object="productDescription.productType"
-					              local-data="vm.uniqueProductType"
-					              search-fields="productType"
-					              title-field="productType"
-					              minlength="1"
-					              input-class="form-control form-control-small"></angucomplete-alt> <br> 
+								Product Type: <br>
+								<input type="text" class="form-control" data-ng-model="productDescription.productType" placeholder="Enter a ProductType" list="addProductProductTypes">
+								<datalist id="addProductProductTypes">
+									<option  data-ng-repeat="productType in vm.uniqueProductType" value="{/productType.productType/}">
+								</datalist> 
 							</li>							
 							<li class="list-group-item">	
 								Description: <input type="text" name="newProductDescription" ng-model="productDescription.description"> <br> 

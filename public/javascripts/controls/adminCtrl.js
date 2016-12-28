@@ -278,7 +278,7 @@
       };
 
       vm.deleteProduct = function(editProductDescription){
-        //console.log(editProductDescription);
+        //Need to add a warning box of deletion like in sending an email in quote send
 
         var index = arraySearch(editProductDescription._id, vm.products)
         //delete item

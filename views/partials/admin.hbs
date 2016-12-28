@@ -201,25 +201,26 @@
 				<br>
 				<button ng-hide="vm.newProduct == true" type="button" ng-click="vm.showNewProduct()" class="btn btn-default">Add New Product</button>
 				<br>
+				{/productDescription/}
 				<div ng-show="vm.newProduct == true">
 						<ul class="list-group"> 
 							<li class="list-group-item">	
 								Distributor: <br>
-								<input type="text" class="form-control" data-ng-model="productDescription.distributor" placeholder="Enter a Distributor" list="addProductDistributors">
+								<input type="text" class="form-control" ng-model="productDescription.distributor" placeholder="Enter a Distributor" list="addProductDistributors">
 								<datalist id="addProductDistributors">
 									<option  data-ng-repeat="distributor in vm.uniqueProductDistributor" value="{/distributor.distributor/}">
 								</datalist>
 							</li>
 							<li class="list-group-item">	
 								Manufacturer: <br>
-								<input type="text" class="form-control" data-ng-model="productDescription.manufacturer" placeholder="Enter a Manufacturer" list="addProductManufacturers">
+								<input type="text" class="form-control" ng-model="productDescription.manufacturer" placeholder="Enter a Manufacturer" list="addProductManufacturers">
 								<datalist id="addProductManufacturers">
 									<option  data-ng-repeat="manufacturer in vm.uniqueProductManufacturer" value="{/manufacturer.manufacturer/}">
 								</datalist>
 							</li>
 							<li class="list-group-item">	
 								Product Type: <br>
-								<input type="text" class="form-control" data-ng-model="productDescription.productType" placeholder="Enter a ProductType" list="addProductProductTypes">
+								<input type="text" class="form-control" ng-model="productDescription.productType" placeholder="Enter a ProductType" list="addProductProductTypes">
 								<datalist id="addProductProductTypes">
 									<option  data-ng-repeat="productType in vm.uniqueProductType" value="{/productType.productType/}">
 								</datalist> 

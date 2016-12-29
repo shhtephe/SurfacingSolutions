@@ -740,7 +740,12 @@
 					for (var i = vm.quote.mandatoryAddons.length - 1; i >= 0; i--) {
 						vm.quote.totalPrice += parseFloat(vm.quote.mandatoryAddons[i].totalPrice);
 					};	
-
+					vm.quote.sheetsUsed = 0;
+					for (var i = vm.quote.counterGroup.length - 1; i >= 0; i--) {
+						if(typeof vm.quote.counterGroup[i].sheets !== "undefined"){
+							vm.quote.sheetsUsed += vm.quote.counterGroup[i].sheets;
+						};
+					};
 					//After adding all the other groups, then calc the quote GMCPSF and GCPSF
 					//console.log(vm.quote.GMC, vm.quote.TAC, vm.quote.totalPrice)
 					vm.quote.GMCPSF = vm.quote.GMC / vm.quote.TAC;

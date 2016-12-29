@@ -525,7 +525,7 @@ router.post('/saveproducts', function(req, res, next) {
     var distributor = bodyProducts.distributor,
       manufacturer = bodyProducts.manufacturer,
       productType = bodyProducts.productType,
-      description = bodyProducts.distributorescription,
+      description = bodyProducts.description,
       itemCode = bodyProducts.itemCode,
       price = bodyProducts.price,
       formula = bodyProducts.formula,

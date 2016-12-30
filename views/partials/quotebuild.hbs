@@ -539,8 +539,9 @@
 	</div>
 	<div class="modal-footer">
 		<button type="button" style="btn" ng-click="vm.cancel()">Cancel</button>
-		<span ng-show="(shape=='rectangle' && counterLength && counterWidth) || (shape=='circle' && counterWidth)">
-		<button type="button" style="btn" ng-click="vm.saveCounterModal(counterWidth, counterLength, shape, description, vm.counters, vm.groupIndex); shape=''; counterWidth=''; counterLength=''; materialDistributor=''; materialManufacturer=''; materialColourGroup=''; materialDescription='';">Save Counter</button>
+		<!--(shape=='rectangle' && counterLength && counterWidth) || (shape=='circle' && counterWidth)-->
+		<span ng-show="vm.checkIsNumber(counterLength, counterWidth)">
+		<button type="button" style="btn" ng-click="vm.saveCounterModal(counterWidth, counterLength, shape, description, vm.counters, vm.groupIndex); shape=''; counterWidth=''; counterLength='';">Save Counter</button>
 		</span>
 	</div>
 	</script>

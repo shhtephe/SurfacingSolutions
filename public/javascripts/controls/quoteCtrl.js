@@ -75,8 +75,21 @@
 			};
 			*/
 
+			vm.checkIsNumber = function(width, length) {
+				width = parseFloat(width);
+				//console.log(parseFloat(width), isFinite(parseFloat(width)), typeof parseFloat(width), length);
+				console.log(parseFloat(width), isFinite(width), width);
+				if(isFinite(width) && isFinite(length)){
+					console.log(true)
+					return true
+				};
+				
+			};
+
 	    	vm.saveCounterModal = function(width, length, shape, description, counters, groupIndex) {
 	    		//console.log(counters, groupIndex);
+	    		width = parseFloat(width);
+	    		length = parseFloat(length);
 	    		var counter = {
 	    			width: width,
 	    			length: length, 

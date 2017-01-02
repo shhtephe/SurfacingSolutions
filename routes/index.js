@@ -242,7 +242,7 @@ renderNightmare = function(req, res) {
 
   var public_dir = '.\\public\\images\\emailquote';
 
-  var pageURL = "http://" + req.hostname + ":3000" + req.body.data.url;
+  var pageURL = "http://" + req.hostname + ":8080" + req.body.data.url;
   console.log("PageURL: ",pageURL);
   console.log("public_dir: ", public_dir);
   //Create new nightmare ;)
@@ -251,7 +251,7 @@ renderNightmare = function(req, res) {
   .wait(5000)
   .pdf(public_dir + '/testfile.pdf') //Should name this file properly in case it isn't deleted
   .run(function(err, nightmare) {
-    console.log("The run function is running");
+    console.log("Running Nightmare");
     if (err){
       return console.log("Screenshot error:", err);
     } 

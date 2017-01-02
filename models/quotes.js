@@ -19,6 +19,7 @@ var quote = new Schema({
 	linearFootage: Number,
 	LSUM: Number,
 	totalLength: Number,
+	sheetsUsed: Number,
 	mandatoryAddons: [{
 		distributor: String,
 		manufactuer: String,

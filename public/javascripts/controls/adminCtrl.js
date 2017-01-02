@@ -162,11 +162,11 @@
 
       vm.addNewMaterial = function(materialDescription){
         var material = {
-          distributor : materialDescription.distributor.title,
-          manufacturer : materialDescription.manufacturer.title,
+          distributor : materialDescription.distributor,
+          manufacturer : materialDescription.manufacturer,
           description : materialDescription.description,
           itemCode : materialDescription.itemCode,
-          colourGroup : materialDescription.colourGroup.title,
+          colourGroup : materialDescription.colourGroup,
           thickness : materialDescription.thickness,
           length : materialDescription.length,
           width : materialDescription.width,
@@ -261,11 +261,11 @@
       };
 
       vm.addNewProduct = function(productDescription){
-        console.log(productDescription.description);
+        console.log(productDescription);
         var product = {
-          distributor : productDescription.distributor.title,
-          manufacturer : productDescription.manufacturer.title,
-          productType : productDescription.productType.title,
+          distributor : productDescription.distributor,
+          manufacturer : productDescription.manufacturer,
+          productType : productDescription.productType,
           description : productDescription.description,
           itemCode : productDescription.itemCode,
           price : productDescription.price,
@@ -274,12 +274,11 @@
           nonMandatory : productDescription.nonMandatory
         };
         vm.products.push(product);
-
         vm.saveProducts("add", product);
       };
 
       vm.deleteProduct = function(editProductDescription){
-        //console.log(editProductDescription);
+        //Need to add a warning box of deletion like in sending an email in quote send
 
         var index = arraySearch(editProductDescription._id, vm.products)
         //delete item

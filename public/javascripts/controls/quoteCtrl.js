@@ -75,8 +75,21 @@
 			};
 			*/
 
+			vm.checkIsNumber = function(width, length) {
+				width = parseFloat(width);
+				//console.log(parseFloat(width), isFinite(parseFloat(width)), typeof parseFloat(width), length);
+				console.log(parseFloat(width), isFinite(width), width);
+				if(isFinite(width) && isFinite(length)){
+					console.log(true)
+					return true
+				};
+				
+			};
+
 	    	vm.saveCounterModal = function(width, length, shape, description, counters, groupIndex) {
 	    		//console.log(counters, groupIndex);
+	    		width = parseFloat(width);
+	    		length = parseFloat(length);
 	    		var counter = {
 	    			width: width,
 	    			length: length, 
@@ -740,15 +753,23 @@
 					for (var i = vm.quote.mandatoryAddons.length - 1; i >= 0; i--) {
 						vm.quote.totalPrice += parseFloat(vm.quote.mandatoryAddons[i].totalPrice);
 					};	
-
+					vm.quote.sheetsUsed = 0;
+					for (var i = vm.quote.counterGroup.length - 1; i >= 0; i--) {
+						if(typeof vm.quote.counterGroup[i].sheets !== "undefined"){
+							vm.quote.sheetsUsed += vm.quote.counterGroup[i].sheets;
+						};
+					};
 					//After adding all the other groups, then calc the quote GMCPSF and GCPSF
 					//console.log(vm.quote.GMC, vm.quote.TAC, vm.quote.totalPrice)
 					vm.quote.GMCPSF = vm.quote.GMC / vm.quote.TAC;
 					vm.quote.GCPSF = vm.quote.totalPrice / vm.quote.TAC;
 					//Gross Margin calculator
-					console.log("("+vm.quote.totalPrice+"-("+vm.quote.GMC+"+("+vm.quote.TAC+"*"+LCPSF+")+"+vm.quote.TAC+"*"+CCPSF+"))/"+vm.quote.totalPrice);
-					vm.quote.QGM = (vm.quote.totalPrice - (vm.quote.GMC + (vm.quote.TAC * LCPSF) + (vm.quote.TAC * CCPSF))) / vm.quote.totalPrice;
+					console.log("("+vm.quote.totalPrice+"-("+vm.quote.GMC+"+("+vm.quote.TAC+"*"+LCPSF+")+("+vm.quote.TAC+"*"+CCPSF+"))/"+vm.quote.totalPrice);
+					var LCCC = (vm.quote.TAC * LCPSF) + (vm.quote.TAC * CCPSF);
+					console.log("LCCC ", LCCC);
+					vm.quote.QGM = (vm.quote.totalPrice - (vm.quote.GMC + LCCC)) / vm.quote.totalPrice;
 					vm.quote.QGM = Math.round((vm.quote.QGM + 0.00001) * 100) / 100;
+					console.log(vm.quote.QGM);
 				};	
 			};	
 		};

@@ -390,7 +390,7 @@
 			      		</table>
 						<br>
 						<table>
-							<caption><u>Summary:</u></caption>
+							<caption><u>Group Summary:</u></caption>
 							<tr>
 								<td>Total Area of Counters</td>
 								<td>Estimated Sheets</td>
@@ -476,7 +476,7 @@
 					</tr>
 					<tr>
 						<td>{/vm.quote.TAC/} SQFT</td>
-						<td>{/vm.quote.estimatedSheets/}</td>
+						<td>{/vm.quote.sheetsUsed/}</td>
 						<td>{/vm.quote.GMC * vm.quote.jobDifficulty | currency:$/}</td>
 						<td>{/vm.quote.GMCPSF * vm.quote.jobDifficulty | currency:$/}/SQFT</td>
 						<td>{/vm.quote.totalPrice * vm.quote.jobDifficulty | currency:$/}</td>
@@ -486,9 +486,14 @@
 				<br>Job Difficulty: <input type="number" ng-model="vm.quote.jobDifficulty" name="vm.quote.jobDifficulty">
 				<span ng-show="vm.quote.jobDifficulty === null"><font color="red">This field should have a number above 0</font></span>
 				<br>
-				<div ng-show="vm.quote.QGM >= .35">Quote Gross Margin: <font color="green">{/vm.quote.QGM/}</font></div>
-				<div ng-show="vm.quote.QGM < .35 && vm.quote.QGM >= (.35 - .0175)">Quote Gross Margin: <font color="yellow">{/vm.quote.QGM/}</font></div>
-				<div ng-show="vm.quote.QGM < (.35 - .0175)">Quote Gross Margin: <font color="red">{/vm.quote.QGM/}</font></div>
+				<div ng-show="vm.quote.QGM >= .35">Quote Gross Margin: <font color="green">
+					 {/vm.quote.QGM * vm.quote.jobDifficulty/}
+				</font></div>
+				<div ng-show="vm.quote.QGM < .35 && vm.quote.QGM >= (.35 - .0175)">Quote Gross Margin:<font color="red">
+					{/vm.quote.QGM * vm.quote.jobDifficulty/}</font></div>
+				<div ng-show="vm.quote.QGM < (.35 - .0175)">Quote Gross Margin:<font color="brown">
+					 {/vm.quote.QGM * vm.quote.jobDifficulty/}
+				</font></div>
 				<br><br><br>
 				<b><u>Terms</u></b>
 				<div ng-repeat="term in vm.terms">
@@ -534,8 +539,9 @@
 	</div>
 	<div class="modal-footer">
 		<button type="button" style="btn" ng-click="vm.cancel()">Cancel</button>
-		<span ng-show="(shape=='rectangle' && counterLength && counterWidth) || (shape=='circle' && counterWidth)">
-		<button type="button" style="btn" ng-click="vm.saveCounterModal(counterWidth, counterLength, shape, description, vm.counters, vm.groupIndex); shape=''; counterWidth=''; counterLength=''; materialDistributor=''; materialManufacturer=''; materialColourGroup=''; materialDescription='';">Save Counter</button>
+		<!--(shape=='rectangle' && counterLength && counterWidth) || (shape=='circle' && counterWidth)-->
+		<span ng-show="vm.checkIsNumber(counterLength, counterWidth)">
+		<button type="button" style="btn" ng-click="vm.saveCounterModal(counterWidth, counterLength, shape, description, vm.counters, vm.groupIndex); shape=''; counterWidth=''; counterLength='';">Save Counter</button>
 		</span>
 	</div>
 	</script>

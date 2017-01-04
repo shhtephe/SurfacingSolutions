@@ -311,6 +311,9 @@ renderNightmare = function(req, res) {
         transporter.close(); // shut down the connection pool, no more messages
       });
     };
+  }).catch(function(err){
+    console.log(err);
+    nightmare.end();
   });
 };
 
@@ -564,7 +567,7 @@ router.post('/savequote', function(req, res){
   //console.log("addons", req.body.quote.counters[0].addons[0]);
   var conditions = {quoteID: req.body.quote.quoteID, custCode: req.body.quote.custCode}
   , update = req.body.quote
-  , options = { multi: false};
+  , options = { multi: false, upsert: true};
 
   mongoose.model('quote').update(conditions, update, options, callback);
   function callback (err, numAffected) {
@@ -574,8 +577,8 @@ router.post('/savequote', function(req, res){
       res.sendStatus(500);
     }
     else {
-      console.log("Quote Saved!");
-      res.send("No Error"); 
+      console.log("Quote Saved! Rows affected: ", numAffected);
+      res.sendStatus(200); 
     }
   }
 });

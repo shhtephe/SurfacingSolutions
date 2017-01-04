@@ -242,8 +242,8 @@ renderNightmare = function(req, res) {
 
   var public_dir = '.\\public\\images\\emailquote';
 
-  //var pageURL = "http://" + req.hostname + ":8080" + req.body.data.url;
-  var pageURL = "http://google.com";
+  var pageURL = "http://" + req.hostname + ":8080" + req.body.data.url;
+  //var pageURL = "http://google.com";
   console.log("PageURL: ",pageURL);
   console.log("public_dir: ", public_dir);
   //Create new nightmare ;)

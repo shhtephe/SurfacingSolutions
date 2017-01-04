@@ -14,6 +14,9 @@
               <input type="password" required ng-model="userForm.password" name="password" placeholder="Password" class="form-control"/>
             </div>
             <div class="form-group">
+              <input type="password" required ng-model="userForm.password2" name="password2" placeholder="Re-type this the password" class="form-control"/>
+            </div>
+            <div class="form-group">
               UserType: 
               <select name="accountType" required ng-model="userForm.accountType">
                 <option value="admin">Admin</option>
@@ -22,7 +25,8 @@
             </div>
             <div class="form-group">
               <input type="email" required ng-model="userForm.email" name="email" placeholder="Email" class="form-control">
-              <input type="text" required ng-model="userForm.phoneNumber" name="phoneNumber" placeholder="Phone Number" class="form-control">
+              <input type="text" required id="Creation_Date" name="phoneNumber" maxlength="50" class="form-control" data-ng-model="userForm.phoneNumber" restrict="reject" mask='(999)-999-9999' placeholder="Phone Number" class="form-control"/>
+              <!--<input type="text"   placeholder="Phone Number">-->
             </div>
             <input type="submit" id="submit" class="btn btn-default">&nbsp;
             <a href="/">

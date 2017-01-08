@@ -107,13 +107,6 @@
 	    	};
 	    };
 
-	    $scope.$on('$stateChangeStart', function( event ) {
-    	var answer = confirm("Are you sure you want to leave this page?")
-	    	if (!answer) {
-	        	event.preventDefault();
-	    	};
-		});
-
 		//assign checkboxes for Terms of Service
 		vm.checkTerms = function (term){
 			var terms = vm.quote.terms;

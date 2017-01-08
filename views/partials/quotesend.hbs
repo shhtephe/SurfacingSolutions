@@ -6,14 +6,12 @@
 	{/vm.customer/}
 	<br>
 	<br>-->
-	<alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</alert>
+	<uib-alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</uib-alert>
 	<md-content>
 	<div id="page-wrap">
-		<div ng-show= "currentUser">
-		<br>
-		<br>
+		<div ng-hide= "!currentUser.loggedIn || vm.hide">
 		<a href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotefinal"><button type="button" style="btn">Back</button></a>
-		<button type="button" class="md-raised md-warn" ng-click="vm.email($event)">Email PDF - {/vm.customer.email/}</button></div>
+		<button type="button" class="md-raised md-warn" ng-click="vm.email($event)">Email PDF - {/vm.customer.email/}</button> <button type="button" class="md-raised md-warn" ng-click="vm.hide = true" style="btn">Hide to save page</button></div>
 		<textarea id="header">Final Quote</textarea>	
 		<div id="surfacingIdentity">
 

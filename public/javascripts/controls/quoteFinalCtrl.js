@@ -103,10 +103,10 @@
 				},
 				//These are placeholders right now
 				salesPerson : {
-					firstName : "Stephen",
-					lastName : "Salesly",
-					email : "Stephen@sales.com",
-					phoneNumber : "555-555-5555"
+					firstName : "Peter",
+					lastName : "Smith",
+					email : "pete@surfacingsolutions.ca",
+					phoneNumber : "(905)-874-1814"
 				}
 			};
 

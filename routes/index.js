@@ -241,7 +241,7 @@ renderNightmare = function(req, res) {
   var nightmare = require('nightmare');
 
   var public_dir = '.\\public\\images\\emailquote';
-
+  var PDFName = '/' + req.body.data.quote.quoteID + ' - ' + req.body.data.quote.reatedAt.substring(0,9) + '.pdf';
   var pageURL = "http://" + req.hostname + ":8080" + req.body.data.url;
   //var pageURL = "http://google.com";
   console.log("PageURL: ",pageURL);
@@ -252,7 +252,7 @@ renderNightmare = function(req, res) {
   })
   .goto(pageURL)
   .wait(5000)
-  .pdf(public_dir + '/testfile.pdf') //Should name this file properly in case it isn't deleted
+  .pdf(public_dir + PDFName)
   .run(function(err, nightmare) {
     console.log("Running Nightmare");
     if (err){
@@ -263,7 +263,7 @@ renderNightmare = function(req, res) {
       //Email PDF as attachment
       var fs = require('fs');
       var path = require('path'),
-      attachFileName = "testfile.pdf",
+      attachFileName = PDFName,
       attachFilePath = path.join(public_dir, attachFileName),
       pdf = fs.readFileSync(attachFilePath);
 

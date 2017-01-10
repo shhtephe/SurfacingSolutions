@@ -108,7 +108,7 @@
 	    };
 
 	    $scope.$on('$stateChangeStart', function( event ) {
-    	var answer = confirm("Are you sure you want to leave this page?")
+    	var answer = confirm("Please ensure you have saved before leaving this page.")
 	    	if (!answer) {
 	        	event.preventDefault();
 	    	};

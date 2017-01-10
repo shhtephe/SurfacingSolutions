@@ -1,6 +1,10 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <div class="jumbotron">
-    <div class="container">
+    <div align="right" class="container">
+    	    <div hl-sticky="" class="simple">
+    	    	<br>
+				<button type="button" style="btn; float:right" ng-click="vm.saveQuote(vm.quote.description)">Update/Save Quote</button>
+			</div>
         <div class="col-xs-offset-2 col-xs-8">
 			<div ng-controller="quoteCtrl" ng-init='vm.addCounter == false; vm.divMandatory = false; vm.divAddon = false;'>
 				<!--<br>

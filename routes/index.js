@@ -247,7 +247,9 @@ renderNightmare = function(req, res) {
   console.log("PageURL: ",pageURL);
   console.log("public_dir: ", public_dir);
   //Create new nightmare ;)
-  var screenshot = new nightmare()
+  var screenshot = new nightmare({
+    electronPath: require('electron')
+  })
   .goto(pageURL)
   .wait(5000)
   .pdf(public_dir + '/testfile.pdf') //Should name this file properly in case it isn't deleted

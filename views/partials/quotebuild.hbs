@@ -3,7 +3,7 @@
     <div class="container">
     	    <div hl-sticky="" align="right" class="simple">
     	    	<br>
-				<button type="button" style="btn; float:right" ng-click="vm.saveQuote(vm.quote.description)">Update/Save Quote</button>
+				<button type="button" style="btn; float:right" ng-click="vm.saveQuote(vm.quote.description, currentUser)">Update/Save Quote</button>
 			</div>
         <div class="col-xs-offset-2 col-xs-8">
 			<div ng-controller="quoteCtrl" ng-init='vm.addCounter == false; vm.divMandatory = false; vm.divAddon = false;'>
@@ -20,6 +20,8 @@
 				<br>QuoteID: {/vm.quote.quoteID/}
 				<br>
 				P.O. Number: <input type="text" ng-model="vm.quote.poNumber">
+				<br>
+				Account Admin: {/vm.quote.account.firstName/} {/vm.quote.account.lastName/}
 				<br>
 				<button type="button" style="btn" ng-click="vm.addGroup()">Create Group</button>
 				<br>
@@ -505,7 +507,7 @@
 				</div>
 				<br>
 				Please click <a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotefinal" target="">here</a> to view the invoice.
-				<button type="button" style="btn; float:right" ng-click="vm.saveQuote(vm.quote.description)">Update/Save Quote</button>
+				<button type="button" style="btn; float:right" ng-click="vm.saveQuote(vm.quote.description, currentUser)">Update/Save Quote</button>
 				<br>
 				<br>
 				<uib-alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</uib-alert>

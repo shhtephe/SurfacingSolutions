@@ -4,6 +4,13 @@ var Schema = mongoose.Schema;
 
 
 var quote = new Schema({
+	account: {
+		firstName: String,
+		lastName: String,
+		username: String,
+		phoneNumber: String,
+		email: String
+	},
 	quoteID: Number,
 	custCode: Number,
 	totalPrice: Number,

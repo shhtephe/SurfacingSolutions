@@ -23,7 +23,7 @@
 					var data = {
 						firstName: form.firstName,
 						lastName: form.lastName,
-						username:form.userName, 
+						username:form.username, 
 						accountType:form.accountType,
 						email:form.email, 
 						phoneNumber:form.phoneNumber,

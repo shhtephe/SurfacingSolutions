@@ -21,6 +21,8 @@
 			} else if(user.accountType === "admin" || form.accountType === "user"){
 				if(form.password === form.password2) {
 					var data = {
+						firstName: form.firstName,
+						lastName: form.lastName,
 						username:form.userName, 
 						accountType:form.accountType,
 						email:form.email, 

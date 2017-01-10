@@ -10,6 +10,8 @@
 	<md-content>
 	<div id="page-wrap">
 		<div ng-hide= "!currentUser.loggedIn || vm.hide">
+		Quote Provided by: {/vm.quote.accounts.firstName/} {/vm.quote.accounts.lastName/} 
+		<br>
 		<a href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotefinal"><button type="button" style="btn">Back</button></a>
 		<button type="button" class="md-raised md-warn" ng-click="vm.email($event)">Email PDF - {/vm.customer.email/}</button> <button type="button" class="md-raised md-warn" ng-click="vm.hide = true" style="btn">Hide to save page</button></div>
 		<textarea id="header">Final Quote</textarea>	

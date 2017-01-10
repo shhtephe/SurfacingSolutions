@@ -54,6 +54,8 @@
   <body ng-app="surfacingSolutions" ng-init="currentUser = {
     loggedIn: {{#if user}} true {{else}} false {{/if}}, 
     userName : '{{user.username}}',
+    firstName : '{{user.firstName}}',
+    lastName : '{{user.lastName}}',
     accountType : '{{user.accountType}}',
     email : '{{user.email}}',
     phoneNumber : '{{user.phoneNumber}}',

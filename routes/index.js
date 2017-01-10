@@ -247,9 +247,7 @@ renderNightmare = function(req, res) {
   console.log("PageURL: ",pageURL);
   console.log("public_dir: ", public_dir);
   //Create new nightmare ;)
-  var screenshot = new nightmare({
-    electronPath: require('electron')
-  })
+  var screenshot = new nightmare()
   .goto(pageURL)
   .wait(5000)
   .pdf(public_dir + PDFName)
@@ -274,7 +272,7 @@ renderNightmare = function(req, res) {
       console.log("Customer Data: ", req.body.data.cust);
       //Email body
       var body = req.body.data.customer.firstName + ", please find attached our quote for services based on the information you provided. If you have any questions please call our office and speak to your sales person.<br><br>Thank you for the opportunity and we look forward to working with you.<br><br>" + req.body.data.salesPerson.firstName + " " + req.body.data.salesPerson.lastName + "<br> Surfacing Solutions (2010) Limited<br>e: " + req.body.data.salesPerson.email + " t: " + req.body.data.salesPerson.phoneNumber;
-      
+      //add PETE'S info to existing quotes      
       //Set email options up
       var mailOptions = {
           from: "pete@surfacingsolutions.ca", // sender address
@@ -609,6 +607,8 @@ router.post('/register', function(req, res) {
   console.log(req.body.data)
     account.register(new account(
         { 
+          firstName : req.body.data.firstName,  
+          lastName : req.body.data.lastName,  
           username : req.body.data.username, 
           accountType : req.body.data.accountType, 
           email : req.body.data.email, 

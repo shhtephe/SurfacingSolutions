@@ -830,9 +830,20 @@
 			return(returnObj);
 		};
 
-		vm.saveQuote = function() {
+		vm.saveQuote = function(description, user) {
 			//save the quote
 			//Need to declare that it's sending a json doc
+			console.log(user, typeof user);
+			if(typeof vm.quote.account === 'undefined'){
+				vm.quote.account = {
+				    userName : user.username,
+				    firstName : user.firstName,
+				    lastName : user.lastName,
+				    accountType : user.accountType,
+				    email : user.email,
+				    phoneNumber : user.phoneNumber
+				};
+			};
 			$http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
 			$http.post('/savequote', {"quote":vm.quote}).
 	  		success(function(data, status, headers, config) {

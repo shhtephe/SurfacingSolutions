@@ -240,8 +240,8 @@ renderNightmare = function(req, res) {
   console.log("Declaring Nightmare");
   var nightmare = require('nightmare');
 
-  var public_dir = '.\\public\\images\\emailquote';
-  var PDFName = '/' + req.body.data.quoteID + ' - ' + req.body.data.createdAt + '.pdf';
+  var public_dir = '.\\public\\images\\emailquote\\';
+  var PDFName = req.body.data.quoteID + ' - ' + req.body.data.createdAt + '.pdf';
   var pageURL = "http://" + req.hostname + ":8080" + req.body.data.url;
   //var pageURL = "http://google.com";
   console.log("PageURL: ",pageURL);

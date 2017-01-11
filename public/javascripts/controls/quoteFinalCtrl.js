@@ -86,13 +86,13 @@
 			
 		    $mdDialog.show(confirm).then(function() {
 		      	console.log("User chose send");
-				vm.render();
+				vm.render(vm.quote);
 		    }, function() {
 		      console.log("User Cancelled.");
 			});
 		};
 
-		vm.render = function() {
+		vm.render = function(quote) {
 			var data = {
 				url: '/#/customer/' + custCode + '/quotebuild/' + quoteID + '/quotesend',
 				userID : custCode,
@@ -101,6 +101,8 @@
 				customer : {
 					firstName : vm.customer.firstName
 				},
+				createdAt : quote.createdAt.substring(0, 10),
+				account : quote.account,
 				//These are placeholders right now
 				salesPerson : {
 					firstName : "Peter",

@@ -241,7 +241,7 @@ renderNightmare = function(req, res) {
   var nightmare = require('nightmare');
 
   var public_dir = '.\\public\\images\\emailquote';
-  var PDFName = '/' + req.body.data.quote.quoteID + ' - ' + req.body.data.quote.reatedAt.substring(0,9) + '.pdf';
+  var PDFName = '/' + req.body.data.quoteID + ' - ' + req.body.data.createdAt + '.pdf';
   var pageURL = "http://" + req.hostname + ":8080" + req.body.data.url;
   //var pageURL = "http://google.com";
   console.log("PageURL: ",pageURL);
@@ -271,7 +271,7 @@ renderNightmare = function(req, res) {
 
       console.log("Customer Data: ", req.body.data.cust);
       //Email body
-      var body = req.body.data.customer.firstName + ", please find attached our quote for services based on the information you provided. If you have any questions please call our office and speak to your sales person.<br><br>Thank you for the opportunity and we look forward to working with you.<br><br>" + req.body.data.salesPerson.firstName + " " + req.body.data.salesPerson.lastName + "<br> Surfacing Solutions (2010) Limited<br>e: " + req.body.data.salesPerson.email + " t: " + req.body.data.salesPerson.phoneNumber;
+      var body = req.body.data.customer.firstName + ", please find attached our quote for services based on the information you provided. If you have any questions please call our office and speak to your sales person.<br><br>Thank you for the opportunity and we look forward to working with you.<br><br>" + req.body.data.account.firstName + " " + req.body.data.account.lastName + "<br> Surfacing Solutions (2010) Limited<br>e: " + req.body.data.account.email + " t: " + req.body.data.account.phoneNumber;
       //add PETE'S info to existing quotes      
       //Set email options up
       var mailOptions = {

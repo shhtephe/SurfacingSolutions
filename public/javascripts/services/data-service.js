@@ -9,7 +9,8 @@
 			getCustomers: getCustomers,
 			getCustomer: getCustomer,
 			getProductsMaterials: getProductsMaterials,
-			getQuote: getQuote
+			getQuote: getQuote,
+			getAccounts: getAccounts
 		};
 
 		function getCustomers() {
@@ -33,6 +34,12 @@
 		};
 		function getQuote(custCode, quoteID) {
 			return $http.get('/customer/' + custCode + '/quotedata/' + quoteID)
+			.then(function(response) {
+				return response.data;
+			});
+		};
+		function getAccounts() {
+			return $http.get('/accountdata')
 			.then(function(response) {
 				return response.data;
 			});

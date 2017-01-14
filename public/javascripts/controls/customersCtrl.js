@@ -29,12 +29,12 @@
 	  		if (customer.lastName !=="" && customer.firstName !=="") {
 	  			response += (customer.lastName + " , " + customer.firstName);
 	  		} else if(customer.lastName !==""){
-	  			response += (customer.lastName + " - ");
+	  			response += (customer.lastName);
 	  		} else if (customer.firstName !==""){
-				response += (customer.firstName + " - ");
+				response += (customer.firstName);
 	  		};
 	  		if(customer.email !=="") {
-				response += (customer.email);
+				response += (" - " + customer.email);
 	  		};
 	  		return response;
 	  	};

@@ -23,6 +23,7 @@ var quote = new Schema({
 	GMCPSF: Number,
 	GCPSF: Number,
 	QGM: Number,
+	showGCPSF : Boolean,
 	linearFootage: Number,
 	LSUM: Number,
 	totalLength: Number,

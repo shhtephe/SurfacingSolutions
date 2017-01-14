@@ -16,6 +16,7 @@
 		//$scope.userForm.accountType = 'user';
 
 		vm.submit = function(form, user){
+			console.log(form);
 			if(user.accountType !== "admin" && form.accountType === "admin" ) {
 				vm.addAlert("warning", "Standard user cannot create an admin account.");
 			} else if(user.accountType === "admin" || form.accountType === "user"){

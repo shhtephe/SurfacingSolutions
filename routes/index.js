@@ -134,7 +134,8 @@ router.param('quotedata', function(req, res, next, quoteID) {
           custCode: custCode,
           totalPrice: totalPrice,
           jobDifficulty: 1,
-          counterGroup: []
+          counterGroup: [],
+          showGCPSF: false
         });
 
         newQuote.save(function (err, quote) {
@@ -361,6 +362,15 @@ router.get('/admindata', function(req, res, next) {
       };
       res.json(vm);
     });
+  });
+});
+
+router.get('/accountdata', function(req, res, next) {
+  mongoose.model('accounts').find(function(err, accounts){
+    var vm = { 
+      accounts : accounts
+    };
+    res.json(vm);
   });
 });
 

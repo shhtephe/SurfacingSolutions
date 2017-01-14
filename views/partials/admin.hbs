@@ -6,7 +6,7 @@
 				<uib-alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</uib-alert>
 				<md-content>
 				<md-tabs md-dynamic-height="" md-border-bottom="">
-				<md-tab label="MaterialsProducts">
+				<md-tab label="Materials/Products">
 				<md-content class="md-padding">
 				<u>Edit Materials</u>
 				<br>
@@ -257,8 +257,15 @@
 				</div>
 				</md-content>
 				</md-tab>
-				<md-tab label="permissions">
-				This feature is coming soon! : D
+				<md-tab label="User Accounts">
+					<div ng-repeat="account in vm.accounts">
+						Name: {/account.firstName/} {/account.lastName/} 
+						<br> Account Name: {/account.username/} Account Type: {/account.accountType/}
+						<br> Email: {/account.email/} Phone Number: {/account.phoneNumber/}
+						<br>
+						<br>
+					</div>
+					<img src="http://www.clipartkid.com/images/254/under-construction-image-SVHjVA-clipart.jpeg" width="600">
 				</md-tab>
 				</md-tabs>
 				</md-content>

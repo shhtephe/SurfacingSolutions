@@ -21,7 +21,7 @@
 				<br>
 				P.O. Number: <input type="text" ng-model="vm.quote.poNumber">
 				<br>
-				Account Admin: {/vm.quote.account.firstName/} {/vm.quote.account.lastName/}
+				Quote Created By: {/vm.quote.account.firstName/} {/vm.quote.account.lastName/}
 				<br>
 				<button type="button" style="btn" ng-click="vm.addGroup()">Create Group</button>
 				<br>
@@ -500,7 +500,10 @@
 				<div ng-show="vm.quote.QGM < (.35 - .0175)">Quote Gross Margin:<font color="brown">
 					 {/vm.quote.QGM * vm.quote.jobDifficulty/}
 				</font></div>
-				<br><br><br>
+				<br>
+				<button type="button" style="btn" ng-click="vm.quote.showGCPSF = !vm.quote.showGCPSF" ng-class="{'btn-success': vm.quote.showGCPSF, 'btn-danger': !vm.quote.showGCPSF}">Show cost per square foot?</button> (Green = Enabled)
+				<br>
+				<br><br>
 				<b><u>Terms</u></b>
 				<div ng-repeat="term in vm.terms">
 					<input type="checkbox" ng-checked="vm.checkTerms(term)" ng-model="term[$index].value" ng-click="vm.buildTerms(term)">{/term.term/}<span ng-show="term.calendar=='true'"><b> *date*</b></span>
@@ -512,7 +515,7 @@
 				<br>
 				<uib-alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</uib-alert>
 				<br><br><br>
-<!--<pre>{/quote | json/}</pre>-->
+<!--<pre>{/vm.quote | json/}</pre>-->
 			</div>
         </div>
     </div>
@@ -546,7 +549,7 @@
 	<div class="modal-footer">
 		<button type="button" style="btn" ng-click="vm.cancel()">Cancel</button>
 		<!--(shape=='rectangle' && counterLength && counterWidth) || (shape=='circle' && counterWidth)-->
-		<span ng-show="vm.checkIsNumber(counterLength, counterWidth)">
+		<span ng-show="vm.checkIsNumber(counterLength, counterWidth, shape)">
 		<button type="button" style="btn" ng-click="vm.saveCounterModal(counterWidth, counterLength, shape, description, vm.counters, vm.groupIndex); shape=''; counterWidth=''; counterLength='';">Save Counter</button>
 		</span>
 	</div>

@@ -8,20 +8,19 @@
                     <!-- ng-init='customer=<%- JSON.stringify(customer) %>; quotes=<%- JSON.stringify(quotes) %>' -->
 				    <table id="Customer" width=100% class="table table-bordered table-striped">
                         <caption>
-                            Customer: {/vm.customer.companyName/}
+                            <button type="button" class="btn" ng-click="vm.newQuote(currentUser)" style="btn; float:right">New Quote</button>
+                            Customer: {/vm.customer.companyName/} 
                             <br>Salesperson: {/vm.customer.rep/}
-                            <br>Primary Contact: {/vm.customer.firstName/} {/vm.customer.lastName/}
+                            <br>Primary Contact: {/vm.customer.firstName/} {/vm.customer.lastName/} <span ng-show="!vm.customer.firstName && !vm.customer.lastName">N/A</span>
                             <br>Business Number: {/vm.customer.mainPhone/} | Mobile Number: {/vm.customer.mobilePhone/}
                         </caption>
                         <thead><th>Quotes</th></thead>
                         <tr ng-repeat="quote in vm.quotes">
-                            <td>   <a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/quote.quoteID/}">{/quote.quoteID/} - {/quote.createdAt | limitTo: 10/}</a> - {/quote.description/} - <a href="" ng-click="vm.removeQuote(quote, $index)">remove</a>
+                            <td>   <a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/quote.quoteID/}">{/quote.quoteID/} - {/quote.createdAt | limitTo: 10/}</a> <span ng-show="quote.description">- {/quote.description/}</span> - <a href="" ng-click="vm.removeQuote(quote, $index)">remove</a>
                             </td>
                         </tr>
                     </table>
                     <br>
-
-    				<button type="button" class="btn" ng-click="vm.newQuote(currentUser)">New Quote</button>
 				</div>
             </div>
         </div>

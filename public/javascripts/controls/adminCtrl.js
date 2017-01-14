@@ -17,6 +17,10 @@
           vm.materials = data.materials;
           vm.uniqueMaterialsProducts();
         })
+      dataFactory.getAccounts()
+        .then(function(data) {
+          vm.accounts = data.accounts;
+        })
       
       vm.alerts = [];
 

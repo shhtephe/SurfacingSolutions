@@ -130,10 +130,10 @@ Phone: {/vm.customer.homePhone/}</textarea>
 		    	<td colspan="1" class="total-line">Total Area</td>
 		    	<td class="total-value"><div align="right" id="subtotal">{/vm.quote.TAC | number:2/} SQFT</div></td>
 		  	</tr>
-			<tr>
+			<tr ng-show="vm.quote.showGCPSF">
 		    	<td colspan="3" class="blank"> </td>
 		    	<td colspan="1" class="total-line">Price Per Sq. Foot</td>
-		    	<td class="total-value"><div align="right" id="subtotal">{/vm.quote.GCPSF | json|currency:$/}</div></td>
+		    	<td class="total-value"><div align="right" id="subtotal">{/vm.quote.GCPSF | json|currency:$/}</div></td></span>
 		  	</tr>
 			<tr>
 		    	<td colspan="3" class="blank"> </td>

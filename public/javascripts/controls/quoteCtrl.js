@@ -75,8 +75,12 @@
 			};
 			*/
 
-			vm.checkIsNumber = function(width, length) {
+			vm.checkIsNumber = function(width, length, shape) {
 				width = parseFloat(width);
+				length = parseFloat(length);
+				if(shape === "circle") {
+					width = length;
+				};
 				//console.log(parseFloat(width), isFinite(parseFloat(width)), typeof parseFloat(width), length);
 				console.log(parseFloat(width), isFinite(width), width);
 				if(isFinite(width) && isFinite(length)){

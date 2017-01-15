@@ -76,12 +76,12 @@
 
 		vm.email = function(ev) {
 			// Appending dialog to document.body to cover sidenav in docs app
-		    var confirm = $mdDialog.prompt()
+		    var confirm = $mdDialog.confirm()
 		          .title('Send Email')
-		          .textContent('Please verify customer\'s email')
-		          .placeholder('Enter an Email')
+		          .textContent('Would you like to send the email to ' + vm.customer.firstName + " " + vm.customer.lastName + " @ " + vm.customer.email)
+		          //.placeholder('Enter an Email')
 		          .ariaLabel('Send Email')
-		          .initialValue(vm.customer.email)
+		          //.initialValue(vm.customer.email)
 				  .targetEvent(ev)
 		          .ok('Send Quote')
 		          .cancel('Cancel');
@@ -89,20 +89,21 @@
 
 		    $mdDialog.show(confirm).then(function(result) {
 		      	console.log("User chose send");
-				vm.render(vm.quote, result);
+				vm.render(vm.quote, vm.customer.firstName, vm.customer.lastName, vm.customer.email);
 		    }, function() {
 		      console.log("User Cancelled.");
 			});
 		};
 
-		vm.render = function(quote, email) {
+		vm.render = function(quote, firstName, lastName, email) {
 			var data = {
 				url: '/#/customer/' + custCode + '/quotebuild/' + quoteID + '/quotesend',
 				userID : custCode,
 				quoteID : quoteID,
 				email : email,
 				customer : {
-					firstName : vm.customer.firstName
+					firstName : firstName,
+					lastName : lastName
 				},
 				createdAt : quote.createdAt.substring(0, 10),
 				account : quote.account,

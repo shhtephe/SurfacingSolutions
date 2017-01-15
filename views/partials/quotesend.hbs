@@ -10,10 +10,15 @@
 	<md-content>
 	<div id="page-wrap">
 		<div ng-hide= "!currentUser.loggedIn || vm.hide">
-		Quote Provided by: {/vm.quote.account.firstName/} {/vm.quote.account.lastName/} 
-		<br>
-		<a href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotefinal"><button type="button" style="btn">Back</button></a>
-		<button type="button" class="md-raised md-warn" ng-click="vm.email($event)">Email PDF - {/vm.customer.email/}</button> <button type="button" class="md-raised md-warn" ng-click="vm.hide = true" style="btn">Hide to save page</button></div>
+			Quote Provided by: {/vm.quote.account.firstName/} {/vm.quote.account.lastName/} 
+			<br>
+			Customer First Name <input type="text" ng-model="vm.customer.firstName"> Customer Last Name <input type="text" ng-model="vm.customer.lastName"> 
+			<br>Customer Email <input type="text" ng-model="vm.customer.email">
+			<br>
+			<br>
+			<a href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotefinal"><button type="button" style="btn">Back</button></a>
+			<button type="button" class="md-raised md-warn" ng-click="vm.email($event)">Email PDF - {/vm.customer.email/}</button> <button type="button" class="md-raised md-warn" ng-click="vm.hide = true" style="btn">Hide to save page</button>
+		</div>
 		<textarea id="header">Final Quote</textarea>	
 		<div id="surfacingIdentity">
 
@@ -158,6 +163,7 @@ Phone: {/vm.customer.homePhone/}</textarea>
 					</td>-->
 				    <td class="description">
 				    	{/addon.description/}
+				    	<span ng-hide="addon.distributor=='SSL'"> - {/addon.itemCode/}</span>
 		    		</td>
 				    <td>
 				    	<div align="right">{/addon.price | currency:$/}

@@ -52,31 +52,31 @@
 {/vm.customer.city/}, {/vm.customer.province/} {/vm.customer.postal/}
 
 Phone: {/vm.customer.homePhone/}</textarea>
-            <table id="meta" class="normal">
+            <table id="meta" >
                 <tr>
                     <td class="meta-head">Quote #</td>
-                    <td class="normal"><textarea>{/vm.quote.quoteID/}</textarea></td>
+                    <td ><textarea>{/vm.quote.quoteID/}</textarea></td>
                 </tr>
                 <tr>
 
                     <td class="meta-head">Date</td>
-                    <td class="normal"><textarea id="date">{/vm.quote.createdAt | limitTo: 10/}</textarea></td>
+                    <td ><textarea id="date">{/vm.quote.createdAt | limitTo: 10/}</textarea></td>
                 </tr>
                 <tr>
                     <td class="meta-head">P.O. No./ Job No.</td>
-                    <td class="normal"><div class="due">{/vm.quote.poNumber/}</div></td>
+                    <td ><div class="due">{/vm.quote.poNumber/}</div></td>
                 </tr>
             </table>
 		</div>
 		<!-- group table -->		
-		<table id="items" class="normal">
+		<table id="items" >
 			<caption>{/vm.quote.description/}</caption>
 		  <thead>
-		      <th class="normal">Item</th>
-		      <th class="normal">Description</th>
-		      <th class="normal">Cost</th>
-		      <th class="normal">Quantity</th>
-		      <th class="normal">Price</th>
+		      <th >Item</th>
+		      <th >Description</th>
+		      <th >Cost</th>
+		      <th >Quantity</th>
+		      <th >Price</th>
 		  </thead>
 		    <tbody>
 		    <tr ng-repeat='group in vm.quote.counterGroup'>
@@ -90,17 +90,17 @@ Phone: {/vm.customer.homePhone/}</textarea>
 			    		 {/group.description/}
 		    		</span>
 	    		</td>
-			    <td class="normal">
+			    <td >
 			    	<div align="right">
 			    		{/group.totalPrice/ group.quantity | currency:$/}
 		    		</div>
 		    	</td>
-			    <td class="normal">
+			    <td >
 			    	<div align="right">
 	        			{/group.quantity/}    				    	
         			</div>
 	    		</td>
-			    <td class="normal">	
+			    <td >	
 			    	<div align="right" class="price">
 			    		{/group.totalPrice | currency: $/}
 			    	</div>	
@@ -113,19 +113,19 @@ Phone: {/vm.customer.homePhone/}</textarea>
 				    <td class="description">
 				    	{/addon.description/}
 		    		</td>
-				    <td class="normal">
+				    <td >
 				    	{/addon.price | currency:$/}
 				    		<span ng-show="addon.formula == 'sqft'"> / ft<sup>2</sup></span>
 				    		<span ng-show="addon.formula == 'linear'"> / ft</span>
 				    		<span ng-show="addon.formula == 'item'"> / items</span>				    	
 			    	</td>
-				    <td class="normal">
+				    <td >
 				    	{/addon.quantity/}
 				    		<span ng-show="addon.formula == 'sqft'">ft<sup>2</sup></span>
 				    		<span ng-show="addon.formula == 'linear'">linear FT</span>
 				    		<span ng-show="addon.formula == 'item'">items</span>
 		    		</td>
-				    <td class="normal">	
+				    <td >	
 				    	<!--<span class="price">{/addon.totalPrice | currency: $/}</span>-->
 			    	</td>
 				</tr>
@@ -148,14 +148,14 @@ Phone: {/vm.customer.homePhone/}</textarea>
 		</table>
 		<!-- Mandatory addons and summary section -->
 		<span ng-show="vm.quote.mandatoryAddons[0]">
-			<table id="items" class="normal">
+			<table id="items" >
 				<caption>Quote Addons</caption>
 				<thead>
 					<!--<th>Item</th>-->
-					<th class="normal">Description</th>
-					<th class="normal">Unit Cost</th>
-					<th class="normal">Quantity</th>
-					<th class="normal">Price</th>
+					<th >Description</th>
+					<th >Unit Cost</th>
+					<th >Quantity</th>
+					<th >Price</th>
 				</thead>
 				<tr ng-repeat="addon in vm.quote.mandatoryAddons">	
 					<!--<td class="item-name">
@@ -165,21 +165,21 @@ Phone: {/vm.customer.homePhone/}</textarea>
 				    	{/addon.description/}
 				    	<span ng-hide="addon.distributor=='SSL'"> - {/addon.itemCode/}</span>
 		    		</td>
-				    <td class="normal">
+				    <td >
 				    	<div align="right">{/addon.price | currency:$/}
 				    		<span ng-show="addon.formula == 'sqft'">/ ft<sup>2</sup></span>
 				    		<span ng-show="addon.formula == 'linear'">/ ft</span>
 				    		<span ng-show="addon.formula == 'item'">/ items</span>
 			    		</div>				    	
 			    	</td>
-				    <td class="normal">
+				    <td >
 				    	<div align="right">{/addon.quantity/}
 				    		<span ng-show="addon.formula == 'sqft'">ft<sup>2</sup></span>
 				    		<span ng-show="addon.formula == 'linear'">ft</span>
 				    		<span ng-show="addon.formula == 'item'">items</span>
 			    		</div>
 		    		</td>
-				    <td class="normal"z>	
+				    <td z>	
 				    	<div align="right" class="price">{/addon.totalPrice | currency: $/}</div>
 			    	</td>
 				</tr>
@@ -187,7 +187,7 @@ Phone: {/vm.customer.homePhone/}</textarea>
 		</span> 
 		</table>
 		<!-- Total summary section -->
-		<table id="items" class="normal">
+		<table id="items" >
 			<caption>Total</caption>
 			<tr>
 		    	<td width="75%" class="blank"> </td>
@@ -211,11 +211,13 @@ Phone: {/vm.customer.homePhone/}</textarea>
 				<font size=2>{/term.term | dateFilter:term/}</font>
 			</div>
 		</div>
-		<div id="signatures" class="signatures">
-			<table>
+		<div id="signatures">
+			<table class="signatures">
 				<caption>Acceptance</caption>
 				<tr>
 					<td><br>Agreed to and accepted:</td>
+					<td></td>
+					<td></td>
 				</tr>
 				<tr><br></tr>
 				<tr>

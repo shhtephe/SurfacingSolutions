@@ -537,6 +537,11 @@
 		vm.saveAddon = function(addon, shape, TAC, groupIndex) {
 			//console.log(typeof vm.quote.counterGroup[groupIndex].addons, addon, shape, length, width, groupIndex);
 			console.log("SaveAddon ran: ",vm.quote.counterGroup[groupIndex], groupIndex, TAC, addon.quantity);
+
+			if(typeof addon.quantity=== "undefined"){
+				addon.quantity = 1;
+			};
+
 			//create addons array if it doesn't exist - for initilization | -1 means 'mandatory addon'
 			if(groupIndex == -1){
 				if(typeof vm.quote.mandatoryAddons === "undefined"){

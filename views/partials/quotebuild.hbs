@@ -262,7 +262,8 @@
 									Formula: {/counterAddonDescription.formula/}
 								</li>
 								<li ng-show="counterAddonDescription.formula=='item'" class="list-group-item">	
-									Quantity: <input type="text" ng-model="counterAddonDescription.quantity">
+									Quantity: 
+										<input type="text" placeholder="1" ng-model="counterAddonDescription.quantity">
 									<br>
 								</li>
 								<li ng-show="counterAddonDescription.formula=='square'" class="list-group-item">
@@ -452,7 +453,7 @@
 								Formula: {/mandatoryDescription.formula/}
 							</li>
 							<li ng-show="mandatoryDescription.formula=='item'" class="list-group-item">	
-								Quantity: <input type="text" ng-model="mandatoryDescription.quantity">
+								Quantity: <input type="text" placeholder="1" ng-model="mandatoryDescription.quantity">
 								<br>
 							</li>
 							<li ng-show="mandatoryDescription.formula=='square'" class="list-group-item">

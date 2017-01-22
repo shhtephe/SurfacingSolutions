@@ -12,7 +12,7 @@
 {/vm.materials|json/}-->
 				<br>
 				<span style="float:right">
-					Quote Description:
+					Project Name / Project Description:
 					<br>
 					<textarea rows="4" columns="150" ng-model="vm.quote.description"></textarea>
 				</span>
@@ -218,7 +218,7 @@
 					  				</table>
 					  				<br><button type="button" ng-click="vm.editCounter[$index] = true" ng-hide="vm.editCounter[$index]" class="btn btn-default">Edit this Counter</button>
 					  				<button type="button" ng-click="vm.editCounter[$index]=false" ng-show="vm.editCounter[$index]" class="btn btn-default">Cancel</button>
-					  				<button type="button" ng-click="vm.calcCounter(counter.counterWidth, counter.counterLength, counter.counterShape, $index, group.groupNumber); vm.editCounter[$index]=false" ng-show="vm.editCounter[$index]" class="btn btn-default">Save Counter</button>
+					  				<button type="button" ng-click="vm.calcCounter(counter.counterWidth, counter.counterLength, counter.counterShape, $index, group.groupNumber, counter.description); vm.editCounter[$index]=false" ng-show="vm.editCounter[$index]" class="btn btn-default">Save Counter</button>
 <!--<br> {/counter.material | json/} <br>-->
 									<!--This is removed until I retool it to work properly-->			
 							      	<!--<span ng-show="counter.totalPrice">Counter Subtotal: {/counter.totalPrice |currency:$/}</span>-->

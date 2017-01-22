@@ -669,8 +669,8 @@
 			pushObj = {
 				itemCode: material.itemCode,
 				thickness: material.thickness,
-				matWidth: material.width,
-				matLength: material.length,
+				width: material.width,
+				length: material.length,
 				price: material.price,
 				fullSheet1: material.fullSheet1,
 				halfSheet: material.halfSheet,

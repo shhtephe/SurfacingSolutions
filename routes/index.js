@@ -374,6 +374,16 @@ router.get('/accountdata', function(req, res, next) {
   });
 });
 
+router.get('/quotesdata', function(req, res, next) {
+  mongoose.model('quote').find(function(err, quote){
+    var vm = { 
+      quotes : quote
+    };
+    res.json(vm);
+  });
+});
+
+
 router.get('/admin', function(req, res, next) {
   res.render('partials/admin');
 });

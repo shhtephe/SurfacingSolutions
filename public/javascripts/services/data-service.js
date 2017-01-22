@@ -10,7 +10,8 @@
 			getCustomer: getCustomer,
 			getProductsMaterials: getProductsMaterials,
 			getQuote: getQuote,
-			getAccounts: getAccounts
+			getAccounts: getAccounts,
+			getQuotes: getQuotes
 		};
 
 		function getCustomers() {
@@ -26,6 +27,7 @@
 				return response.data;
 			});
 		};
+
 		function getProductsMaterials() {
 			return $http.get('/admindata')
 			.then(function(response) {
@@ -38,6 +40,14 @@
 				return response.data;
 			});
 		};
+
+		function getQuotes() {
+			return $http.get('/quotesdata')
+			.then(function(response) {
+				return response.data;
+			});
+		};
+
 		function getAccounts() {
 			return $http.get('/accountdata')
 			.then(function(response) {

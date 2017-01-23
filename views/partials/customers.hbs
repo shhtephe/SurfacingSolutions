@@ -27,6 +27,9 @@
 									Created On
 								</td>
 								<td>
+									Last updated
+								</td>
+								<td>
 									Created By
 								</td>
 								<td>
@@ -47,10 +50,12 @@
 									{/quote.createdAt | limitTo: 10/}
 								</td>
 								<td>
+									{/quote.updatedAt | limitTo: 19/}
+								</td>
+								<td>
 									{/quote.account.firstName/} {/quote.account.lastName/}
 								</td>
 								<td>
-
 									<a ng-href="/#/customer/{/quote.custCode/}/quotebuild/{/quote.quoteID/}">{/quote.quoteID/}</a>
 								</td>
 								<td>

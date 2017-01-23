@@ -275,7 +275,7 @@
 			//Update Mandatory addons with new TAC
 			vm.updateMandatoryAddons(groupIndex, vm.quote.TAC);
 			//Remove from Array
-			vm.quote.counterGroup.splice(groupIndex, groupIndex+1);
+			vm.quote.counterGroup.splice(groupIndex, 1);
 		};
 
 	  	//This is called from the add counter modal. Passes the values from the modal to the main page.
@@ -427,7 +427,7 @@
 			vm.quote.LSUM -= vm.quote.counterGroup[groupIndex].counters[index].LSUM
 			vm.quote.linearFootage -= vm.quote.counterGroup[groupIndex].counters[index].linearFootage;
 			//Remove from array
-			vm.quote.counterGroup[groupIndex].counters.splice(index, index+1);
+			vm.quote.counterGroup[groupIndex].counters.splice(index, 1);
 			//recalculate group if material is present
 			if(typeof vm.quote.counterGroup[groupIndex].material !== 'undefined') {
 				vm.calcGroup(groupIndex, vm.quote.counterGroup[groupIndex].material);

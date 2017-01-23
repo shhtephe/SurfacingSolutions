@@ -15,7 +15,7 @@
                             <br>Business Number: {/vm.customer.mainPhone/} | Mobile Number: {/vm.customer.mobilePhone/}
                         </caption>
                         <thead><th>Quotes</th></thead>
-                        <tr ng-repeat="quote in vm.quotes">
+                        <tr ng-repeat="quote in vm.quotes | orderBy: 'quoteID':true">
                             <td>   <a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/quote.quoteID/}">{/quote.quoteID/} - {/quote.createdAt | limitTo: 10/}</a> <span ng-show="quote.description">- {/quote.description/}</span> - <a href="" ng-click="vm.removeQuote(quote, $index)">remove</a>
                             </td>
                         </tr>

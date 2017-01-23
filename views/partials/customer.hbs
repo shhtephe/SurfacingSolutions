@@ -9,7 +9,7 @@
 				    <table id="Customer" width=100% class="table table-bordered table-striped">
                         <caption>
                             <button type="button" class="btn" ng-click="vm.newQuote(currentUser)" style="btn; float:right">New Quote</button>
-                            Customer: {/vm.customer.companyName/} 
+                            Customer: {/vm.customer.companyName/} - {/vm.customer.custCode/}
                             <br>Salesperson: {/vm.customer.rep/}
                             <br>Primary Contact: {/vm.customer.firstName/} {/vm.customer.lastName/} <span ng-show="!vm.customer.firstName && !vm.customer.lastName">N/A</span>
                             <br>Business Number: {/vm.customer.mainPhone/} | Mobile Number: {/vm.customer.mobilePhone/}

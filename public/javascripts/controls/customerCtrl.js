@@ -20,6 +20,7 @@
 			});
 		//I think this was originally to create a new quote through angular.
 		vm.newQuote = function(){
+			//This needs to be rewritten.
 			var max = Math.max.apply(null, vm.quotes.map(function(item){
 				console.log("Item:", item);
 			   return item["quoteID"];

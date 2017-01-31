@@ -12,7 +12,7 @@
 {/vm.materials|json/}-->
 				<br>
 				<span style="float:right">
-					Quote Description:
+					Project Name / Project Description:
 					<br>
 					<textarea rows="4" columns="150" ng-model="vm.quote.description"></textarea>
 				</span>
@@ -30,8 +30,9 @@
 				<div ng-repeat="group in vm.quote.counterGroup | orderBy:'-groupNumber' track by $index">
 <!--{/group.groupNumber|json/}-->
 					<span class="col-md-8">
-						<u>Group {/group.groupNumber + 1/}</u> - <input style="width:80%" type="text" ng-model="group.description"></input>
+						<u>Group {/group.groupNumber + 1/}</u> - <textarea rows="4" columns="150" ng-model="group.description"></textarea>
 					</span>
+					<br>
 					<button type="button" class="btn btn-danger" style="float:right" ng-click="vm.removeGroup(group.groupNumber)">DELETE THIS GROUP</button>
 					<br>
 					<br>
@@ -203,7 +204,8 @@
 											  					{/counter.counterLength/}"
 										  					</span> 
 									  					</span>
-							  							<br>Width: 
+							  							<span ng-show="counter.counterShape==='rectangle'"><br>Width: </span>
+							  							<span ng-show="counter.counterShape==='circle'"><br>Radius: </span>
 								  						<span ng-show="vm.editCounter[$index]">
 									  						<input type="text" ng-model="counter.counterWidth">
 									  					</span>
@@ -218,7 +220,7 @@
 					  				</table>
 					  				<br><button type="button" ng-click="vm.editCounter[$index] = true" ng-hide="vm.editCounter[$index]" class="btn btn-default">Edit this Counter</button>
 					  				<button type="button" ng-click="vm.editCounter[$index]=false" ng-show="vm.editCounter[$index]" class="btn btn-default">Cancel</button>
-					  				<button type="button" ng-click="vm.calcCounter(counter.counterWidth, counter.counterLength, counter.counterShape, $index, group.groupNumber); vm.editCounter[$index]=false" ng-show="vm.editCounter[$index]" class="btn btn-default">Save Counter</button>
+					  				<button type="button" ng-click="vm.calcCounter(counter.counterWidth, counter.counterLength, counter.counterShape, $index, group.groupNumber, counter.description); vm.editCounter[$index]=false" ng-show="vm.editCounter[$index]" class="btn btn-default">Save Counter</button>
 <!--<br> {/counter.material | json/} <br>-->
 									<!--This is removed until I retool it to work properly-->			
 							      	<!--<span ng-show="counter.totalPrice">Counter Subtotal: {/counter.totalPrice |currency:$/}</span>-->
@@ -262,7 +264,8 @@
 									Formula: {/counterAddonDescription.formula/}
 								</li>
 								<li ng-show="counterAddonDescription.formula=='item'" class="list-group-item">	
-									Quantity: <input type="text" ng-model="counterAddonDescription.quantity">
+									Quantity: 
+										<input type="text" placeholder="1" ng-model="counterAddonDescription.quantity">
 									<br>
 								</li>
 								<li ng-show="counterAddonDescription.formula=='square'" class="list-group-item">
@@ -452,7 +455,7 @@
 								Formula: {/mandatoryDescription.formula/}
 							</li>
 							<li ng-show="mandatoryDescription.formula=='item'" class="list-group-item">	
-								Quantity: <input type="text" ng-model="mandatoryDescription.quantity">
+								Quantity: <input type="text" placeholder="1" ng-model="mandatoryDescription.quantity">
 								<br>
 							</li>
 							<li ng-show="mandatoryDescription.formula=='square'" class="list-group-item">
@@ -555,9 +558,12 @@
 		<div ng-show="shape == 'rectangle'">
 			Length in inches: <input type="text" ng-model="counterLength" name="counterLength">
 		</div>
-		<div ng-show="shape == 'rectangle' || shape == 'circle'">
+		<div ng-show="shape == 'rectangle'">
 			Width in inches: <input type="text" ng-model="counterWidth" name="counterWidth">
 		</div>
+		<div ng-show="shape == 'circle'">
+			Radius in inches: <input type="text" ng-model="counterWidth" name="counterWidth">
+		</div>		
 	</div>
 	<div class="modal-footer">
 		<button type="button" style="btn" ng-click="vm.cancel()">Cancel</button>

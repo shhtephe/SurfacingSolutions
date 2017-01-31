@@ -226,9 +226,6 @@
 		} 	
 		return '';
 		};
-
-		//$window.status = "ready";	
-		//console.log($window.status);
 	};
 	angular.module('surfacingSolutions')
 	.filter('flattenRows', function() {
@@ -246,7 +243,7 @@
     	return flatten;
     };
   });
-	
+	//This function is no longer used?
 	angular.module('surfacingSolutions')
 	.filter('termDate', function() {
     return function(term, quote) {

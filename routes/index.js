@@ -37,7 +37,7 @@ router.get('/home', function(req, res, next) {
 router.param('customer', function(req, res, next, custCode) {
   console.log("Fetching Customer Data");
   var query = {};
-      query["custCode"] = custCode;
+  query["custCode"] = custCode;
 
   var search = mongoose.model('customers').findOne(query);
 
@@ -46,14 +46,15 @@ router.param('customer', function(req, res, next, custCode) {
     if (!customer) { return next(new Error('can\'t find Customer')); }
 
     req.customer = customer;
-    console.log("Param customer", req.customer);
+    //console.log("Customer Data: ", req.customer);
     return next();
   });
 });
 
 //Gets individual quotes for customer
 router.get('/customerdata/:customer', function(req, res, next) {
-  console.log("Loading Customer Quotes");
+  console.log("Fecthing Customer Quotes");
+  //console.log(req.customer);
   req.customer.populate('customers', function(err, customer) {
     if (err) { return next(err); }
     var query = {};
@@ -98,84 +99,77 @@ router.post('/removeQuote', function(req, res, next){
 
 });
 
-/*apparently will save me work, but I don't think it will.
-Supposed to run every time there's 'quote' in a url*/
+//Creating a new quote:
+router.post('/newquote', function(req, res, next) {
+  console.log(req.body);
+  createNewQuote(req.body.customer.custCode, res);
+  //var query = {};
+  //query["custCode"] = req.body.custCode;
+  
+});
+
+/*This runs when grabbing the quote*/
 router.param('quotedata', function(req, res, next, quoteID) {
+  console.log("Fetching Customer Quote " + quoteID);
+  //Creates quote query
   var query = {};
   query["quoteID"] = quoteID;
   query["custCode"] = req.customer.custCode;
 
+  //Searches for quote
   var search = mongoose.model('quote').find(query);
   search.exec(function (err, quote){
     if (err) {return next(err); }
-    //console.log("Quote 0: ", typeof quote[0] === "undefined");
-    if (typeof quote[0]==="undefined") {
-      //Instead of just hitting next, create a new quote
-      var query = {};
-      query["custCode"] = req.customer.custCode;
-      search = mongoose.model('quote').findOne().sort({quoteID : "desc"}).exec(function(err, quote){
-        var quoteID 
-        console.log("Quote: ", quote);
-        if(quote == null){
-          quoteID = 1;  
-        }
-        else {
-          quoteID = quote.quoteID + 1
-        };
-        var custCode = req.customer.custCode,
-        totalPrice = 0,
-        jobDifficulty = 0,
-        counters = [];
-
-        console.log("quote ID!", quoteID);
-
-        var newQuote = new quotes({
-          quoteID: quoteID,
-          custCode: custCode,
-          totalPrice: totalPrice,
-          jobDifficulty: 1,
-          counterGroup: [],
-          showGCPSF: false
-        });
-
-        newQuote.save(function (err, quote) {
-          if (err) {return errorHandler(err);}
-          else {
-            // saved!
-            console.log("New quote saved");
-            req.quote = quote;
-            //console.log("Param Quote");
-            //console.log(req.quote);
-            return next();
-          };
-        });
-      });
-    } else {
+      //console.log("Quote 0: ", typeof quote[0] === "undefined");
       req.quote = quote;
-      //console.log("Param Quote");
-      //console.log(req.quote);
       return next();
-    }
   });
 });
 
+createNewQuote = function(custCode, res) {
+  search = mongoose.model('quote').findOne().sort({quoteID : "desc"}).exec(function(err, quote){
+    var quoteID;
+    console.log("Quote: ", quote);
+    //Search for highest quote number and increment that by one
+    if(quote == null){
+      quoteID = 1;  
+    }
+    else {
+      quoteID = quote.quoteID + 1
+    };
+    var totalPrice = 0,
+    jobDifficulty = 0,
+    counters = [];
+
+    console.log("quote ID!", quoteID);
+
+    var newQuote = new quotes({
+      quoteID: quoteID,
+      custCode: custCode,
+      totalPrice: totalPrice,
+      jobDifficulty: 1,
+      counterGroup: [],
+      showGCPSF: false
+    });
+
+    newQuote.save(function (err, quote) {
+      if (err) {return errorHandler(err);}
+      else {
+        // saved!
+        console.log("New quote saved");
+        //req.quote = quote;
+        //console.log("Param Quote");
+        //console.log(req.quote);
+        res.json(quote);
+      };
+    });
+  });
+};
+
 router.get('/customer/:customer/quotedata/:quotedata', function(req, res, next) {
-//console.log(req.quote);
+console.log("Returning Quote")
   if (typeof req.quote[0]==="undefined") {
-      mongoose.model('products').find(function(err, products){
-        mongoose.model('materials').find(function(err, materials){
-          mongoose.model('terms').find(function(err, terms){
-            var vm = { 
-              quote: req.quote,
-              customer: req.customer,
-              products: products,
-              materials: materials,
-              terms: terms
-            };
-            res.json(vm)
-          });
-        });
-    })
+      createNewQuote(req.params.customer, res);
   }
   else{
     mongoose.model('products').find(function(err, products){
@@ -191,8 +185,8 @@ router.get('/customer/:customer/quotedata/:quotedata', function(req, res, next) 
           res.json(vm);
         });
       });
-    })
-  }
+    });
+  };
 });
 
 router.get('/customer/:customer/quotebuild/:quote', function(req, res, next) {
@@ -278,7 +272,7 @@ renderNightmare = function(req, res) {
       var mailOptions = {
           from: req.body.data.account.email, // sender address
           to:  req.body.data.email, // list of receivers
-          cc: "quotes@surfacingsolutions.ca",
+          cc: ["quotes@surfacingsolutions.ca", req.body.data.account.email],
           subject: "Surfacing Solutions Quote", // Subject line
           html: body, // html body
           attachments: [{
@@ -373,6 +367,16 @@ router.get('/accountdata', function(req, res, next) {
     res.json(vm);
   });
 });
+
+router.get('/quotesdata', function(req, res, next) {
+  mongoose.model('quote').find(function(err, quote){
+    var vm = { 
+      quotes : quote
+    };
+    res.json(vm);
+  });
+});
+
 
 router.get('/admin', function(req, res, next) {
   res.render('partials/admin');

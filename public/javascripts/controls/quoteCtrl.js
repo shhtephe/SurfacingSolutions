@@ -837,7 +837,7 @@
 		vm.saveQuote = function(description, user) {
 			//save the quote
 			//Need to declare that it's sending a json doc
-			console.log(user, typeof user);
+			console.log(user, typeof user, vm.quote.account);
 			if(typeof vm.quote.account === 'undefined'){
 				vm.quote.account = {
 				    userName : user.username,

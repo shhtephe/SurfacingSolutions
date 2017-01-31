@@ -276,7 +276,7 @@ renderNightmare = function(req, res) {
       //add PETE'S info to existing quotes      
       //Set email options up
       var mailOptions = {
-          from: "pete@surfacingsolutions.ca", // sender address
+          from: req.body.data.account.email, // sender address
           to:  req.body.data.email, // list of receivers
           cc: "quotes@surfacingsolutions.ca",
           subject: "Surfacing Solutions Quote", // Subject line

@@ -62,18 +62,6 @@
 	    	var vm = this;
 	    	vm.groupIndex = groupIndex;
 	    	vm.counters = counters;
-	    	//console.log(vm.counters, vm.groupIndex);
-	    	//remove?
-			/*vm.arraySearchModal = function (nameKey, myArray, property){
-			    //console.log(nameKey, myArray, property);
-			    for (var i=0; i < myArray.length; i++) {
-			    	//console.log("my array i", myArray[i], "property", property)
-			        if (myArray[i][property] === nameKey) {
-			            return i;
-			        };
-			    };
-			};
-			*/
 
 			vm.checkIsNumber = function(width, length, shape) {
 				width = parseFloat(width);
@@ -287,6 +275,7 @@
 			var squareFootage = 0;
 			var pushObj = {};
 			var pricing = "";
+			var areaYield = 0;
 
 			//Saves me from worrying about which dimension to multiply
 			if(shape === "circle"){
@@ -305,17 +294,21 @@
 				counterWidth: width,
 				squareFootage: 0,
 				linearFootage: 0,
+				areaYield: 0,
 				LSUM: 0
 			};
 
 			//Calculates square footage.
 			if(shape === "rectangle"){
 				pushObj.squareFootage = (length * width/144); //measurements are in inches, then converted to feet
+				pushObj.areaYield = pushObj.squareFootage;
 			} else if(shape === "circle"){
 				pushObj.squareFootage = (Math.PI * (Math.pow(width, 2)))/144;
+				pushObj.areaYield = ((width * 2) * (width * 2))/144;
 			};
 			//Truncate the squareFootage to 2 decimals
 			pushObj.squareFootage = parseFloat(pushObj.squareFootage.toFixed(2));
+			pushObj.areaYield = parseFloat(pushObj.areaYield.toFixed(2));
 			//Calc LSUM for counter to be used for calculations for addons
 			if(shape === "rectangle") {
 				pushObj.LSUM = (length) / 12;
@@ -370,19 +363,23 @@
 			vm.quote.counterGroup[groupIndex].LSUM = 0;
 			vm.quote.counterGroup[groupIndex].linearFootage = 0;
 			vm.quote.counterGroup[groupIndex].squareFootage = 0;
+			vm.quote.counterGroup[groupIndex].areaYield = 0;
 			for (var i = vm.quote.counterGroup[groupIndex].counters.length - 1; i >= 0; i--) {
 				vm.quote.counterGroup[groupIndex].LSUM += vm.quote.counterGroup[groupIndex].counters[i].LSUM;
 				vm.quote.counterGroup[groupIndex].linearFootage += vm.quote.counterGroup[groupIndex].counters[i].linearFootage;
 				vm.quote.counterGroup[groupIndex].squareFootage += vm.quote.counterGroup[groupIndex].counters[i].squareFootage;
+				vm.quote.counterGroup[groupIndex].areaYield += vm.quote.counterGroup[groupIndex].counters[i].areaYield;
 			};
 			vm.quote.counterGroup[groupIndex].LSUM = Math.round((vm.quote.counterGroup[groupIndex].LSUM + 0.00001) * 100) / 100;
 			vm.quote.counterGroup[groupIndex].linearFootage = Math.round((vm.quote.counterGroup[groupIndex].linearFootage + 0.00001) * 100) / 100;
 			vm.quote.counterGroup[groupIndex].squareFootage = Math.round((vm.quote.counterGroup[groupIndex].squareFootage + 0.00001) * 100) / 100;
+			vm.quote.counterGroup[groupIndex].areaYield = Math.round((vm.quote.counterGroup[groupIndex].areaYield + 0.00001) * 100) / 100;
 
 			//Add up all the LSUM and linearFootage values for all groups in the quote
 			vm.quote.LSUM = 0;
 			vm.quote.linearFootage = 0;
 			vm.quote.squareFootage = 0;
+			vm.quote.areaYield = 0;
 			for (var i = vm.quote.counterGroup.length - 1; i >= 0; i--) {
 				vm.quote.LSUM += vm.quote.counterGroup[i].LSUM;
 				vm.quote.linearFootage += vm.quote.counterGroup[i].linearFootage;
@@ -392,10 +389,11 @@
 			vm.quote.linearFootage = Math.round((vm.quote.linearFootage + 0.00001) * 100) / 100;
 			vm.quote.squareFootage = Math.round((vm.quote.squareFootage + 0.00001) * 100) / 100;
 
-			//Add up all TAC values for all counters in the group
+			//Add up all TAC and areaYield values for all counters in the group
 			vm.quote.counterGroup[groupIndex].TAC = 0;
 			for (var i = vm.quote.counterGroup[groupIndex].counters.length - 1; i >= 0; i--) {
 				vm.quote.counterGroup[groupIndex].TAC += vm.quote.counterGroup[groupIndex].counters[i].squareFootage;
+				vm.quote.counterGroup[groupIndex].areaYield += vm.quote.counterGroup[groupIndex].counters[i].areaYield;
 			};
 			vm.quote.counterGroup[groupIndex].TAC = Math.round((vm.quote.counterGroup[groupIndex].TAC + 0.00001) * 100) / 100;
 			//Add up all TAC values for all groups in the quote
@@ -419,6 +417,8 @@
 			vm.quote.totalPrice -= vm.quote.counterGroup[groupIndex].counters[index].totalPrice;
 			//Subtract squareFootage from group
 			vm.quote.counterGroup[groupIndex].TAC -= vm.quote.counterGroup[groupIndex].counters[index].squareFootage;
+			//Subtract areaYield from group
+			vm.quote.counterGroup[groupIndex].areaYield -= vm.quote.counterGroup[groupIndex].counters[index].areaYield;
 			//Subtract squareFootage from quote
 			vm.quote.TAC -= parseFloat(vm.quote.counterGroup[groupIndex].counters[index].squareFootage) * parseFloat(vm.quote.counterGroup[groupIndex].quantity);
 			//subtract Linear Footage and LSUM from group and quote
@@ -426,6 +426,8 @@
 			vm.quote.counterGroup[groupIndex].linearFootage -= vm.quote.counterGroup[groupIndex].counters[index].linearFootage;
 			vm.quote.LSUM -= vm.quote.counterGroup[groupIndex].counters[index].LSUM
 			vm.quote.linearFootage -= vm.quote.counterGroup[groupIndex].counters[index].linearFootage;
+			//Remove the areaYield of a counter from the group
+			vm.quote.counterGroup[groupIndex].areaYield -= vm.quote.counterGroup[groupIndex].counters[index].areaYield;
 			//Remove from array
 			vm.quote.counterGroup[groupIndex].counters.splice(index, 1);
 			//recalculate group if material is present
@@ -700,7 +702,12 @@
 			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
 	  		var index = vm.arraySearch(groupIndex, vm.quote.counterGroup, 'groupNumber');
 			//If sheets entered is not a number or undefined, don't calculate.
-			if((isNaN(parseFloat(vm.quote.counterGroup[index].sheets)) === false || typeof vm.quote.counterGroup[index].sheets === "undefined") && (parseFloat(vm.quote.counterGroup[index].quantity) != 0) || parseFloat(vm.quote.counterGroup[index].quantity) != 0){
+			console.log(vm.quote.counterGroup[index].areaYield);
+			if((isNaN(parseFloat(vm.quote.counterGroup[index].sheets)) === false 
+				|| typeof vm.quote.counterGroup[index].sheets === "undefined") && (parseFloat(vm.quote.counterGroup[index].quantity) != 0) 
+				|| parseFloat(vm.quote.counterGroup[index].quantity) != 0
+				|| typeof vm.quote.counterGroup[index].counters[0].width ==='undefined'
+				|| typeof vm.quote.counterGroup[index].estimatedSheets === 'NaN'){
 				//do not let quantity go into negatives
 				if(vm.quote.counterGroup[groupIndex].quantity < 0){
 					vm.quote.counterGroup[groupIndex].quantity = 0;
@@ -709,7 +716,7 @@
 				var sheets = {};
 				console.log(vm.quote.counterGroup[index].TAC, material.length, material.width, vm.quote.counterGroup[index].quantity, material);
 				//Estimate the number of sheets
-				vm.quote.counterGroup[index].estimatedSheets = (vm.quote.counterGroup[index].TAC / (material.length * material.width/144)) * vm.quote.counterGroup[index].quantity;
+				vm.quote.counterGroup[index].estimatedSheets = (vm.quote.counterGroup[index].areaYield / (material.length * material.width/144)) * vm.quote.counterGroup[index].quantity;
 				vm.quote.counterGroup[index].estimatedSheets = Math.round((vm.quote.counterGroup[index].estimatedSheets + 0.00001) * 100) / 100;
 				console.log(vm.quote.counterGroup[index].estimatedSheets);
 				//If sheets has not been entered (is null) make sheets = estimated, then proceed with calculating

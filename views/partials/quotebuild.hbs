@@ -30,8 +30,9 @@
 				<div ng-repeat="group in vm.quote.counterGroup | orderBy:'-groupNumber' track by $index">
 <!--{/group.groupNumber|json/}-->
 					<span class="col-md-8">
-						<u>Group {/group.groupNumber + 1/}</u> - <input style="width:80%" type="text" ng-model="group.description"></input>
+						<u>Group {/group.groupNumber + 1/}</u> - <textarea rows="4" columns="150" ng-model="group.description"></textarea>
 					</span>
+					<br>
 					<button type="button" class="btn btn-danger" style="float:right" ng-click="vm.removeGroup(group.groupNumber)">DELETE THIS GROUP</button>
 					<br>
 					<br>
@@ -203,7 +204,8 @@
 											  					{/counter.counterLength/}"
 										  					</span> 
 									  					</span>
-							  							<br>Width: 
+							  							<span ng-show="counter.counterShape==='rectangle'"><br>Width: </span>
+							  							<span ng-show="counter.counterShape==='circle'"><br>Radius: </span>
 								  						<span ng-show="vm.editCounter[$index]">
 									  						<input type="text" ng-model="counter.counterWidth">
 									  					</span>
@@ -556,9 +558,12 @@
 		<div ng-show="shape == 'rectangle'">
 			Length in inches: <input type="text" ng-model="counterLength" name="counterLength">
 		</div>
-		<div ng-show="shape == 'rectangle' || shape == 'circle'">
+		<div ng-show="shape == 'rectangle'">
 			Width in inches: <input type="text" ng-model="counterWidth" name="counterWidth">
 		</div>
+		<div ng-show="shape == 'circle'">
+			Radius in inches: <input type="text" ng-model="counterWidth" name="counterWidth">
+		</div>		
 	</div>
 	<div class="modal-footer">
 		<button type="button" style="btn" ng-click="vm.cancel()">Cancel</button>

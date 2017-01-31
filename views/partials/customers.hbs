@@ -36,6 +36,9 @@
 									Quote ID
 								</td>
 								<td>
+									Quote Value
+								</td>								
+								<td>
 									Sent Date
 								</td>
 								<td>
@@ -45,7 +48,7 @@
 									Project Name / Description
 								</td>
 							</tr>
-							<tr ng-repeat="quote in vm.quotes.quotes | orderBy:'createdAt':true | filter:quoteFilter.search">
+							<tr ng-repeat="quote in vm.quotes.quotes | orderBy:'updatedAt':true | filter:quoteFilter.search">
 								<td>
 									{/quote.createdAt | limitTo: 10/}
 								</td>
@@ -58,6 +61,9 @@
 								<td>
 									<a ng-href="/#/customer/{/quote.custCode/}/quotebuild/{/quote.quoteID/}">{/quote.quoteID/}</a>
 								</td>
+								<td>
+									{/quote.totalPrice| currency:$/}
+								</td>								
 								<td>
 									{/quote.sentDate/}
 								</td>

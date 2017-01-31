@@ -60,7 +60,7 @@
 	  			//console.log(vm.customers);
 				var search = vm.arraySearch(customer, vm.customers, 'custCode');
 				//console.log(search)
-				response = vm.buildCustomer(vm.customers[search]);
+				response = vm.customers[search].companyName;
 	  		return response;
 	  	};
 

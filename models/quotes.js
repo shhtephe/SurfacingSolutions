@@ -59,7 +59,7 @@ var quote = new Schema({
 		totalLength: Number,
 		LSUM: Number,
 		linearFootage: Number,
-		areaYieldCircle: Number,
+		areaYield: Number,
 		addons: [{
 			distributor: String,
 			manufacturer: String,
@@ -101,7 +101,7 @@ var quote = new Schema({
 			linearFootage: Number,
 			LSUM: Number,
 			matPrice: Number,
-			areaYieldCircle: Number
+			areaYield: Number
 		}]
 	}]
 });

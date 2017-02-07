@@ -68,6 +68,8 @@ textarea:hover, textarea:focus, #items td.total-value textarea:hover, #items td.
 
 #customer { overflow: hidden; }
 
+#quoteBuild textarea {width: 400px; height: 100px; resize: vertical;}
+
 #logo { text-align: right; float: right; position: relative; margin-top: 25px; border: 1px solid #fff; max-width: 540px; max-height: 100px; overflow: hidden; }
 #logo:hover, #logo.edit { border: 1px solid #000; margin-top: 0px; max-height: 125px; }
 #logoctr { display: none; }

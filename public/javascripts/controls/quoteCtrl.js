@@ -266,6 +266,22 @@
 			vm.quote.counterGroup.splice(groupIndex, 1);
 		};
 
+		vm.calcSquareAndYield = function(shape, pushObj, length, width){
+			//Calculates square footage and areaYield.
+			if(shape === "rectangle"){
+				pushObj.squareFootage = (length * width)/144; //measurements are in inches, then converted to feet
+				pushObj.areaYield = pushObj.squareFootage;
+			} else if(shape === "circle"){
+				pushObj.squareFootage = (Math.PI * (Math.pow(width, 2)))/144;
+				pushObj.areaYield = ((width * 2) * (width * 2))/144;
+			};
+			//Truncate the squareFootage to 2 decimals
+			pushObj.squareFootage = parseFloat(pushObj.squareFootage.toFixed(2));
+			pushObj.areaYield = parseFloat(pushObj.areaYield.toFixed(2));
+
+			return pushObj;
+		};
+
 	  	//This is called from the add counter modal. Passes the values from the modal to the main page.
 		vm.calcCounter = function(width, length, shape, index, groupIndex, description, modal) {
 			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
@@ -297,18 +313,15 @@
 				areaYield: 0,
 				LSUM: 0
 			};
+			
+			pushObj = vm.calcSquareAndYield(shape, pushObj, length, width);
 
-			//Calculates square footage.
-			if(shape === "rectangle"){
-				pushObj.squareFootage = (length * width/144); //measurements are in inches, then converted to feet
-				pushObj.areaYield = pushObj.squareFootage;
-			} else if(shape === "circle"){
-				pushObj.squareFootage = (Math.PI * (Math.pow(width, 2)))/144;
-				pushObj.areaYield = ((width * 2) * (width * 2))/144;
+			console.log(pushObj);
+
+			//Zeroes out LSUM if it isn't set
+			if(typeof vm.quote.LSUM == "undefined"){
+				vm.quote.LSUM = 0;
 			};
-			//Truncate the squareFootage to 2 decimals
-			pushObj.squareFootage = parseFloat(pushObj.squareFootage.toFixed(2));
-			pushObj.areaYield = parseFloat(pushObj.areaYield.toFixed(2));
 			//Calc LSUM for counter to be used for calculations for addons
 			if(shape === "rectangle") {
 				pushObj.LSUM = (length) / 12;
@@ -316,9 +329,6 @@
 			} else {
 				pushObj.LSUM = ((2 * Math.PI) * (length /2)) / 12;
 				pushObj.LSUM = Math.round((pushObj.LSUM + 0.00001) * 100) / 100;
-			};
-			if(typeof vm.quote.LSUM == "undefined"){
-				vm.quote.LSUM = 0;
 			};
 			vm.quote.LSUM += pushObj.LSUM;
 			if(shape === "rectangle") {
@@ -368,18 +378,16 @@
 				vm.quote.counterGroup[groupIndex].LSUM += vm.quote.counterGroup[groupIndex].counters[i].LSUM;
 				vm.quote.counterGroup[groupIndex].linearFootage += vm.quote.counterGroup[groupIndex].counters[i].linearFootage;
 				vm.quote.counterGroup[groupIndex].squareFootage += vm.quote.counterGroup[groupIndex].counters[i].squareFootage;
-				vm.quote.counterGroup[groupIndex].areaYield += vm.quote.counterGroup[groupIndex].counters[i].areaYield;
 			};
 			vm.quote.counterGroup[groupIndex].LSUM = Math.round((vm.quote.counterGroup[groupIndex].LSUM + 0.00001) * 100) / 100;
 			vm.quote.counterGroup[groupIndex].linearFootage = Math.round((vm.quote.counterGroup[groupIndex].linearFootage + 0.00001) * 100) / 100;
 			vm.quote.counterGroup[groupIndex].squareFootage = Math.round((vm.quote.counterGroup[groupIndex].squareFootage + 0.00001) * 100) / 100;
-			vm.quote.counterGroup[groupIndex].areaYield = Math.round((vm.quote.counterGroup[groupIndex].areaYield + 0.00001) * 100) / 100;
 
 			//Add up all the LSUM and linearFootage values for all groups in the quote
 			vm.quote.LSUM = 0;
 			vm.quote.linearFootage = 0;
 			vm.quote.squareFootage = 0;
-			vm.quote.areaYield = 0;
+
 			for (var i = vm.quote.counterGroup.length - 1; i >= 0; i--) {
 				vm.quote.LSUM += vm.quote.counterGroup[i].LSUM;
 				vm.quote.linearFootage += vm.quote.counterGroup[i].linearFootage;
@@ -393,6 +401,9 @@
 			vm.quote.counterGroup[groupIndex].TAC = 0;
 			for (var i = vm.quote.counterGroup[groupIndex].counters.length - 1; i >= 0; i--) {
 				vm.quote.counterGroup[groupIndex].TAC += vm.quote.counterGroup[groupIndex].counters[i].squareFootage;
+				if(typeof vm.quote.counterGroup[groupIndex].areaYield ==='undefined') {
+					vm.quote.counterGroup[groupIndex].counters[i] = vm.calcSquareAndYield(vm.quote.counterGroup[groupIndex].counters[i].shape, vm.quote.counterGroup[groupIndex].counters[i], vm.quote.counterGroup[groupIndex].counters[i].length, vm.quote.counterGroup[groupIndex].counters[i].width);
+				};
 				vm.quote.counterGroup[groupIndex].areaYield += vm.quote.counterGroup[groupIndex].counters[i].areaYield;
 			};
 			vm.quote.counterGroup[groupIndex].TAC = Math.round((vm.quote.counterGroup[groupIndex].TAC + 0.00001) * 100) / 100;
@@ -760,7 +771,7 @@
 				if(typeof vm.quote.counterGroup[index].totalPrice !== 'undefined'){
 					for (var t = vm.quote.counterGroup.length - 1; t >= 0; t--) {
 						console.log(typeof(vm.quote.counterGroup[t].material), vm.quote.counterGroup[t].material === 'object')
-						if(t !== index && typeof(vm.quote.counterGroup[t].material) === 'object'){
+						if(t !== index && typeof(vm.quote.counterGroup[t].material) === 'object'){							
 							console.log(t, vm.quote.counterGroup[t].TAC, vm.quote.counterGroup[t].totalPrice, vm.quote.counterGroup[t].GMC);
 							vm.quote.TAC += parseFloat(vm.quote.counterGroup[t].TAC) * vm.quote.counterGroup[t].quantity;
 							vm.quote.totalPrice += parseFloat(vm.quote.counterGroup[t].totalPrice);

@@ -14,7 +14,7 @@
 				<span style="float:right">
 					Project Name / Project Description:
 					<br>
-					<textarea rows="4" columns="150" ng-model="vm.quote.description"></textarea>
+					<textarea ng-model="vm.quote.description"></textarea>
 				</span>
 				Customer: {/vm.customer.companyName/} - {/vm.customer.lastName/}, {/vm.customer.firstName/}
 				<br>QuoteID: {/vm.quote.quoteID/}
@@ -29,11 +29,11 @@
 	      		<br>
 				<div ng-repeat="group in vm.quote.counterGroup | orderBy:'-groupNumber' track by $index">
 <!--{/group.groupNumber|json/}-->
-					<span class="col-md-8">
-						<u>Group {/group.groupNumber + 1/}</u> - <textarea rows="4" columns="150" ng-model="group.description"></textarea>
-					</span>
-					<br>
-					<button type="button" class="btn btn-danger" style="float:right" ng-click="vm.removeGroup(group.groupNumber)">DELETE THIS GROUP</button>
+					<u>Group {/group.groupNumber + 1/}</u> - 
+					<div id="quoteBuild">
+						<textarea ng-model="group.description"></textarea>
+						<button type="button" class="btn btn-danger" style="float:right" ng-click="vm.removeGroup(group.groupNumber)">DELETE THIS GROUP</button>
+					</div>
 					<br>
 					<br>
 					<br>
@@ -531,7 +531,8 @@
 				<br>
 				<uib-alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</uib-alert>
 				<br><br><br>
-<!--<pre>{/vm.quote | json/}</pre>-->
+				<md-button ng-click="selected = !selected" ng-class="{'selected-button' : selected}">Debug</md-button>
+				<span ng-show="selected"><pre>{/vm.quote | json/}</pre></span>
 			</div>
         </div>
     </div>

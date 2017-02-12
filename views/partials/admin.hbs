@@ -43,7 +43,10 @@
 							<ul class="list-group"> 
 								<li class="list-group-item">	
 									Colour Group: <input type="text" name="colourGroup" ng-model="editMaterialDescription.colourGroup"> <br> 
-								</li>								
+								</li>	
+								<li class="list-group-item">	
+									Collection: <input type="text" name="matCollection" ng-model="editMaterialDescription.matCollection"> <br> 
+								</li>							
 								<li class="list-group-item">	
 									Item Code: <input type="text" name="itemCode" ng-model="editMaterialDescription.itemCode"> <br> 
 								</li>	
@@ -75,7 +78,12 @@
 									Sale: <input type="text" name="sale" ng-model="editMaterialDescription.sale"> <br>
 								</li>
 								<li class="list-group-item">	
-									Collection: <input type="text" name="matCollection" ng-model="editMaterialDescription.matCollection"> <br> 
+
+									Material Type: <select name="materialType" ng-model="editMaterialDescription.materialType"><option value="">----Select----</option>
+									<option value="Acrylic">Acrylic</option>
+									<option value="Quartz">Quartz</option>
+									<option value="Quartz - Viatera">Quartz - Viatera</option>
+									</select>
 								</li>
 							</ul>
 						    <input type="submit" id="materialUpdateSubmit" class="btn btn-default" value="Update">

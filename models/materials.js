@@ -10,6 +10,7 @@ var materials = new Schema({
 	description: String,
 	itemCode: String,
 	colourGroup: String,
+	matCollection: String,
 	thickness: Number,
 	length: Number,
 	width: Number,
@@ -19,8 +20,7 @@ var materials = new Schema({
 	fullSheet5: Number,
 	fullSheet21: Number,
 	salePrice: Number,
-	isa: Number,
-	matCollection: String
+	isa: Number
 });
 
 materials.plugin(timestamps);

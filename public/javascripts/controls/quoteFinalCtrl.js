@@ -101,6 +101,7 @@
 				userID : custCode,
 				quoteID : quoteID,
 				email : email,
+				description : quote.description,
 				customer : {
 					firstName : firstName,
 					lastName : lastName

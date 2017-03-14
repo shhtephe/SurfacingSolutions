@@ -1,8 +1,8 @@
 var _gaq = _gaq || [];
 
 $(window).load(function(){
-  var widthOffset = 0;
-  var heightOffset = 0
+  var widthOffset = 345;
+  var heightOffset = 35
 
   var d = new DataConverter('importConverter');
 
@@ -22,7 +22,7 @@ $(window).load(function(){
       h = win.height() - heightOffset;
       d.resize(w,h);
       sidebar.height(h);
-
+      console.log(w, h);
     });
 
 
@@ -71,7 +71,7 @@ $(window).load(function(){
     
     d.useUnderscores = true;
     
-    d.convert();
+    vm.jsonArray = d.convert();
   };
 
   updateSettings();

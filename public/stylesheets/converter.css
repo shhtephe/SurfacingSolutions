@@ -122,7 +122,6 @@ p.importDataHeaders{
   text-shadow: #DED4DD 0px 1px 0px;
   -webkit-box-shadow: #333 1px 1px 10px inset;
   -moz-box-shadow: #333 1px 1px 10px inset;
-  wrap:"soft";
 }
 
 .importGroupHeader{

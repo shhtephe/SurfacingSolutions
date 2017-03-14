@@ -2,9 +2,9 @@
 	'use strict';
 	angular.module('surfacingSolutions').factory('dataFactory', dataFactory);
 
-	dataFactory.$inject = ['$http'];
+	dataFactory.$inject = ['$http', '$q', '$rootScope'];
 
-	function dataFactory($http) {
+	function dataFactory($http, $q, $rootScope) {
 		return {
 			getCustomers: getCustomers,
 			getCustomer: getCustomer,
@@ -15,17 +15,26 @@
 		};
 
 		function getCustomers() {
-			return $http.get('/customersdata')
-			.then(function(response) {
-				return response.data;
-			});
+			var deferred = $q.defer();
+			//console.log("This has ran")
+			$http.get('/customersdata')
+				.success(function(response) {
+					deferred.resolve(response);
+					// update angular's scopes
+                 	$rootScope.$$phase || $rootScope.$apply();
+				})
+			return deferred.promise;
 		};
 
 		function getCustomer(custCode) {
-			return $http.get('/customerdata/' + custCode)
-			.then(function(response) {
-				return response.data;
+			var deferred = $q.defer();
+			$http.get('/customerdata/' + custCode)
+				.success(function(response) {
+					deferred.resolve(response);
+					// update angular's scopes
+                 	$rootScope.$$phase || $rootScope.$apply();
 			});
+			return deferred.promise;
 		};
 
 		function getProductsMaterials() {

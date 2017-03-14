@@ -5,10 +5,11 @@
 		.module('surfacingSolutions')
 		.controller('customersCtrl', customersCtrl);
 
-	customersCtrl.$inject = ['dataFactory', '$scope'];
+	customersCtrl.$inject = ['dataFactory'];
 
-	function customersCtrl(dataFactory, $scope) {
+	function customersCtrl(dataFactory) {
 	  	var vm = this;
+
 	  	dataFactory.getCustomers()
 	  		.then(function(data) {
 	  			vm.customers = data;
@@ -16,14 +17,15 @@
 	  		},
 	  		function(reason) {
   				console.log(reason);
-	  		});
+	  		});	
 	  	dataFactory.getQuotes()
 	  		.then(function(data) {
 	  			vm.quotes = data;
 	  		},
 	  		function(reason) {
   				console.log(reason);
-	  		});	
+	  		});
+
 	  	vm.alerts = [
 	  	];
 
@@ -45,16 +47,6 @@
 	  		return response;
 	  	};
 
-	  	vm.arraySearch = function (nameKey, myArray, property){
-		    //console.log("myArray." + property + "=" + nameKey);
-		    for (var i=0; i < myArray.length; i++) {
-		    	//console.log("my array i", myArray[i], "property", property)
-		        if (myArray[i][property] === nameKey) {
-		            return i;
-		        };
-		    };
-		};
-
 	  	vm.buildCustName = function(customer) {
 	  		var response = "";
 	  			//console.log(vm.customers);
@@ -63,6 +55,17 @@
 				response = vm.customers[search].companyName;
 	  		return response;
 	  	};
+
+	  	vm.arraySearch = function (nameKey, myArray, property){
+		    //console.log("myArray." + property + "=" + nameKey);
+		    //console.log(myArray);
+		    for (var i=0; i < myArray.length; i++) {
+		    	//console.log("my array i", myArray[i], "property", property)
+		        if (myArray[i][property] === nameKey) {
+		            return i;
+		        };
+		    };
+		};
 
 		vm.init = function(customers) {
 			//console.log("customers: ", customers[0]);

@@ -29,7 +29,8 @@ var CSVParser = {
   //var parseOutput = CSVParser.parse(this.inputText, this.headersProvided, this.delimiter, this.downcaseHeaders, this.upcaseHeaders);
 
   parse: function (input, headersIncluded, delimiterType, downcaseHeaders, upcaseHeaders, decimalSign) {
-
+    //console.log(input);
+    console.log(headersIncluded, delimiterType, downcaseHeaders, upcaseHeaders, decimalSign);
     var dataArray = [];
 
     var errors = [];

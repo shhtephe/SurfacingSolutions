@@ -15,21 +15,6 @@ function DataConverter(nodeId) {
   this.nodeId                 = nodeId;
   this.node                   = $("#"+nodeId);
 
-  this.outputDataTypes        = [
-                                {"text":"Actionscript",           "id":"as",               "notes":""},
-                                {"text":"ASP/VBScript",           "id":"asp",              "notes":""},
-                                {"text":"HTML",                   "id":"html",             "notes":""},
-                                {"text":"JSON - Properties",      "id":"json",             "notes":""},
-                                {"text":"JSON - Column Arrays",   "id":"jsonArrayCols",    "notes":""},
-                                {"text":"JSON - Row Arrays",      "id":"jsonArrayRows",    "notes":""},
-                                {"text":"JSON - Dictionary",      "id":"jsonDict",         "notes":""},
-                                {"text":"MySQL",                  "id":"mysql",            "notes":""},
-                                {"text":"PHP",                    "id":"php",              "notes":""},
-                                {"text":"Python - Dict",          "id":"python",           "notes":""},
-                                {"text":"Ruby",                   "id":"ruby",             "notes":""},
-                                {"text":"XML - Properties",       "id":"xmlProperties",    "notes":""},
-                                {"text":"XML - Nodes",            "id":"xml",              "notes":""},
-                                {"text":"XML - Illustrator",      "id":"xmlIllustrator",   "notes":""}];
   this.outputDataType         = "json";
 
   this.columnDelimiter        = "\t";
@@ -65,25 +50,24 @@ function DataConverter(nodeId) {
 // PUBLIC METHODS
 //---------------------------------------
 
-DataConverter.prototype.create = function(w,h) {
+DataConverter.prototype.create = function(w,h, _gaq) {
   var self = this;
 
   //build HTML for converter
-  this.importInputHeader = $('<div class="importGroupHeader" id="importInputHeader"><p class="importGroupHeadline">Input CSV or tab-delimited data. <span class="subhead"> Using Excel? Simply copy and paste. No data on hand? <a href="#" id="insertSample">Use sample</a></span></p></div>');
+  this.importInputHeader = $('<div class="importGroupHeader" id="importInputHeader"><p class="importGroupHeadline">Copy and Paste Excel Data below:</p></div>');
   this.importInputTextArea = $('<textarea class="importTextInputs" id="dataInput"></textarea>');
-  $( ".inner" ).append( "<p>Test</p>" );
   this.node.append(this.importInputHeader);
   this.node.append(this.importInputTextArea);
 
 
-  $("#insertSample").bind('click',function(evt){
+  /*$("#insertSample").bind('click',function(evt){
     evt.preventDefault();
     self.insertSampleData();
     self.convert();
     _gaq.push(['_trackEvent', 'SampleData','InsertGeneric']);
-  });
+  });*/
 
-  $("#dataInput").keyup(function() {self.convert()});
+  //$("#dataInput").keyup(function() {self.convert()});
   $("#dataInput").change(function() {
     self.convert();
     _gaq.push(['_trackEvent', 'DataType',self.outputDataType]);
@@ -99,7 +83,7 @@ DataConverter.prototype.create = function(w,h) {
 
 DataConverter.prototype.resize = function(w,h) {
 
-  var paneWidth = w;
+  var paneWidth = (w-90)/2-20;;
   var paneHeight = (h-90)/2-20;
 
   this.node.css({width:paneWidth});
@@ -125,8 +109,7 @@ DataConverter.prototype.convert = function() {
     }
 
     CSVParser.resetLog();
-    console.log(this.headersProvided, this.delimiter, this.downcaseHeaders, this.upcaseHeaders)
-    var parseOutput = CSVParser.parse(this.inputText, true, this.delimiter, this.downcaseHeaders, this.upcaseHeaders);
+    var parseOutput = CSVParser.parse(this.inputText, true, "tab", false, false);
 
     var dataGrid = parseOutput.dataGrid;
     var headerNames = parseOutput.headerNames;
@@ -135,23 +118,36 @@ DataConverter.prototype.convert = function() {
 
     this.outputText = DataGridRenderer[this.outputDataType](dataGrid, headerNames, headerTypes, this.indent, this.newLine);
   
-    var jsonArray = JSON.parse(this.outputText);
-    console.log(jsonArray)
-    var missingColumns = "";
+    var jsonArray = {
+        data : "",
+        errors : ""
+      };
+
+    jsonArray.data = JSON.parse(this.outputText);
+    console.log(jsonArray.data)
     var columnToCheck = ["manufacturer", "distributor", "materialType", "colourGroup", "description", "matCollection", "itemCode", "thickness", "length", "width", "quarterSheet", "halfSheet", "fullSheet1", "fullSheet5", "fullSheet21", "isa", "sale"];
 
-    for (var i = columnToCheck.length - 1; i >= 0; i--) {
-      if (typeof jsonArray[0][columnToCheck[i]] === "undefined"){
-        missingColumns += columnToCheck[i] + "\n"
+    if (jsonArray.data.length !== 0) {
+      for (var i = columnToCheck.length - 1; i >= 0; i--) {
+        if (typeof jsonArray[0].data[columnToCheck[i]] === "undefined"){
+          if (jsonArray.errors == "") {
+            jsonArray.errors += "The following Columns are missing: \n";
+          };
+          jsonArray.errors += columnToCheck[i] + "\n"
+        };
       };
+    } else {
+      jsonArray.errors += "Excel data invalid, please clear text and try again.";
     };
 
-    if(missingColumns !== "") {
-      console.log("The following columns are missing: " + missingColumns);
+    if(jsonArray.errors !== "") {
+      console.log("There are errors: \n" + jsonArray.errors);
     } else
     {
       console.log("All Columns are accounted for!");
     };
+    console.log(jsonArray)
+    return jsonArray;
 
 //    this.outputTextArea.val(errors + this.outputText);
 

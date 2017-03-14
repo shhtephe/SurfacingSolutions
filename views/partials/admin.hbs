@@ -2,7 +2,7 @@
 <div class="jumbotron">
         <div class="container">
             <div class="col-xs-offset-2 col-xs-8">
-			<div ng-controller="adminCtrl">
+			<!--<div ng-controller="adminCtrl">-->
 				<uib-alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</uib-alert>
 				<md-tabs md-dynamic-height md-border-bottom md-stretch-tabs>
 				<md-tab label="Materials/Products">
@@ -91,7 +91,7 @@
 					<br>
 					<div ng-show="vm.newMaterial == true">
 						<form name="addMaterialForm"
-						ng-submit="vm.addNewMaterial(materialDescription); materialDescription =''; materialDescription.itemCode =''; materialDescription.thickness = ''; materialDescription.width = ''; materialDescription.length = ''; materialDescription.fullSheet1 = ''; materialDescription.halfSheet = ''; materialDescription.fullSheet5 = ''; materialDescription.fullSheet21 = ''; materialDescription.isa = ''; materialDescription.matCollection = '';  searchStr = ''; vm.newMaterial == false; $scope.$broadcast('angucomplete-alt:clearInput');">
+						ng-submit="vm.addNewMaterial(materialDescription); materialDescription =''; materialDescription.itemCode =''; materialDescription.thickness = ''; materialDescription.width = ''; materialDescription.length = ''; materialDescription.fullSheet1 = ''; materialDescription.halfSheet = ''; materialDescription.fullSheet5 = ''; materialDescription.fullSheet21 = ''; materialDescription.isa = ''; materialDescription.matCollection = '';  searchStr = ''; vm.newMaterial == false;">
 
 							<ul class="list-group"> 
 								<li class="list-group-item">
@@ -116,16 +116,11 @@
 									</datalist>
 								</li>
 								<li class="list-group-item">	
-<<<<<<< HEAD
-									Colour Description: <input type="text" name="materialDescription" ng-model="materialDescription.description"> <br> 
-								</li>
-=======
 									Colour Group: <input type="text" name="colourGroup" ng-model="editMaterialDescription.colourGroup"> <br> 
 								</li>	
 								<li class="list-group-item">	
 									Collection: <input type="text" name="matCollection" ng-model="editMaterialDescription.matCollection"> <br> 
 								</li>							
->>>>>>> ee046bdd9a352ef723c5261a427f7ac961241358
 								<li class="list-group-item">	
 									Item Code: <input type="text" name="newItemCode" ng-model="materialDescription.itemCode"> <br> 
 								</li>	
@@ -153,17 +148,12 @@
 								<li class="list-group-item">	
 									ISA: <input type="text" name="newisa" ng-model="materialDescription.isa"> <br> 
 								</li>
-								<li class="list-group-item">	
-<<<<<<< HEAD
-									Collection: <input type="text" name="newCollection" ng-model="materialDescription.matCollection"> <br> 
-=======
-
+								<li class="list-group-item">
 									Material Type: <select name="materialType" ng-model="editMaterialDescription.materialType"><option value="">----Select----</option>
 									<option value="Acrylic">Acrylic</option>
 									<option value="Quartz">Quartz</option>
 									<option value="Quartz - Viatera">Quartz - Viatera</option>
 									</select>
->>>>>>> ee046bdd9a352ef723c5261a427f7ac961241358
 								</li>
 							</ul>
 							<button type="button" ng-click="vm.hideNewMaterial()" class="btn btn-default">Cancel</button> 
@@ -285,16 +275,26 @@
 					<img src="http://www.clipartkid.com/images/254/under-construction-image-SVHjVA-clipart.jpeg" width="600">
 				</md-tab>
 				<md-tab label="Import Data">
+					DB to replace: <select name="replaceDB" ng-model="replaceDB"><option value="">----Select----</option>
+								<option value="products">Products</option>
+								<option value="materials">Materials</option>
+								</select>
+					<br>
+					<button type="button" ng-click="vm.checkData(replaceDB)" class="btn btn-default">Verify Data</button>
+					<button type="button" ng-click="vm.submitData()" class="btn btn-default">Update DB</button> 
+					<br>
 					<div id='importBase'>
 						<div id='importConverter' class=''>
-
+							<div class="importGroupHeader" id="importInputHeader"><p class="importGroupHeadline">Copy and Paste Excel Data below:</p></div>
+							<textarea style="width:100%; height:200px" class="importTextInputs" ng-model="importInputText" id="dataInput" ng-change="vm.importInputTextChange(importInputText)"></textarea>
 						</div>
 					</div>
+					{/vm.jsonArray/}
 				</md-tab>
 				</md-tabs>			
 				<!--<input type="text" ng-model="searchQuery"> <br>
 				<span ng-repeat="material in vm.products | filter:searchQuery">{/material | json/}<span>-->
-			</div>
+			<!--</div>-->
         </div>
     </div>
 </div>

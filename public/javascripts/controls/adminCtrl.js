@@ -5,9 +5,9 @@
     .module('surfacingSolutions')
     .controller('adminCtrl', adminCtrl);
 
-    adminCtrl.$inject = ['dataFactory', '$stateParams', '$http', '$scope'];
+    adminCtrl.$inject = ['dataFactory', '$stateParams', '$http', '$window', '$scope'];
 
-    function adminCtrl(dataFactory, $stateParams, $http, $scope) {
+    function adminCtrl(dataFactory, $stateParams, $http, $window, $scope) {
     	
       var vm = this;
 
@@ -23,6 +23,13 @@
         })
       
       vm.alerts = [];
+
+      //Copy and paste excel into jquery area text and hit "submit"
+      function updateDB(errors, data, db){
+        if (typeof errors == 'undefined') {
+          //update data to appropriate DB
+        };
+      };
 
       function arraySearch(nameKey, myArray){
           for (var i=0; i < myArray.length; i++) {
@@ -63,7 +70,6 @@
         vm.uniqueProductType = vm.uniqueSort("productType", vm.products);
         //console.log(vm.uniqueProductType);
         
-
         vm.uniqueMaterialDistributor = vm.uniqueSort("distributor", vm.materials);
         //console.log(vm.uniqueMaterialDistributor);
         vm.uniqueMaterialManufacturer = vm.uniqueSort("manufacturer", vm.materials);
@@ -346,6 +352,45 @@
             vm.materials = data.materials;
             vm.uniqueMaterialsProducts();
           });
+      };
+
+      //Integrating jQuery Mr. Data Converter code to my code.
+      vm.importInputTextChange = function(){
+
+        CSVParser.resetLog();
+
+        var parseOutput = CSVParser.parse(vm.inputText, true, "tabs", false, false);
+
+        var jsonArray = {
+          data : "",
+          errors : ""
+        };
+        console.log(parseOutput);
+        jsonArray.data = JSON.parse(parseOutput);
+        console.log(jsonArray.data)
+        var columnToCheck = ["manufacturer", "distributor", "materialType", "colourGroup", "description", "matCollection", "itemCode", "thickness", "length", "width", "quarterSheet", "halfSheet", "fullSheet1", "fullSheet5", "fullSheet21", "isa", "sale"];
+
+        if (jsonArray.data.length !== 0) {
+          for (var i = columnToCheck.length - 1; i >= 0; i--) {
+            if (typeof jsonArray[0].data[columnToCheck[i]] === "undefined"){
+              if (jsonArray.errors == "") {
+                jsonArray.errors += "The following Columns are missing: \n";
+              };
+              jsonArray.errors += columnToCheck[i] + "\n"
+            };
+          };
+        } else {
+          jsonArray.errors += "Excel data invalid, please clear text and try again.";
+        };
+
+        if(jsonArray.errors !== "") {
+          console.log("There are errors: \n" + jsonArray.errors);
+        } else
+        {
+          console.log("All Columns are accounted for!");
+        };
+        console.log(jsonArray)
+        return jsonArray;
       };
   };
 }());

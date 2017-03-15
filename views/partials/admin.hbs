@@ -275,21 +275,23 @@
 					<img src="http://www.clipartkid.com/images/254/under-construction-image-SVHjVA-clipart.jpeg" width="600">
 				</md-tab>
 				<md-tab label="Import Data">
-					DB to replace: <select name="replaceDB" ng-model="replaceDB"><option value="">----Select----</option>
+					DB to replace: <select name="dataBase" ng-model="vm.dataBase"><option value="">----Select----</option>
 								<option value="products">Products</option>
 								<option value="materials">Materials</option>
 								</select>
-					<br>
-					<button type="button" ng-click="vm.checkData(replaceDB)" class="btn btn-default">Verify Data</button>
-					<button type="button" ng-click="vm.submitData()" class="btn btn-default">Update DB</button> 
+					<br><br>
+					<span ng-show="vm.dataBase && vm.importInputText.length > 0">
+						<button type="button" ng-click="vm.updateDBModal($event)" class="btn btn-default">Update {/vm.dataBase/} DB</button>
+					</span>
+					<button type="button" ng-click="vm.importInputText=''" class="btn btn-default">Clear Excel</button> 
 					<br>
 					<div id='importBase'>
 						<div id='importConverter' class=''>
 							<div class="importGroupHeader" id="importInputHeader"><p class="importGroupHeadline">Copy and Paste Excel Data below:</p></div>
-							<textarea style="width:100%; height:200px" class="importTextInputs" ng-model="importInputText" id="dataInput" ng-change="vm.importInputTextChange(importInputText)"></textarea>
+							<textarea style="width:100%; height:200px" class="importTextInputs" ng-model="vm.importInputText" id="dataInput" ng-change="vm.importInputTextChange(importInputText)"></textarea>
 						</div>
 					</div>
-					{/vm.jsonArray/}
+					{/vm.errors/}
 				</md-tab>
 				</md-tabs>			
 				<!--<input type="text" ng-model="searchQuery"> <br>

@@ -5,9 +5,9 @@
     .module('surfacingSolutions')
     .controller('adminCtrl', adminCtrl);
 
-    adminCtrl.$inject = ['dataFactory', '$stateParams', '$http', '$window', '$scope'];
+    adminCtrl.$inject = ['dataFactory', '$stateParams', '$http', '$window', '$scope', '$mdDialog'];
 
-    function adminCtrl(dataFactory, $stateParams, $http, $window, $scope) {
+    function adminCtrl(dataFactory, $stateParams, $http, $window, $scope, $mdDialog) {
     	
       var vm = this;
 
@@ -24,11 +24,51 @@
       
       vm.alerts = [];
 
-      //Copy and paste excel into jquery area text and hit "submit"
-      function updateDB(errors, data, db){
-        if (typeof errors == 'undefined') {
-          //update data to appropriate DB
-        };
+      vm.updateDBModal = function(ev) {
+      // Appending dialog to document.body to cover sidenav in docs app
+        var confirm = $mdDialog.confirm()
+              .title('Update ' + vm.dataBase + ' Database')
+              .textContent('Are you sure you want to drop the ' + vm.dataBase + " database and replace it's contents with the text below?")
+              //.placeholder('Enter an Email')
+              .ariaLabel('Replace DB')
+              //.initialValue(vm.customer.email)
+          .targetEvent(ev)
+              .ok('Replace DB')
+              .cancel('Cancel');
+
+
+        $mdDialog.show(confirm).then(function(result) {
+          console.log("User chose to update DB");
+          vm.updateDB();
+        }, function() {
+          console.log("User Cancelled.");
+        });
+      };
+
+      vm.updateDB = function() {
+        //console.log(action, parameter);
+        //declaring json data
+        $http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
+        $http.post('/updatedb', {"json": vm.jsonArray, "dataBase": vm.dataBase}).
+          success(function(data, status, headers, config) {
+            // this callback will be called asynchronously
+            // when the response is available
+            vm.errors = "Database updated successfully"
+          }).
+          error(function(data, status, headers, config) {
+            // called asynchronously if an error occurs
+            // or server returns response with an error status.
+            //vm.addAlert("danger", "Error: Product did not " + action);
+            console.log("Nope.jpg");
+          });
+          
+          //Reload all data
+          dataFactory.getProductsMaterials()
+          .then(function(data) {
+            vm.products = data.products;
+            vm.materials = data.materials;
+            vm.uniqueMaterialsProducts();
+          });
       };
 
       function arraySearch(nameKey, myArray){
@@ -356,41 +396,64 @@
 
       //Integrating jQuery Mr. Data Converter code to my code.
       vm.importInputTextChange = function(){
-
+        //Clear error logs
+        vm.errors = "";
         CSVParser.resetLog();
+        console.log(vm.dataBase)
+        if (vm.dataBase =="") {
+          vm.errors = "Please Select a DB";
+        } else {
 
-        var parseOutput = CSVParser.parse(vm.inputText, true, "tabs", false, false);
-
-        var jsonArray = {
-          data : "",
-          errors : ""
         };
-        console.log(parseOutput);
-        jsonArray.data = JSON.parse(parseOutput);
-        console.log(jsonArray.data)
-        var columnToCheck = ["manufacturer", "distributor", "materialType", "colourGroup", "description", "matCollection", "itemCode", "thickness", "length", "width", "quarterSheet", "halfSheet", "fullSheet1", "fullSheet5", "fullSheet21", "isa", "sale"];
 
-        if (jsonArray.data.length !== 0) {
-          for (var i = columnToCheck.length - 1; i >= 0; i--) {
-            if (typeof jsonArray[0].data[columnToCheck[i]] === "undefined"){
-              if (jsonArray.errors == "") {
-                jsonArray.errors += "The following Columns are missing: \n";
-              };
-              jsonArray.errors += columnToCheck[i] + "\n"
+        if (vm.importInputText.length > 0) {
+          var parseOutput = CSVParser.parse(vm.importInputText, true, "tab", false, false);
+
+          var dataGrid = parseOutput.dataGrid;
+          var headerNames = parseOutput.headerNames;
+          var headerTypes = parseOutput.headerTypes;
+
+          parseOutput = DataGridRenderer['json'](dataGrid, headerNames, headerTypes, false, "\n");
+
+          var jsonArray = {
+            data : "",
+            db : vm.dataBase
+          };
+          console.log(parseOutput);
+          if(!parseOutput.errors){
+            jsonArray.data = JSON.parse(parseOutput);
+            //console.log(jsonArray.data, jsonArray.data.length);
+            if(vm.dataBase == 'materials'){
+              var columnToCheck = ["manufacturer", "distributor", "materialType", "colourGroup", "description", "matCollection", "itemCode", "thickness", "length", "width", "quarterSheet", "halfSheet", "fullSheet1", "fullSheet5", "fullSheet21", "isa", "sale"];
+            } else if(vm.dataBase == 'products') {
+              var columnToCheck = ["distributor", 'manufacturer', 'productType', 'description', 'itemCode', 'price', 'formula', 'mandatory', 'nonMandatory'];
             };
+            if (jsonArray.data.length !== 0) {
+              for (var i = columnToCheck.length - 1; i >= 0; i--) {
+                if (typeof jsonArray.data[0][columnToCheck[i]] === "undefined"){
+                  if (vm.errors == "") {
+                    vm.errors += "The following Columns are missing: \n";
+                  };
+                  vm.errors += columnToCheck[i] + "\n"
+                };
+              };
+            } else {
+              vm.errors += "Excel data invalid, please clear text and try again.";
+            };
+
+            if(vm.errors !== "") {
+              vm.errors = "There are errors: \n" + vm.errors;
+            } else
+            {
+              vm.errors = "All Columns are accounted for!";
+
+            };
+            vm.jsonArray = jsonArray;
+            console.log(jsonArray)
           };
         } else {
-          jsonArray.errors += "Excel data invalid, please clear text and try again.";
+          vm.errors = parseOutput.errors;
         };
-
-        if(jsonArray.errors !== "") {
-          console.log("There are errors: \n" + jsonArray.errors);
-        } else
-        {
-          console.log("All Columns are accounted for!");
-        };
-        console.log(jsonArray)
-        return jsonArray;
       };
   };
 }());

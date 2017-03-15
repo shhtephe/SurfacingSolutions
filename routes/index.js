@@ -389,6 +389,42 @@ router.get('/admin', function(req, res, next) {
   res.render('partials/admin');
 });
 
+router.post('/updatedb', function(req, res, next) {
+  //console.log(req.body.json.data);
+  var conditions = {};
+  mongoose.model(req.body.dataBase).find(conditions).remove(callback);
+  function callback (err, numAffected) {
+    if(err) {
+      console.log("Errors: " + err);
+      res.sendStatus(500);
+    } else {
+      console.log("Number of rows Dropped: " + numAffected);
+      if(req.body.dataBase == 'materials') {
+        materials.create(req.body.json.data, function (err, material) {
+        if (err) {
+          console.log("Errors: " + err);
+          res.sendStatus(500);
+        } else {
+          console.log(req.body.dataBase + " database has been updated");
+          res.sendStatus(200);
+        };
+      });
+      } else if (req.body.dataBase == 'products') {
+        products.create(req.body.json.data, function (err, product) {
+        if (err) {
+          console.log("Errors: " + err);
+          res.sendStatus(500);
+        } else {
+          console.log(req.body.dataBase + " database has been updated");
+          res.sendStatus(200);
+        };
+      });
+      };
+    };
+  };
+
+});
+
 router.post('/savematerials', function(req, res, next) {
   console.log(req.body.action + ' materials Ran')
   //console.log('Material: ',req.body.material);
@@ -426,7 +462,7 @@ router.post('/savematerials', function(req, res, next) {
       }
       else {
         console.log("Number of rows Affected: " + numAffected);
-          res.sendStatus(200);
+        res.sendStatus(200);
       };
     };
   } else if(req.body.action === "delete"){

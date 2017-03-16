@@ -30,8 +30,10 @@
 				vm.customer = data.customer;
 				vm.products = data.products;
 				vm.materials = data.materials;
-
 				console.log(vm.quote);
+				//build email body
+				vm.init();
+
 				//get totalprice for each group to add at "total"
 				var total = 0;
 				for (var i = vm.quote.counterGroup.length - 1; i >= 0; i--) {
@@ -43,22 +45,16 @@
 				console.log(reason);
 			});	
 
-		/*vm.getCountersTotal = function() {
-			console.log(vm.quote);
-			var total = 0;
-			for (var i = vm.quote.counterGroup.length - 1; i >= 0; i--) {
-				total += vm.quote.counters[i].totalPrice;
-			};
-			return total;
-		};*/
+		vm.init = function() {
+			vm.emailBody = 
+				vm.customer.firstName + ", please find attached our quote for services based on the information you provided. " +
+				"If you have any questions please call our office and speak to your sales person.<br><br>Thank you for the opportunity " +
+				"and we look forward to working with you.<br><br>" + vm.quote.account.firstName + " " + vm.quote.account.lastName + 
+				"<br> Surfacing Solutions (2010) Limited<br>e: " + vm.quote.account.email + " t: " + vm.quote.account.phoneNumber;
+		};
 
+		//save the quote
 		vm.saveQuote = function() {
-			//console.log(vm.quote.jobDifficulty.$dirty);
-			/*if(vm.quote.jobDifficulty.$dirty === true){
-				console.log("value has changed");
-			};*/
-
-			//save the quote
 			//Need to declare that it's sending a json doc
 			$http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
 			$http.post('/savequote', {"quote":vm.quote}).
@@ -97,24 +93,18 @@
 
 		vm.render = function(quote, firstName, lastName, email) {
 			var data = {
-				url: '/#/customer/' + custCode + '/quotebuild/' + quoteID + '/quotesend',
+				url : '/#/customer/' + custCode + '/quotebuild/' + quoteID + '/quotesend',
 				userID : custCode,
 				quoteID : quoteID,
 				email : email,
+				emailBody : vm.emailBody,
 				description : quote.description,
 				customer : {
 					firstName : firstName,
 					lastName : lastName
 				},
 				createdAt : quote.createdAt.substring(0, 10),
-				account : quote.account,
-				//These are placeholders right now
-				salesPerson : {
-					firstName : "Peter",
-					lastName : "Smith",
-					email : "pete@surfacingsolutions.ca",
-					phoneNumber : "(905)-874-1814"
-				}
+				account : quote.account
 			};
 
 			//Need to declare that it's sending a json doc
@@ -123,7 +113,7 @@
 	  		success(function(data, status, headers, config) {
 		    	// this callback will be called asynchronously
 		    	// when the response is available
-		    	vm.addAlert("success", "Page Rendered successfully.");
+		    	vm.addAlert("success", "Page Rendered and emailed successfully.");
 		    	console.log("Success!");
 		  	}).
 	  		error(function(data, status, headers, config) {

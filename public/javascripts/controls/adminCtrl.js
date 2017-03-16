@@ -25,24 +25,27 @@
       vm.alerts = [];
 
       vm.updateDBModal = function(ev) {
-      // Appending dialog to document.body to cover sidenav in docs app
-        var confirm = $mdDialog.confirm()
-              .title('Update ' + vm.dataBase + ' Database')
-              .textContent('Are you sure you want to drop the ' + vm.dataBase + " database and replace it's contents with the text below?")
-              //.placeholder('Enter an Email')
-              .ariaLabel('Replace DB')
-              //.initialValue(vm.customer.email)
-          .targetEvent(ev)
-              .ok('Replace DB')
-              .cancel('Cancel');
+        if (vm.errors == "") {
+          // Appending dialog to document.body to cover sidenav in docs app
+          var confirm = $mdDialog.confirm()
+                .title('Update ' + vm.dataBase + ' Database')
+                .textContent('Are you sure you want to drop the ' + vm.dataBase + " database and replace it's contents with the text below?")
+                //.placeholder('Enter an Email')
+                .ariaLabel('Replace DB')
+                //.initialValue(vm.customer.email)
+            .targetEvent(ev)
+                .ok('Replace DB')
+                .cancel('Cancel');
 
-
-        $mdDialog.show(confirm).then(function(result) {
-          console.log("User chose to update DB");
-          vm.updateDB();
-        }, function() {
-          console.log("User Cancelled.");
-        });
+          $mdDialog.show(confirm).then(function(result) {
+            console.log("User chose to update DB");
+            vm.updateDB();
+          }, function() {
+            console.log("User Cancelled.");
+          });
+        } else {
+          vm.addAlert("warning", "Please clear text and try again. There were errors.");
+        };  
       };
 
       vm.updateDB = function() {
@@ -397,8 +400,8 @@
       //Integrating jQuery Mr. Data Converter code to my code.
       vm.importInputTextChange = function(){
         //Clear error logs
-        vm.errors = "";
         CSVParser.resetLog();
+        vm.errors = "";        
         console.log(vm.dataBase)
         if (vm.dataBase =="") {
           vm.errors = "Please Select a DB";
@@ -419,7 +422,7 @@
             data : "",
             db : vm.dataBase
           };
-          console.log(parseOutput);
+          //console.log(parseOutput);
           if(!parseOutput.errors){
             jsonArray.data = JSON.parse(parseOutput);
             //console.log(jsonArray.data, jsonArray.data.length);
@@ -445,14 +448,17 @@
               vm.errors = "There are errors: \n" + vm.errors;
             } else
             {
-              vm.errors = "All Columns are accounted for!";
+              vm.addAlert("success", "All Columns are accounted for!");
 
             };
             vm.jsonArray = jsonArray;
-            console.log(jsonArray)
+            //console.log(jsonArray)
           };
         } else {
           vm.errors = parseOutput.errors;
+        };
+        if (vm.errors) {
+          vm.addAlert("warning", vm.errors);
         };
       };
   };

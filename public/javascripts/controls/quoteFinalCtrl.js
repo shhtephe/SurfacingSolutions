@@ -106,6 +106,7 @@
 				createdAt : quote.createdAt.substring(0, 10),
 				account : quote.account
 			};
+			console.log(data.account)
 
 			//Need to declare that it's sending a json doc
 			$http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';

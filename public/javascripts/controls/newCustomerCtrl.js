@@ -14,6 +14,28 @@
     vm.alerts = [
     ];
 
+    vm.init = function() {
+      vm.contacts = [];
+      vm.contacts[0] = {
+        firstName : "", 
+        lastName : "", 
+        title : "",
+        phone : "",
+        email : ""
+      };
+    };
+
+    vm.addContact = function() {
+      vm.contacts.push({
+        firstName : "", 
+        lastName : "", 
+        title : "",
+        phone : "",
+        email : ""
+      });    
+      console.log("Contact added", vm.contacts)
+    };
+
     vm.addAlert = function(type, msg) {
       vm.alerts.push({
         type: type,
@@ -25,20 +47,18 @@
       vm.alerts.splice(index, 1);
     };
 
-    vm.submit = function(customer, user) {
+    vm.submit = function(user) {
       console.log("User ", user.userName, " created this account.")  ;
       var data = {
-        "firstName":customer.firstName, 
-        "lastName":customer.lastName, 
-        "companyName":customer.companyName, 
-        "email":customer.email, 
-        "addressLine1":customer.addressLine1,
-        "addressLine2":customer.addressLine2,
-        "city":customer.city,
-        "postal":customer.postal,
-        "province":customer.province,
-        "mainPhone":customer.mainPhone,
-        "mobilePhone":customer.mobilePhone
+        "companyName":vm.customer.companyName,
+        "addressLine1":vm.customer.addressLine1,
+        "addressLine2":vm.customer.addressLine2, 
+        "firstName":vm.customer.firstName, 
+        "lastName":vm.customer.lastName, 
+        "city":vm.customer.city,
+        "province":vm.customer.province,
+        "postal":vm.customer.postal,
+        "contacts": vm.contacts
       };
       //console.log(data);
 

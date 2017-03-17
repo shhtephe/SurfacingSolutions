@@ -3,12 +3,6 @@ var router = express.Router();
 var passport = require('passport');
 var customerService = require('../services/customer-service');
 
-/* GET customers listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-  console.log("worked");
-});
-
 // GET /customer/create
 router.get('/create', function(req, res, next) {
   var vm = {

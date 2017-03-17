@@ -1,25 +1,170 @@
 <!DOCTYPE html>
-<div class="jumbotron">
+<div class="jumbotron" ng-init="vm.init()">
     <div class="container">
         <div class="col-xs-offset-2 col-xs-8">
-			<!--<div ng-controller="newCustomerCtrl">-->
-				<form ng-submit="vm.submit(customer, currentUser)" id="createCustomerForm" name="createCustomerForm">
-					New Customer: <br>	
-					Company <br> <input type='text'  ng-model="customer.companyName" name='companyName' required value="{{input.companyName}}"><br>
-					First name <br> <input type='text' ng-model="customer.firstName" name='firstName' required value="{{input.firstName}}"><br>
-					Last name <br> <input type='text' ng-model="customer.lastName" name='lastName'required value="{{input.lastName}}"><br>
-					Email Address <br> <input type='email' ng-model="customer.email" name='email' required value="{{input.email}}"><br>
-					Address <br> <input type='text' ng-model="customer.addressLine1" name='addressLine1' required value="{{input.addressLine1}}"><br>
-					Address Line 2 <br> <input type='text' ng-model="customer.addressLine2" name='addressLine2'><br>
-					City <br> <input type='text' ng-model="customer.city" name='city' value="{{input.city}}"><br>					
-					Province/State <br> <input type='text' ng-model="customer.province" name='province' required value="{{input.province}}"><br>
-					Postal Code <br> <input type='text' ng-model="customer.postal" name='postal' required value="{{input.postal}}"><br>
-					Business Phone <br> <input type='text' ng-model="customer.mainPhone" name='mainPhone' required value="{{input.mainPhone}}"><br>
-					Cellphone <br> <input type='text' ng-model="customer.mobilePhone" name='mobilePhone' required value="{{input.mobilePhone}}"><br>
-					<input type="submit" id="submit">
-				</form>
-				<uib-alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</uib-alert>
-			<!--</div>-->
+			<form ng-submit="vm.submit(currentUser)" id="createCustomerForm" name="createCustomerForm">
+				<table>
+					<caption>New Customer</caption>
+					<tr>
+						<td>
+						Business Contact Info								
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Customer Name
+						</td>
+						<td>
+							<input type='text'  ng-model="vm.customer.companyName" name='companyName' required>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Address
+						</td>
+						<td>
+							<input type='text' ng-model="vm.customer.addressLine1" name='addressLine1' required>
+						</td>
+					</tr >
+					<tr>
+						<td>
+							City
+						</td>
+						<td>
+							<input type='text' ng-model="vm.customer.city" name='city' required>
+						</td>
+						<td>
+							Province
+						</td>
+						<td>
+							<input type='text' ng-model="vm.customer.province" name='province'>
+						</td>
+						<td>
+							Postal Code
+						</td>
+						<td>
+							<input type='text' ng-model="vm.customer.postal" name='postal'>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Telephone
+						</td>
+						<td>
+							<input type='text' ng-model="vm.customer.businessPhone" name='businessPhone' 
+							maxlength="50"
+							class="form-control"
+							restrict="reject" 
+							mask='(999)-999-9999' 
+							placeholder="(xxx)-xxx-xxxx"
+							required>
+						</td>
+						<td>
+							Fax
+						</td>
+						<td>
+							<input type='text' ng-model="vm.customer.fax" name='fax'
+							maxlength="50"
+							class="form-control"
+							restrict="reject" 
+							mask='(999)-999-9999' 
+							placeholder="(xxx)-xxx-xxxx">
+						</td>
+					</tr>
+					<tr>
+						<td>Primary Contact</td>
+					</tr>
+					<tr>
+						<td>
+							First Name
+						</td>
+						<td>
+							<input type='text' ng-model="vm.contacts[0].firstName" name='firstName' required>
+						</td>
+						<td>
+							Last Name
+						</td>
+						<td>
+							<input type='text' ng-model="vm.contacts[0].lastName" name='lastName' required>
+						</td>
+						<td>
+							Title
+						</td>
+						<td>
+							<input type='text' ng-model="vm.contacts[0].title" name='title'>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Telephone
+						</td>
+						<td>
+							<input type='text' ng-model="vm.contacts[0].phone" name='phone'
+							maxlength="50"
+							class="form-control"
+							restrict="reject" 
+							mask='(999)-999-9999' 
+							placeholder="(xxx)-xxx-xxxx">
+						</td>
+						<td>
+							Email
+						</td>
+						<td>
+							<input type='email' ng-model="vm.contacts[0].email" name='email' required>
+						</td>
+					</tr>
+				</table>
+				<br>
+				<button type="button" style="btn" ng-click="vm.addContact()">Add Contact</button>
+				<br>
+				<br>
+				<table>
+					<tbody ng-repeat="contact in vm.contacts track by $index">
+						<tr ng-show="$index > 0">
+							<td>
+								Contact {/$index+1/}
+							</td>
+						</tr>
+						<tr ng-show="$index > 0">
+							<td>
+								First Name
+							</td>
+							<td>
+								<input type='text' ng-model="contact.firstName" name='firstName' autofocus="autofocus">
+							</td>
+							<td>
+								Last Name
+							</td>
+							<td>
+								<input type='text' ng-model="contact.lastName" name='lastName'>
+							</td>
+							<td>
+								Title
+							</td>
+							<td>
+								<input type='text' ng-model="contact.title" name='title'>
+							</td>
+						</tr>
+						<tr ng-show="$index > 0">
+							<td>
+								Telephone
+							</td>
+							<td>
+								<input type='text' ng-model="contact.phone" name='phone'>
+							</td>
+							<td>
+								Email
+							</td>
+							<td>
+								<input type='email' ng-model="contact.email" name='email'>
+							</td>
+						</tr>
+					</tbody>				
+				</table>
+				<br>
+				<input type="submit" id="submit" value="Submit"/>
+			</form>
+			<uib-alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</uib-alert>
         </div>
     </div>
 </div>

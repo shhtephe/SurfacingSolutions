@@ -8,10 +8,10 @@
           <p class="lead"></p><br/>
           <form ng-submit="vm.submit(userForm, currentUser)" id="form" name="form" style="max-width: 300px;">
             <div class="form-group">
-              <input type="text" required ng-model="userForm.firstName" name="firstName" placeholder="Enter Last Name" class="form-control"/>
+              <input type="text" required ng-model="userForm.firstName" name="firstName" placeholder="Enter First Name" class="form-control"/>
             </div>
             <div class="form-group">
-              <input type="text" required ng-model="userForm.lastName" name="lastName" placeholder="Enter First Name" class="form-control"/>
+              <input type="text" required ng-model="userForm.lastName" name="lastName" placeholder="Enter Last Name" class="form-control"/>
             </div>
             <div class="form-group">
               <input type="text" required ng-model="userForm.username" name="username" placeholder="Enter Username" class="form-control"/>
@@ -32,7 +32,6 @@
             <div class="form-group">
               <input type="email" required ng-model="userForm.email" name="email" placeholder="Email" class="form-control">
               <input type="text" required id="Creation_Date" name="phoneNumber" maxlength="50" class="form-control" data-ng-model="userForm.phoneNumber" restrict="reject" mask='(999)-999-9999' placeholder="Phone Number" class="form-control"/>
-              <!--<input type="text"   placeholder="Phone Number">-->
             </div>
             <input type="submit" id="submit" class="btn btn-default">&nbsp;
             <a href="/">

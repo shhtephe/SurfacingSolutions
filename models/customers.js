@@ -4,17 +4,20 @@ var Schema = mongoose.Schema;
 
 
 var customers = new Schema({
-	firstName: String,
-	lastName: String,
 	companyName: String,
-	email: String,
 	addressLine1: String,
 	addressLine2: String,
 	city: String,
-	postal: String,
 	province: String,
-	mainPhone: String,
-	mobilePhone: String,
+	postal: String,
+	businessPhone: String,
+	contacts: [{
+		firstName: String,
+		lastName: String,
+		title: String,
+		phone: String,
+		email: String
+	}],
 	custCode: Number,
 	rep: String
 });

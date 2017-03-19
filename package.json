@@ -41,5 +41,8 @@
     "phantomjs": "^1.9.18",
     "serve-favicon": "~2.2.0",
     "xvfb": "^0.2.3"
+  },
+  "devDependencies": {
+    "electron-prebuilt": "^1.4.13"
   }
 }

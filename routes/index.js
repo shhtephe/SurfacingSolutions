@@ -266,8 +266,7 @@ renderNightmare = function(req, res) {
 
       console.log("Customer Data: ", req.body.data.cust);
       //Email body
-      var body = req.body.data.customer.firstName + ", please find attached our quote for services based on the information you provided. If you have any questions please call our office and speak to your sales person.<br><br>Thank you for the opportunity and we look forward to working with you.<br><br>" + req.body.data.account.firstName + " " + req.body.data.account.lastName + "<br> Surfacing Solutions (2010) Limited<br>e: " + req.body.data.account.email + " t: " + req.body.data.account.phoneNumber;
-      //add PETE'S info to existing quotes 
+      var body = req.body.data.emailBody;
       console.log(req.body.data);
       if(req.body.data.description){
         var emailSubject = "Surfacing Solutions Quote " + req.body.data.quoteID + " - " + req.body.data.description;//.substring(0,30)  

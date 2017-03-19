@@ -46,11 +46,43 @@
 			});	
 
 		vm.init = function() {
-			vm.emailBody = 
+			vm.selectedContacts	= [];
+			vm.buildEmailBody();
+		};
+
+		vm.buildEmailBody = function() {
+			if(typeof vm.customer.contacts[0] === 'undefined') {
+				vm.emailBody = 
 				vm.customer.firstName + ", please find attached our quote for services based on the information you provided. " +
 				"If you have any questions please call our office and speak to your sales person.<br><br>Thank you for the opportunity " +
 				"and we look forward to working with you.<br><br>" + vm.quote.account.firstName + " " + vm.quote.account.lastName + 
+				"<br> Surfacing Solutions (2010) Limited<br>e: " + vm.quote.account.email + " t: " + vm.quote.account.phoneNumber;	
+			} else if(vm.selectedContacts.length == 1) {
+				vm.emailBody = 
+				vm.selectedContacts[0].firstName + ", please find attached our quote for services based on the information you provided. " +
+				"If you have any questions please call our office and speak to your sales person.<br><br>Thank you for the opportunity " +
+				"and we look forward to working with you.<br><br>" + vm.quote.account.firstName + " " + vm.quote.account.lastName + 
 				"<br> Surfacing Solutions (2010) Limited<br>e: " + vm.quote.account.email + " t: " + vm.quote.account.phoneNumber;
+			} else {
+				vm.emailBody = 
+				"Please find attached our quote for services based on the information you provided. " +
+				"If you have any questions please call our office and speak to your sales person.<br><br>Thank you for the opportunity " +
+				"and we look forward to working with you.<br><br>" + vm.quote.account.firstName + " " + vm.quote.account.lastName + 
+				"<br> Surfacing Solutions (2010) Limited<br>e: " + vm.quote.account.email + " t: " + vm.quote.account.phoneNumber;
+			};
+			
+		};
+
+		vm.buildContacts = function() {
+			vm.selectedContacts = [];
+			vm.contactEmailList = [];
+			for (var i = vm.customer.contacts.length - 1; i >= 0; i--) {
+				if(vm.customer.contacts[i].sendEmail == true) {
+					vm.selectedContacts.push(vm.customer.contacts[i]);
+					vm.contactEmailList.push(vm.customer.contacts[i].email);
+				};
+			};
+			vm.buildEmailBody();
 		};
 
 		//save the quote
@@ -74,7 +106,7 @@
 			// Appending dialog to document.body to cover sidenav in docs app
 		    var confirm = $mdDialog.confirm()
 		          .title('Send Email')
-		          .textContent('Would you like to send the email to ' + vm.customer.firstName + " " + vm.customer.lastName + " @ " + vm.customer.email)
+		          .textContent('Would you like to send the email to ' + vm.contactEmailList +"?")
 		          //.placeholder('Enter an Email')
 		          .ariaLabel('Send Email')
 		          //.initialValue(vm.customer.email)
@@ -85,7 +117,7 @@
 
 		    $mdDialog.show(confirm).then(function(result) {
 		      	console.log("User chose send");
-				vm.render(vm.quote, vm.customer.firstName, vm.customer.lastName, vm.customer.email);
+				vm.render(vm.quote, vm.customer.firstName, vm.customer.lastName, vm.contactEmailList);
 		    }, function() {
 		      console.log("User Cancelled.");
 			});

@@ -526,6 +526,11 @@
 					<input type="checkbox" ng-checked="vm.checkTerms(term)" ng-model="term[$index].value" ng-click="vm.buildTerms(term)">{/term.term/}<span ng-show="term.calendar=='true'"><b> *date*</b></span>
 				</div>
 				<br>
+				Quote notes:
+				<br>
+				<textarea style="width:100%; height:200px" ng-model=vm.quote.notes></textarea>
+				<br> 
+				<br>
 				Please click <a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotefinal" target="">here</a> to view the invoice.
 				<button type="button" style="btn; float:right" ng-click="vm.saveQuote(vm.quote.description, currentUser)">Update/Save Quote</button>
 				<br>
@@ -574,122 +579,10 @@
 		<button type="button" style="btn" ng-click="vm.saveCounterModal(counterWidth, counterLength, shape, description, vm.counters, vm.groupIndex); shape=''; counterWidth=''; counterLength='';">Save Counter</button>
 		</span>
 	</div>
-	</script>
+</script>
 
 	<!--<br>
 	<u>Debug info:</u>
 	<br>
 	{/vm.quote|json/}
 	<br><br>-->
-<!--
-
-//This is to add creation date: | termDate:vm.quote
-
-List of things I would like to add:
-Move Screen and center where the user should click, so they don't get lost.
-
-
-Dynamic ul's for item code, thickness, etc. if they're empty, they don't show up - THIS HAS BEEN DONE.
-
-Things to do:
-Add selectable price for counter (half sheet/full sheet/ multidiscount) - THIS HAS BEEN DONE
-
-
--->
-<!--
-Feedback: 
-
-Done:
-
-	make "counter 1" the description - Done
-
-	add ability to multiply groups - done
-
-	Group description text box not area, across "group 1" heading (group 1 - description text box) - done
-
-	reverse order for group - added and working, I *THINK*
-
-	Second group/addons breaks GMC psq / GTC psq - Fixed
-
-	TAC was added as "text" - fixed
-
-	Add calendar picker to terms below. - added and saves properly!
-
-	mandatory addons not removing properly - done
-
-	make all calcs update to difficulty multiplier
-	
-Pending: 
-
-
-	mandatory addons not calculating GMC/sqft and TGC/sqft
-
-
-
-
-Not done:
-
-Line everything up in two columns
-
-Group Title - Group description
-
-
-
-
-Area of Quote	Sheets Used	Quote Cost	Quote Material Cost	 Quote Material Cost per Square Foot	Total Cost per Square Foot
-
-Add the multiplier to the group
-
-group description text box "enter description here" until you type in it
-
-
-client review view
-table
-	Item
-	description - group description
-	quantity (sqft)
-	TGC/SQFT (alias cost/SQFT)
-	TGC
-
-Customer review
-table
-	Item
-	description - group description
-	quantity (sqft)
-	TGC/SQFT (alias cost/SQFT)
-	TGC
-below counters
-addon columns
-	item
-	description
-	unit cost
-	quantity
-	price
-
-client view mandatory addons only
-
-addons with item/description etc
-
-global addons below
-and then totals
--->
-<!--
-changing quantity after changing material causes a NaN in estimated sheets
-Shows as blank on refresh
-
-Sheets required = just straight multiply sheet cost by sheets required and not by quantity
-
-Collapse counters to one group
-Group description as description
-
-Unit cost = counter group cost
-quantity = quantity
-area
-price/sqft
-
-No group total 
-
-global addon section
-
-
--->

@@ -58,7 +58,8 @@
         "city":vm.customer.city,
         "province":vm.customer.province,
         "postal":vm.customer.postal,
-        "contacts": vm.contacts
+        "contacts": vm.contacts,
+        "businessPhone" : vm.customer.businessPhone 
       };
       //console.log(data);
 

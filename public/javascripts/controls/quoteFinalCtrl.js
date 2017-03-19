@@ -102,11 +102,11 @@
 	  		});
 		};
 
-		vm.email = function(ev) {
+		vm.email = function(ev, contactEmailList) {
 			// Appending dialog to document.body to cover sidenav in docs app
 		    var confirm = $mdDialog.confirm()
 		          .title('Send Email')
-		          .textContent('Would you like to send the email to ' + vm.contactEmailList +"?")
+		          .textContent('Would you like to send the email to ' + contactEmailList +"?")
 		          //.placeholder('Enter an Email')
 		          .ariaLabel('Send Email')
 		          //.initialValue(vm.customer.email)
@@ -117,44 +117,44 @@
 
 		    $mdDialog.show(confirm).then(function(result) {
 		      	console.log("User chose send");
-				vm.render(vm.quote, vm.customer.firstName, vm.customer.lastName, vm.contactEmailList);
+				vm.render(vm.quote, contactEmailList);
 		    }, function() {
 		      console.log("User Cancelled.");
 			});
 		};
 
-		vm.render = function(quote, firstName, lastName, email) {
-			var data = {
-				url : '/#/customer/' + custCode + '/quotebuild/' + quoteID + '/quotesend',
-				userID : custCode,
-				quoteID : quoteID,
-				email : email,
-				emailBody : vm.emailBody,
-				description : quote.description,
-				customer : {
-					firstName : firstName,
-					lastName : lastName
-				},
-				createdAt : quote.createdAt.substring(0, 10),
-				account : quote.account
-			};
-			console.log(data.account)
+		vm.render = function(quote, email) {
+			if(typeof email =='undefined'){
+				vm.addAlert("warning", "No contacts have been selected.");
+			} else {
+				var data = {
+					url : '/#/customer/' + custCode + '/quotebuild/' + quoteID + '/quotesend',
+					userID : custCode,
+					quoteID : quoteID,
+					email : email,
+					emailBody : vm.emailBody,
+					description : quote.description,
+					createdAt : quote.createdAt.substring(0, 10),
+					account : quote.account
+				};
+				console.log(data.account)
 
-			//Need to declare that it's sending a json doc
-			$http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
-			$http.post('/emailrender', {"data":data}).
-	  		success(function(data, status, headers, config) {
-		    	// this callback will be called asynchronously
-		    	// when the response is available
-		    	vm.addAlert("success", "Page Rendered and emailed successfully.");
-		    	console.log("Success!");
-		  	}).
-	  		error(function(data, status, headers, config) {
-			    // called asynchronously if an error occurs
-			    // or server returns response with an error status.
-				vm.addAlert("danger", "Error: Page not rendered.");
-	  			console.log("Failure!");
-	  		});
+				//Need to declare that it's sending a json doc
+				$http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
+				$http.post('/emailrender', {"data":data}).
+		  		success(function(data, status, headers, config) {
+			    	// this callback will be called asynchronously
+			    	// when the response is available
+			    	vm.addAlert("success", "Page rendered and emailed successfully.");
+			    	console.log("Success!");
+			  	}).
+		  		error(function(data, status, headers, config) {
+				    // called asynchronously if an error occurs
+				    // or server returns response with an error status.
+					vm.addAlert("danger", "Error: Page not rendered.");
+		  			console.log("Failure!");
+		  		});
+			};
 		};
 		
 		//calendar picker

@@ -150,7 +150,12 @@
 								Telephone
 							</td>
 							<td>
-								<input type='text' ng-model="contact.phone" name='phone'>
+								<input type='text' ng-model="contact.phone" name='phone'
+								maxlength="50"
+								class="form-control"
+								restrict="reject" 
+								mask='(999)-999-9999' 
+								placeholder="(xxx)-xxx-xxxx">
 							</td>
 							<td>
 								Email

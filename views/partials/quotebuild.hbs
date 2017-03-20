@@ -258,8 +258,8 @@
 								<li class="list-group-item">	
 									Price /<span ng-show="counterAddonDescription.formula=='item'">Item</span>
 									<span ng-show="counterAddonDescription.formula=='sqft'">Square Foot</span>
-									<span ng-show="counterAddonDescription.formula=='LinearLW'">Linear Foot</span>
-									<span ng-show="counterAddonDescription.formula=='LinearLSUM'">Linear Foot</span>: {/counterAddonDescription.price| currency:$/}<br> 
+									<span ng-show="counterAddonDescription.formula=='linearLW'">Linear Foot</span>
+									<span ng-show="counterAddonDescription.formula=='linearLSUM'">Linear Foot</span>: {/counterAddonDescription.price| currency:$/}<br> 
 								</li>	
 								<li class="list-group-item">	
 									Formula: {/counterAddonDescription.formula/}
@@ -269,9 +269,11 @@
 										<input type="text" placeholder="1" ng-model="counterAddonDescription.quantity">
 									<br>
 								</li>
-								<li ng-show="counterAddonDescription.formula=='square'" class="list-group-item">
-									Square Footage: {/counter.TAC/} 
-									<br>Price: {/counter.TAC * counterAddonDescription.price/}
+								<li ng-show="
+									counterAddonDescription.formula=='sqft' ||
+									counterAddonDescription.formula=='linearLW' ||
+									counterAddonDescription.formula=='linearLSUM'" class="list-group-item">
+									Override Length/Area <input type="text" ng-model="counterAddonDescription.overrideValue"> 
 								</li>	
 							</ul>
 						    <button type="button" ng-click="vm.saveAddon(counterAddonDescription, shape, group.TAC, group.groupNumber); vm.divAddons[group.groupNumber]=false; counterAddonDistributor=''; counterAddonManufacturer=''; counterAddonType=''; counterAddonDescription='';" class="btn btn-default">Add Addons</button>

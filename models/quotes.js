@@ -37,6 +37,7 @@ var quote = new Schema({
 		itemCode: String,
 		price: Number,
 		formula: String,
+		overrideValue: Number,
 		quantity: Number,
 		totalPrice: Number
 	}],
@@ -69,6 +70,7 @@ var quote = new Schema({
 			itemCode: String,
 			price: Number,
 			formula: String,
+			formula: String,overrideValue: Number,
 			quantity: Number,
 			totalPrice: Number
 		}],

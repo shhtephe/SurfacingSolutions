@@ -476,21 +476,26 @@
 		vm.updateMandatoryAddon = function(addon, TAC, groupIndex) {
 			console.log(TAC, addon.formula, vm.quote.linearFootage);
 			//If formula is sqft or linear, the quantity is different This is to make the calculating easier, so it's just the quantity that's being handled, not TAC, width, length etc
-			if(addon.formula === "sqft"){
-				if(typeof TAC == 'undefined') {
-					TAC = 0; 
+			//Only if the value wasn't overriden
+			if(!addon.overrideValue){
+				if(addon.formula === "sqft"){
+					if(typeof TAC == 'undefined') {
+						TAC = 0; 
+					};
+					addon.quantity = TAC;
+				} else if (addon.formula === "linearLW"){
+					if(typeof vm.quote.linearFootage == 'undefined') {
+						vm.quote.linearFootage = 0;
+					};
+					addon.quantity = vm.quote.linearFootage;
+				} else if(addon.formula === "linearLSUM"){
+					if(typeof vm.quote.linearLSUM == 'undefined') {
+						vm.quote.linearLSUM = 0;
+					};
+					addon.quantity = vm.quote.linearLSUM;
 				};
-				addon.quantity = TAC;
-			} else if (addon.formula === "linearLW"){
-				if(typeof vm.quote.linearFootage == 'undefined') {
-					vm.quote.linearFootage = 0;
-				};
-				addon.quantity = vm.quote.linearFootage;
-			} else if(addon.formula === "linearLSUM"){
-				if(typeof vm.quote.linearLSUM == 'undefined') {
-					vm.quote.linearLSUM = 0;
-				};
-				addon.quantity = vm.quote.linearLSUM;
+			} else {
+				addon.quantity = addon.overrideValue;
 			};
 			console.log(addon.quantity);
 			addon.quantity = parseFloat(addon.quantity);
@@ -501,16 +506,20 @@
 
 		//updates the "quantity" value so it can be calculated - requires TAC for Sqft and total Length for linear
 		vm.updateAddon = function(addon, TAC, groupIndex, quantity) {
-			console.log(vm.quote.counterGroup[groupIndex], addon.quantity, quantity);
+			console.log(vm.quote.counterGroup[groupIndex], addon.quantity, quantity, !addon.overrideValue);
 			//if formula is sqft or linear(Lw/LSUM), the quantity is different This is to make the calculating easier, so it's just the quantity that's being handled, not TAC, width, length etc
-			if(addon.formula === "sqft"){
-				addon.quantity = TAC * quantity;
-			} else if (addon.formula === "linearLW"){
-				addon.quantity = vm.quote.counterGroup[groupIndex].linearFootage * quantity;
-			} else if (addon.formula === "linearLSUM"){
-				addon.quantity = vm.quote.counterGroup[groupIndex].LSUM * quantity;
+			if (!addon.overrideValue) {
+				if(addon.formula === "sqft"){
+					addon.quantity = TAC * quantity;
+				} else if (addon.formula === "linearLW"){
+					addon.quantity = vm.quote.counterGroup[groupIndex].linearFootage * quantity;
+				} else if (addon.formula === "linearLSUM"){
+					addon.quantity = vm.quote.counterGroup[groupIndex].LSUM * quantity;
+				};
+			} else {
+				addon.quantity = addon.overrideValue;
 			};
-
+			console.log(addon.quantity);
 			addon.quantity = parseFloat(addon.quantity);
 			addon.quantity = parseFloat(addon.quantity.toFixed(2));
 			return addon.quantity;
@@ -531,14 +540,13 @@
 				} else {
 					totalPrice =  addon.quantity * addon.price * vm.quote.counterGroup[index].quantity;	
 				};
-				
 			}else if(addon.formula === "sqft"){
 				//console.log(vm.quote.counterGroup[index]);
 				totalPrice = addon.price * addon.quantity;
 			}else if(addon.formula === "linearLW"){	
-					totalPrice = addon.quantity * addon.price;
+				totalPrice = addon.quantity * addon.price;
 			}else if(addon.formula === "linearLSUM"){	
-					totalPrice = addon.quantity * addon.price;
+				totalPrice = addon.quantity * addon.price;
 			}else{
 				console.error("Unknown addon formula type!!!", addon.formula);
 				totalPrice = addon.quantity * addon.price;
@@ -596,6 +604,7 @@
 					itemCode: addon.itemCode,
 					price: addon.price,
 					formula: addon.formula,
+					overrideValue: addon.overrideValue,
 					quantity: addon.quantity,
 					totalPrice: totalPrice
 				};

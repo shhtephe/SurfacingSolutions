@@ -87,7 +87,7 @@
 				<div class="form-group">
 					<button class="btn btn-default" type="button" style="btn" ng-click="vm.addContact()">Add Contact</button>
 				</div>
-				<div ng-repeat="contact in vm.contacts track by $index">
+				<div ng-repeat="contact in vm.contacts track by $index" ng-if="!$first">
 					<div class="form-group" ng-show="$index > 0">
 						Contact {/$index+1/}
 					</div>

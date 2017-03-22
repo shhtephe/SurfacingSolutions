@@ -12,25 +12,29 @@
 		<div ng-hide= "!currentUser.loggedIn || vm.hide">
 			Quote Provided by: {/vm.quote.account.firstName/} {/vm.quote.account.lastName/} 
 			<br>
-			Contacts:
-			<div ng-repeat="contact in vm.customer.contacts">
-				<input type="checkbox" ng-model="contact.sendEmail" name="group" ng-click="vm.buildContacts()"> {/contact.firstName/} {/contact.lastName/} - {/contact.email/}
+			<div ng-show="vm.customer.contacts[0]">
+				Contacts:
+				<div ng-repeat="contact in vm.customer.contacts">
+					<input type="checkbox" ng-model="contact.sendEmail" name="group" ng-click="vm.buildContacts()"> {/contact.firstName/} {/contact.lastName/} - {/contact.email/}
+				</div>
+				<br>
 			</div>
-			<br>
-			<button type="button" class="btn" ng-click="vm.oneTimeEmail.show = true">Add one-time recipient</button>
-			<div ng-show="vm.oneTimeEmail.show">
-				First Name: <input type="text" ng-model="vm.oneTimeEmail.firstName"> Email: <input type="text" ng-model="vm.oneTimeEmail.email">
-				<br> <br>
-				<button type="button" ng-click="vm.email($event, vm.oneTimeEmail.email)">Send</button> <button type="buttong" ng-click="vm.oneTimeEmail.show = false">Cancel</button>
-			</div>
-			<br>
 			<br>
 			Email body:
 			<br>
 			<textarea style="width:100%; height:200px" class="importTextInputs" ng-model="vm.emailBody" id="dataInput"></textarea>
+			<br> 
+			<button type="button" class="btn" ng-click="vm.oneTimeEmail.show = true">Add one-time recipient</button> <button type="button" class="btn" ng-click="vm.buildContacts()">Clear one time recipients</button>
 			<br>
-			<a href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotefinal"><button type="button" style="btn">Back</button></a>
-			<button type="button" class="md-raised md-warn" ng-click="vm.email($event, vm.contactEmailList)">Email PDF - {/vm.contactEmailList.toString()/} </span></button> <button type="button" class="md-raised md-warn" ng-click="vm.hide = true" style="btn">Hide to save page</button>
+			<br>
+			<div ng-show="vm.oneTimeEmail.show">
+				First Name: <input type="text" ng-model="vm.oneTimeEmail.firstName"> Email: <input type="text" ng-model="vm.oneTimeEmail.email">
+				<br> <br>
+				<button type="button" class="btn" ng-click="vm.addOneTimeEmail()">Add</button> <button type="button" class="btn" ng-click="vm.hideOneTimeEmail()">Cancel</button>
+			</div>
+			<br>
+			<a href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotefinal"><button type="button" class="btn">Back</button></a>
+			<button type="button" class="btn" ng-click="vm.email($event, vm.contactEmailList)">Email PDF - {/vm.contactEmailList.toString()/} </span></button> <button type="button" class="btn" ng-click="vm.hide = true" style="btn">Hide to save page</button>
 		</div>
 		<textarea id="header">Final Quote</textarea>	
 		<div id="surfacingIdentity">

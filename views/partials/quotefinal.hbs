@@ -10,7 +10,7 @@
 	<div id="page-wrap">
 	<a href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}"><button type="button" style="btn">Back</button></a> 
 	<a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotesend	" target=""><button type="button" style="btn">Client Preview</button></a>
-		<textarea id="header">Final Quote</textarea>	
+		<textarea id="header">Office Copy</textarea>	
 		<div id="surfacingIdentity">
 
 			<textarea id="surfacingInfo">Surfacing Solutions 2010 Ltd.</textarea>
@@ -135,6 +135,11 @@ Phone: {/vm.customer.homePhone/}</textarea>
 			    	<td colspan="1" class="total-line">Addons</td>
 			    	<td class="total-value"><div align="right" id="subtotal">{/(group.totalPrice - group.GMC) * vm.quote.jobDifficulty| currency:$/}</div></td>
 			  	</tr>
+			  	<tr>
+			    	<td colspan="3" class="blank"> </td>
+			    	<td colspan="1" class="total-line">Price Per Sq. Ft</td>
+			    	<td class="total-value"><div align="right" id="subtotal">{/group.GCPSF| currency:$/}</div></td>
+			  	</tr>
 				<tr>
 			    	<td colspan="3" class="blank"> </td>
 			    	<td colspan="1" class="total-line">Total</td>
@@ -190,11 +195,22 @@ Phone: {/vm.customer.homePhone/}</textarea>
 			</tr>
 			<tr>
 		    	<td width="75%" class="blank"> </td>
+			    <td colspan="1" class="total-line">Gross Margin</td>
+			    <td class="total-value"><div align="right" id="total">{/vm.quote.QGM/}</div></td>
+		  	</tr>
+			<tr>
+		    	<td width="75%" class="blank"> </td>
 			    <td colspan="1" class="total-line">Total</td>
 			    <td class="total-value"><div align="right" id="total">{/vm.quote.totalPrice * 1.13 | currency:$/}</div></td>
 			</tr>
 		</table>
-
+		<div id="signatures">
+			<table class="signatures">
+				<caption>Notes</caption>
+				<tr>
+					<td><div style="padding-top:5px; padding-bottom:5px">{/vm.quote.notes/}</td>
+			</table>
+		</div>
 		<!-- terms section Start -->
 		<div id="terms">
 		  <h5>Terms</h5>

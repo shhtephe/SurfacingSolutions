@@ -18,9 +18,14 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
-app.set('port', process.env.PORT || 8080);
+//Handle prodcution or dev 
+if(process.env.NODE_ENV == 'dev') {
+    app.set('port', process.env.PORT || 6969);
+} else if (process.env.NODE_ENV == 'production') {
+    app.set('port', process.env.PORT || 8080);   
+};
 app.listen(app.get('port'));
-console.log(process.env.PORT);
+console.log("Express has been started in " + process.env.NODE_ENV + " mode.");
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
@@ -47,7 +52,11 @@ passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
 
 // mongoose
-mongoose.connect('mongodb://localhost/surfacingSolutions');
+if(process.env.NODE_ENV == 'dev') {
+    mongoose.connect('mongodb://localhost/surfacingSolutionsDev');
+} else if (process.env.NODE_ENV == 'production'){
+    mongoose.connect('mongodb://localhost/surfacingSolutions');
+};
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

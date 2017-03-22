@@ -30,7 +30,7 @@
 				vm.customer = data.customer;
 				vm.products = data.products;
 				vm.materials = data.materials;
-				console.log(vm.quote);
+				console.log("Quote: ", vm.quote);
 				//build email body
 				vm.init();
 
@@ -46,12 +46,13 @@
 			});	
 
 		vm.init = function() {
-			vm.selectedContacts	= [];
+			vm.buildContacts();
 			vm.buildEmailBody();
 		};
 
 		vm.buildEmailBody = function() {
-			if(typeof vm.customer.contacts[0] === 'undefined') {
+			console.log("Customer: ", vm.customer)
+			if(typeof vm.customer.firstName !== 'undefined') {
 				vm.emailBody = 
 				vm.customer.firstName + ", please find attached our quote for services based on the information you provided. " +
 				"If you have any questions please call our office and speak to your sales person.<br><br>Thank you for the opportunity " +
@@ -76,13 +77,30 @@
 		vm.buildContacts = function() {
 			vm.selectedContacts = [];
 			vm.contactEmailList = [];
-			for (var i = vm.customer.contacts.length - 1; i >= 0; i--) {
-				if(vm.customer.contacts[i].sendEmail == true) {
-					vm.selectedContacts.push(vm.customer.contacts[i]);
-					vm.contactEmailList.push(vm.customer.contacts[i].email);
+			if (typeof vm.customer.firstName !== 'undefined') {
+				vm.selectedContacts.push(vm.customer.firstName);
+				vm.contactEmailList.push(vm.customer.email);
+			} else {
+				for (var i = vm.customer.contacts.length - 1; i >= 0; i--) {
+					if(vm.customer.contacts[i].sendEmail == true) {
+						vm.selectedContacts.push(vm.customer.contacts[i]);
+						vm.contactEmailList.push(vm.customer.contacts[i].email);
+					};
 				};
 			};
 			vm.buildEmailBody();
+		};
+
+		vm.addOneTimeEmail = function() {
+			vm.selectedContacts.push(vm.oneTimeEmail.firstName);
+			vm.contactEmailList.push(vm.oneTimeEmail.email);
+			vm.hideOneTimeEmail();
+		};
+
+		vm.hideOneTimeEmail = function() {
+			vm.oneTimeEmail.show = false;
+			vm.oneTimeEmail.email = "";
+			vm.oneTimeEmail.firstName = "";
 		};
 
 		//save the quote

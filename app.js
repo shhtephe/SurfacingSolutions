@@ -20,7 +20,7 @@ app.set('view engine', 'hbs');
 
 //Handle prodcution or dev 
 if(process.env.NODE_ENV == 'dev') {
-    app.set('port', process.env.PORT || 9999);
+    app.set('port', process.env.PORT || 8000);
 } else if (process.env.NODE_ENV == 'production') {
     app.set('port', 8080);   
 };

@@ -20,9 +20,9 @@ app.set('view engine', 'hbs');
 
 //Handle prodcution or dev 
 if(process.env.NODE_ENV == 'dev') {
-    app.set('port', process.env.PORT || 6969);
+    app.set('port', process.env.PORT || 9999);
 } else if (process.env.NODE_ENV == 'production') {
-    app.set('port', process.env.PORT || 8080);   
+    app.set('port', 8080);   
 };
 app.listen(app.get('port'));
 console.log("Express has been started in " + process.env.NODE_ENV + " mode.");

@@ -5,9 +5,9 @@
 	.module('surfacingSolutions')
 	.controller('customerCtrl', customerCtrl);
 
-	customerCtrl.$inject = ['dataFactory', '$stateParams', '$location', '$mdDialog', '$http'];
+	customerCtrl.$inject = ['dataFactory', '$stateParams', '$location', '$mdDialog', '$http', '$uibModal'];
 
-	function customerCtrl(dataFactory, $stateParams, $location, $mdDialog, $http) {
+	function customerCtrl(dataFactory, $stateParams, $location, $mdDialog, $http, $uibModal) {
 		var vm = this;
 		var custCode = $stateParams.custCode;
 		dataFactory.getCustomer(custCode)
@@ -18,6 +18,74 @@
 			function(reason) {
 				console.log(reason);
 			});
+
+		//add Contact Modal
+		vm.addContact = function (contacts) {
+			//console.log(groupIndex, counters, size);
+	    	var modalInstance = $uibModal.open({
+		      animation: true,
+		      templateUrl: 'addContact.html',
+		      controller: ['$uibModalInstance', addContactCtrl],
+		      controllerAs: 'vm',
+		      resolve: {
+		        contacts: function() {return contacts}
+		        }
+      	  	});
+
+      	  	modalInstance.result.then(function (contacts) {
+      			//Save the countertop and put all the data back onto the main controller
+      			vm.saveContact(contacts);  			 				
+			}, function () {
+      		console.log('Modal dismissed at: ' + new Date());
+    		});
+	    };
+
+	    //Contact modal Controller
+	    var addContactCtrl = function($uibModalInstance) {
+	    	var vm = this;
+
+	    	vm.submitContact = function(contact) {
+	    		$uibModalInstance.close(contact);
+	    	};
+
+	    	vm.cancel = function() {
+				$uibModalInstance.dismiss('cancel');
+	    	};
+	    };
+
+		vm.saveContact = function(contact){
+			//refactor old contact format into new
+			if (vm.customer.firstName) {
+				var newCustomer = {
+				  _id: vm.customer._id,
+				  createdAt: vm.customer.createdAt,
+				  updatedAt: vm.customer.updatedAt,
+				  companyName: vm.customer.companyName,
+				  addressLine1: vm.customer.addressLine1,
+				  city: vm.customer.city,
+				  province: vm.customer.province,
+				  postal: vm.customer.postal,
+				  businessPhone: vm.customer.businessPhone,
+				  custCode: vm.customer.custCode,
+				  __v: vm.customer.__v,
+				  contacts: [
+				  	{
+				  		firstName: vm.customer.firstName,
+				  		lastName: vm.customer.lastName,
+				  		title: "",
+				  		phone: vm.customer.mainPhone,
+				  		email: vm.customer.email,
+				  	}
+				  ]
+		  		};
+
+	  			vm.customer = newCustomer;
+
+			} else {
+				vm.customer.contacts.push(contact);
+			};
+		};
+
 		//I think this was originally to create a new quote through angular.
 		vm.newQuote = function(currentUser){
 			//New Quote

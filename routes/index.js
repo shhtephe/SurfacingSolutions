@@ -275,7 +275,8 @@ renderNightmare = function(req, res) {
         var emailSubject = "Surfacing Solutions Quote " + req.body.data.quoteID;
       };
       //Set email options up
-      var mailOptions = {
+      if(req.body.data.account.email && req.body.data.email) {
+        var mailOptions = {
           from: req.body.data.account.email, // sender address
           to:  req.body.data.email, // list of receivers
           cc: ["quotes@surfacingsolutions.ca", req.body.data.account.email],
@@ -286,32 +287,33 @@ renderNightmare = function(req, res) {
             path: attachFilePath
             //contentType: 'application/pdf'
           }]
-      };
-      console.log("Mail Options: ", mailOptions);
-      transporter.sendMail(mailOptions, function(error, response){
-        if (error) {
-          console.log('Sending Mail Failed!', error);
-          res.sendStatus(500);
-          return;
-        } else {
-          console.log("Emailed", response);
-          res.header('Content-Type', 'text/plain');
-          res.sendStatus(200);
         };
-        //Delete file once we're done.
-        fs.exists(attachFilePath, function(exists) {
-          if(exists) {
-            //Show in green
-            console.log(gutil.colors.green('Deleting Temp File'));
-            fs.unlink(attachFilePath);
+        console.log("Mail Options: ", mailOptions);
+        transporter.sendMail(mailOptions, function(error, response){
+          if (error) {
+            console.log('Sending Mail Failed!', error);
+            res.sendStatus(500);
+            return;
           } else {
-            //Show in red
-            console.log(gutil.colors.red('File not found.'));
+            console.log("Emailed", response);
+            res.header('Content-Type', 'text/plain');
+            res.sendStatus(200);
           };
+          //Delete file once we're done.
+          fs.exists(attachFilePath, function(exists) {
+            if(exists) {
+              //Show in green
+              console.log(gutil.colors.green('Deleting Temp File'));
+              fs.unlink(attachFilePath);
+            } else {
+              //Show in red
+              console.log(gutil.colors.red('File not found.'));
+            };
+          });
+          // if you don't want to use this transport object anymore, uncomment following line
+          transporter.close(); // shut down the connection pool, no more messages
         });
-        // if you don't want to use this transport object anymore, uncomment following line
-        transporter.close(); // shut down the connection pool, no more messages
-      });
+      };
     };
   }).catch(function(err){
     console.log(err);

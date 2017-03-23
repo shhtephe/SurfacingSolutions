@@ -1,27 +1,92 @@
 <!DOCTYPE=html>
-    <div class="jumbotron">
-        <div class="container">
-            <div class="col-xs-offset-2 col-xs-8">
-                <div ng-controller="customerCtrl">
-                    <uib-alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</uib-alert>
+<div class="jumbotron">
+    <div class="container">
+        <div class="col-xs-offset-2 col-xs-8">
+            <uib-alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</uib-alert>
+            <br>
+            <!-- ng-init='customer=<%- JSON.stringify(customer) %>; quotes=<%- JSON.stringify(quotes) %>' -->
+		    <table id="Customer" width=100% class="table table-bordered table-striped">
+                <!--legacy contact format-->
+                <caption ng-show="vm.customer.firstName">
+                    <button type="button" class="btn" ng-click="vm.newQuote(currentUser)" style="btn; float:right">New Quote</button>
                     <br>
-                    <!-- ng-init='customer=<%- JSON.stringify(customer) %>; quotes=<%- JSON.stringify(quotes) %>' -->
-				    <table id="Customer" width=100% class="table table-bordered table-striped">
-                        <caption>
-                            <button type="button" class="btn" ng-click="vm.newQuote(currentUser)" style="btn; float:right">New Quote</button>
-                            Customer: {/vm.customer.companyName/} - {/vm.customer.custCode/}
-                            <br>Salesperson: {/vm.customer.rep/}
-                            <br>Primary Contact: {/vm.customer.firstName/} {/vm.customer.lastName/} <span ng-show="!vm.customer.firstName && !vm.customer.lastName">N/A</span>
-                            <br>Business Number: {/vm.customer.mainPhone/} | Mobile Number: {/vm.customer.mobilePhone/}
-                        </caption>
-                        <thead><th>Quotes</th></thead>
-                        <tr ng-repeat="quote in vm.quotes | orderBy: 'quoteID':true">
-                            <td>   <a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/quote.quoteID/}">{/quote.quoteID/} - {/quote.createdAt | limitTo: 10/}</a> <span ng-show="quote.description">- {/quote.description/}</span> - <a href="" ng-click="vm.removeQuote(quote, $index)">remove</a>
-                            </td>
-                        </tr>
-                    </table>
+                    Customer: {/vm.customer.companyName/} - {/vm.customer.custCode/}
+                    <!--<br>Salesperson: {/vm.customer.rep/}-->
+                    <br>Primary Contact: {/vm.customer.firstName/} {/vm.customer.lastName/} <span ng-show="!vm.customer.firstName && !vm.customer.lastName">N/A</span>
+                    <br>Email: {/vm.customer.email/}
+                    <button type="button" class="btn" ng-click="vm.addContact()" style="btn; float:right">Add Contact</button>
+                    <br>Phone Number: {/vm.customer.mainPhone/} | Mobile Number: {/vm.customer.mobilePhone/}
+                </caption>
+                <!-- End legacy contact format-->
+                <caption ng-show="!vm.customer.firstName">
+                    <button type="button" class="btn" ng-click="vm.newQuote(currentUser)" style="btn; float:right">New Quote</button>
                     <br>
-				</div>
+                    Customer: {/vm.customer.companyName/} - {/vm.customer.custCode/}
+                    <!--<br>Salesperson: {/vm.customer.rep/}-->
+                    <br>Primary Contact: {/vm.customer.contacts[0].firstName/} {/vm.customer.contacts[0].lastName/}
+                    <br>Title: {/vm.customer.contacts[0].title/}
+                    <br>Email: {/vm.customer.contacts[0].email/}
+                    <button type="button" class="btn" ng-click="vm.addContact()" style="btn; float:right">Add Contact</button>
+                    <br>Phone Number: {/vm.customer.contacts[0].phone/}
+                </caption>
+            </table>
+            <div ng-repeat="contact in vm.customer.contacts track by $index" ng-if="!$first">
+                <div ng-show="!vm.customer.firstName && $index == 1">Secondary Contacts <br></div>
+                <br>Name: {/contact.firstName/} {/contact.lastName/}
+                <br>Title: {/contact.title/}
+                <br>Email: {/contact.email/}
+                <br>Phone: {/contact.phone/}
             </div>
+            <table id="Customer" width=100% class="table table-bordered table-striped">
+                <thead><th>Quotes</th></thead>
+                <tr ng-repeat="quote in vm.quotes | orderBy: 'quoteID':true">
+                    <td>   <a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/quote.quoteID/}">{/quote.quoteID/} - {/quote.createdAt | limitTo: 10/}</a> <span ng-show="quote.description">- {/quote.description/}</span> - <a href="" ng-click="vm.removeQuote(quote, $index)">remove</a>
+                    </td>
+                </tr>
+            </table>
+            <br>
+            <pre>{/vm.customer | json/}</pre>
         </div>
     </div>
+</div>
+<!--Modal Code for adding a counter-->
+<script type="text/ng-template" id="addContact.html">   
+    <form ng-submit="vm.submitContact(contact)" id="createCustomerForm" name="createCustomerForm">
+        <div class="modal-header">
+            <h3 class="modal-title">Add a Contact</h3>
+        </div>
+        <br>
+        <div class="form-group row">
+            <label for="firstName" class="col-sm-1 col-form-label">First Name</label>
+            <div class="form-group col-sm-3">
+                <input type='text' class="form-control" ng-model="contact.firstName" name='firstName' required>
+            </div>
+            <label for="lastName" class="col-sm-1 col-form-label">Last Name</label>
+            <div class="form-group col-sm-3">
+                <input type='text' class="form-control" ng-model="contact.lastName" name='lastName' required>
+            </div>
+            <label for="title" class="col-sm-1 col-form-label">Title</label>
+            <div class="form-group col-sm-3">
+                <input type='text' class="form-control" ng-model="contact.title" name='title'>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="phone" class="col-sm-2 col-form-label">Telephone</label>
+            <div class="col-sm-4">
+                <input type='text' ng-model="contact.phone" name='phone' 
+                    maxlength="50"
+                    class="form-control"
+                    restrict="reject" 
+                    mask='(999)-999-9999' 
+                    placeholder="(xxx)-xxx-xxxx"
+                    required>                   </div>
+            <label for="fax" class="col-sm-1 col-form-label">Email</label>
+            <div class="col-sm-5">
+                <input type='email' class="form-control" ng-model="contact.email" name='email' required>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <input class="btn btn-default" type="submit" id="submit" value="Submit"/> <button type="button" class="btn" ng-click="vm.cancel()">Cancel</button>
+        </div>
+    </form>
+</script>

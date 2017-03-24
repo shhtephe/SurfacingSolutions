@@ -327,33 +327,7 @@ router.post('/emailrender', function(req, res) {
 
   var env = process.env.NODE_ENV;
   console.log("Env Variable: ", env);
-
-  //Use screen emulator if in linux environment
-  if(env === 'production'){
-    //var Xvfb = require('xvfb');
-    //var xvfb = new Xvfb();
-    //This creates an emulated screen for nightmare to work in
-    var headless = require('headless');
-    console.log("Starting sync");
-    headless(function(err, childProcess, servernum) {
-      console.log('Xvfb running on server number', servernum);
-      console.log('Xvfb pid', childProcess.pid);
-      console.log('err should be null', err);
-      if(err){
-        console.log("There was an error: ", err);
-      };
-      renderNightmare(req, res);
-    });
-    /*xvfb.start(function(err, xvfbProcess) {
-      renderNightmare(req, res);
-      xvfb.stop(function(err) {
-        // the Xvfb is stopped 
-      });
-    });*/
-    
-  } else {
-    renderNightmare(req, res);
-  };
+  renderNightmare(req, res);
 });
 
 router.get('/admindata', function(req, res, next) {
@@ -621,6 +595,25 @@ router.post('/saveproducts', function(req, res, next) {
   }
 });
 
+router.post('/savecustomer', function(req, res){
+  console.log(req.body.customer);
+  var conditions = {custCode:req.body.customer.custCode}
+    , update = req.body.customer
+    , options = {multi : false, upsert : false};
+
+  mongoose.model('customers').findOneAndUpdate(conditions, update, options, callback);
+  function callback (err, numAffected) {
+    if(err) {
+      console.log("Errors: " + err);
+      res.sendStatus(500);
+    } else {
+      console.log("Customer Saved! Rows affected: ", numAffected);
+      res.sendStatus(200); 
+    };
+  };
+});
+
+
 router.post('/savequote', function(req, res){
   //console.log(req.body.quote.counterGroup[0].addons[0]);
   //console.log("addons", req.body.quote.counters[0].addons[0]);
@@ -638,8 +631,8 @@ router.post('/savequote', function(req, res){
     else {
       console.log("Quote Saved! Rows affected: ", numAffected);
       res.sendStatus(200); 
-    }
-  }
+    };
+  };
 });
 
 router.get('/customers', function(req, res, next) {

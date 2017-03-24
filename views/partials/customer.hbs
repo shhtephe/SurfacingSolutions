@@ -11,11 +11,13 @@
                     <button type="button" class="btn" ng-click="vm.newQuote(currentUser)" style="btn; float:right">New Quote</button>
                     <br>
                     Customer: {/vm.customer.companyName/} - {/vm.customer.custCode/}
+                    <br>
                     <!--<br>Salesperson: {/vm.customer.rep/}-->
-                    <br>Primary Contact: {/vm.customer.firstName/} {/vm.customer.lastName/} <span ng-show="!vm.customer.firstName && !vm.customer.lastName">N/A</span>
+                    <br><u>Primary Contact</u>
+                    <br>{/vm.customer.firstName/} {/vm.customer.lastName/} <span ng-show="!vm.customer.firstName && !vm.customer.lastName">N/A</span>
                     <br>Email: {/vm.customer.email/}
                     <button type="button" class="btn" ng-click="vm.addContact()" style="btn; float:right">Add Contact</button>
-                    <br>Phone Number: {/vm.customer.mainPhone/} | Mobile Number: {/vm.customer.mobilePhone/}
+                    <br>Phone: {/vm.customer.mainPhone/} | Mobile Phone: {/vm.customer.mobilePhone/}
                 </caption>
                 <!-- End legacy contact format-->
                 <caption ng-show="!vm.customer.firstName">
@@ -30,12 +32,17 @@
                     <br>Phone Number: {/vm.customer.contacts[0].phone/}
                 </caption>
             </table>
-            <div ng-repeat="contact in vm.customer.contacts track by $index" ng-if="!$first">
-                <div ng-show="!vm.customer.firstName && $index == 1">Secondary Contacts <br></div>
-                <br>Name: {/contact.firstName/} {/contact.lastName/}
-                <br>Title: {/contact.title/}
-                <br>Email: {/contact.email/}
-                <br>Phone: {/contact.phone/}
+            <div ng-show="!vm.customer.firstName && vm.customer.contacts[0].firstName"><button type="button" class="btn btn-default" ng-click="isContactCollapsed = !isContactCollapsed">Secondary Contacts</button></div>
+            <div uib-collapse="!isContactCollapsed">
+                <div class="well well-lg">
+                    <div ng-repeat="contact in vm.customer.contacts track by $index" ng-if="!$first">
+                        <br>Name: {/contact.firstName/} {/contact.lastName/}
+                        <span style="float:right" ng-click="vm.removeContact($index)">x</span>
+                        <br>Title: {/contact.title/}
+                        <br>Email: {/contact.email/}
+                        <br>Phone: {/contact.phone/}
+                    </div>
+                </div>
             </div>
             <table id="Customer" width=100% class="table table-bordered table-striped">
                 <thead><th>Quotes</th></thead>
@@ -45,7 +52,7 @@
                 </tr>
             </table>
             <br>
-            <pre>{/vm.customer | json/}</pre>
+            <!--<pre>{/vm.customer | json/}</pre>-->
         </div>
     </div>
 </div>

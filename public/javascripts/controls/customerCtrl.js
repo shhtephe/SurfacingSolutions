@@ -34,7 +34,7 @@
 
       	  	modalInstance.result.then(function (contacts) {
       			//Save the countertop and put all the data back onto the main controller
-      			vm.saveContact(contacts);  			 				
+      			vm.pushContact(contacts);  			 				
 			}, function () {
       		console.log('Modal dismissed at: ' + new Date());
     		});
@@ -53,9 +53,14 @@
 	    	};
 	    };
 
-		vm.saveContact = function(contact){
+		vm.pushContact = function(contact){
+			console.log(vm.customer.firstName)
 			//refactor old contact format into new
 			if (vm.customer.firstName) {
+				if(!vm.customer.mainPhone) {
+					vm.customer.mainPhone = vm.customer.mobilePhone;
+				};
+
 				var newCustomer = {
 				  _id: vm.customer._id,
 				  createdAt: vm.customer.createdAt,
@@ -80,15 +85,37 @@
 		  		};
 
 	  			vm.customer = newCustomer;
+	  			vm.customer.contacts.push(contact);
 
 			} else {
 				vm.customer.contacts.push(contact);
 			};
+			vm.saveCustomer(vm.customer);
 		};
 
-		//I think this was originally to create a new quote through angular.
-		vm.newQuote = function(currentUser){
-			//New Quote
+		vm.removeContact = function(index) {
+			console.log("Removed Contact " + index);
+			vm.customer.contacts.splice(index, 1);
+			vm.saveCustomer();
+		};
+
+		vm.saveCustomer = function() {
+			//Need to declare that it's sending a json doc
+			$http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
+			$http.post('/savecustomer', {customer : vm.customer}).
+	  		success(function(data, status, headers, config) {
+		    	// this callback will be called asynchronously
+		    	// when the response is available
+		    	console.log("Customer saved, probably");
+		  	}).
+	  		error(function(data, status, headers, config) {
+			    // called asynchronously if an error occurs
+			    // or server returns response with an error status.
+				vm.addAlert("danger", "Could not create new quote: ", data);
+	  		});
+		};
+
+		vm.newQuote = function(){
 			//Need to declare that it's sending a json doc
 			$http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
 			$http.post('/newquote', {customer : vm.customer}).

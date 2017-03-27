@@ -230,15 +230,19 @@ router.get('/customer/:customer/quotebuild/:quote/quotefinaldata', function(req,
   }
 });
 
-renderNightmare = function(req, res) {
+renderNightmare = function(req, res, env) {
   //Nightmare Wrapper 
   console.log("Declaring Nightmare");
   var nightmare = require('nightmare');
 
   var public_dir = '.\\public\\images\\emailquote\\';
   var PDFName = req.body.data.quoteID + ' - ' + req.body.data.createdAt + '.pdf';
-  var pageURL = "http://" + req.hostname + ":8080" + req.body.data.url;
-  //var pageURL = "http://google.com";
+  if (env == "production") {
+    var pageURL = "http://" + req.hostname + ":8080" + req.body.data.url;
+  } else if (env == "dev") {
+    var pageURL = "http://" + req.hostname + ":8081" + req.body.data.url;
+  };
+
   console.log("PageURL: ",pageURL);
   console.log("public_dir: ", public_dir);
   //Create new nightmare ;)
@@ -327,7 +331,7 @@ router.post('/emailrender', function(req, res) {
 
   var env = process.env.NODE_ENV;
   console.log("Env Variable: ", env);
-  renderNightmare(req, res);
+  renderNightmare(req, res, env);
 });
 
 router.get('/admindata', function(req, res, next) {

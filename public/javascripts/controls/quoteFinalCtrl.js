@@ -30,7 +30,7 @@
 				vm.customer = data.customer;
 				vm.products = data.products;
 				vm.materials = data.materials;
-				console.log("Quote: ", vm.quote);
+				//console.log("Quote: ", vm.quote);
 				//build email body
 				vm.init();
 
@@ -51,27 +51,27 @@
 		};
 
 		vm.buildEmailBody = function() {
-			console.log("Customer: ", vm.customer)
-			if(typeof vm.customer.firstName !== 'undefined') {
-				vm.emailBody = 
-				vm.customer.firstName + ", please find attached our quote for services based on the information you provided. " +
-				"If you have any questions please call our office and speak to your sales person.<br><br>Thank you for the opportunity " +
-				"and we look forward to working with you.<br><br>" + vm.quote.account.firstName + " " + vm.quote.account.lastName + 
-				"<br> Surfacing Solutions (2010) Limited<br>e: " + vm.quote.account.email + " t: " + vm.quote.account.phoneNumber;	
-			} else if(vm.selectedContacts.length == 1) {
-				vm.emailBody = 
-				vm.selectedContacts[0].firstName + ", please find attached our quote for services based on the information you provided. " +
-				"If you have any questions please call our office and speak to your sales person.<br><br>Thank you for the opportunity " +
-				"and we look forward to working with you.<br><br>" + vm.quote.account.firstName + " " + vm.quote.account.lastName + 
-				"<br> Surfacing Solutions (2010) Limited<br>e: " + vm.quote.account.email + " t: " + vm.quote.account.phoneNumber;
-			} else {
-				vm.emailBody = 
-				"Please find attached our quote for services based on the information you provided. " +
-				"If you have any questions please call our office and speak to your sales person.<br><br>Thank you for the opportunity " +
-				"and we look forward to working with you.<br><br>" + vm.quote.account.firstName + " " + vm.quote.account.lastName + 
-				"<br> Surfacing Solutions (2010) Limited<br>e: " + vm.quote.account.email + " t: " + vm.quote.account.phoneNumber;
+			if (vm.selectedContacts.length == 1) {
+				vm.emailBody = vm.selectedContacts[0].firstName + ", please find attached our quote for services based on the information you provided. " +
+				"If you have any questions please call our office and speak to your sales person.\n\nThank you for the opportunity " +
+				"and we look forward to working with you.\n\n" + vm.quote.account.firstName + " " + vm.quote.account.lastName + 
+				"\nSurfacing Solutions (2010) Limited\ne: " + vm.quote.account.email + " t: " + vm.quote.account.phoneNumber;
+			} else if (vm.selectedContacts.length > 1) {
+				vm.emailBody = "Please find attached our quote for services based on the information you provided. " +
+				"If you have any questions please call our office and speak to your sales person.\n\nThank you for the opportunity " +
+				"and we look forward to working with you.\n\n" + vm.quote.account.firstName + " " + vm.quote.account.lastName + 
+				"<br> Surfacing Solutions (2010) Limited\ne: " + vm.quote.account.email + " t: " + vm.quote.account.phoneNumber;
+			} else if(typeof vm.customer.firstName !== 'undefined') {
+				vm.emailBody = vm.customer.firstName + ", please find attached our quote for services based on the information you provided. " +
+				"If you have any questions please call our office and speak to your sales person.\n\nThank you for the opportunity " +
+				"and we look forward to working with you.\n\n" + vm.quote.account.firstName + " " + vm.quote.account.lastName + 
+				"\nSurfacing Solutions (2010) Limited\ne: " + vm.quote.account.email + " t: " + vm.quote.account.phoneNumber;
+			} else if(vm.customer.contacts.length > 0) {
+				vm.emailBody = vm.customer.contacts[0].firstName + ", please find attached our quote for services based on the information you provided. " +
+				"If you have any questions please call our office and speak to your sales person.\n\nThank you for the opportunity " +
+				"and we look forward to working with you.\n\n" + vm.quote.account.firstName + " " + vm.quote.account.lastName + 
+				"\nSurfacing Solutions (2010) Limited\ne: " + vm.quote.account.email + " t: " + vm.quote.account.phoneNumber;
 			};
-			
 		};
 
 		vm.buildContacts = function() {
@@ -122,6 +122,9 @@
 
 		vm.email = function(ev, contactEmailList) {
 			// Appending dialog to document.body to cover sidenav in docs app
+
+			//Chance all line breaks to HTML
+			vm.emailBody = vm.emailBody.replace(/\n/g, "<br>");
 		    var confirm = $mdDialog.confirm()
 		          .title('Send Email')
 		          .textContent('Would you like to send the email to ' + contactEmailList +"?")

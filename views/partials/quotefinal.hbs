@@ -36,7 +36,19 @@
 		<div style="clear:both"></div>
 		<br>
 		<div id="customer">
+            <span ng-show="!vm.customer.firstName && vm.customer.contacts[0].firstName">
             <textarea style="width:400px;height:170px" id="customerInfo">{/vm.quote.description/}
+
+{/vm.customer.companyName/}
+
+{/vm.customer.contacts[0].lastName/}, {/vm.customer.contacts[0].firstName/}
+{/vm.customer.addressLine1/} {/vm.customer.addressLine2/}
+{/vm.customer.city/}, {/vm.customer.province/} {/vm.customer.postal/}
+
+Phone: {/vm.customer.contacts[0].phone/}</textarea>
+			</span>
+			<span ng-show="vm.customer.firstName && !vm.customer.contacts[0].firstName">
+			<textarea style="width:400px;height:170px" id="customerInfo">{/vm.quote.description/}
 
 {/vm.customer.companyName/}
 
@@ -45,6 +57,7 @@
 {/vm.customer.city/}, {/vm.customer.province/} {/vm.customer.postal/}
 
 Phone: {/vm.customer.homePhone/}</textarea>
+			</span>
 
             <table id="meta">
                 <tr>
@@ -52,7 +65,6 @@ Phone: {/vm.customer.homePhone/}</textarea>
                     <td><textarea>{/vm.quote.quoteID/}</textarea></td>
                 </tr>
                 <tr>
-
                     <td class="meta-head">Date</td>
                     <td><textarea id="date">{/vm.quote.createdAt | limitTo: 10/}</textarea></td>
                 </tr>

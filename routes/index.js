@@ -604,7 +604,7 @@ router.post('/savecustomer', function(req, res){
   var conditions = {custCode:req.body.customer.custCode}
     , update = req.body.customer
     , options = {multi : false, upsert : false};
-
+//http://stackoverflow.com/questions/26871720/using-findone-then-save-to-replace-a-document-mongoose
   mongoose.model('customers').findOneAndUpdate(conditions, update, options, callback);
   function callback (err, numAffected) {
     if(err) {

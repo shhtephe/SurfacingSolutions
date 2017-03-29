@@ -32,8 +32,8 @@
                     <br>Phone Number: {/vm.customer.contacts[0].phone/}
                 </caption>
             </table>
-            <div ng-show="!vm.customer.firstName && vm.customer.contacts[0].firstName"><button type="button" class="btn btn-default" ng-click="isContactCollapsed = !isContactCollapsed">Secondary Contacts</button></div>
-            <div uib-collapse="!isContactCollapsed">
+            <div ng-show="!vm.customer.firstName && vm.customer.contacts[1].firstName"><button type="button" class="btn btn-default" ng-click="vm.isContactCollapsed = !vm.isContactCollapsed">Secondary Contacts</button></div>
+            <div uib-collapse="!vm.isContactCollapsed">
                 <div class="well well-lg">
                     <div ng-repeat="contact in vm.customer.contacts track by $index" ng-if="!$first">
                         <br>Name: {/contact.firstName/} {/contact.lastName/}
@@ -52,7 +52,7 @@
                 </tr>
             </table>
             <br>
-            <!--<pre>{/vm.customer | json/}</pre>-->
+            <pre>{/vm.customer | json/}</pre>
         </div>
     </div>
 </div>

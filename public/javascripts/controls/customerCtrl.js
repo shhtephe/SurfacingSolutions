@@ -57,12 +57,12 @@
 			console.log(vm.customer.firstName)
 			//refactor old contact format into new
 			if (vm.customer.firstName) {
+				console.log("Legacy contact found.")
 				if(!vm.customer.mainPhone) {
 					vm.customer.mainPhone = vm.customer.mobilePhone;
 				};
 
 				var newCustomer = {
-				  _id: vm.customer._id,
 				  createdAt: vm.customer.createdAt,
 				  updatedAt: vm.customer.updatedAt,
 				  companyName: vm.customer.companyName,
@@ -72,7 +72,6 @@
 				  postal: vm.customer.postal,
 				  businessPhone: vm.customer.businessPhone,
 				  custCode: vm.customer.custCode,
-				  __v: vm.customer.__v,
 				  contacts: [
 				  	{
 				  		firstName: vm.customer.firstName,
@@ -85,24 +84,29 @@
 		  		};
 
 	  			vm.customer = newCustomer;
+	  			console.log(vm.customer);
 	  			vm.customer.contacts.push(contact);
-
+	  			console.log(vm.customer);
+	  			vm.saveCustomer(vm.customer, "replace");
 			} else {
 				vm.customer.contacts.push(contact);
+				vm.saveCustomer(vm.customer, "update");
 			};
-			vm.saveCustomer(vm.customer);
 		};
 
 		vm.removeContact = function(index) {
 			console.log("Removed Contact " + index);
 			vm.customer.contacts.splice(index, 1);
-			vm.saveCustomer();
+			vm.saveCustomer(vm.customer, "update");
+			if(vm.customer.contacts.length < 2) {
+				vm.isContactCollapsed = false;
+			}
 		};
 
-		vm.saveCustomer = function() {
+		vm.saveCustomer = function(customer, action) {
 			//Need to declare that it's sending a json doc
 			$http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
-			$http.post('/savecustomer', {customer : vm.customer}).
+			$http.post('/savecustomer', {customer : customer, action : action}).
 	  		success(function(data, status, headers, config) {
 		    	// this callback will be called asynchronously
 		    	// when the response is available

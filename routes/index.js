@@ -600,19 +600,49 @@ router.post('/saveproducts', function(req, res, next) {
 });
 
 router.post('/savecustomer', function(req, res){
-  console.log(req.body.customer);
+  //console.log("Customer", req.body.customer);
   var conditions = {custCode:req.body.customer.custCode}
     , update = req.body.customer
-    , options = {multi : false, upsert : false};
-
-  mongoose.model('customers').findOneAndUpdate(conditions, update, options, callback);
-  function callback (err, numAffected) {
-    if(err) {
-      console.log("Errors: " + err);
-      res.sendStatus(500);
-    } else {
-      console.log("Customer Saved! Rows affected: ", numAffected);
-      res.sendStatus(200); 
+    , options = {upsert: true};
+  if(req.body.action == 'replace') {
+    console.log("Finding and removing")
+    mongoose.model('customers').findOneAndRemove(conditions, callback);
+    function callback (err, doc) {
+      if(err) {
+        console.log("Could not Remove: " + err);
+        res.sendStatus(500);
+      } else {
+        if(update.__v) {
+          console.log("Removing __v");
+          delete update._v;
+        };
+        console.log("Updating with new doc")
+        mongoose.model('customers').findOneAndUpdate(conditions, update, options, callback);
+        function callback (err, doc) {
+          if(err) {
+            console.log("Errors: " + err);
+            res.sendStatus(500);
+          } else {
+            console.log("Customer Saved! Rows affected: ", doc);
+            res.sendStatus(200); 
+          };
+        };
+      };
+    };
+  } else if (req.body.action == 'update') {
+      if(typeof update.__v == 'number') {
+        console.log("Removing __v");
+        delete update.__v;
+      };
+    mongoose.model('customers').findOneAndUpdate(conditions, update, options, callback);
+    function callback (err, doc) {
+      if(err) {
+        console.log("Could not update doc: " + err);
+        res.sendStatus(500);
+      } else {
+        console.log("Customer Saved! Rows affected: ", doc);
+        res.sendStatus(200); 
+      };
     };
   };
 });

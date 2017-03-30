@@ -7,6 +7,7 @@ var quotes = require('../models/quotes');
 var customers = require('../models/customers'); 
 var products = require('../models/products'); 
 var materials = require('../models/materials');
+var remnants = require('../models/remnants');
 var terms = require('../models/terms');
 
 //mongoose
@@ -369,6 +370,10 @@ router.get('/admin', function(req, res, next) {
   res.render('partials/admin');
 });
 
+router.get('/remnants', function(req, res, next) {
+  res.render('partials/remnants');
+});
+
 router.post('/updatedb', function(req, res, next) {
   //console.log(req.body.json.data);
   var conditions = {};
@@ -678,6 +683,13 @@ router.get('/customersdata', function(req, res, next) {
       res.json(data); 
   }); 
 });
+
+router.get('/remnants', function(req, res, next) {
+  mongoose.model('remnants').find(function(err, data) {
+      res.json(data); 
+  }); 
+});
+
 
 
 

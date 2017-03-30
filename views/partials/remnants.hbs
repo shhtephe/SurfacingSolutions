@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<div class="container">
+	<button class="button" ng-click="vm.showAddRemnants = true">Add Remnants</button>
+	<br>
+	<span ng-show="vm.showAddRemnants">
+		<!--FILL IN WITH ADMIN CODE-->
+		<form name="addMaterialForm"
+		ng-submit="vm.addRemnant(materialDescription);">
+			<ul class="list-group"> 
+				<li class="list-group-item">	
+					Choose a Manufacturer:
+					<select name="addMaterialManufacturer" ng-model="addMaterialManufacturer" ng-options="material.manufacturer for material in vm.materials | orderBy:'manufacturer' | unique: 'manufacturer'" value="{/manufacturer.manufacturer/}">
+						<option value="">----Select----</option>
+					</select>
+				</li>
+				<li ng-show="addMaterialManufacturer" class="list-group-item">	
+					Choose a Description:
+					<select name="addMaterialDescription" ng-model="addMaterialDescription" ng-options="material.description for material in vm.materials | filter:{manufacturer:addMaterialManufacturer.manufacturer} | orderBy:'description' | unique: 'description'" value="{/material.manufacturer/}">
+						<option value="">----Select----</option>
+					</select>
+				</li>
+				<span ng-show="addMaterialManufacturer && addMaterialDescription">
+					<br>
+					<table class="table">
+						<tr>
+							<td>Manufacturer</td>
+							<td>Type</td>
+							<td>Colour</td>
+							<td>Description</td>
+							<td>Thickness</td>
+							<td>Length</td>
+							<td>Width</td>
+							<td>Location</td>
+							<td>Date Added</td>
+
+						</tr>
+						<tr>
+							<td>
+								{/addMaterialDescription.manufacturer/} 
+							</td>
+							<td>
+								{/addMaterialDescription.materialType/} 
+							</td>
+							<td>
+								{/addMaterialDescription.colourGroup/} 
+							</td>
+							<td>
+								{/addMaterialDescription.description/} 
+							</td>
+							<td>
+								{/addMaterialDescription.thickness/} 
+							</td>
+							<td>
+								<input type="text" name="length" ng-model="addMaterialDescription.length">
+							</td>
+							<td>
+								<input type="text" name="width" ng-model="addMaterialDescription.width"> 
+							</td>
+							<td>
+								<input type="text" name="location" ng-model="addMaterialDescription.location">
+							</td>
+							<td>
+								<input type="text" name="dateAdded" ng-model="addMaterialDescription.dateAdded">
+							</td>
+
+						</tr>
+					</table>
+				<span>
+			</ul>
+			<button type="button" ng-click="vm.showAddRemnants = !vm.showAddRemnants" class="btn btn-default">Cancel</button> 
+			<input type="submit" class="btn btn-default" value="Add">
+		</form> 
+	</span>
+	<span ng-show="vm.remnants == null">
+		<br>There are no remnants to show!
+		<br>Try adding some!
+	</span>
+	<span ng-hide="vm.remnants == null">
+		<table class="table">
+			<caption>Remnants List</caption>		
+		</table>
+	</span>
+</div>

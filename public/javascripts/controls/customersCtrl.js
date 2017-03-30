@@ -31,7 +31,7 @@
 
 	  	vm.buildCustomer = function(customer) {
 	  		var response = "";
-	  		
+	  		console.log(customer)
 	  		if(customer.companyName !=="") {
 	  			response += (customer.companyName + " - ");
 	  		};

@@ -325,33 +325,7 @@ router.post('/emailrender', function(req, res) {
 
   var env = process.env.NODE_ENV;
   console.log("Env Variable: ", env);
-
-  //Use screen emulator if in linux environment
-  if(env === 'production'){
-    //var Xvfb = require('xvfb');
-    //var xvfb = new Xvfb();
-    //This creates an emulated screen for nightmare to work in
-    var headless = require('headless');
-    console.log("Starting sync");
-    headless(function(err, childProcess, servernum) {
-      console.log('Xvfb running on server number', servernum);
-      console.log('Xvfb pid', childProcess.pid);
-      console.log('err should be null', err);
-      if(err){
-        console.log("There was an error: ", err);
-      };
-      renderNightmare(req, res);
-    });
-    /*xvfb.start(function(err, xvfbProcess) {
-      renderNightmare(req, res);
-      xvfb.stop(function(err) {
-        // the Xvfb is stopped 
-      });
-    });*/
-    
-  } else {
-    renderNightmare(req, res);
-  };
+  renderNightmare(req, res);
 });
 
 router.get('/admindata', function(req, res, next) {

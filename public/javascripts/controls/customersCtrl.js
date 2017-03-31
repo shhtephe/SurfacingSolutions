@@ -31,19 +31,34 @@
 
 	  	vm.buildCustomer = function(customer) {
 	  		var response = "";
+	  		console.log(customer)
 	  		if(customer.companyName !=="") {
 	  			response += (customer.companyName + " - ");
 	  		};
-	  		if (customer.lastName !=="" && customer.firstName !=="") {
-	  			response += (customer.lastName + ", " + customer.firstName);
-	  		} else if(customer.lastName !==""){
-	  			response += (customer.lastName);
-	  		} else if (customer.firstName !==""){
-				response += (customer.firstName);
+	  		//handles old contact style
+	  		if (typeof customer.firstName == 'undefined') {
+  				var contact = {
+  					firstName : customer.contacts[0].firstName,
+  					lastName : customer.contacts[0].lastName,
+  					email : customer.contacts[0].email, 
+  				};
+  			} else {
+  				var contact = {
+  					firstName : customer.firstName,
+  					lastName : customer.lastName,
+  					email : customer.email, 
+  				};
+  			};
+	  		if (contact.lastName !=="" && contact.firstName !=="") {
+	  			response += (contact.lastName + ", " + contact.firstName);
+	  		} else if(contact.lastName !==""){
+	  			response += (contact.lastName);
+	  		} else if (contact.firstName !==""){
+				response += (contact.firstName);
 	  		};
-	  		if(customer.email !=="") {
-				response += (" - " + customer.email);
-	  		};
+	  		if(contact.email !=="") {
+					response += (" - " + contact.email);
+		  		};
 	  		return response;
 	  	};
 

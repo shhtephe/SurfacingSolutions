@@ -7,6 +7,7 @@ var quotes = require('../models/quotes');
 var customers = require('../models/customers'); 
 var products = require('../models/products'); 
 var materials = require('../models/materials');
+var remnants = require('../models/remnants');
 var terms = require('../models/terms');
 
 //mongoose
@@ -230,15 +231,19 @@ router.get('/customer/:customer/quotebuild/:quote/quotefinaldata', function(req,
   }
 });
 
-renderNightmare = function(req, res) {
+renderNightmare = function(req, res, env) {
   //Nightmare Wrapper 
   console.log("Declaring Nightmare");
   var nightmare = require('nightmare');
 
   var public_dir = '.\\public\\images\\emailquote\\';
   var PDFName = req.body.data.quoteID + ' - ' + req.body.data.createdAt + '.pdf';
-  var pageURL = "http://" + req.hostname + ":8080" + req.body.data.url;
-  //var pageURL = "http://google.com";
+  if (env == "production") {
+    var pageURL = "http://" + req.hostname + ":8080" + req.body.data.url;
+  } else if (env == "dev") {
+    var pageURL = "http://" + req.hostname + ":8081" + req.body.data.url;
+  };
+
   console.log("PageURL: ",pageURL);
   console.log("public_dir: ", public_dir);
   //Create new nightmare ;)
@@ -275,7 +280,8 @@ renderNightmare = function(req, res) {
         var emailSubject = "Surfacing Solutions Quote " + req.body.data.quoteID;
       };
       //Set email options up
-      var mailOptions = {
+      if(req.body.data.account.email && req.body.data.email) {
+        var mailOptions = {
           from: req.body.data.account.email, // sender address
           to:  req.body.data.email, // list of receivers
           cc: ["quotes@surfacingsolutions.ca", req.body.data.account.email],
@@ -286,32 +292,33 @@ renderNightmare = function(req, res) {
             path: attachFilePath
             //contentType: 'application/pdf'
           }]
-      };
-      console.log("Mail Options: ", mailOptions);
-      transporter.sendMail(mailOptions, function(error, response){
-        if (error) {
-          console.log('Sending Mail Failed!', error);
-          res.sendStatus(500);
-          return;
-        } else {
-          console.log("Emailed", response);
-          res.header('Content-Type', 'text/plain');
-          res.sendStatus(200);
         };
-        //Delete file once we're done.
-        fs.exists(attachFilePath, function(exists) {
-          if(exists) {
-            //Show in green
-            console.log(gutil.colors.green('Deleting Temp File'));
-            fs.unlink(attachFilePath);
+        console.log("Mail Options: ", mailOptions);
+        transporter.sendMail(mailOptions, function(error, response){
+          if (error) {
+            console.log('Sending Mail Failed!', error);
+            res.sendStatus(500);
+            return;
           } else {
-            //Show in red
-            console.log(gutil.colors.red('File not found.'));
+            console.log("Emailed", response);
+            res.header('Content-Type', 'text/plain');
+            res.sendStatus(200);
           };
+          //Delete file once we're done.
+          fs.exists(attachFilePath, function(exists) {
+            if(exists) {
+              //Show in green
+              console.log(gutil.colors.green('Deleting Temp File'));
+              fs.unlink(attachFilePath);
+            } else {
+              //Show in red
+              console.log(gutil.colors.red('File not found.'));
+            };
+          });
+          // if you don't want to use this transport object anymore, uncomment following line
+          transporter.close(); // shut down the connection pool, no more messages
         });
-        // if you don't want to use this transport object anymore, uncomment following line
-        transporter.close(); // shut down the connection pool, no more messages
-      });
+      };
     };
   }).catch(function(err){
     console.log(err);
@@ -325,7 +332,11 @@ router.post('/emailrender', function(req, res) {
 
   var env = process.env.NODE_ENV;
   console.log("Env Variable: ", env);
+<<<<<<< HEAD
   renderNightmare(req, res);
+=======
+  renderNightmare(req, res, env);
+>>>>>>> 226dc135a4045083958c8e5eecc85ac62ee0430f
 });
 
 router.get('/admindata', function(req, res, next) {
@@ -361,6 +372,10 @@ router.get('/quotesdata', function(req, res, next) {
 
 router.get('/admin', function(req, res, next) {
   res.render('partials/admin');
+});
+
+router.get('/remnants', function(req, res, next) {
+  res.render('partials/remnants');
 });
 
 router.post('/updatedb', function(req, res, next) {
@@ -593,6 +608,55 @@ router.post('/saveproducts', function(req, res, next) {
   }
 });
 
+router.post('/savecustomer', function(req, res){
+  //console.log("Customer", req.body.customer);
+  var conditions = {custCode:req.body.customer.custCode}
+    , update = req.body.customer
+    , options = {upsert: true};
+  if(req.body.action == 'replace') {
+    console.log("Finding and removing")
+    mongoose.model('customers').findOneAndRemove(conditions, callback);
+    function callback (err, doc) {
+      if(err) {
+        console.log("Could not Remove: " + err);
+        res.sendStatus(500);
+      } else {
+        if(update.__v) {
+          console.log("Removing __v");
+          delete update._v;
+        };
+        console.log("Updating with new doc")
+        mongoose.model('customers').findOneAndUpdate(conditions, update, options, callback);
+        function callback (err, doc) {
+          if(err) {
+            console.log("Errors: " + err);
+            res.sendStatus(500);
+          } else {
+            console.log("Customer Saved! Rows affected: ", doc);
+            res.sendStatus(200); 
+          };
+        };
+      };
+    };
+  } else if (req.body.action == 'update') {
+      if(typeof update.__v == 'number') {
+        console.log("Removing __v");
+        delete update.__v;
+      };
+    mongoose.model('customers').findOneAndUpdate(conditions, update, options, callback);
+    function callback (err, doc) {
+      if(err) {
+        console.log("Could not update doc: " + err);
+        res.sendStatus(500);
+      } else {
+        console.log("Customer Saved! Rows affected: ", doc);
+        res.sendStatus(200); 
+      };
+    };
+  };
+});
+
+
 router.post('/savequote', function(req, res){
   //console.log(req.body.quote.counterGroup[0].addons[0]);
   //console.log("addons", req.body.quote.counters[0].addons[0]);
@@ -610,8 +674,8 @@ router.post('/savequote', function(req, res){
     else {
       console.log("Quote Saved! Rows affected: ", numAffected);
       res.sendStatus(200); 
-    }
-  }
+    };
+  };
 });
 
 router.get('/customers', function(req, res, next) {
@@ -623,6 +687,13 @@ router.get('/customersdata', function(req, res, next) {
       res.json(data); 
   }); 
 });
+
+router.get('/remnants', function(req, res, next) {
+  mongoose.model('remnants').find(function(err, data) {
+      res.json(data); 
+  }); 
+});
+
 
 
 

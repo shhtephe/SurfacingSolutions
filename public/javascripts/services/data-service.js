@@ -11,7 +11,8 @@
 			getProductsMaterials: getProductsMaterials,
 			getQuote: getQuote,
 			getAccounts: getAccounts,
-			getQuotes: getQuotes
+			getQuotes: getQuotes,
+			getRemnants: getRemnants
 		};
 
 		function getCustomers() {
@@ -25,6 +26,18 @@
 				})
 			return deferred.promise;
 		};
+
+		function getRemnants() {
+			var deferred = $q.defer();
+			$http.get('/remnants')
+				.success(function(response) {
+					deferred.resolve(response);
+					// update angular's scopes
+                 	$rootScope.$$phase || $rootScope.$apply();
+				})
+			return deferred.promise;
+		};
+
 
 		function getCustomer(custCode) {
 			var deferred = $q.defer();

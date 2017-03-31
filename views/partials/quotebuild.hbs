@@ -17,7 +17,12 @@
 					<br>
 					<textarea ng-model="vm.quote.description"></textarea>
 				</span>
-				Customer: {/vm.customer.companyName/} - {/vm.customer.lastName/}, {/vm.customer.firstName/}
+				<span ng-show="vm.customer.firstName">
+					Customer: {/vm.customer.companyName/} - {/vm.customer.lastName/}, {/vm.customer.firstName/}
+				</span>
+				<span ng-show="!vm.customer.firstName">
+					Customer: {/vm.customer.companyName/} - {/vm.customer.contacts[0].lastName/}, {/vm.customer.contacts[0].firstName/}
+				</span>
 				<br>QuoteID: {/vm.quote.quoteID/}
 				<br>
 				P.O. Number: <input type="text" ng-model="vm.quote.poNumber">

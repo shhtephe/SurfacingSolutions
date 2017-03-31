@@ -5,9 +5,9 @@
 	.module('surfacingSolutions')
 	.controller('customerCtrl', customerCtrl);
 
-	customerCtrl.$inject = ['dataFactory', '$stateParams', '$location', '$mdDialog', '$http'];
+	customerCtrl.$inject = ['dataFactory', '$stateParams', '$location', '$mdDialog', '$http', '$uibModal'];
 
-	function customerCtrl(dataFactory, $stateParams, $location, $mdDialog, $http) {
+	function customerCtrl(dataFactory, $stateParams, $location, $mdDialog, $http, $uibModal) {
 		var vm = this;
 		var custCode = $stateParams.custCode;
 		dataFactory.getCustomer(custCode)
@@ -18,9 +18,108 @@
 			function(reason) {
 				console.log(reason);
 			});
-		//I think this was originally to create a new quote through angular.
-		vm.newQuote = function(currentUser){
-			//New Quote
+
+		//add Contact Modal
+		vm.addContact = function (contacts) {
+			//console.log(groupIndex, counters, size);
+	    	var modalInstance = $uibModal.open({
+		      animation: true,
+		      templateUrl: 'addContact.html',
+		      controller: ['$uibModalInstance', addContactCtrl],
+		      controllerAs: 'vm',
+		      resolve: {
+		        contacts: function() {return contacts}
+		        }
+      	  	});
+
+      	  	modalInstance.result.then(function (contacts) {
+      			//Save the countertop and put all the data back onto the main controller
+      			vm.pushContact(contacts);  			 				
+			}, function () {
+      		console.log('Modal dismissed at: ' + new Date());
+    		});
+	    };
+
+	    //Contact modal Controller
+	    var addContactCtrl = function($uibModalInstance) {
+	    	var vm = this;
+
+	    	vm.submitContact = function(contact) {
+	    		$uibModalInstance.close(contact);
+	    	};
+
+	    	vm.cancel = function() {
+				$uibModalInstance.dismiss('cancel');
+	    	};
+	    };
+
+		vm.pushContact = function(contact){
+			console.log(vm.customer.firstName)
+			//refactor old contact format into new
+			if (vm.customer.firstName) {
+				console.log("Legacy contact found.")
+				if(!vm.customer.mainPhone) {
+					vm.customer.mainPhone = vm.customer.mobilePhone;
+				};
+
+				var newCustomer = {
+				  createdAt: vm.customer.createdAt,
+				  updatedAt: vm.customer.updatedAt,
+				  companyName: vm.customer.companyName,
+				  addressLine1: vm.customer.addressLine1,
+				  city: vm.customer.city,
+				  province: vm.customer.province,
+				  postal: vm.customer.postal,
+				  businessPhone: vm.customer.businessPhone,
+				  custCode: vm.customer.custCode,
+				  contacts: [
+				  	{
+				  		firstName: vm.customer.firstName,
+				  		lastName: vm.customer.lastName,
+				  		title: "",
+				  		phone: vm.customer.mainPhone,
+				  		email: vm.customer.email,
+				  	}
+				  ]
+		  		};
+
+	  			vm.customer = newCustomer;
+	  			console.log(vm.customer);
+	  			vm.customer.contacts.push(contact);
+	  			console.log(vm.customer);
+	  			vm.saveCustomer(vm.customer, "replace");
+			} else {
+				vm.customer.contacts.push(contact);
+				vm.saveCustomer(vm.customer, "update");
+			};
+		};
+
+		vm.removeContact = function(index) {
+			console.log("Removed Contact " + index);
+			vm.customer.contacts.splice(index, 1);
+			vm.saveCustomer(vm.customer, "update");
+			if(vm.customer.contacts.length < 2) {
+				vm.isContactCollapsed = false;
+			}
+		};
+
+		vm.saveCustomer = function(customer, action) {
+			//Need to declare that it's sending a json doc
+			$http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
+			$http.post('/savecustomer', {customer : customer, action : action}).
+	  		success(function(data, status, headers, config) {
+		    	// this callback will be called asynchronously
+		    	// when the response is available
+		    	console.log("Customer saved, probably");
+		  	}).
+	  		error(function(data, status, headers, config) {
+			    // called asynchronously if an error occurs
+			    // or server returns response with an error status.
+				vm.addAlert("danger", "Could not create new quote: ", data);
+	  		});
+		};
+
+		vm.newQuote = function(){
 			//Need to declare that it's sending a json doc
 			$http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
 			$http.post('/newquote', {customer : vm.customer}).

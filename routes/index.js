@@ -332,11 +332,7 @@ router.post('/emailrender', function(req, res) {
 
   var env = process.env.NODE_ENV;
   console.log("Env Variable: ", env);
-<<<<<<< HEAD
-  renderNightmare(req, res);
-=======
   renderNightmare(req, res, env);
->>>>>>> 226dc135a4045083958c8e5eecc85ac62ee0430f
 });
 
 router.get('/admindata', function(req, res, next) {

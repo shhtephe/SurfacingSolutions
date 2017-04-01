@@ -8,36 +8,38 @@
 <br>-->
 <uib-alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</uib-alert>
 	<div id="page-wrap">
-	<a href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}"><button type="button" style="btn">Back</button></a> 
-	<a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotesend	" target=""><button type="button" style="btn">Client Preview</button></a>
-		<textarea id="header">Office Copy</textarea>	
-		<div id="surfacingIdentity">
+	<a href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}"><button type="button" class="btn">Back</button></a> 
+	<a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotesend	" target=""><button type="button" class="btn">Client Preview</button></a>
+	<button type="button" class="btn" ng-click="vm.printScreen('printScreen')">Print</button>
+		<div id="printScreen">
+			<textarea id="header">Office Copy</textarea>	
+			<div id="surfacingIdentity">
 
-			<textarea id="surfacingInfo">Surfacing Solutions 2010 Ltd.</textarea>
-			<br> <br>
-			<textarea id="surfacingAddress">170 Bovaird Drive West, Unit #3 &#13;Brampton, Ontario &#13;L7A 1A1&#13;P: 905-874-1814 F: 905-874-8083&#13;Website: www.surfacingsolutions.ca&#13;Email: pete@surfacingsolutiuons.ca</textarea>
-			<div id="logo">
+				<textarea id="surfacingInfo">Surfacing Solutions 2010 Ltd.</textarea>
+				<br> <br>
+				<textarea id="surfacingAddress">170 Bovaird Drive West, Unit #3 &#13;Brampton, Ontario &#13;L7A 1A1&#13;P: 905-874-1814 F: 905-874-8083&#13;Website: www.surfacingsolutions.ca&#13;Email: pete@surfacingsolutiuons.ca</textarea>
+				<div id="logo">
 
-              <div id="logoctr">
-                <a href="javascript:;" id="change-logo" title="Change logo">Change Logo</a>
-                <a href="javascript:;" id="save-logo" title="Save changes">Save</a>
-                |
-                <a href="javascript:;" id="delete-logo" title="Delete logo">Delete Logo</a>
-                <a href="javascript:;" id="cancel-logo" title="Cancel changes">Cancel</a>
-              </div>
+	              <div id="logoctr">
+	                <a href="javascript:;" id="change-logo" title="Change logo">Change Logo</a>
+	                <a href="javascript:;" id="save-logo" title="Save changes">Save</a>
+	                |
+	                <a href="javascript:;" id="delete-logo" title="Delete logo">Delete Logo</a>
+	                <a href="javascript:;" id="cancel-logo" title="Cancel changes">Cancel</a>
+	              </div>
 
-              <div id="logohelp">
-                <input id="imageloc" type="text" size="50" value="" /><br />
-                (max width: 540px, max height: 100px)
-              </div>
-              <img id="image" src="images/ssilogo.png" alt="logo" />
-            </div>
-		</div>
-		<div style="clear:both"></div>
-		<br>
-		<div id="customer">
-            <span ng-show="!vm.customer.firstName && vm.customer.contacts[0].firstName">
-            <textarea style="width:400px;height:170px" id="customerInfo">{/vm.quote.description/}
+	              <div id="logohelp">
+	                <input id="imageloc" type="text" size="50" value="" /><br />
+	                (max width: 540px, max height: 100px)
+	              </div>
+	              <img id="image" src="images/ssilogo.png" alt="logo" />
+	            </div>
+			</div>
+			<div style="clear:both"></div>
+			<br>
+			<div id="customer">
+	            <span ng-show="!vm.customer.firstName && vm.customer.contacts[0].firstName">
+	            <textarea style="width:400px;height:170px" id="customerInfo">{/vm.quote.description/}
 
 {/vm.customer.companyName/}
 
@@ -46,9 +48,9 @@
 {/vm.customer.city/}, {/vm.customer.province/} {/vm.customer.postal/}
 
 Phone: {/vm.customer.contacts[0].phone/}</textarea>
-			</span>
-			<span ng-show="vm.customer.firstName && !vm.customer.contacts[0].firstName">
-			<textarea style="width:400px;height:170px" id="customerInfo">{/vm.quote.description/}
+				</span>
+				<span ng-show="vm.customer.firstName && !vm.customer.contacts[0].firstName">
+				<textarea style="width:400px;height:170px" id="customerInfo">{/vm.quote.description/}
 
 {/vm.customer.companyName/}
 
@@ -57,112 +59,26 @@ Phone: {/vm.customer.contacts[0].phone/}</textarea>
 {/vm.customer.city/}, {/vm.customer.province/} {/vm.customer.postal/}
 
 Phone: {/vm.customer.homePhone/}</textarea>
-			</span>
+				</span>
 
-            <table id="meta">
-                <tr>
-                    <td class="meta-head">Quote #</td>
-                    <td><textarea>{/vm.quote.quoteID/}</textarea></td>
-                </tr>
-                <tr>
-                    <td class="meta-head">Date</td>
-                    <td><textarea id="date">{/vm.quote.createdAt | limitTo: 10/}</textarea></td>
-                </tr>
-                <tr>
-                    <td class="meta-head">P.O. No./ Job No.</td>
-                    <td><div class="due">{/vm.quote.poNumber/}</div></td>
-                </tr>
-            </table>
-		</div>
-		<!-- group table -->
-		<table id="items" ng-repeat='group in vm.quote.counterGroup'>
-			<caption>Group {/$index+1/} x {/group.quantity/}</caption>
-			<thead>
-				<th>Item</th>
-				<th>Description</th>
-				<th>Unit Cost</th>
-				<th>Quantity</th>
-				<th>Price</th>
-			</thead>
-			<tbody>
-			<!-- Counter Section -->
-				<tr>
-					<td class="item-name">
-						<span ng-hide="counter.addon">{/group.material.manufacturer/} - {/group.material.description/}</span>
-						<span class="label label-info" ng-show="counter.addon">Addon</span>
-					</td>
-				    <td class="description">
-				    	<span ng-hide="counter.addon">
-				    		{/group.description/}
-			    		</span>
-			    		<span ng-show="counter.addon">
-				    		<textarea>{/counter.itemCode/}</textarea>
-			    		</span>
-		    		</td>
-				    <td>
-				    	<div align="right" ng-hide="counter.addon">
-				    		{/group.material[group.material.pricing] | currency:$/}
-			    		</div>
-			    		<span ng-show="counter.addon">
-				    		<textarea>{/counter.price | currency:$/}</textarea>
-			    		</span>
-			    	</td>
-				    <td>
-		        		{/group.TAC | number:2/} SQFT    				    	
-		    		</td>
-				    <td>	
-				    	<div align="right" ng-show="counter.addon"class="price">{/group.GMC | currency: $/}</div>
-				    	<div align="right" ng-hide="counter.addon"class="price">{/group.GMC | currency: $/}</div>	
-			    	</td>
-				</tr>
-			<!-- Addon section -->
-				<tr ng-repeat="addon in group.addons">	
-					<td class="item-name">
-						<span class="label label-info">Addon</span>
-					</td>
-				    <td class="description">
-				    	{/addon.description/}
-		    		</td>
-				    <td>
-				    	<div align="right">{/addon.price | currency:$/}</div>
-			    	</td>
-				    <td>
-				    	{/addon.quantity/}
-				    		<span ng-show="addon.formula == 'sqft'"> SQFT</span>
-				    		<span ng-show="addon.formula == 'linear'"> linear FT</span>
-				    		<span ng-show="addon.formula == 'item'"> items</span>
-		    		</td>
-				    <td>	
-				    	<div align="right" class="price">{/addon.totalPrice | currency: $/}</div>
-			    	</td>
-				</tr>
-			<!-- totals and summation -->
-				<tr>
-			    	<td colspan="3" class="blank"> </td>
-			    	<td colspan="1" class="total-line">GMC</td>
-			    	<td class="total-value"><div align="right" id="subtotal">{/group.GMC * vm.quote.jobDifficulty| currency:$/}</div></td>
-			  	</tr>
-				<tr>
-			    	<td colspan="3" class="blank"> </td>
-			    	<td colspan="1" class="total-line">Addons</td>
-			    	<td class="total-value"><div align="right" id="subtotal">{/(group.totalPrice - group.GMC) * vm.quote.jobDifficulty| currency:$/}</div></td>
-			  	</tr>
-			  	<tr>
-			    	<td colspan="3" class="blank"> </td>
-			    	<td colspan="1" class="total-line">Price Per Sq. Ft</td>
-			    	<td class="total-value"><div align="right" id="subtotal">{/group.GCPSF| currency:$/}</div></td>
-			  	</tr>
-				<tr>
-			    	<td colspan="3" class="blank"> </td>
-			    	<td colspan="1" class="total-line">Total</td>
-			    	<td class="total-value"><div align="right" id="subtotal">{/group.totalPrice * vm.quote.jobDifficulty| currency:$/}</div></td>
-			  	</tr>
-			</tbody>
-		</table>
-		<!-- Mandatory addons and summary section -->
-		<span ng-show="vm.quote.mandatoryAddons[0]">
-			<table id="items">
-				<caption>Global addons:</caption>
+	            <table id="meta">
+	                <tr>
+	                    <td class="meta-head">Quote #</td>
+	                    <td><textarea>{/vm.quote.quoteID/}</textarea></td>
+	                </tr>
+	                <tr>
+	                    <td class="meta-head">Date</td>
+	                    <td><textarea id="date">{/vm.quote.createdAt | limitTo: 10/}</textarea></td>
+	                </tr>
+	                <tr>
+	                    <td class="meta-head">P.O. No./ Job No.</td>
+	                    <td><div class="due">{/vm.quote.poNumber/}</div></td>
+	                </tr>
+	            </table>
+			</div>
+			<!-- group table -->
+			<table id="items" ng-repeat='group in vm.quote.counterGroup'>
+				<caption>Group {/$index+1/} x {/group.quantity/}</caption>
 				<thead>
 					<th>Item</th>
 					<th>Description</th>
@@ -170,79 +86,166 @@ Phone: {/vm.customer.homePhone/}</textarea>
 					<th>Quantity</th>
 					<th>Price</th>
 				</thead>
+				<tbody>
+				<!-- Counter Section -->
+					<tr>
+						<td class="item-name">
+							<span ng-hide="counter.addon">{/group.material.manufacturer/} - {/group.material.description/}</span>
+							<span class="label label-info" ng-show="counter.addon">Addon</span>
+						</td>
+					    <td class="description">
+					    	<span ng-hide="counter.addon">
+					    		{/group.description/}
+				    		</span>
+				    		<span ng-show="counter.addon">
+					    		<textarea>{/counter.itemCode/}</textarea>
+				    		</span>
+			    		</td>
+					    <td>
+					    	<div align="right" ng-hide="counter.addon">
+					    		{/group.material[group.material.pricing] | currency:$/}
+				    		</div>
+				    		<span ng-show="counter.addon">
+					    		<textarea>{/counter.price | currency:$/}</textarea>
+				    		</span>
+				    	</td>
+					    <td>
+			        		{/group.TAC | number:2/} SQFT    				    	
+			    		</td>
+					    <td>	
+					    	<div align="right" ng-show="counter.addon"class="price">{/group.GMC | currency: $/}</div>
+					    	<div align="right" ng-hide="counter.addon"class="price">{/group.GMC | currency: $/}</div>	
+				    	</td>
+					</tr>
+				<!-- Addon section -->
+					<tr ng-repeat="addon in group.addons">	
+						<td class="item-name">
+							<span class="label label-info">Addon</span>
+						</td>
+					    <td class="description">
+					    	{/addon.description/}
+			    		</td>
+					    <td>
+					    	<div align="right">{/addon.price | currency:$/}</div>
+				    	</td>
+					    <td>
+					    	{/addon.quantity/}
+					    		<span ng-show="addon.formula == 'sqft'"> SQFT</span>
+					    		<span ng-show="addon.formula == 'linear'"> linear FT</span>
+					    		<span ng-show="addon.formula == 'item'"> items</span>
+			    		</td>
+					    <td>	
+					    	<div align="right" class="price">{/addon.totalPrice | currency: $/}</div>
+				    	</td>
+					</tr>
+				<!-- totals and summation -->
+					<tr>
+				    	<td colspan="3" class="blank"> </td>
+				    	<td colspan="1" class="total-line">GMC</td>
+				    	<td class="total-value"><div align="right" id="subtotal">{/group.GMC * vm.quote.jobDifficulty| currency:$/}</div></td>
+				  	</tr>
+					<tr>
+				    	<td colspan="3" class="blank"> </td>
+				    	<td colspan="1" class="total-line">Addons</td>
+				    	<td class="total-value"><div align="right" id="subtotal">{/(group.totalPrice - group.GMC) * vm.quote.jobDifficulty| currency:$/}</div></td>
+				  	</tr>
+				  	<tr>
+				    	<td colspan="3" class="blank"> </td>
+				    	<td colspan="1" class="total-line">Price Per Sq. Ft</td>
+				    	<td class="total-value"><div align="right" id="subtotal">{/group.GCPSF| currency:$/}</div></td>
+				  	</tr>
+					<tr>
+				    	<td colspan="3" class="blank"> </td>
+				    	<td colspan="1" class="total-line">Total</td>
+				    	<td class="total-value"><div align="right" id="subtotal">{/group.totalPrice * vm.quote.jobDifficulty| currency:$/}</div></td>
+				  	</tr>
+				</tbody>
+			</table>
+			<!-- Mandatory addons and summary section -->
+			<span ng-show="vm.quote.mandatoryAddons[0]">
+				<table id="items">
+					<caption>Global addons:</caption>
+					<thead>
+						<th>Item</th>
+						<th>Description</th>
+						<th>Unit Cost</th>
+						<th>Quantity</th>
+						<th>Price</th>
+					</thead>
 
-				<tr ng-repeat="addon in vm.quote.mandatoryAddons">	
-					<td class="item-name">
-						<span class="label label-info">Global Addon</span>
-					</td>
-				    <td class="description">
-				    	{/addon.description/}
-		    		</td>
-				    <td>
-				    	{/addon.price | currency:$/}
-			    	</td>
-				    <td>
-				    	{/addon.quantity/}
-				    		<span ng-show="addon.formula == 'sqft'">SQFT</span>
-				    		<span ng-show="addon.formula == 'linear'">linear FT</span>
-				    		<span ng-show="addon.formula == 'item'">items</span>
-		    		</td>
-				    <td>	
-				    	<span class="price">{/addon.totalPrice | currency: $/}</span>
-			    	</td>
+					<tr ng-repeat="addon in vm.quote.mandatoryAddons">	
+						<td class="item-name">
+							<span class="label label-info">Global Addon</span>
+						</td>
+					    <td class="description">
+					    	{/addon.description/}
+			    		</td>
+					    <td>
+					    	{/addon.price | currency:$/}
+				    	</td>
+					    <td>
+					    	{/addon.quantity/}
+					    		<span ng-show="addon.formula == 'sqft'">SQFT</span>
+					    		<span ng-show="addon.formula == 'linear'">linear FT</span>
+					    		<span ng-show="addon.formula == 'item'">items</span>
+			    		</td>
+					    <td>	
+					    	<span class="price">{/addon.totalPrice | currency: $/}</span>
+				    	</td>
+					</tr>
+				</table>
+			</span> 
+			<table id="items">
+				<caption>Total</caption>
+				<tr>
+			    	<td width="75%" class="blank"> </td>
+			    	<td colspan="1" class="total-line">Subtotal</td>
+			    	<td class="total-value"><div align="right" id="subtotal">{/vm.quote.totalPrice * vm.quote.jobDifficulty| currency:$/}</div></td>
+			  	</tr>
+				<tr>
+			    	<td width="75%" class="blank"> </td>
+				    <td colspan="1" class="total-line">HST (13%)</td>
+				    <td class="total-value"><div align="right" id="total">{/vm.quote.totalPrice * 0.13 | currency:$/}</div></td>
+				</tr>
+				<tr>
+			    	<td width="75%" class="blank"> </td>
+				    <td colspan="1" class="total-line">Gross Margin</td>
+				    <td class="total-value"><div align="right" id="total">{/vm.quote.QGM/}</div></td>
+			  	</tr>
+				<tr>
+			    	<td width="75%" class="blank"> </td>
+				    <td colspan="1" class="total-line">Total</td>
+				    <td class="total-value"><div align="right" id="total">{/vm.quote.totalPrice * 1.13 | currency:$/}</div></td>
 				</tr>
 			</table>
-		</span> 
-		<table id="items">
-			<caption>Total</caption>
-			<tr>
-		    	<td width="75%" class="blank"> </td>
-		    	<td colspan="1" class="total-line">Subtotal</td>
-		    	<td class="total-value"><div align="right" id="subtotal">{/vm.quote.totalPrice * vm.quote.jobDifficulty| currency:$/}</div></td>
-		  	</tr>
-			<tr>
-		    	<td width="75%" class="blank"> </td>
-			    <td colspan="1" class="total-line">HST (13%)</td>
-			    <td class="total-value"><div align="right" id="total">{/vm.quote.totalPrice * 0.13 | currency:$/}</div></td>
-			</tr>
-			<tr>
-		    	<td width="75%" class="blank"> </td>
-			    <td colspan="1" class="total-line">Gross Margin</td>
-			    <td class="total-value"><div align="right" id="total">{/vm.quote.QGM/}</div></td>
-		  	</tr>
-			<tr>
-		    	<td width="75%" class="blank"> </td>
-			    <td colspan="1" class="total-line">Total</td>
-			    <td class="total-value"><div align="right" id="total">{/vm.quote.totalPrice * 1.13 | currency:$/}</div></td>
-			</tr>
-		</table>
-		<div id="signatures">
-			<table class="signatures">
-				<caption>Notes</caption>
-				<tr>
-					<td><div style="padding-top:5px; padding-bottom:5px">{/vm.quote.notes/}</td>
-			</table>
-		</div>
-		<!-- terms section Start -->
-		<div id="terms">
-		  <h5>Terms</h5>
-		  <div ng-repeat="term in vm.quote.terms">
-		  	<br>
-				<div class="row">
-					<div class="col-md-8">{/term.term/}<!--<span ng-show="term.calendar==true">{/term.date | date:'shortDate'/}</span>--></div>
-					<!--date picker-->
-  					<div class="col-md-3">
-			        	<span ng-show="term.calendar=='true'">
-					        <span class="input-group">
-					          <input type="text" class="form-control" uib-datepicker-popup="{/vm.format/}" ng-change="vm.saveQuote()" ng-model="term.date" is-open="vm.popup1.opened" datepicker-options="vm.dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"/>
-					          <span class="input-group-btn">
-					            <button type="button" class="btn btn-default" ng-click="vm.open1()"><i class="glyphicon glyphicon-calendar"></i></button>
-					          </span>
+			<div id="signatures">
+				<table class="signatures">
+					<caption>Notes</caption>
+					<tr>
+						<td><div style="padding-top:5px; padding-bottom:5px">{/vm.quote.notes/}</td>
+				</table>
+			</div>
+			<!-- terms section Start -->
+			<div id="terms">
+			  <h5>Terms</h5>
+			  <div ng-repeat="term in vm.quote.terms">
+			  	<br>
+					<div class="row">
+						<div class="col-md-8">{/term.term/}<!--<span ng-show="term.calendar==true">{/term.date | date:'shortDate'/}</span>--></div>
+						<!--date picker-->
+	  					<div class="col-md-3">
+				        	<span ng-show="term.calendar=='true'">
+						        <span class="input-group">
+						          <input type="text" class="form-control" uib-datepicker-popup="{/vm.format/}" ng-change="vm.saveQuote()" ng-model="term.date" is-open="vm.popup1.opened" datepicker-options="vm.dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"/>
+						          <span class="input-group-btn">
+						            <button type="button" class="btn btn-default" ng-click="vm.open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+						          </span>
+						        </span>
 					        </span>
-				        </span>
-		    		</div>
-		    	</div>
-  		  </div>
+			    		</div>
+			    	</div>
+	  		  </div>
+			</div>
 		</div>
 		<!--Terms End-->
 		<br><br>

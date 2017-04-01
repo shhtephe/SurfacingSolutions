@@ -1,262 +1,262 @@
 <!DOCTYPE html>
-<div>
-	<!--<pre>{/vm.quote | json/}</pre>
-	<br>
-	<br>
-	<pre>{/vm.customer | json/}</pre>
-	<br>
-	<br>-->
-	<uib-alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</uib-alert>
-	<md-content>
-	<div id="page-wrap">
-		<div ng-hide= "!currentUser.loggedIn || vm.hide">
-			Quote Provided by: {/vm.quote.account.firstName/} {/vm.quote.account.lastName/} 
-			<br>
-			<div ng-show="vm.customer.contacts[0]">
-				Contacts:
-				<div ng-repeat="contact in vm.customer.contacts">
-					<input type="checkbox" ng-model="contact.sendEmail" name="group" ng-click="vm.buildContacts()"> {/contact.firstName/} {/contact.lastName/} - {/contact.email/}
-				</div>
-				<br>
-			</div>
-			<br>
-			Email body:
-			<br>
-			<textarea style="width:100%; height:200px" class="importTextInputs" ng-model="vm.emailBody" id="dataInput"></textarea>
-			<br> 
-			<button type="button" class="btn" ng-click="vm.oneTimeEmail.show = true">Add one-time recipient</button> <button type="button" class="btn" ng-click="vm.buildContacts()">Clear one time recipients</button>
-			<br>
-			<br>
-			<div ng-show="vm.oneTimeEmail.show">
-				First Name: <input type="text" ng-model="vm.oneTimeEmail.firstName"> Email: <input type="text" ng-model="vm.oneTimeEmail.email">
-				<br> <br>
-				<button type="button" class="btn" ng-click="vm.addOneTimeEmail()">Add</button> <button type="button" class="btn" ng-click="vm.hideOneTimeEmail()">Cancel</button>
-			</div>
-			<br>
-			<a href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotefinal"><button type="button" class="btn">Back</button></a>
-			<button type="button" class="btn" ng-click="vm.email($event, vm.contactEmailList)">Email PDF - {/vm.contactEmailList.toString()/} </span></button> <button type="button" class="btn" ng-click="vm.hide = true" style="btn">Hide to save page</button>
-		</div>
-		<textarea id="header">Final Quote</textarea>	
-		<div id="surfacingIdentity">
 
-			<textarea id="surfacingInfo">Surfacing Solutions 2010 Ltd.</textarea>
-			<br> <br>
-			<textarea id="surfacingAddress">170 Bovaird Drive West, Unit #3 &#13;Brampton, Ontario &#13;L7A 1A1&#13;P: 905-874-1814 F: 905-874-8083&#13;Website: www.surfacingsolutions.ca&#13;Email: info@surfacingsolutions.ca</textarea>
-			<div id="logo">
-
-	          <div id="logoctr">
-	            <a href="javascript:;" id="change-logo" title="Change logo">Change Logo</a>
-	            <a href="javascript:;" id="save-logo" title="Save changes">Save</a>
-	            |
-	            <a href="javascript:;" id="delete-logo" title="Delete logo">Delete Logo</a>
-	            <a href="javascript:;" id="cancel-logo" title="Cancel changes">Cancel</a>
-	          </div>
-
-	          <div id="logohelp">
-	            <input id="imageloc" type="text" size="50" value="" /><br />
-	            (max width: 540px, max height: 100px)
-	          </div>
-	          <img id="image" src="images/ssilogo.png" alt="logo"/>
-	        </div>
-		</div>
-		<div style="clear:both"></div>
+<!--<pre>{/vm.quote | json/}</pre>
+<br>
+<br>
+<pre>{/vm.customer | json/}</pre>
+<br>
+<br>-->
+<uib-alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</uib-alert>
+<md-content>
+<div id="page-wrap">
+	<div ng-hide= "!currentUser.loggedIn">
+		Quote Provided by: {/vm.quote.account.firstName/} {/vm.quote.account.lastName/} 
 		<br>
-		<div id="customer">
-	        <textarea style="width:400px;height:190px" id="customerInfo">{/vm.customer.companyName/}
+		<div ng-show="vm.customer.contacts[0]">
+			Contacts:
+			<div ng-repeat="contact in vm.customer.contacts">
+				<input type="checkbox" ng-model="contact.sendEmail" name="group" ng-click="vm.buildContacts()"> {/contact.firstName/} {/contact.lastName/} - {/contact.email/}
+			</div>
+			<br>
+		</div>
+		<br>
+		Email body:
+		<br>
+		<textarea style="width:100%; height:200px" class="importTextInputs" ng-model="vm.emailBody" id="dataInput"></textarea>
+		<br> 
+		<button type="button" class="btn" ng-click="vm.oneTimeEmail.show = true">Add one-time recipient</button> <button type="button" class="btn" ng-click="vm.buildContacts()">Clear one time recipients</button>
+		<br>
+		<br>
+		<div ng-show="vm.oneTimeEmail.show">
+			First Name: <input type="text" ng-model="vm.oneTimeEmail.firstName"> Email: <input type="text" ng-model="vm.oneTimeEmail.email">
+			<br> <br>
+			<button type="button" class="btn" ng-click="vm.addOneTimeEmail()">Add</button> <button type="button" class="btn" ng-click="vm.hideOneTimeEmail()">Cancel</button>
+		</div>
+		<br>
+		<a href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotefinal"><button type="button" class="btn">Back</button></a>
+		<button type="button" class="btn" ng-click="vm.email($event, vm.contactEmailList)">Email PDF - {/vm.contactEmailList.toString()/} </span></button> <button type="button" class="btn" ng-click="vm.printScreen('printScreen')" style="btn">Print</button>
+	</div>
+<div id="printScreen">
+	<textarea id="header">Final Quote</textarea>	
+	<div id="surfacingIdentity">
+
+		<textarea id="surfacingInfo">Surfacing Solutions 2010 Ltd.</textarea>
+		<br> <br>
+		<textarea id="surfacingAddress">170 Bovaird Drive West, Unit #3 &#13;Brampton, Ontario &#13;L7A 1A1&#13;P: 905-874-1814 F: 905-874-8083&#13;Website: www.surfacingsolutions.ca&#13;Email: info@surfacingsolutions.ca</textarea>
+		<div id="logo">
+
+          <div id="logoctr">
+            <a href="javascript:;" id="change-logo" title="Change logo">Change Logo</a>
+            <a href="javascript:;" id="save-logo" title="Save changes">Save</a>
+            |
+            <a href="javascript:;" id="delete-logo" title="Delete logo">Delete Logo</a>
+            <a href="javascript:;" id="cancel-logo" title="Cancel changes">Cancel</a>
+          </div>
+
+          <div id="logohelp">
+            <input id="imageloc" type="text" size="50" value="" /><br />
+            (max width: 540px, max height: 100px)
+          </div>
+          <img id="image" src="images/ssilogo.png" alt="logo"/>
+        </div>
+	</div>
+	<div style="clear:both"></div>
+	<br>
+	<div id="customer">
+        <textarea style="width:400px;height:190px" id="customerInfo">{/vm.customer.companyName/}
 
 {/vm.customer.contacts[0].lastName/}, {/vm.customer.contacts[0].firstName/}
 {/vm.customer.addressLine1/} {/vm.customer.addressLine2/}
 {/vm.customer.city/}, {/vm.customer.province/} {/vm.customer.postal/}
 
 Phone: {/vm.customer.businessPhone/}</textarea>
-            <table id="meta" >
-                <tr>
-                    <td class="meta-head">Quote #</td>
-                    <td ><textarea>{/vm.quote.quoteID/}</textarea></td>
-                </tr>
-                <tr>
+        <table id="meta" >
+            <tr>
+                <td class="meta-head">Quote #</td>
+                <td ><textarea>{/vm.quote.quoteID/}</textarea></td>
+            </tr>
+            <tr>
 
-                    <td class="meta-head">Date</td>
-                    <td ><textarea id="date">{/vm.quote.createdAt | limitTo: 10/}</textarea></td>
-                </tr>
-                <tr>
-                    <td class="meta-head">P.O. No./ Job No.</td>
-                    <td ><div class="due">{/vm.quote.poNumber/}</div></td>
-                </tr>
-            </table>
-		</div>
-		<!-- group table -->		
-		<table id="items" >
-			<caption>{/vm.quote.description/}</caption>
-		  <thead>
-		      <th >Item</th>
-		      <th >Description</th>
-		      <th >Cost</th>
-		      <th >Quantity</th>
-		      <th >Price</th>
-		  </thead>
-		    <tbody>
-		    <tr ng-repeat='group in vm.quote.counterGroup'>
+                <td class="meta-head">Date</td>
+                <td ><textarea id="date">{/vm.quote.createdAt | limitTo: 10/}</textarea></td>
+            </tr>
+            <tr>
+                <td class="meta-head">P.O. No./ Job No.</td>
+                <td ><div class="due">{/vm.quote.poNumber/}</div></td>
+            </tr>
+        </table>
+	</div>
+	<!-- group table -->		
+	<table id="items" >
+		<caption>{/vm.quote.description/}</caption>
+	  <thead>
+	      <th >Item</th>
+	      <th >Description</th>
+	      <th >Cost</th>
+	      <th >Quantity</th>
+	      <th >Price</th>
+	  </thead>
+	    <tbody>
+	    <tr ng-repeat='group in vm.quote.counterGroup'>
+			<td class="item-name">
+				<span ng-hide="counter.addon">
+					{/group.material.manufacturer/} - {/group.material.description/}
+				</span>
+			</td>
+		    <td class="description">
+		    	<span ng-hide="counter.addon">
+		    		 {/group.description/}
+	    		</span>
+    		</td>
+		    <td >
+		    	<div align="right">
+		    		{/group.totalPrice/ group.quantity | currency:$/}
+	    		</div>
+	    	</td>
+		    <td >
+		    	<div align="right">
+        			{/group.quantity/}    				    	
+    			</div>
+    		</td>
+		    <td >	
+		    	<div align="right" class="price">
+		    		{/group.totalPrice | currency: $/}
+		    	</div>	
+	    	</td>
+		</tr>
+		<!-- Addon section -->
+			<tr ng-repeat="addon in group.addons">	
 				<td class="item-name">
-					<span ng-hide="counter.addon">
-						{/group.material.manufacturer/} - {/group.material.description/}
-					</span>
 				</td>
 			    <td class="description">
-			    	<span ng-hide="counter.addon">
-			    		 {/group.description/}
-		    		</span>
+			    	{/addon.description/}
 	    		</td>
 			    <td >
-			    	<div align="right">
-			    		{/group.totalPrice/ group.quantity | currency:$/}
-		    		</div>
+			    	{/addon.price | currency:$/}
+			    		<span ng-show="addon.formula == 'sqft'"> / ft<sup>2</sup></span>
+			    		<span ng-show="addon.formula == 'linear'"> / ft</span>
+			    		<span ng-show="addon.formula == 'item'"> / items</span>				    	
 		    	</td>
 			    <td >
-			    	<div align="right">
-	        			{/group.quantity/}    				    	
-        			</div>
+			    	{/addon.quantity/}
+			    		<span ng-show="addon.formula == 'sqft'">ft<sup>2</sup></span>
+			    		<span ng-show="addon.formula == 'linear'">linear FT</span>
+			    		<span ng-show="addon.formula == 'item'">items</span>
 	    		</td>
 			    <td >	
-			    	<div align="right" class="price">
-			    		{/group.totalPrice | currency: $/}
-			    	</div>	
+			    	<!--<span class="price">{/addon.totalPrice | currency: $/}</span>-->
 		    	</td>
 			</tr>
-			<!-- Addon section -->
-				<tr ng-repeat="addon in group.addons">	
-					<td class="item-name">
-					</td>
-				    <td class="description">
-				    	{/addon.description/}
-		    		</td>
-				    <td >
-				    	{/addon.price | currency:$/}
-				    		<span ng-show="addon.formula == 'sqft'"> / ft<sup>2</sup></span>
-				    		<span ng-show="addon.formula == 'linear'"> / ft</span>
-				    		<span ng-show="addon.formula == 'item'"> / items</span>				    	
-			    	</td>
-				    <td >
-				    	{/addon.quantity/}
-				    		<span ng-show="addon.formula == 'sqft'">ft<sup>2</sup></span>
-				    		<span ng-show="addon.formula == 'linear'">linear FT</span>
-				    		<span ng-show="addon.formula == 'item'">items</span>
-		    		</td>
-				    <td >	
-				    	<!--<span class="price">{/addon.totalPrice | currency: $/}</span>-->
-			    	</td>
-				</tr>
-			<!-- Group totals and summation -->
-			<tr>
-		    	<td colspan="3" class="blank"> </td>
-		    	<td colspan="1" class="total-line">Total Area</td>
-		    	<td class="total-value"><div align="right" id="subtotal">{/vm.quote.TAC | number:2/} SQFT</div></td>
-		  	</tr>
-			<tr ng-show="vm.quote.showGCPSF">
-		    	<td colspan="3" class="blank"> </td>
-		    	<td colspan="1" class="total-line">Price Per Sq. Foot</td>
-		    	<td class="total-value"><div align="right" id="subtotal">{/vm.quote.GCPSF | json|currency:$/}</div></td></span>
-		  	</tr>
-			<tr>
-		    	<td colspan="3" class="blank"> </td>
-		    	<td colspan="1" class="total-line">Total</td>
-		    	<td class="total-value"><div align="right" id="subtotal">{/vm.getCountersTotal * vm.quote.jobDifficulty| currency:$/}</div></td>
-		  	</tr>
-		</table>
-		<!-- Mandatory addons and summary section -->
-		<span ng-show="vm.quote.mandatoryAddons[0]">
-			<table id="items" >
-				<caption>Quote Addons</caption>
-				<thead>
-					<!--<th>Item</th>-->
-					<th >Description</th>
-					<th >Unit Cost</th>
-					<th >Quantity</th>
-					<th >Price</th>
-				</thead>
-				<tr ng-repeat="addon in vm.quote.mandatoryAddons">	
-					<!--<td class="item-name">
-						<span class="label label-info">Global Addon</span>
-					</td>-->
-				    <td class="description">
-				    	{/addon.description/}
-				    	<span ng-hide="addon.distributor=='SSL'"> - {/addon.itemCode/}</span>
-		    		</td>
-				    <td >
-				    	<div align="right">{/addon.price | currency:$/}
-				    		<span ng-show="addon.formula == 'sqft'">/ ft<sup>2</sup></span>
-				    		<span ng-show="addon.formula == 'linear'">/ ft</span>
-				    		<span ng-show="addon.formula == 'item'">/ items</span>
-			    		</div>				    	
-			    	</td>
-				    <td >
-				    	<div align="right">{/addon.quantity/}
-				    		<span ng-show="addon.formula == 'sqft'">ft<sup>2</sup></span>
-				    		<span ng-show="addon.formula == 'linear'">ft</span>
-				    		<span ng-show="addon.formula == 'item'">items</span>
-			    		</div>
-		    		</td>
-				    <td z>	
-				    	<div align="right" class="price">{/addon.totalPrice | currency: $/}</div>
-			    	</td>
-				</tr>
-			</table>
-		</span> 
-		</table>
-		<!-- Total summary section -->
+		<!-- Group totals and summation -->
+		<tr>
+	    	<td colspan="3" class="blank"> </td>
+	    	<td colspan="1" class="total-line">Total Area</td>
+	    	<td class="total-value"><div align="right" id="subtotal">{/vm.quote.TAC | number:2/} SQFT</div></td>
+	  	</tr>
+		<tr ng-show="vm.quote.showGCPSF">
+	    	<td colspan="3" class="blank"> </td>
+	    	<td colspan="1" class="total-line">Price Per Sq. Foot</td>
+	    	<td class="total-value"><div align="right" id="subtotal">{/vm.quote.GCPSF | json|currency:$/}</div></td></span>
+	  	</tr>
+		<tr>
+	    	<td colspan="3" class="blank"> </td>
+	    	<td colspan="1" class="total-line">Total</td>
+	    	<td class="total-value"><div align="right" id="subtotal">{/vm.getCountersTotal * vm.quote.jobDifficulty| currency:$/}</div></td>
+	  	</tr>
+	</table>
+	<!-- Mandatory addons and summary section -->
+	<span ng-show="vm.quote.mandatoryAddons[0]">
 		<table id="items" >
-			<caption>Total</caption>
-			<tr>
-		    	<td width="75%" class="blank"> </td>
-		    	<td colspan="1" class="total-line">Subtotal</td>
-		    	<td class="total-value"><div align="right" id="subtotal">{/vm.quote.totalPrice * vm.quote.jobDifficulty| currency:$/}</div></td>
-		  	</tr>
-			<tr>
-		    	<td width="75%" class="blank"> </td>
-			    <td colspan="1" class="total-line">HST (13%)</td>
-			    <td class="total-value"><div align="right" id="total">{/vm.quote.totalPrice * 0.13 | currency:$/}</div></td>
-			</tr>
-			<tr>
-		    	<td width="75%" class="blank"> </td>
-			    <td colspan="1" class="total-line">Total</td>
-			    <td class="total-value"><div align="right" id="total">{/vm.quote.totalPrice * 1.13 | currency:$/}</div></td>
+			<caption>Quote Addons</caption>
+			<thead>
+				<!--<th>Item</th>-->
+				<th >Description</th>
+				<th >Unit Cost</th>
+				<th >Quantity</th>
+				<th >Price</th>
+			</thead>
+			<tr ng-repeat="addon in vm.quote.mandatoryAddons">	
+				<!--<td class="item-name">
+					<span class="label label-info">Global Addon</span>
+				</td>-->
+			    <td class="description">
+			    	{/addon.description/}
+			    	<span ng-hide="addon.distributor=='SSL'"> - {/addon.itemCode/}</span>
+	    		</td>
+			    <td >
+			    	<div align="right">{/addon.price | currency:$/}
+			    		<span ng-show="addon.formula == 'sqft'">/ ft<sup>2</sup></span>
+			    		<span ng-show="addon.formula == 'linear'">/ ft</span>
+			    		<span ng-show="addon.formula == 'item'">/ items</span>
+		    		</div>				    	
+		    	</td>
+			    <td >
+			    	<div align="right">{/addon.quantity/}
+			    		<span ng-show="addon.formula == 'sqft'">ft<sup>2</sup></span>
+			    		<span ng-show="addon.formula == 'linear'">ft</span>
+			    		<span ng-show="addon.formula == 'item'">items</span>
+		    		</div>
+	    		</td>
+			    <td z>	
+			    	<div align="right" class="price">{/addon.totalPrice | currency: $/}</div>
+		    	</td>
 			</tr>
 		</table>
-		<div id="signatures">
-			<table class="signatures">
-				<caption>Notes</caption>
-				<tr>
-					<td><div style="padding-top:5px; padding-bottom:5px">{/vm.quote.notes/}</td>
-			</table>
-		</div>
-		<div id="terms">
-			<h5>Terms</h5>
-			<div ng-repeat="term in vm.quote.terms">
-				<font size=2>{/term.term | dateFilter:term/}</font>
-			</div>
-		</div>
-		<div id="signatures">
-			<table class="signatures">
-				<caption>Acceptance</caption>
-				<tr>
-					<td><br>Agreed to and accepted:</td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr><br></tr>
-				<tr>
-					<td>_______________________</td>
-					<td>_______________________</td>
-					<td>_______________________</td>
-				</tr>
-				<tr>
-					<td>Name</td>
-					<td>Signature</td>
-					<td>Date</td>
-				</tr>
-			</table>
-			<br><br>
+	</span> 
+	</table>
+	<!-- Total summary section -->
+	<table id="items" >
+		<caption>Total</caption>
+		<tr>
+	    	<td width="75%" class="blank"> </td>
+	    	<td colspan="1" class="total-line">Subtotal</td>
+	    	<td class="total-value"><div align="right" id="subtotal">{/vm.quote.totalPrice * vm.quote.jobDifficulty| currency:$/}</div></td>
+	  	</tr>
+		<tr>
+	    	<td width="75%" class="blank"> </td>
+		    <td colspan="1" class="total-line">HST (13%)</td>
+		    <td class="total-value"><div align="right" id="total">{/vm.quote.totalPrice * 0.13 | currency:$/}</div></td>
+		</tr>
+		<tr>
+	    	<td width="75%" class="blank"> </td>
+		    <td colspan="1" class="total-line">Total</td>
+		    <td class="total-value"><div align="right" id="total">{/vm.quote.totalPrice * 1.13 | currency:$/}</div></td>
+		</tr>
+	</table>
+	<div id="signatures">
+		<table class="signatures">
+			<caption>Notes</caption>
+			<tr>
+				<td><div style="padding-top:5px; padding-bottom:5px">{/vm.quote.notes/}</div></td>
+		</table>
+	</div>
+	<div id="terms">
+		<h5>Terms</h5>
+		<div ng-repeat="term in vm.quote.terms">
+			<font size=2>{/term.term | dateFilter:term/}</font>
 		</div>
 	</div>
-</md-content>
+	<div id="signatures">
+		<table class="signatures">
+			<caption>Acceptance</caption>
+			<tr>
+				<td><br>Agreed to and accepted:</td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr><br></tr>
+			<tr>
+				<td>_______________________</td>
+				<td>_______________________</td>
+				<td>_______________________</td>
+			</tr>
+			<tr>
+				<td>Name</td>
+				<td>Signature</td>
+				<td>Date</td>
+			</tr>
+		</table>
+		<br><br>
+	</div>
 </div>
+</md-content>

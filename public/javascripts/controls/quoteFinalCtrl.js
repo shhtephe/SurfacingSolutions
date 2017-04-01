@@ -120,6 +120,14 @@
 	  		});
 		};
 
+		vm.printScreen = function(divName) {
+			var printContents = document.getElementById(divName).innerHTML;
+			var popupWin = window.open('', '_blank', 'width=300,height=300');
+			popupWin.document.open();
+			popupWin.document.write('<html><head> <link rel="stylesheet" type="text/css" href="stylesheets/quotestyle.css"/> <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"> <link rel="stylesheet" type="text/css" href="https://cdn.gitcdn.link/cdn/angular/bower-material/v1.1.1/angular-material.css"/> </head> <body onload="window.print()">' + printContents + '</body> </html>');
+			popupWin.document.close();
+		};
+
 		vm.email = function(ev, contactEmailList) {
 			// Appending dialog to document.body to cover sidenav in docs app
 

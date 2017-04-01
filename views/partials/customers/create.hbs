@@ -15,21 +15,21 @@
   				<div class="form-group row">
 	  				<label for="addressLine1" class="col-sm-2 col-form-label">Address</label>
     				<div class="col-sm-10">
-						<input type='text' class="form-control"  ng-model="vm.customer.addressLine1" name='addressLine1' required>
+						<input type='text' class="form-control"  ng-model="vm.customer.addressLine1" name='addressLine1'>
 					</div>
 				</div>
 				<div class="form-group row">
 	  				<label for="city" class="col-sm-1 col-form-label">City</label>
     				<div class="form-group col-sm-3">
-						<input type='text' class="form-control"  ng-model="vm.customer.city" name='city' required>
+						<input type='text' class="form-control"  ng-model="vm.customer.city" name='city'>
 					</div>
 	  				<label for="province" class="col-sm-1 col-form-label">Province</label>
 					<div class="form-group col-sm-3">
-						<input type='text' class="form-control"  ng-model="vm.customer.province" name='province' required>
+						<input type='text' class="form-control"  ng-model="vm.customer.province" name='province'>
 					</div>
 	  				<label for="postal" class="col-sm-1 col-form-label">Postal</label>
 					<div class="form-group col-sm-3">
-						<input type='text' class="form-control"  ng-model="vm.customer.postal" name='postal' required>
+						<input type='text' class="form-control"  ng-model="vm.customer.postal" name='postal'>
 					</div>
 				</div> 	
 				<div class="form-group row">
@@ -40,8 +40,8 @@
 							class="form-control"
 							restrict="reject" 
 							mask='(999)-999-9999' 
-							placeholder="(xxx)-xxx-xxxx"
-							required>					</div>
+							placeholder="(xxx)-xxx-xxxx">					
+					</div>
 					<label for="fax" class="col-sm-2 col-form-label">Business Fax</label>
     				<div class="col-sm-4">
     					<input type='text' ng-model="vm.customer.fax" name='fax'
@@ -77,10 +77,9 @@
 							class="form-control"
 							restrict="reject" 
 							mask='(999)-999-9999' 
-							placeholder="(xxx)-xxx-xxxx"
-							required>					
+							placeholder="(xxx)-xxx-xxxx">					
 					</div>
-					<label for="fax" class="col-sm-1 col-form-label">Email</label>
+					<label for="email" class="col-sm-1 col-form-label">Email</label>
     				<div class="col-sm-5">
     					<input type='email' class="form-control" ng-model="vm.contacts[0].email" name='email' required>
 					</div>
@@ -114,10 +113,9 @@
 								class="form-control"
 								restrict="reject" 
 								mask='(999)-999-9999' 
-								placeholder="(xxx)-xxx-xxxx"
-								required>					
+								placeholder="(xxx)-xxx-xxxx">					
 						</div>
-						<label for="fax" class="col-sm-1 col-form-label">Email</label>
+						<label for="email" class="col-sm-1 col-form-label">Email</label>
 	    				<div class="col-sm-5">
 	    					<input type='email' class="form-control" ng-model="contact.email" name='email' required>
 						</div>

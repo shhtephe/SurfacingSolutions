@@ -9,7 +9,7 @@
 <uib-alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</uib-alert>
 	<div id="page-wrap">
 	<a href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}"><button type="button" class="btn">Back</button></a> 
-	<a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotesend	" target=""><button type="button" class="btn">Client Preview</button></a>
+	<a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotesend	" target=""><button type="button" class="btn">Client Copy</button></a>
 	<button type="button" class="btn" ng-click="vm.printScreen('printScreen')">Print</button>
 		<div id="printScreen">
 			<textarea id="header">Office Copy</textarea>	

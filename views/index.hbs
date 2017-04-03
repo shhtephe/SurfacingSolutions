@@ -40,9 +40,10 @@
     <script src="/javascripts/controls/searchCtrl.js"></script>
     <script src="/javascripts/controls/invoiceCtrl.js"></script>    
     <script src="/javascripts/controls/quoteFinalCtrl.js"></script>    
-    <script src="/javascripts/controls/homeCtrl.js"></script>    
-    <script src="/javascripts/controls/remnantsCtrl.js"></script>    
+    <script src="/javascripts/controls/homeCtrl.js"></script>       
     <script src="/javascripts/controls/registerCtrl.js"></script>    
+    <script src="/javascripts/controls/remnantsEditCtrl.js"></script>
+    <script src="/javascripts/controls/remnantsViewCtrl.js"></script>
     <!--<script src="/javascripts/controls/indexCtrl.js"></script>-->
     <script src="/javascripts/services/data-service.js"></script>    
     <script src="/javascripts/angular-sticky.js"></script>    
@@ -55,6 +56,8 @@
     <link rel='stylesheet' type='text/css' href='https://cdn.gitcdn.link/cdn/angular/bower-material/v1.1.1/angular-material.css'/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel='stylesheet' type='text/css' href='stylesheets/quotestyle.css'/>
+    <!--FontAwesome css -->
+    <link rel='stylesheet' type='text/css' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
 
   </head>
   <body ng-app="surfacingSolutions" ng-init="currentUser = {
@@ -96,7 +99,10 @@
                         <a ui-sref="admin">Change Default Pricing</a>
                       </li>
                       <li>
-                        <a ui-sref="remnants">View/Add Remnants</a>
+                        <a ui-sref="remnantsedit">Add/Edit Remnants</a>
+                      </li>
+                      <li>
+                        <a ui-sref="remnantsview">View Remnants</a>
                       </li>
                       <li role="menu" class="divider"></li>
                       <li>

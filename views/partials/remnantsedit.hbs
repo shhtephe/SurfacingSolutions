@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<div class="container">
+	<!--<pre>{/vm.remnants |json/}</pre>-->
+	<button class="button" ng-click="vm.showAddRemnants = true">Add Remnants</button>
+	<br>
+	<span ng-show="vm.showAddRemnants">
+		<form name="addMaterialForm"
+		ng-submit="vm.addRemnant(addMaterialDescription); vm.showAddRemnants = !vm.showAddRemnants; addMaterialManufacturer=''; addMaterialDescription='';">
+			<ul class="list-group"> 
+				<li class="list-group-item">	
+					Choose a Manufacturer:
+					<select name="addMaterialManufacturer" ng-model="addMaterialManufacturer" ng-options="material.manufacturer for material in vm.materials | orderBy:'manufacturer' | unique: 'manufacturer'" value="{/manufacturer.manufacturer/}">
+						<option value="">----Select----</option>
+					</select>
+				</li>
+				<li ng-show="addMaterialManufacturer" class="list-group-item">	
+					Choose a Description:
+					<select name="addMaterialDescription" ng-model="addMaterialDescription" ng-options="material.description for material in vm.materials | filter:{manufacturer:addMaterialManufacturer.manufacturer} | orderBy:'description' | unique: 'description'" value="{/material.manufacturer/}">
+						<option value="">----Select----</option>
+					</select>
+				</li>
+				<span ng-show="addMaterialManufacturer && addMaterialDescription">
+					<br>
+					<table class="table">
+						<tr>
+							<td>Manufacturer</td>
+							<td>Type</td>
+							<td>Colour</td>
+							<td>Description</td>
+							<td>Thickness</td>
+							<td>Length</td>
+							<td>Width</td>
+							<td>Location</td>
+						</tr>
+						<tr>
+							<td>
+								{/addMaterialDescription.manufacturer/} 
+							</td>
+							<td>
+								{/addMaterialDescription.materialType/} 
+							</td>
+							<td>
+								{/addMaterialDescription.colourGroup/} 
+							</td>
+							<td>
+								{/addMaterialDescription.description/} 
+							</td>
+							<td>
+								{/addMaterialDescription.thickness/} 
+							</td>
+							<td>
+								<input type="text" name="length" ng-model="addMaterialDescription.length" required>
+							</td>
+							<td>
+								<input type="text" name="width" ng-model="addMaterialDescription.width" required> 
+							</td>
+							<td>
+								<input type="text" name="location" ng-model="addMaterialDescription.location" required>
+							</td>
+						</tr>
+					</table>
+				<span>
+			</ul>
+			<button type="button" ng-click="vm.showAddRemnants = !vm.showAddRemnants; addMaterialManufacturer=''; addMaterialDescription='';" class="btn btn-default">Cancel</button> 
+			<input type="submit" class="btn btn-default" value="Add">
+		</form> 
+	</span>
+	<span ng-show="!vm.remnants[0]">
+		<br>There are no remnants to show!
+		<br>Try adding some!
+	</span>
+	<span ng-hide="!vm.remnants[0]">
+		<br><br>
+		<table class="table">
+			<caption>Remnants List</caption>
+			<tr>
+				<td>Manufacturer</td>
+				<td>Type</td>
+				<td>Colour</td>
+				<td>Description</td>
+				<td>Thickness</td>
+				<td>Length</td>
+				<td>Width</td>
+				<td>Location</td>
+				<td>Date Added</td>
+				<td></td>
+			</tr>
+			<tr ng-repeat="remnant in vm.remnants track by $index">
+				<td>
+					{/remnant.manufacturer/} 
+				</td>
+				<td>
+					{/remnant.remnantType/} 
+				</td>
+				<td>
+					{/remnant.colourGroup/} 
+				</td>
+				<td>
+					{/remnant.description/} 
+				</td>
+				<td>
+					{/remnant.thickness/} 
+				</td>
+				<td>
+					<span ng-hide="remnant.edit==true">{/remnant.length/}</span>
+					<span ng-show="remnant.edit==true"><input type="text" name="length" ng-value="remnant.length" ng-model="vm.edit.length"></span>
+				</td>
+				<td>
+					<span ng-hide="remnant.edit==true">{/remnant.width/}</span>
+					<span ng-show="remnant.edit==true"><input type="text" name="width" ng-value="remnant.width" ng-model="vm.edit.width"></span>
+				</td>
+				<td>
+					<span ng-hide="remnant.edit==true">{/remnant.location/}</span>
+					<span ng-show="remnant.edit==true"><input type="text" name="location" ng-value="remnant.location" ng-model="vm.edit.location"></span>
+				</td>
+				<td>
+					{/remnant.createdAt | limitTo: 10/}
+				</td>
+				<td>
+					<span ng-hide="remnant.edit==true">
+						<a ng-click="vm.removeRemnant($index)">Remove</a>
+						/ <a ng-click="vm.editRemnant($index)">Edit</a>
+					</span>
+					<span ng-show="remnant.edit==true">
+						<a ng-click="
+							vm.cancelEditRemnant($index);
+							vm.edit.location = remnant.location;
+							vm.edit.width = remnant.width;
+							vm.edit.length = remnant.length;
+						">Cancel</a>
+						/ <a ng-click="vm.saveEditRemnant($index, vm.edit)">Save</a>
+					</span>
+				</td>
+			</tr>		
+		</table>
+	</span>
+</div>

@@ -43,13 +43,22 @@ function($interpolateProvider, $stateProvider, $urlRouterProvider, $locationProv
       controller: 'adminCtrl',
       controllerAs: 'vm'
 	})
-    .state('remnants', {
-      url: '/remnants',
-      templateUrl: '/remnants',
+    .state('remnantsedit', {
+      url: '/remnantsedit',
+      templateUrl: '/remnantsedit',
             data: {
         requireLogin: true
       },
-      controller: 'remnantsCtrl',
+      controller: 'remnantsEditCtrl',
+      controllerAs: 'vm'
+  })
+    .state('remnantsview', {
+      url: '/remnantsview',
+      templateUrl: '/remnantsview',
+            data: {
+        requireLogin: true
+      },
+      controller: 'remnantsViewCtrl',
       controllerAs: 'vm'
   })
     .state('search', {

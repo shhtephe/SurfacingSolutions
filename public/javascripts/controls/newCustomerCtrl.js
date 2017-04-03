@@ -36,6 +36,17 @@
       console.log("Contact added", vm.contacts)
     };
 
+    vm.removeContact = function (index) {
+      vm.contacts.splice(index, 1);
+    };
+
+    vm.clear = function() {
+      vm.customer = {};
+      vm.contacts = [];
+
+      console.log(vm.contacts);
+    }
+
     vm.addAlert = function(type, msg) {
       vm.alerts.push({
         type: type,

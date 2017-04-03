@@ -7,47 +7,91 @@
 					<md-tabs md-dynamic-height="" md-border-bottom="">
 					<md-tab label="Customers">
 					<md-content class="md-padding">
-						<table>
-							<caption>Search by Name: <input type="text" ng-model="customerFilter.search"></caption>
-							<tr ng-repeat="customer in vm.customers | orderBy:'companyName' | filter:customerFilter.search">
-									<td>
-										<a ng-href="/#/customer/{/customer.custCode/}">{/vm.buildCustomer(customer)/}</a>
-									</td>
-							</tr>
-						</table>
+						<div class="form-group">
+      						<div class="input-group">
+								<div class="input-group-addon"><i class="fa fa-search"></i></div>
+        						<input type="text" class="form-control" placeholder="Search Customers" ng-model="customerFilter.search">
+    						</div>
+						</div>
+						<div class="list group">
+							<div class="col-xs-6 col-sm-4" data-ng-repeat="customer in vm.customers | orderBy:'companyName' | filter:customerFilter.search">
+								<a ng-href="/#/customer/{/customer.custCode/}" class="list-group-item">
+									<i class="fa fa-address-card"></i>
+									<h5>{/vm.buildCustomer(customer)/}</h5>
+								</a>
+							</div>
+						</div>
 						<alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</alert>
+					</md-content>
 					</md-tab>
 					<md-tab label="Quotes">
 					<md-content class="md-padding">
+						<div class="form-group">
+      						<div class="input-group">
+								<div class="input-group-addon"><i class="fa fa-search"></i></div>
+        						<input type="text" class="form-control" placeholder="Search Quotes" ng-model="quoteFilter.search">
+    						</div>
+						</div>
 						<table>
-							<caption>Search: <input type="text" ng-model="quoteFilter.search"></caption>
 							<tr>
 								<td>
-									Created On
+									<a href="" ng-click="vm.sortType = 'createdAt'; vm.sortReverse = !vm.sortReverse">
+            							Created On 
+            							<span ng-show="vm.sortType == 'createdAt' && !vm.sortReverse" class="fa fa-caret-down"></span>
+            							<span ng-show="vm.sortType == 'createdAt' && vm.sortReverse" class="fa fa-caret-up"></span>
+          							</a>
 								</td>
 								<td>
-									Last updated
+									<a href="" ng-click="vm.sortType = 'updatedAt'; vm.sortReverse = !vm.sortReverse">
+            							Last Updated
+            							<span ng-show="vm.sortType == 'updatedAt' && !vm.sortReverse" class="fa fa-caret-down"></span>
+            							<span ng-show="vm.sortType == 'updatedAt' && vm.sortReverse" class="fa fa-caret-up"></span>
+          							</a>
 								</td>
 								<td>
-									Created By
+									<a href="" ng-click="vm.sortType = 'account.lastName'; vm.sortReverse = !vm.sortReverse">
+            							Created By
+            							<span ng-show="vm.sortType == 'account.lastName' && !vm.sortReverse" class="fa fa-caret-down"></span>
+            							<span ng-show="vm.sortType == 'account.lastName' && vm.sortReverse" class="fa fa-caret-up"></span>
+          							</a>
 								</td>
 								<td>
-									Quote ID
+									<a href="" ng-click="vm.sortType = 'quoteID'; vm.sortReverse = !vm.sortReverse">
+            							Quote ID
+            							<span ng-show="vm.sortType == 'quoteID' && !vm.sortReverse" class="fa fa-caret-down"></span>
+            							<span ng-show="vm.sortType == 'quoteID' && vm.sortReverse" class="fa fa-caret-up"></span>
+          							</a>
 								</td>
 								<td>
-									Quote Value
+									<a href="" ng-click="vm.sortType = 'totalPrice'; vm.sortReverse = !vm.sortReverse">
+            							Quote Value
+            							<span ng-show="vm.sortType == 'totalPrice' && !vm.sortReverse" class="fa fa-caret-down"></span>
+            							<span ng-show="vm.sortType == 'totalPrice' && vm.sortReverse" class="fa fa-caret-up"></span>
+          							</a>
 								</td>								
 								<td>
-									Sent Date
+									<a href="" ng-click="vm.sortType = 'sentDate'; vm.sortReverse = !vm.sortReverse">
+            							Sent Date
+            							<span ng-show="vm.sortType == 'sentDate' && !vm.sortReverse" class="fa fa-caret-down"></span>
+            							<span ng-show="vm.sortType == 'sentDate' && vm.sortReverse" class="fa fa-caret-up"></span>
+          							</a>
 								</td>
 								<td>
-									Customer Name
+									<a href="" ng-click="vm.sortType = 'customerName'; vm.sortReverse = !vm.sortReverse">
+            							Customer Name
+            							<span ng-show="vm.sortType == 'customerName' && !vm.sortReverse" class="fa fa-caret-down"></span>
+            							<span ng-show="vm.sortType == 'customerName' && vm.sortReverse" class="fa fa-caret-up"></span>
+          							</a>
 								</td>
 								<td>
-									Project Name / Description
+									<a href="" ng-click="vm.sortType = 'description'; vm.sortReverse = !vm.sortReverse">
+            							Project Name / Description
+            							<span ng-show="vm.sortType == 'description' && !vm.sortReverse" class="fa fa-caret-down"></span>
+            							<span ng-show="vm.sortType == 'description' && vm.sortReverse" class="fa fa-caret-up"></span>
+          							</a>
 								</td>
 							</tr>
-							<tr ng-repeat="quote in vm.quotes.quotes | orderBy:'updatedAt':true | filter:quoteFilter.search">
+							<tr ng-repeat="quote in vm.quotes.quotes | orderBy:vm.sortType:vm.sortReverse | filter:quoteFilter.search">
 								<td>
 									{/quote.createdAt | limitTo: 10/}
 								</td>

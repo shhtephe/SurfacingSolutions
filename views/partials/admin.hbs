@@ -21,13 +21,6 @@
 								<option value="">----Select----</option>
 							</select>
 						</div>
-						<!--<div ng-show="editMaterialDistributor && editMaterialManufacturer">
-							<br>
-							Choose a Colour Group:
-							<select name="editMaterialColourGroup" ng-model="editMaterialColourGroup" ng-options="material.colourGroup for material in vm.materials | filter:{distributor:editMaterialDistributor.distributor, manufacturer:editMaterialManufacturer.manufacturer} | unique: 'colourGroup' | orderBy:'colourGroup'">
-								<option value="">----Select----</option>
-							</select>
-						</div>-->
 						<div ng-show="editMaterialDistributor && editMaterialManufacturer">
 							<br>
 							Choose a Colour:
@@ -265,14 +258,16 @@
 					</div>
 				</md-tab>
 				<md-tab label="User Accounts">
-					<div ng-repeat="account in vm.accounts">
-						Name: {/account.firstName/} {/account.lastName/} 
-						<br> Account Name: {/account.username/} Account Type: {/account.accountType/}
-						<br> Email: {/account.email/} Phone Number: {/account.phoneNumber/}
-						<br>
-						<br>
+					<div class="list group">
+						<div class="col-xs-6 col-sm-4" data-ng-repeat="account in vm.accounts | orderBy:'lastName'">
+							<a ng-click="vm.accountModal()6" class="list-group-item">
+								<i class="fa fa-address-card"></i><span ng-click="vm.deleteAccount(account)" style="float:right ">x</span>
+								<h5>{/account.firstName/} {/account.lastName/}</h5>
+								<h6>Account Name: {/account.username/} Account Type: {/account.accountType/}
+								<br> Email: <br>{/account.email/} Phone Number: {/account.phoneNumber/}</h6>
+							</a>
+						</div>
 					</div>
-					<img src="http://www.clipartkid.com/images/254/under-construction-image-SVHjVA-clipart.jpeg" width="600">
 				</md-tab>
 				<md-tab label="Import Data">
 					DB to replace: <select name="dataBase" ng-model="vm.dataBase"><option value="">----Select----</option>

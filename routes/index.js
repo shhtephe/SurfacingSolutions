@@ -370,8 +370,12 @@ router.get('/admin', function(req, res, next) {
   res.render('partials/admin');
 });
 
-router.get('/remnants', function(req, res, next) {
-  res.render('partials/remnants');
+router.get('/remnantsedit', function(req, res, next) {
+  res.render('partials/remnantsedit');
+});
+
+router.get('/remnantsview', function(req, res, next) {
+  res.render('partials/remnantsview');
 });
 
 router.post('/updatedb', function(req, res, next) {
@@ -407,8 +411,75 @@ router.post('/updatedb', function(req, res, next) {
       };
     };
   };
-
 });
+
+router.post('/updateremnants', function(req, res, next) {
+  console.log(req.body);
+  if(req.body.action === "update"){
+    var remnant = req.body.data;
+    var conditions = {_id:remnant._id}
+      , update = {
+        length: req.body.data.length,
+        width: req.body.data.width,
+        location: req.body.data.location
+      }
+      , options = { multi: false};
+    console.log(conditions);
+    mongoose.model('remnants').update(conditions, update, options, callback);
+    function callback (err, numAffected) {
+      //numAffected is the number of updated documents
+      if(err) {
+        console.log("Errors: " + err);
+        res.sendStatus(500);
+      }
+      else {
+        console.log("Number of rows Affected: " + numAffected);
+        res.sendStatus(200);
+      };
+    };
+  } else if(req.body.action === "remove"){
+    //console.log("Parameter:", req.body.parameter);
+    var ObjectId = require('mongoose').Types.ObjectId; 
+    var query = req.body.data;
+    //console.log('Query', query);
+    var search = mongoose.model('remnants').find(query);
+    search.remove().exec(function (err, searchRemnants){
+      if (err) { return next(err); }
+      if (!searchRemnants) { return next(new Error('Can\'t find remnant.')); } 
+      else {      
+        console.log("Entry Deleted");
+        res.sendStatus(200);
+      };
+    });
+  } else if(req.body.action === "add"){
+    console.log("Adding remnant");
+    console.log(req.body.data)
+    var newRemnant = new remnants({
+      manufacturer: req.body.data.manufacturer,
+      remnantType: req.body.data.remnantType,
+      colourGroup: req.body.data.colourGroup,
+      description: req.body.data.description,
+      thickness: req.body.data.thickness,
+      length: req.body.data.length,
+      width: req.body.data.width,
+      location: req.body.data.location
+    });
+    console.log("New Remnant", newRemnant);
+    newRemnant.save(function (err, numAffected) {
+      if (err) {
+        console.log("Remnant did not save: " + err);
+        res.sendStatus(500);
+      }
+      else {
+        //saved!
+        console.log("Remnant saved!", numAffected);
+        res.sendStatus(200);
+      }
+    });
+  }
+});
+
+
 
 router.post('/savematerials', function(req, res, next) {
   console.log(req.body.action + ' materials Ran')
@@ -689,9 +760,6 @@ router.get('/remnants', function(req, res, next) {
       res.json(data); 
   }); 
 });
-
-
-
 
 router.get('/', function (req, res) {
     res.render('index', { user : req.user });

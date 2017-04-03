@@ -76,9 +76,5 @@
 				return response.data;
 			});
 		};
-	};
-/*,
-			getProducts: getProducts,
-			getMaterials: getMaterials*/
-		
+	};		
 }());

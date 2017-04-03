@@ -21,18 +21,14 @@
                 </caption>
                 <!-- End legacy contact format-->
                 <caption ng-show="!vm.customer.firstName">
-                    <button type="button" class="btn" ng-click="vm.newQuote(currentUser)" style="btn; float:right">New Quote</button>
-                    <br>
-                    Customer: {/vm.customer.companyName/} - {/vm.customer.custCode/}
+                    Customer: {/vm.customer.companyName/} - {/vm.customer.custCode/} <div ng-show="!vm.customer.firstName && vm.customer.contacts[1].firstName" style='float:right'><button type="btn" class="btn btn-default" ng-click="vm.isContactCollapsed = !vm.isContactCollapsed">Secondary Contacts</button></div><button type="button" class="btn" ng-click="vm.addContact()" style="btn; float:right">Add Contact</button><button type="button" class="btn" ng-click="vm.newQuote(currentUser)" style="btn; float:right">New Quote</button>
                     <!--<br>Salesperson: {/vm.customer.rep/}-->
                     <br>Primary Contact: {/vm.customer.contacts[0].firstName/} {/vm.customer.contacts[0].lastName/}
                     <br>Title: {/vm.customer.contacts[0].title/}
                     <br>Email: {/vm.customer.contacts[0].email/}
-                    <button type="button" class="btn" ng-click="vm.addContact()" style="btn; float:right">Add Contact</button>
                     <br>Phone Number: {/vm.customer.contacts[0].phone/}
                 </caption>
             </table>
-            <div ng-show="!vm.customer.firstName && vm.customer.contacts[1].firstName"><button type="button" class="btn btn-default" ng-click="vm.isContactCollapsed = !vm.isContactCollapsed">Secondary Contacts</button></div>
             <div uib-collapse="!vm.isContactCollapsed">
                 <div class="well well-lg">
                     <div ng-repeat="contact in vm.customer.contacts track by $index" ng-if="!$first">
@@ -52,10 +48,7 @@
                 </tr>
             </table>
             <br>
-<<<<<<< HEAD
             <!--<pre>{/vm.customer | json/}</pre>-->
-=======
->>>>>>> d9b586ec1fcaa598fbc4c90ebc6c77555d9f8b76
         </div>
     </div>
 </div>

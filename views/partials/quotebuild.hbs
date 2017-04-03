@@ -3,8 +3,13 @@
     <div class="container">
     	    <div hl-sticky="" align="right" class="simple">
     	    	<br>
-				<button type="button" style="btn; float:right" ng-click="vm.saveQuote(vm.quote.description, currentUser)">Update/Save Quote</button> <a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotefinal" target=""><button type="button" style="btn; float:right">View Invoice</button></a>
-				
+				<button type="button" style="btn; float:right" ng-click="vm.saveQuote(vm.quote.description, currentUser)">Update/Save Quote</button> 
+				<a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotesend" target="">
+					<button type="button" style="btn; float:right">Client Copy</button>
+				</a>
+				<a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotefinal" target="">
+					<button type="button" style="btn; float:right">Office Copy</button>
+				</a>				
 			</div>
         <div class="col-xs-offset-2 col-xs-8">
 			<div ng-init='vm.addCounter == false; vm.divMandatory = false; vm.divAddon = false;'>
@@ -538,7 +543,7 @@
 				<textarea style="width:100%; height:200px" ng-model=vm.quote.notes></textarea>
 				<br> 
 				<br>
-				Please click <a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotefinal" target="">here</a> to view the invoice.
+				Please click <a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotefinal" target="">here</a> to view the office copy.
 				<button type="button" style="btn; float:right" ng-click="vm.saveQuote(vm.quote.description, currentUser)">Update/Save Quote</button>
 				<br>
 				<br>

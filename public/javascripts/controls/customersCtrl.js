@@ -28,10 +28,13 @@
 
 	  	vm.alerts = [
 	  	];
+	  	//set Sort type on
+	  	vm.sortType = "updatedAt";
+	  	vm.sortReverse = !vm.sortReverse;
 
 	  	vm.buildCustomer = function(customer) {
 	  		var response = "";
-	  		console.log(customer)
+	  		//console.log(customer)
 	  		if(customer.companyName !=="") {
 	  			response += (customer.companyName + " - ");
 	  		};
@@ -56,9 +59,6 @@
 	  		} else if (contact.firstName !==""){
 				response += (contact.firstName);
 	  		};
-	  		if(contact.email !=="") {
-					response += (" - " + contact.email);
-		  		};
 	  		return response;
 	  	};
 

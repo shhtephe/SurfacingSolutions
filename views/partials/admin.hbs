@@ -1,297 +1,299 @@
 <!DOCTYPE html>
 <div class="jumbotron">
-        <div class="container">
-            <div class="col-xs-offset-2 col-xs-8">
-			<!--<div ng-controller="adminCtrl">-->
-				<uib-alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</uib-alert>
-				<md-tabs md-dynamic-height md-border-bottom md-stretch-tabs>
-				<md-tab label="Materials/Products">
-					<u>Edit Materials</u>
+    <div class="container">
+        <div class="col-xs-offset-2 col-xs-8">
+		<!--<div ng-controller="adminCtrl">-->
+			<uib-alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</uib-alert>
+			<md-tabs md-dynamic-height md-border-bottom md-stretch-tabs>
+			<md-tab label="Materials/Products">
+				<u>Edit Materials</u>
+				<br>
+				<button ng-hide="vm.newEditMaterial == true" type="button" ng-click="vm.showEditMaterial()" class="btn btn-default">Edit Material</button>
+				<div ng-show="vm.newEditMaterial == true">
+					Choose a Distributor: <select name="editMaterialDistributor" ng-model="editMaterialDistributor" ng-options="material.distributor for material in vm.materials | orderBy:'distributor' | unique: 'distributor'">
+					<option value="">----Select----</option>
+					</select>
 					<br>
-					<button ng-hide="vm.newEditMaterial == true" type="button" ng-click="vm.showEditMaterial()" class="btn btn-default">Edit Material</button>
-					<div ng-show="vm.newEditMaterial == true">
-						Choose a Distributor: <select name="editMaterialDistributor" ng-model="editMaterialDistributor" ng-options="material.distributor for material in vm.materials | orderBy:'distributor' | unique: 'distributor'">
-						<option value="">----Select----</option>
-						</select>
+					<div ng-show="editMaterialDistributor">
 						<br>
-						<div ng-show="editMaterialDistributor">
-							<br>
-							Choose a Manufacturer:
-							<select name="editMaterialManufacturer" ng-model="editMaterialManufacturer" ng-options="material.manufacturer for material in vm.materials | filter:{distributor:editMaterialDistributor.distributor} | unique: 'manufacturer' | orderBy:'manufacturer'">
-								<option value="">----Select----</option>
-							</select>
-						</div>
-						<div ng-show="editMaterialDistributor && editMaterialManufacturer">
-							<br>
-							Choose a Colour:
-							<select name="editMaterialDescription" ng-model="editMaterialDescription" ng-options="material.description + ' - ' + material.thickness + 'x' + material.width + 'x' + material.length for material in vm.materials | filter:{manufacturer:editMaterialManufacturer.manufacturer} | orderBy:'description'">
-								<option value="">----Select----</option>
-							</select>
-						</div>
-						<form ng-submit="vm.updateMaterial(editMaterialDescription); editMaterialDistributor =''; editMaterialManufacturer=''; editMaterialColourGroup = ''; editMaterialDescription = ''; vm.newEditMaterial = 'false'" id="updateMaterialForm" name="updateMaterialForm">
-							<div ng-show="editMaterialDistributor && editMaterialManufacturer && editMaterialDescription">
-								<br>
-								<ul class="list-group"> 
-									<li class="list-group-item">	
-										Colour Group: <input type="text" name="colourGroup" ng-model="editMaterialDescription.colourGroup"> <br> 
-									</li>								
-									<li class="list-group-item">	
-										Item Code: <input type="text" name="itemCode" ng-model="editMaterialDescription.itemCode"> <br> 
-									</li>	
-									<li class="list-group-item">	
-										Thickness: <input required type="text" name="thickness" ng-model="editMaterialDescription.thickness"> <br> 
-									</li>	
-									<li class="list-group-item">	
-										Width (In.): <input required type="text" name="width" ng-model="editMaterialDescription.width"> <br> 
-									</li>				
-									<li class="list-group-item">	
-										Length (In.): <input required type="text" name="length" ng-model="editMaterialDescription.length"> <br> 
-									</li>	
-									<li class="list-group-item">	
-										Half Sheet: <input type="text" name="halfSheet" ng-model="editMaterialDescription.halfSheet"> <br> 
-									</li>
-									<li class="list-group-item">	
-										Full Sheet 1-5: <input  type="text" name="fullSheet1" ng-model="editMaterialDescription.fullSheet1"> <br> 
-									</li>	
-									<li class="list-group-item">	
-										Full Sheet 5-20: <input type="text" name="fullSheet5" ng-model="editMaterialDescription.fullSheet5"> <br> 
-									</li>
-									<li class="list-group-item">	
-										Full Sheet 21+: <input type="text" name="fullSheet21" ng-model="editMaterialDescription.fullSheet21"> <br> 
-									</li>
-									<li class="list-group-item">	
-										ISA: <input type="text" name="isa" ng-model="editMaterialDescription.isa"> <br> 
-									</li>
-									<li class="list-group-item">	
-										Sale: <input type="text" name="sale" ng-model="editMaterialDescription.sale"> <br>
-									</li>
-									<li class="list-group-item">	
-										Collection: <input type="text" name="matCollection" ng-model="editMaterialDescription.matCollection"> <br> 
-									</li>
-								</ul>
-							    <input type="submit" id="materialUpdateSubmit" class="btn btn-default" value="Update">
-							    <button type="button" ng-click="vm.deleteMaterial(editMaterialDescription); vm.newEditMaterial = false; editMaterialDistributor =''; editMaterialManufacturer=''; editMaterialColourGroup = ''; editMaterialDescription = ''; vm.newEditMaterial = 'false'" class="btn btn-danger">Delete</button> 
-							</div>
-						    <br>
-						    <button type="button" ng-click="vm.cancelSaveMaterial()" class="btn btn-default">Cancel</button> 
-					    </form>
-					</div>
-					<br>
-					<br>
-					<u>Add New Material</u>
-					<br>
-					<button ng-hide="vm.newMaterial == true" type="button" ng-click="vm.showNewMaterial()" class="btn btn-default">Add new Material</button>
-					<br>
-					<div ng-show="vm.newMaterial == true">
-						<form name="addMaterialForm"
-						ng-submit="vm.addNewMaterial(materialDescription); materialDescription =''; materialDescription.itemCode =''; materialDescription.thickness = ''; materialDescription.width = ''; materialDescription.length = ''; materialDescription.fullSheet1 = ''; materialDescription.halfSheet = ''; materialDescription.fullSheet5 = ''; materialDescription.fullSheet21 = ''; materialDescription.isa = ''; materialDescription.matCollection = '';  searchStr = ''; vm.newMaterial == false;">
-
-							<ul class="list-group"> 
-								<li class="list-group-item">
-									Distributor: <br>
-									<input type="text" class="form-control" data-ng-model="materialDescription.distributor" list="addMaterialDistributors">
-									<datalist id="addMaterialDistributors">
-										<option  data-ng-repeat="distributor in vm.uniqueMaterialDistributor" value="{/distributor.distributor/}">
-									</datalist>	 
-								</li>
-								<li class="list-group-item">	
-									Manufacturer: <br>
-									<input type="text" class="form-control" data-ng-model="materialDescription.manufacturer" list="addMaterialManufacturers">
-									<datalist id="addMaterialManufacturers">
-										<option  data-ng-repeat="manufacturer in vm.uniqueMaterialManufacturer" value="{/manufacturer.manufacturer/}">
-									</datalist>	 
-								</li>
-								<li class="list-group-item">	
-									Colour Group: <br> 
-									<input type="text" class="form-control" data-ng-model="materialDescription.colourGroup" list="addMaterialColourGroups">
-									<datalist id="addMaterialColourGroups">
-										<option  data-ng-repeat="colourGroup in vm.uniqueMaterialColourGroup" value="{/colourGroup.colourGroup/}">
-									</datalist>
-								</li>
-								<li class="list-group-item">	
-									Colour Group: <input type="text" name="colourGroup" ng-model="editMaterialDescription.colourGroup"> <br> 
-								</li>	
-								<li class="list-group-item">	
-									Collection: <input type="text" name="matCollection" ng-model="editMaterialDescription.matCollection"> <br> 
-								</li>							
-								<li class="list-group-item">	
-									Item Code: <input type="text" name="newItemCode" ng-model="materialDescription.itemCode"> <br> 
-								</li>	
-								<li class="list-group-item">	
-									Thickness: <input type="text" name="newThickness" ng-model="materialDescription.thickness"> <br> 
-								</li>	
-								<li class="list-group-item">	
-									Width (In.): <input type="text" name="newWidth" ng-model="materialDescription.width"> <br> 
-								</li>				
-								<li class="list-group-item">	
-									Length (In.): <input type="text" name="newLength" ng-model="materialDescription.length"> <br> 
-								</li>	
-								<li class="list-group-item">	
-									Full Sheet 1-5: <input type="text" name="newFullSheet1" ng-model="materialDescription.fullSheet1"> <br> 
-								</li>	
-								<li class="list-group-item">	
-									Half Sheet: <input type="text" name="newHalfSheet" ng-model="materialDescription.halfSheet"> <br> 
-								</li>
-								<li class="list-group-item">	
-									Full Sheet 5-20: <input type="text" name="newFullSheet5" ng-model="materialDescription.fullSheet5"> <br> 
-								</li>
-								<li class="list-group-item">	
-									Full Sheet 21+: <input type="text" name="newFullSheet21" ng-model="materialDescription.fullSheet21"> <br> 
-								</li>
-								<li class="list-group-item">	
-									ISA: <input type="text" name="newisa" ng-model="materialDescription.isa"> <br> 
-								</li>
-								<li class="list-group-item">
-									Material Type: <select name="materialType" ng-model="editMaterialDescription.materialType"><option value="">----Select----</option>
-									<option value="Acrylic">Acrylic</option>
-									<option value="Quartz">Quartz</option>
-									<option value="Quartz - Viatera">Quartz - Viatera</option>
-									</select>
-								</li>
-							</ul>
-							<button type="button" ng-click="vm.hideNewMaterial()" class="btn btn-default">Cancel</button> 
-							<input type="submit" class="btn btn-default" value="Add">
-						</form> 
-					</div>
-					<br>
-					<u>Edit Products</u>
-					<br>
-					<button ng-hide="vm.newEditProduct == true" type="button" ng-click="vm.showEditProduct()" class="btn btn-default">Edit Product</button>
-					<div ng-show="vm.newEditProduct == true">
-						Choose a Product Type:
-						<select name="editProductType" ng-model="editProductType" ng-options="product.productType for product in vm.products | unique: 'productType' | orderBy:'productType'">
+						Choose a Manufacturer:
+						<select name="editMaterialManufacturer" ng-model="editMaterialManufacturer" ng-options="material.manufacturer for material in vm.materials | filter:{distributor:editMaterialDistributor.distributor} | unique: 'manufacturer' | orderBy:'manufacturer'">
 							<option value="">----Select----</option>
 						</select>
-						<div ng-show="editProductType">
-							<br>
-							Choose a Description:
-							<select name="editProductDescription" ng-model="editProductDescription" ng-options="product.description for product in vm.products | filter:{productType:editProductType.productType} | unique: 'description' | orderBy:'description'">
-								<option value="">----Select----</option>
-							</select>
-						</div>
-						<div ng-show="editProductType && editProductDescription">
+					</div>
+					<div ng-show="editMaterialDistributor && editMaterialManufacturer">
+						<br>
+						Choose a Colour:
+						<select name="editMaterialDescription" ng-model="editMaterialDescription" ng-options="material.description + ' - ' + material.thickness + 'x' + material.width + 'x' + material.length for material in vm.materials | filter:{manufacturer:editMaterialManufacturer.manufacturer} | orderBy:'description'">
+							<option value="">----Select----</option>
+						</select>
+					</div>
+					<form ng-submit="vm.updateMaterial(editMaterialDescription); editMaterialDistributor =''; editMaterialManufacturer=''; editMaterialColourGroup = ''; editMaterialDescription = ''; vm.newEditMaterial = 'false'" id="updateMaterialForm" name="updateMaterialForm">
+						<div ng-show="editMaterialDistributor && editMaterialManufacturer && editMaterialDescription">
 							<br>
 							<ul class="list-group"> 
 								<li class="list-group-item">	
-									Item Code: <input type="text" name="productItemCode" ng-model="editProductDescription.itemCode"> <br> 
+									Colour Group: <input type="text" name="colourGroup" ng-model="editMaterialDescription.colourGroup"> <br> 
+								</li>								
+								<li class="list-group-item">	
+									Item Code: <input type="text" name="itemCode" ng-model="editMaterialDescription.itemCode"> <br> 
 								</li>	
 								<li class="list-group-item">	
-									Price: <input type="text" name="productPrice" ng-model="editProductDescription.price"> <br> 
+									Thickness: <input required type="text" name="thickness" ng-model="editMaterialDescription.thickness"> <br> 
 								</li>	
 								<li class="list-group-item">	
-									Formula: <select name="newProductFormula" ng-model="editProductDescription.formula"><option value="">----Select----</option>
-									<option value="item">Item</option>
-									<option value="linearLW">LinearLW</option>
-									<option value="linearLSUM">LinearLSUM</option>
-									<option value="sqft">Square Footage</option>
-									</select>
+									Width (In.): <input required type="text" name="width" ng-model="editMaterialDescription.width"> <br> 
+								</li>				
+								<li class="list-group-item">	
+									Length (In.): <input required type="text" name="length" ng-model="editMaterialDescription.length"> <br> 
+								</li>	
+								<li class="list-group-item">	
+									Half Sheet: <input type="text" name="halfSheet" ng-model="editMaterialDescription.halfSheet"> <br> 
 								</li>
-								<li class="list-group-item">
-									Mandatory: <input type="checkbox" ng-model="editProductDescription.mandatory">
+								<li class="list-group-item">	
+									Full Sheet 1-5: <input  type="text" name="fullSheet1" ng-model="editMaterialDescription.fullSheet1"> <br> 
+								</li>	
+								<li class="list-group-item">	
+									Full Sheet 5-20: <input type="text" name="fullSheet5" ng-model="editMaterialDescription.fullSheet5"> <br> 
 								</li>
-								<li class="list-group-item">
-									Non-Mandatory: <input type="checkbox" ng-model="editProductDescription.nonMandatory">
+								<li class="list-group-item">	
+									Full Sheet 21+: <input type="text" name="fullSheet21" ng-model="editMaterialDescription.fullSheet21"> <br> 
+								</li>
+								<li class="list-group-item">	
+									ISA: <input type="text" name="isa" ng-model="editMaterialDescription.isa"> <br> 
+								</li>
+								<li class="list-group-item">	
+									Sale: <input type="text" name="sale" ng-model="editMaterialDescription.sale"> <br>
+								</li>
+								<li class="list-group-item">	
+									Collection: <input type="text" name="matCollection" ng-model="editMaterialDescription.matCollection"> <br> 
 								</li>
 							</ul>
-						    <button type="button" ng-click="vm.updateProduct(editProductDescription); editProductType = ''; editProductDescription = ''; editProductDescription.itemCode = ''; editProductDescription.price = ''; editProductDescription.formula = ''; vm.newEditProduct = false;" class="btn btn-default">Update</button>
-						    <button type="button" ng-click="vm.deleteProduct(editProductDescription); editProductType = ''; editProductDescription = ''; editProductDescription.itemCode = ''; editProductDescription.price = ''; editProductDescription.formula = ''; vm.newEditProduct = false;" class="btn btn-danger">Delete</button> 
+						    <input type="submit" id="materialUpdateSubmit" class="btn btn-default" value="Update">
+						    <button type="button" ng-click="vm.deleteMaterial(editMaterialDescription); vm.newEditMaterial = false; editMaterialDistributor =''; editMaterialManufacturer=''; editMaterialColourGroup = ''; editMaterialDescription = ''; vm.newEditMaterial = 'false'" class="btn btn-danger">Delete</button> 
 						</div>
 					    <br>
-					    <button type="button" ng-click="vm.cancelSaveProduct()" class="btn btn-default">Cancel</button>
-					</div>
-					<br>
-					<br>
-					<u>Add New Product</u>
-					<br>
-					<button ng-hide="vm.newProduct == true" type="button" ng-click="vm.showNewProduct()" class="btn btn-default">Add New Product</button>
-					<br>
-					{/productDescription/}
-					<div ng-show="vm.newProduct == true">
-							<ul class="list-group"> 
-								<li class="list-group-item">	
-									Distributor: <br>
-									<input type="text" class="form-control" ng-model="productDescription.distributor" placeholder="Enter a Distributor" list="addProductDistributors">
-									<datalist id="addProductDistributors">
-										<option  data-ng-repeat="distributor in vm.uniqueProductDistributor" value="{/distributor.distributor/}">
-									</datalist>
-								</li>
-								<li class="list-group-item">	
-									Manufacturer: <br>
-									<input type="text" class="form-control" ng-model="productDescription.manufacturer" placeholder="Enter a Manufacturer" list="addProductManufacturers">
-									<datalist id="addProductManufacturers">
-										<option  data-ng-repeat="manufacturer in vm.uniqueProductManufacturer" value="{/manufacturer.manufacturer/}">
-									</datalist>
-								</li>
-								<li class="list-group-item">	
-									Product Type: <br>
-									<input type="text" class="form-control" ng-model="productDescription.productType" placeholder="Enter a ProductType" list="addProductProductTypes">
-									<datalist id="addProductProductTypes">
-										<option  data-ng-repeat="productType in vm.uniqueProductType" value="{/productType.productType/}">
-									</datalist> 
-								</li>							
-								<li class="list-group-item">	
-									Description: <input type="text" name="newProductDescription" ng-model="productDescription.description"> <br> 
-								</li>
-								<li class="list-group-item">	
-									Item Code: <input type="text" name="newProductItemCode" ng-model="productDescription.itemCode"> <br> 
-								</li>	
-								<li class="list-group-item">	
-									Price: <input type="text" name="newProductPrice" ng-model="productDescription.price"> <br> 
-								</li>	
-								<li class="list-group-item">	
-									Formula: <select name="newProductFormula" ng-model="productDescription.formula"><option value="">----Select----</option>
-									<option value="item">Item</option>
-									<option value="linearLW">LinearLW</option>
-									<option value="linearLSUM">LinearLSUM</option>
-									<option value="sqft">Square Footage</option>
-									</select>
-								</li>	
-								<li class="list-group-item">
-									Mandatory: <input type="checkbox" name="newProductMandatory" ng-model="productDescription.mandatory" value="mandatory">
-								</li>
-								<li class="list-group-item">
-									Non-Mandatory: <input type="checkbox" name="newProductNonMandatory" ng-model="productDescription.nonMandatory" value="nonMandatory">
-								</li>
-							</ul>
-						<button type="button" ng-click="vm.hideNewProduct()" class="btn btn-default">Cancel</button> 
-						<button type="button" ng-click="vm.addNewProduct(productDescription)" class="btn btn-default">Add</button> 
-					</div>
-				</md-tab>
-				<md-tab label="User Accounts">
-					<div class="list group">
-						<div class="col-xs-6 col-sm-4" data-ng-repeat="account in vm.accounts | orderBy:'lastName'">
-							<a ng-click="vm.accountModal()6" class="list-group-item">
-								<i class="fa fa-address-card"></i><span ng-click="vm.deleteAccount(account)" style="float:right ">x</span>
-								<h5>{/account.firstName/} {/account.lastName/}</h5>
-								<h6>Account Name: {/account.username/} Account Type: {/account.accountType/}
-								<br> Email: <br>{/account.email/} Phone Number: {/account.phoneNumber/}</h6>
-							</a>
-						</div>
-					</div>
-				</md-tab>
-				<md-tab label="Import Data">
-					DB to replace: <select name="dataBase" ng-model="vm.dataBase"><option value="">----Select----</option>
-								<option value="products">Products</option>
-								<option value="materials">Materials</option>
+					    <button type="button" ng-click="vm.cancelSaveMaterial()" class="btn btn-default">Cancel</button> 
+				    </form>
+				</div>
+				<br>
+				<br>
+				<u>Add New Material</u>
+				<br>
+				<button ng-hide="vm.newMaterial == true" type="button" ng-click="vm.showNewMaterial()" class="btn btn-default">Add new Material</button>
+				<br>
+				<div ng-show="vm.newMaterial == true">
+					<form name="addMaterialForm"
+					ng-submit="vm.addNewMaterial(materialDescription); materialDescription =''; materialDescription.itemCode =''; materialDescription.thickness = ''; materialDescription.width = ''; materialDescription.length = ''; materialDescription.fullSheet1 = ''; materialDescription.halfSheet = ''; materialDescription.fullSheet5 = ''; materialDescription.fullSheet21 = ''; materialDescription.isa = ''; materialDescription.matCollection = '';  searchStr = ''; vm.newMaterial == false;">
+
+						<ul class="list-group"> 
+							<li class="list-group-item">
+								Distributor: <br>
+								<input type="text" class="form-control" data-ng-model="materialDescription.distributor" list="addMaterialDistributors">
+								<datalist id="addMaterialDistributors">
+									<option  data-ng-repeat="distributor in vm.uniqueMaterialDistributor" value="{/distributor.distributor/}">
+								</datalist>	 
+							</li>
+							<li class="list-group-item">	
+								Manufacturer: <br>
+								<input type="text" class="form-control" data-ng-model="materialDescription.manufacturer" list="addMaterialManufacturers">
+								<datalist id="addMaterialManufacturers">
+									<option  data-ng-repeat="manufacturer in vm.uniqueMaterialManufacturer" value="{/manufacturer.manufacturer/}">
+								</datalist>	 
+							</li>
+							<li class="list-group-item">	
+								Colour Group: <br> 
+								<input type="text" class="form-control" data-ng-model="materialDescription.colourGroup" list="addMaterialColourGroups">
+								<datalist id="addMaterialColourGroups">
+									<option  data-ng-repeat="colourGroup in vm.uniqueMaterialColourGroup" value="{/colourGroup.colourGroup/}">
+								</datalist>
+							</li>
+							<li class="list-group-item">	
+								Colour Group: <input type="text" name="colourGroup" ng-model="editMaterialDescription.colourGroup"> <br> 
+							</li>	
+							<li class="list-group-item">	
+								Collection: <input type="text" name="matCollection" ng-model="editMaterialDescription.matCollection"> <br> 
+							</li>							
+							<li class="list-group-item">	
+								Item Code: <input type="text" name="newItemCode" ng-model="materialDescription.itemCode"> <br> 
+							</li>	
+							<li class="list-group-item">	
+								Thickness: <input type="text" name="newThickness" ng-model="materialDescription.thickness"> <br> 
+							</li>	
+							<li class="list-group-item">	
+								Width (In.): <input type="text" name="newWidth" ng-model="materialDescription.width"> <br> 
+							</li>				
+							<li class="list-group-item">	
+								Length (In.): <input type="text" name="newLength" ng-model="materialDescription.length"> <br> 
+							</li>	
+							<li class="list-group-item">	
+								Full Sheet 1-5: <input type="text" name="newFullSheet1" ng-model="materialDescription.fullSheet1"> <br> 
+							</li>	
+							<li class="list-group-item">	
+								Half Sheet: <input type="text" name="newHalfSheet" ng-model="materialDescription.halfSheet"> <br> 
+							</li>
+							<li class="list-group-item">	
+								Full Sheet 5-20: <input type="text" name="newFullSheet5" ng-model="materialDescription.fullSheet5"> <br> 
+							</li>
+							<li class="list-group-item">	
+								Full Sheet 21+: <input type="text" name="newFullSheet21" ng-model="materialDescription.fullSheet21"> <br> 
+							</li>
+							<li class="list-group-item">	
+								ISA: <input type="text" name="newisa" ng-model="materialDescription.isa"> <br> 
+							</li>
+							<li class="list-group-item">
+								Material Type: <select name="materialType" ng-model="editMaterialDescription.materialType"><option value="">----Select----</option>
+								<option value="Acrylic">Acrylic</option>
+								<option value="Quartz">Quartz</option>
+								<option value="Quartz - Viatera">Quartz - Viatera</option>
 								</select>
-					<br><br>
-					<span ng-show="vm.dataBase && vm.importInputText.length > 0">
-						<button type="button" ng-click="vm.updateDBModal($event)" class="btn btn-default">Update {/vm.dataBase/} DB</button>
-					</span>
-					<button type="button" ng-click="vm.importInputText=''" class="btn btn-default">Clear Excel</button> 
-					<br>
-					<div id='importBase'>
-						<div id='importConverter' class=''>
-							<div class="importGroupHeader" id="importInputHeader"><p class="importGroupHeadline">Copy and Paste Excel Data below:</p></div>
-							<textarea style="width:100%; height:200px" class="importTextInputs" ng-model="vm.importInputText" id="dataInput" ng-change="vm.importInputTextChange(importInputText)"></textarea>
-						</div>
+							</li>
+						</ul>
+						<button type="button" ng-click="vm.hideNewMaterial()" class="btn btn-default">Cancel</button> 
+						<input type="submit" class="btn btn-default" value="Add">
+					</form> 
+				</div>
+				<br>
+				<u>Edit Products</u>
+				<br>
+				<button ng-hide="vm.newEditProduct == true" type="button" ng-click="vm.showEditProduct()" class="btn btn-default">Edit Product</button>
+				<div ng-show="vm.newEditProduct == true">
+					Choose a Product Type:
+					<select name="editProductType" ng-model="editProductType" ng-options="product.productType for product in vm.products | unique: 'productType' | orderBy:'productType'">
+						<option value="">----Select----</option>
+					</select>
+					<div ng-show="editProductType">
+						<br>
+						Choose a Description:
+						<select name="editProductDescription" ng-model="editProductDescription" ng-options="product.description for product in vm.products | filter:{productType:editProductType.productType} | unique: 'description' | orderBy:'description'">
+							<option value="">----Select----</option>
+						</select>
 					</div>
-					{/vm.errors/}
-				</md-tab>
-				</md-tabs>			
-				<!--<input type="text" ng-model="searchQuery"> <br>
-				<span ng-repeat="material in vm.products | filter:searchQuery">{/material | json/}<span>-->
-			<!--</div>-->
+					<div ng-show="editProductType && editProductDescription">
+						<br>
+						<ul class="list-group"> 
+							<li class="list-group-item">	
+								Item Code: <input type="text" name="productItemCode" ng-model="editProductDescription.itemCode"> <br> 
+							</li>	
+							<li class="list-group-item">	
+								Price: <input type="text" name="productPrice" ng-model="editProductDescription.price"> <br> 
+							</li>	
+							<li class="list-group-item">	
+								Formula: <select name="newProductFormula" ng-model="editProductDescription.formula"><option value="">----Select----</option>
+								<option value="item">Item</option>
+								<option value="linearLW">LinearLW</option>
+								<option value="linearLSUM">LinearLSUM</option>
+								<option value="sqft">Square Footage</option>
+								</select>
+							</li>
+							<li class="list-group-item">
+								Mandatory: <input type="checkbox" ng-model="editProductDescription.mandatory">
+							</li>
+							<li class="list-group-item">
+								Non-Mandatory: <input type="checkbox" ng-model="editProductDescription.nonMandatory">
+							</li>
+						</ul>
+					    <button type="button" ng-click="vm.updateProduct(editProductDescription); editProductType = ''; editProductDescription = ''; editProductDescription.itemCode = ''; editProductDescription.price = ''; editProductDescription.formula = ''; vm.newEditProduct = false;" class="btn btn-default">Update</button>
+					    <button type="button" ng-click="vm.deleteProduct(editProductDescription); editProductType = ''; editProductDescription = ''; editProductDescription.itemCode = ''; editProductDescription.price = ''; editProductDescription.formula = ''; vm.newEditProduct = false;" class="btn btn-danger">Delete</button> 
+					</div>
+				    <br>
+				    <button type="button" ng-click="vm.cancelSaveProduct()" class="btn btn-default">Cancel</button>
+				</div>
+				<br>
+				<br>
+				<u>Add New Product</u>
+				<br>
+				<button ng-hide="vm.newProduct == true" type="button" ng-click="vm.showNewProduct()" class="btn btn-default">Add New Product</button>
+				<br>
+				{/productDescription/}
+				<div ng-show="vm.newProduct == true">
+						<ul class="list-group"> 
+							<li class="list-group-item">	
+								Distributor: <br>
+								<input type="text" class="form-control" ng-model="productDescription.distributor" placeholder="Enter a Distributor" list="addProductDistributors">
+								<datalist id="addProductDistributors">
+									<option  data-ng-repeat="distributor in vm.uniqueProductDistributor" value="{/distributor.distributor/}">
+								</datalist>
+							</li>
+							<li class="list-group-item">	
+								Manufacturer: <br>
+								<input type="text" class="form-control" ng-model="productDescription.manufacturer" placeholder="Enter a Manufacturer" list="addProductManufacturers">
+								<datalist id="addProductManufacturers">
+									<option  data-ng-repeat="manufacturer in vm.uniqueProductManufacturer" value="{/manufacturer.manufacturer/}">
+								</datalist>
+							</li>
+							<li class="list-group-item">	
+								Product Type: <br>
+								<input type="text" class="form-control" ng-model="productDescription.productType" placeholder="Enter a ProductType" list="addProductProductTypes">
+								<datalist id="addProductProductTypes">
+									<option  data-ng-repeat="productType in vm.uniqueProductType" value="{/productType.productType/}">
+								</datalist> 
+							</li>							
+							<li class="list-group-item">	
+								Description: <input type="text" name="newProductDescription" ng-model="productDescription.description"> <br> 
+							</li>
+							<li class="list-group-item">	
+								Item Code: <input type="text" name="newProductItemCode" ng-model="productDescription.itemCode"> <br> 
+							</li>	
+							<li class="list-group-item">	
+								Price: <input type="text" name="newProductPrice" ng-model="productDescription.price"> <br> 
+							</li>	
+							<li class="list-group-item">	
+								Formula: <select name="newProductFormula" ng-model="productDescription.formula"><option value="">----Select----</option>
+								<option value="item">Item</option>
+								<option value="linearLW">LinearLW</option>
+								<option value="linearLSUM">LinearLSUM</option>
+								<option value="sqft">Square Footage</option>
+								</select>
+							</li>	
+							<li class="list-group-item">
+								Mandatory: <input type="checkbox" name="newProductMandatory" ng-model="productDescription.mandatory" value="mandatory">
+							</li>
+							<li class="list-group-item">
+								Non-Mandatory: <input type="checkbox" name="newProductNonMandatory" ng-model="productDescription.nonMandatory" value="nonMandatory">
+							</li>
+						</ul>
+					<button type="button" ng-click="vm.hideNewProduct()" class="btn btn-default">Cancel</button> 
+					<button type="button" ng-click="vm.addNewProduct(productDescription)" class="btn btn-default">Add</button> 
+				</div>
+			</md-tab>
+<!--User Accounts Tab-->			
+			<md-tab label="User Accounts">
+				Click to Edit:
+				<div class="list group">
+					<div class="col-xs-6 col-sm-4" data-ng-repeat="account in vm.accounts | orderBy:'lastName'">
+						<a ng-click="vm.accountModal()6" class="list-group-item">
+							<i class="fa fa-user-circle"></i><span ng-click="vm.deleteAccount(account)" style="float:right ">x</span>
+							<h5>{/account.firstName/} {/account.lastName/}</h5>
+							<h6>Account Name: {/account.username/} Account Type: {/account.accountType/}
+							<br> Email: <br>{/account.email/} Phone Number: {/account.phoneNumber/}</h6>
+						</a>
+					</div>
+				</div>
+			</md-tab>
+<!--Import Data Tab-->
+			<md-tab label="Import Data">
+				DB to replace: <select name="dataBase" ng-model="vm.dataBase"><option value="">----Select----</option>
+							<option value="products">Products</option>
+							<option value="materials">Materials</option>
+							</select>
+				<br><br>
+				<span ng-show="vm.dataBase && vm.importInputText.length > 0">
+					<button type="button" ng-click="vm.updateDBModal($event)" class="btn btn-default">Update {/vm.dataBase/} DB</button>
+				</span>
+				<button type="button" ng-click="vm.importInputText=''" class="btn btn-default">Clear Excel</button> 
+				<br>
+				<div id='importBase'>
+					<div id='importConverter' class=''>
+						<div class="importGroupHeader" id="importInputHeader"><p class="importGroupHeadline">Copy and Paste Excel Data below:</p></div>
+						<textarea style="width:100%; height:200px" class="importTextInputs" ng-model="vm.importInputText" id="dataInput" ng-change="vm.importInputTextChange(importInputText)"></textarea>
+					</div>
+				</div>
+				{/vm.errors/}
+			</md-tab>
+			</md-tabs>			
+			<!--<input type="text" ng-model="searchQuery"> <br>
+			<span ng-repeat="material in vm.products | filter:searchQuery">{/material | json/}<span>-->
         </div>
     </div>
 </div>

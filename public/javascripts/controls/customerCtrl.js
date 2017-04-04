@@ -33,7 +33,7 @@
       	  	});
 
       	  	modalInstance.result.then(function (contacts) {
-      			//Save the countertop and put all the data back onto the main controller
+      			//Save the contact and put all the data back onto the main controller
       			vm.pushContact(contacts);  			 				
 			}, function () {
       		console.log('Modal dismissed at: ' + new Date());

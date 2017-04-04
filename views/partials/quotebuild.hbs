@@ -2,14 +2,16 @@
 <div class="jumbotron">
     <div class="container">
     	    <div hl-sticky="" align="right" class="simple">
-    	    	<br>
-				<button type="button" style="btn; float:right" ng-click="vm.saveQuote(vm.quote.description, currentUser)">Update/Save Quote</button> 
-				<a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotesend" target="">
-					<button type="button" style="btn; float:right">Client Copy</button>
-				</a>
-				<a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotefinal" target="">
-					<button type="button" style="btn; float:right">Office Copy</button>
-				</a>				
+				<span style="float:right">
+					<br>
+					<button type="button" class="btn" ng-click="vm.saveQuote(vm.quote.description, currentUser)">Update/Save Quote</button>
+					<a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotesend" target="">
+						<button type="button" class="btn">Client Copy</button> 
+					</a>
+					<a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotefinal" target=""> 
+						<button type="button" class="btn">Office Copy</button> 
+					</a>	
+				</span>			
 			</div>
         <div class="col-xs-offset-2 col-xs-8">
 			<div ng-init='vm.addCounter == false; vm.divMandatory = false; vm.divAddon = false;'>

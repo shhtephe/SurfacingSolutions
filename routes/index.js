@@ -378,6 +378,67 @@ router.get('/remnantsview', function(req, res, next) {
   res.render('partials/remnantsview');
 });
 
+//This needs to be edited
+router.post('/saveaccount', function(req, res, next) {
+  console.log(req.body.account)
+  if(req.body.action === "update"){
+    var account = req.body.account;
+    var conditions = {_id:account._id}
+      , update = {
+        firstName: account.firstName,
+        lastName: account.lastName,
+        username: account.username,
+        accountType: account.accountType,
+        email: account.email,
+        phoneNumber: account.phoneNumber
+      }
+      , options = { multi: false};
+    console.log("conditions", conditions);
+    mongoose.model('accounts').update(conditions, update, options, callback);
+    function callback (err, numAffected) {
+      //numAffected is the number of updated documents
+      if(err) {
+        console.log("Errors: " + err);
+        res.sendStatus(500);
+      }
+      else {
+        console.log("Number of rows Affected: " + numAffected);
+        res.sendStatus(200);
+      };
+    };
+  } else if(req.body.action === "remove"){
+    //console.log("body:", req.body);
+    var ObjectId = require('mongoose').Types.ObjectId;
+    var query = req.body.account;
+    console.log('Query', query);
+    var search = mongoose.model('accounts').find(query);
+    search.remove().exec(function (err, searchAccounts){
+      if (err) { return next(err); }
+      if (!searchAccounts) { console.log("Can't find account"); } 
+      else {      
+        console.log("Entry Deleted");
+        res.sendStatus(200);
+      };
+    });
+  } else if(req.body.action === "password") {
+    var username = req.body.username,
+        newPasswordString = req.body.password;
+
+    account.findByUsername(username).then(function(sanitizedUser){
+    if (sanitizedUser){
+        sanitizedUser.setPassword(newPasswordString, function(){
+            sanitizedUser.save();
+            res.status(200).json({message: 'password reset successful'});
+        });
+    } else {
+        res.status(500).json({message: 'This user does not exist'});
+    }
+},function(err){
+    console.error(err);
+})
+  };
+});
+
 router.post('/updatedb', function(req, res, next) {
   //console.log(req.body.json.data);
   var conditions = {};

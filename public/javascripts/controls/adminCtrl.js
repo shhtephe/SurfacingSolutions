@@ -5,9 +5,9 @@
     .module('surfacingSolutions')
     .controller('adminCtrl', adminCtrl);
 
-    adminCtrl.$inject = ['dataFactory', '$stateParams', '$http', '$window', '$scope', '$mdDialog'];
+    adminCtrl.$inject = ['dataFactory', '$http', '$scope', '$mdDialog', '$uibModal'];
 
-    function adminCtrl(dataFactory, $stateParams, $http, $window, $scope, $mdDialog) {
+    function adminCtrl(dataFactory, $http, $scope, $mdDialog, $uibModal) {
     	
       var vm = this;
 
@@ -23,6 +23,102 @@
         })
       
       vm.alerts = [];
+
+      vm.accountEditModal = function (account, index) {
+        var modalInstance = $uibModal.open({
+          animation: true,
+          templateUrl: 'accountEdit.html',
+          controller: ['$uibModalInstance', 'account', accountEditCtrl],
+          controllerAs: 'vm',
+          resolve: {
+            account: function() {return account;}
+            }
+          });
+
+            modalInstance.result.then(function (account) {
+            //Save the account and put all the data back onto the main controller
+            vm.saveAccount(account, "update");               
+      }, function () {
+          console.log('Modal dismissed at: ' + new Date());
+        });
+      };
+
+      //Contact modal Controller
+      var accountEditCtrl = function($uibModalInstance, account) {
+        console.log($uibModalInstance, account)
+        var vm = this;
+        vm.account = account;
+        vm.changePassword = function(account, password) {
+
+        };
+
+        vm.submitAccountEdit = function(account) {
+          $uibModalInstance.close(account);
+        };
+
+        vm.cancel = function() {
+        $uibModalInstance.dismiss('cancel');
+        };
+      };
+
+      vm.deleteAccountModal = function(ev, account, index) {
+        // Appending dialog to document.body to cover sidenav in docs app
+        var confirm = $mdDialog.confirm()
+              .title('Delete Account')
+              .textContent('Are you sure you want delete ' + account.firstName + "'s account?")
+              //.placeholder('Enter an Email')
+              .ariaLabel('Delete User')
+              //.initialValue(vm.customer.email)
+          .targetEvent(ev)
+              .ok('Delete')
+              .cancel('Cancel');
+
+        $mdDialog.show(confirm).then(function(result) {
+          console.log("User chose to delete account");
+          vm.deleteAccount(index, account);
+        }, function() {
+          console.log("User Cancelled.");
+        });
+      };
+
+      //nameKey = string to find | myArray = the array | property = which property to find it in)
+      vm.arraySearch = function (nameKey, myArray, property){
+        //console.log(nameKey, myArray, property);
+        for (var i=0; i < myArray.length; i++) {
+          //console.log("my array i", myArray[i], "property", property)
+            if (myArray[i][property] === nameKey) {
+                return i;
+            };
+        };
+      };
+
+      vm.deleteAccount = function(index, account) {
+        console.log("Account deleted", index);
+        vm.accounts.splice(vm.arraySearch(account._id, vm.accounts, '_id'), 1);
+        vm.saveAccount(account, "remove");
+      };
+
+      vm.saveAccount = function(account, action) {
+        //declaring json data
+        console.log("Save account ran")
+        $http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
+        $http.post('/saveaccount', {"account":account, "action": action}).
+          success(function(data, status, headers, config) {
+            // this callback will be called asynchronously
+            // when the response is available
+            if(action == 'add'){
+              vm.addAlert("success", "Account " + action + "ed successfully");
+            } else {
+              vm.addAlert("success", "Account " + action + "d successfully");
+            };
+          })
+          .error(function(data, status, headers, config) {
+            // called asynchronously if an error occurs
+            // or server returns response with an error status.
+            vm.addAlert("danger", "Error: Material did not " + action);
+            console.log("Nope.jpg");
+        });
+      };
 
       vm.updateDBModal = function(ev) {
         if (vm.errors == "") {
@@ -293,16 +389,16 @@
 
       vm.saveMaterials = function(action, parameter){
       //console.log(action, parameter, vm.materials[parameter]);
-      //declaring json data
+        //declaring json data
         $http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
         $http.post('/savematerials', {"material":vm.materials[parameter], "action": action, "parameter": parameter}).
           success(function(data, status, headers, config) {
             // this callback will be called asynchronously
             // when the response is available
             if(action == 'add'){
-              vm.addAlert("success", "Material " + action + "ed Successfully");
+              vm.addAlert("success", "Material " + action + "ed successfully");
             } else {
-              vm.addAlert("success", "Material " + action + "d Successfully");
+              vm.addAlert("success", "Material " + action + "d successfully");
             };
           })
           .error(function(data, status, headers, config) {

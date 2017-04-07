@@ -273,10 +273,12 @@
 			</md-tab>
 <!--Import Data Tab-->
 			<md-tab label="Import Data">
-				DB to replace: <select name="dataBase" ng-model="vm.dataBase"><option value="">----Select----</option>
-							<option value="products">Products</option>
-							<option value="materials">Materials</option>
-							</select>
+				DB to replace: <select name="dataBase" ng-model="vm.dataBase">
+					<option value="">----Select----</option>
+					<option value="products">Products</option>
+					<option value="materials">Materials</option>
+					<option value="remnantsIndex">Remnants Index</option>
+				</select>
 				<br><br>
 				<span ng-show="vm.dataBase && vm.importInputText.length > 0">
 					<button type="button" ng-click="vm.updateDBModal($event)" class="btn btn-default">Update {/vm.dataBase/} DB</button>

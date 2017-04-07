@@ -8,6 +8,7 @@ var customers = require('../models/customers');
 var products = require('../models/products'); 
 var materials = require('../models/materials');
 var remnants = require('../models/remnants');
+var remnantsIndex = require('../models/remnantsIndex');
 var terms = require('../models/terms');
 
 //mongoose
@@ -451,24 +452,34 @@ router.post('/updatedb', function(req, res, next) {
       console.log("Number of rows Dropped: " + numAffected);
       if(req.body.dataBase == 'materials') {
         materials.create(req.body.json.data, function (err, material) {
-        if (err) {
-          console.log("Errors: " + err);
-          res.sendStatus(500);
-        } else {
-          console.log(req.body.dataBase + " database has been updated");
-          res.sendStatus(200);
-        };
-      });
+          if (err) {
+            console.log("Errors: " + err);
+            res.sendStatus(500);
+          } else {
+            console.log(req.body.dataBase + " database has been updated");
+            res.sendStatus(200);
+          };
+        });
       } else if (req.body.dataBase == 'products') {
         products.create(req.body.json.data, function (err, product) {
-        if (err) {
-          console.log("Errors: " + err);
-          res.sendStatus(500);
-        } else {
-          console.log(req.body.dataBase + " database has been updated");
-          res.sendStatus(200);
-        };
-      });
+          if (err) {
+            console.log("Errors: " + err);
+            res.sendStatus(500);
+          } else {
+            console.log(req.body.dataBase + " database has been updated");
+            res.sendStatus(200);
+          };
+        });
+      } else if (req.body.dataBase == 'remnantsIndex') {
+        remnantsIndex.create(req.body.json.data, function (err, remnantsIndex) {
+          if (err) {
+            console.log("Errors: " + err);
+            res.sendStatus(500);
+          } else {
+            console.log(req.body.dataBase + " database has been updated");
+            res.sendStatus(200);
+          };
+        });
       };
     };
   };
@@ -482,7 +493,8 @@ router.post('/updateremnants', function(req, res, next) {
       , update = {
         length: req.body.data.length,
         width: req.body.data.width,
-        location: req.body.data.location
+        location: req.body.data.location,
+        hold: req.body.data.hold
       }
       , options = { multi: false};
     console.log(conditions);
@@ -523,7 +535,8 @@ router.post('/updateremnants', function(req, res, next) {
       thickness: req.body.data.thickness,
       length: req.body.data.length,
       width: req.body.data.width,
-      location: req.body.data.location
+      location: req.body.data.location,
+      hold: req.body.data.hold
     });
     console.log("New Remnant", newRemnant);
     newRemnant.save(function (err, numAffected) {
@@ -817,8 +830,22 @@ router.get('/customersdata', function(req, res, next) {
 });
 
 router.get('/remnants', function(req, res, next) {
-  mongoose.model('remnants').find(function(err, data) {
-      res.json(data); 
+  var data = {};
+  mongoose.model('remnants').find(function(err, remnants) {
+    console.log("remnants", remnants)
+    if (err) {
+      res.status(500).send({info: "Sorry there was an error", error : err.message});
+    };
+    mongoose.model('remnantsIndex').find(function(err, remnantsIndex) {
+      if (err) {
+        res.status(500).send({info: "Sorry there was an error", error : err.message});
+      };
+      data = {
+        remnantsIndex:remnantsIndex,
+        remnants:remnants
+      };
+      res.json(data);
+    });
   }); 
 });
 

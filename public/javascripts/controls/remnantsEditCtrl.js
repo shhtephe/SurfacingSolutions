@@ -16,11 +16,14 @@
         })
       	dataFactory.getRemnants()
         .then(function(data) {
-          vm.remnants = data;
+          vm.remnants = data.remnants;
+          vm.remnantsIndex = data.remnantsIndex;
+          console.log(data)
         })
 
         vm.addRemnant = function(material) {
-        	if(typeof vm.remnants == 'undefined'){
+        	console.log(material)
+            if(typeof vm.remnants == 'undefined'){
         		vm.remnants = [];
         	}
         	var remnant = {
@@ -31,7 +34,8 @@
 				thickness: material.thickness,
 				length: material.length,
 				width: material.width,
-				location: material.location
+				location: material.location,
+                hold: false
         	};
         	console.log(vm.remnants)
         	vm.remnants.push(remnant);
@@ -93,7 +97,7 @@
     		//Reload all data
 	        dataFactory.getRemnants()
 	        	.then(function(data) {
-	            vm.remnants = data;
+	            vm.remnants = data.remnants;
 	            console.log(vm.remnants)
 	        });
     	};

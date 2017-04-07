@@ -9,92 +9,129 @@
     </div>      
   </div>
 </form>
-<span ng-repeat="link in vm.links">
-  <a href="{/link.url/}" target="_blank">{/link.name/}</a><br>
-</span>
+
+<b>Links to Manufacturer Websites for Colour Samples</b>
+<br><small>Material Colour Links - click on a name to link to the supplier’s website</small>
+<br><br>
+<div style="position:relative; left:35px">
+  Acrylic Solid Surface
+  <div class="row">
+    <div class="col-md-2" ng-repeat-start="link in vm.links | filter:{type:'Acrylic'}">
+      <a href="{/link.url/}" target="_blank">{/link.name/}</a><br>
+    </div>
+    <div class="clearfix" ng-if="($index+1)%5==0"></div>
+    <div ng-repeat-end></div>
+  </div>
+  <br>
+  Quartz
+  <div class="row">
+    <div class="col-md-2" ng-repeat-start="link in vm.links | filter:{type:'Quartz'}">
+      <a href="{/link.url/}" target="_blank">{/link.name/}</a><br>  
+    </div>
+    <div class="clearfix" ng-if="($index+1)%5==0"></div>
+    <div ng-repeat-end></div>
+  </div>
+</div>
 <br>
-<table class="table table-bordered table-striped">
+<button type="button" class="btn" ng-click="vm.printScreen('printScreen')">Print</button>
+<br>
+<br>
+<div id="printScreen">
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <td>
+          <a href="" ng-click="vm.sortType = 'manufacturer'; vm.sortReverse = !vm.sortReverse">
+            Manufacturer 
+            <span ng-show="vm.sortType == 'manufacturer' && !vm.sortReverse" class="fa fa-caret-down"></span>
+            <span ng-show="vm.sortType == 'manufacturer' && vm.sortReverse" class="fa fa-caret-up"></span>
+          </a>
+        </td>
+        <td>
+          <a href="" ng-click="vm.sortType = 'remnantType'; vm.sortReverse = !vm.sortReverse">
+          Material Type 
+            <span ng-show="vm.sortType == 'remnantType' && !vm.sortReverse" class="fa fa-caret-down"></span>
+            <span ng-show="vm.sortType == 'remnantType' && vm.sortReverse" class="fa fa-caret-up"></span>
+          </a>
+        </td>
+        <td>
+          <a href="" ng-click="vm.sortType = 'colourGroup'; vm.sortReverse = !vm.sortReverse">
+          Colour Group 
+            <span ng-show="vm.sortType == 'colourGroup' && !vm.sortReverse" class="fa fa-caret-down"></span>
+            <span ng-show="vm.sortType == 'colourGroup' && vm.sortReverse" class="fa fa-caret-up"></span>
+          </a>
+        </td>
+        <td>
+          <a href="" ng-click="vm.sortType = 'description'; vm.sortReverse = !vm.sortReverse">
+          Colour 
+            <span ng-show="vm.sortType == 'description' && !vm.sortReverse" class="fa fa-caret-down"></span>
+            <span ng-show="vm.sortType == 'description' && vm.sortReverse" class="fa fa-caret-up"></span>
+          </a>
+        </td>
+        <td>
+          <a href="" ng-click="vm.sortType = 'thickness'; vm.sortReverse = !vm.sortReverse">
+          Thickness 
+            <span ng-show="vm.sortType == 'thickness' && !vm.sortReverse" class="fa fa-caret-down"></span>
+            <span ng-show="vm.sortType == 'thickness' && vm.sortReverse" class="fa fa-caret-up"></span>
+          </a>
+        </td>
+        <td>
+          <a href="" ng-click="vm.sortType = 'length'; vm.sortReverse = !vm.sortReverse">
+          Length 
+            <span ng-show="vm.sortType == 'length' && !vm.sortReverse" class="fa fa-caret-down"></span>
+            <span ng-show="vm.sortType == 'length' && vm.sortReverse" class="fa fa-caret-up"></span>
+          </a>
+        </td>
+        <td>
+          <a href="" ng-click="vm.sortType = 'width'; vm.sortReverse = !vm.sortReverse">
+          Width 
+            <span ng-show="vm.sortType == 'width' && !vm.sortReverse" class="fa fa-caret-down"></span>
+            <span ng-show="vm.sortType == 'width' && vm.sortReverse" class="fa fa-caret-up"></span>
+          </a>
+        </td>
+        <td>
+          <a href="" ng-click="vm.sortType = 'location'; vm.sortReverse = !vm.sortReverse">
+          Location 
+            <span ng-show="vm.sortType == 'location' && !vm.sortReverse" class="fa fa-caret-down"></span>
+            <span ng-show="vm.sortType == 'location' && vm.sortReverse" class="fa fa-caret-up"></span>
+          </a>
+        </td>
+        <td>
+          <a href="" ng-click="vm.sortType = 'createdAt'; vm.sortReverse = !vm.sortReverse">
+          Date Added 
+            <span ng-show="vm.sortType == 'createdAt' && !vm.sortReverse" class="fa fa-caret-down"></span>
+            <span ng-show="vm.sortType == 'createdAt' && vm.sortReverse" class="fa fa-caret-up"></span>
+          </a>
+        </td>
+        <td>
+          <a href="" ng-click="vm.sortType = 'hold'; vm.sortReverse = !vm.sortReverse">
+          Hold
+            <span ng-show="vm.sortType == 'hold' && !vm.sortReverse" class="fa fa-caret-down"></span>
+            <span ng-show="vm.sortType == 'hold' && vm.sortReverse" class="fa fa-caret-up"></span>
+          </a>
+        </td>
+      </tr>
+    </thead>
+    
+    <tbody>
+      <tr 
+        ng-repeat="remnant in vm.remnants | orderBy:vm.sortType:vm.sortReverse | filter:searchRemnants"
+        ng-class='{remnantHold : remnant.hold, remnantNotHold: !remnant.hold}'>
+        <td>{/remnant.manufacturer/}</td>
+      	<td>{/remnant.remnantType/}</td>
+      	<td>{/remnant.colourGroup/}</td>
+      	<td>{/remnant.description/}</td>
+      	<td>{/remnant.thickness/}</td>
+      	<td>{/remnant.length/}</td>
+      	<td>{/remnant.width/}</td>
+      	<td>{/remnant.location/}</td>
+      	<td>{/remnant.createdAt | limitTo: 10/}</td>
+        <td>
+          <span ng-show="remnant.hold==true && remnant.edit!==true"><i class="fa fa-check-circle"></i></span>
+          <span ng-show="remnant.hold==false && remnant.edit!==true"><i class="fa fa-times"></i></span>
+        </td>
+      </tr>
+    </tbody>
   
-  <thead>
-    <tr>
-      <td>
-        <a href="" ng-click="vm.sortType = 'manufacturer'; vm.sortReverse = !vm.sortReverse">
-          Manufacturer 
-          <span ng-show="vm.sortType == 'manufacturer' && !vm.sortReverse" class="fa fa-caret-down"></span>
-          <span ng-show="vm.sortType == 'manufacturer' && vm.sortReverse" class="fa fa-caret-up"></span>
-        </a>
-      </td>
-      <td>
-        <a href="" ng-click="vm.sortType = 'remnantType'; vm.sortReverse = !vm.sortReverse">
-        Material Type 
-          <span ng-show="vm.sortType == 'remnantType' && !vm.sortReverse" class="fa fa-caret-down"></span>
-          <span ng-show="vm.sortType == 'remnantType' && vm.sortReverse" class="fa fa-caret-up"></span>
-        </a>
-      </td>
-      <td>
-        <a href="" ng-click="vm.sortType = 'colourGroup'; vm.sortReverse = !vm.sortReverse">
-        Colour Group 
-          <span ng-show="vm.sortType == 'colourGroup' && !vm.sortReverse" class="fa fa-caret-down"></span>
-          <span ng-show="vm.sortType == 'colourGroup' && vm.sortReverse" class="fa fa-caret-up"></span>
-        </a>
-      </td>
-      <td>
-        <a href="" ng-click="vm.sortType = 'description'; vm.sortReverse = !vm.sortReverse">
-        Colour 
-          <span ng-show="vm.sortType == 'description' && !vm.sortReverse" class="fa fa-caret-down"></span>
-          <span ng-show="vm.sortType == 'description' && vm.sortReverse" class="fa fa-caret-up"></span>
-        </a>
-      </td>
-      <td>
-        <a href="" ng-click="vm.sortType = 'thickness'; vm.sortReverse = !vm.sortReverse">
-        Thickness 
-          <span ng-show="vm.sortType == 'thickness' && !vm.sortReverse" class="fa fa-caret-down"></span>
-          <span ng-show="vm.sortType == 'thickness' && vm.sortReverse" class="fa fa-caret-up"></span>
-        </a>
-      </td>
-      <td>
-        <a href="" ng-click="vm.sortType = 'length'; vm.sortReverse = !vm.sortReverse">
-        Length 
-          <span ng-show="vm.sortType == 'length' && !vm.sortReverse" class="fa fa-caret-down"></span>
-          <span ng-show="vm.sortType == 'length' && vm.sortReverse" class="fa fa-caret-up"></span>
-        </a>
-      </td>
-      <td>
-        <a href="" ng-click="vm.sortType = 'width'; vm.sortReverse = !vm.sortReverse">
-        Width 
-          <span ng-show="vm.sortType == 'width' && !vm.sortReverse" class="fa fa-caret-down"></span>
-          <span ng-show="vm.sortType == 'width' && vm.sortReverse" class="fa fa-caret-up"></span>
-        </a>
-      </td>
-      <td>
-        <a href="" ng-click="vm.sortType = 'location'; vm.sortReverse = !vm.sortReverse">
-        Location 
-          <span ng-show="vm.sortType == 'location' && !vm.sortReverse" class="fa fa-caret-down"></span>
-          <span ng-show="vm.sortType == 'location' && vm.sortReverse" class="fa fa-caret-up"></span>
-        </a>
-      </td>
-      <td>
-        <a href="" ng-click="vm.sortType = 'createdAt'; vm.sortReverse = !vm.sortReverse">
-        Date Added 
-          <span ng-show="vm.sortType == 'createdAt' && !vm.sortReverse" class="fa fa-caret-down"></span>
-          <span ng-show="vm.sortType == 'createdAt' && vm.sortReverse" class="fa fa-caret-up"></span>
-        </a>
-      </td>
-    </tr>
-  </thead>
-  
-  <tbody>
-    <tr ng-repeat="remnant in vm.remnants | orderBy:vm.sortType:vm.sortReverse | filter:searchRemnants">
-      <td>{/remnant.manufacturer/}</td>
-	<td>{/remnant.remnantType/}</td>
-	<td>{/remnant.colourGroup/}</td>
-	<td>{/remnant.description/}</td>
-	<td>{/remnant.thickness/}</td>
-	<td>{/remnant.length/}</td>
-	<td>{/remnant.width/}</td>
-	<td>{/remnant.location/}</td>
-	<td>{/remnant.createdAt | limitTo: 10/}</td>
-    </tr>
-  </tbody>
-  
-</table>
+  </table>
+</div>

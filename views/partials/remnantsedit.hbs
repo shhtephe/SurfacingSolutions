@@ -55,7 +55,9 @@
 								<input type="text" name="width" ng-model="addMaterialDescription.width" required> 
 							</td>
 							<td>
-								<input type="text" name="location" ng-model="addMaterialDescription.location" required>
+								<select ng-options="index.location as index.location for index in vm.remnantsIndex track by index.location" type="text" name="location" data-ng-model="addMaterialDescription.location" required>
+									<option value="">----Select----</option>
+								</select>
 							</td>
 						</tr>
 					</table>
@@ -71,21 +73,87 @@
 	</span>
 	<span ng-hide="!vm.remnants[0]">
 		<br><br>
-		<table class="table">
+
+		<table class="table table-bordered table-striped">
 			<caption>Remnants List</caption>
-			<tr>
-				<td>Manufacturer</td>
-				<td>Type</td>
-				<td>Colour</td>
-				<td>Description</td>
-				<td>Thickness</td>
-				<td>Length</td>
-				<td>Width</td>
-				<td>Location</td>
-				<td>Date Added</td>
-				<td></td>
-			</tr>
-			<tr ng-repeat="remnant in vm.remnants track by $index">
+		    <thead>
+		      <tr>
+		        <td>
+		          <a href="" ng-click="vm.sortType = 'manufacturer'; vm.sortReverse = !vm.sortReverse">
+		            Manufacturer 
+		            <span ng-show="vm.sortType == 'manufacturer' && !vm.sortReverse" class="fa fa-caret-down"></span>
+		            <span ng-show="vm.sortType == 'manufacturer' && vm.sortReverse" class="fa fa-caret-up"></span>
+		          </a>
+		        </td>
+		        <td>
+		          <a href="" ng-click="vm.sortType = 'remnantType'; vm.sortReverse = !vm.sortReverse">
+		          Material Type 
+		            <span ng-show="vm.sortType == 'remnantType' && !vm.sortReverse" class="fa fa-caret-down"></span>
+		            <span ng-show="vm.sortType == 'remnantType' && vm.sortReverse" class="fa fa-caret-up"></span>
+		          </a>
+		        </td>
+		        <td>
+		          <a href="" ng-click="vm.sortType = 'colourGroup'; vm.sortReverse = !vm.sortReverse">
+		          Colour Group 
+		            <span ng-show="vm.sortType == 'colourGroup' && !vm.sortReverse" class="fa fa-caret-down"></span>
+		            <span ng-show="vm.sortType == 'colourGroup' && vm.sortReverse" class="fa fa-caret-up"></span>
+		          </a>
+		        </td>
+		        <td>
+		          <a href="" ng-click="vm.sortType = 'description'; vm.sortReverse = !vm.sortReverse">
+		          Colour 
+		            <span ng-show="vm.sortType == 'description' && !vm.sortReverse" class="fa fa-caret-down"></span>
+		            <span ng-show="vm.sortType == 'description' && vm.sortReverse" class="fa fa-caret-up"></span>
+		          </a>
+		        </td>
+		        <td>
+		          <a href="" ng-click="vm.sortType = 'thickness'; vm.sortReverse = !vm.sortReverse">
+		          Thickness 
+		            <span ng-show="vm.sortType == 'thickness' && !vm.sortReverse" class="fa fa-caret-down"></span>
+		            <span ng-show="vm.sortType == 'thickness' && vm.sortReverse" class="fa fa-caret-up"></span>
+		          </a>
+		        </td>
+		        <td>
+		          <a href="" ng-click="vm.sortType = 'length'; vm.sortReverse = !vm.sortReverse">
+		          Length 
+		            <span ng-show="vm.sortType == 'length' && !vm.sortReverse" class="fa fa-caret-down"></span>
+		            <span ng-show="vm.sortType == 'length' && vm.sortReverse" class="fa fa-caret-up"></span>
+		          </a>
+		        </td>
+		        <td>
+		          <a href="" ng-click="vm.sortType = 'width'; vm.sortReverse = !vm.sortReverse">
+		          Width 
+		            <span ng-show="vm.sortType == 'width' && !vm.sortReverse" class="fa fa-caret-down"></span>
+		            <span ng-show="vm.sortType == 'width' && vm.sortReverse" class="fa fa-caret-up"></span>
+		          </a>
+		        </td>
+		        <td>
+		          <a href="" ng-click="vm.sortType = 'location'; vm.sortReverse = !vm.sortReverse">
+		          Location 
+		            <span ng-show="vm.sortType == 'location' && !vm.sortReverse" class="fa fa-caret-down"></span>
+		            <span ng-show="vm.sortType == 'location' && vm.sortReverse" class="fa fa-caret-up"></span>
+		          </a>
+		        </td>
+		        <td>
+		          <a href="" ng-click="vm.sortType = 'createdAt'; vm.sortReverse = !vm.sortReverse">
+		          Date Added 
+		            <span ng-show="vm.sortType == 'createdAt' && !vm.sortReverse" class="fa fa-caret-down"></span>
+		            <span ng-show="vm.sortType == 'createdAt' && vm.sortReverse" class="fa fa-caret-up"></span>
+		          </a>
+		        </td>
+		        <td>
+		          <a href="" ng-click="vm.sortType = 'hold'; vm.sortReverse = !vm.sortReverse">
+		          Hold
+		            <span ng-show="vm.sortType == 'hold' && !vm.sortReverse" class="fa fa-caret-down"></span>
+		            <span ng-show="vm.sortType == 'hold' && vm.sortReverse" class="fa fa-caret-up"></span>
+		          </a>
+		        </td>
+		        <td>
+		        	<!--Padding for Edit/Remove-->
+		        </td>
+		      </tr>
+		    </thead>
+			<tr ng-repeat="remnant in vm.remnants | orderBy:vm.sortType:vm.sortReverse track by $index">
 				<td>
 					{/remnant.manufacturer/} 
 				</td>
@@ -111,10 +179,25 @@
 				</td>
 				<td>
 					<span ng-hide="remnant.edit==true">{/remnant.location/}</span>
-					<span ng-show="remnant.edit==true"><input type="text" name="location" ng-value="remnant.location" ng-model="vm.edit.location"></span>
+					<span ng-show="remnant.edit==true">
+						<select  
+							ng-init="vm.edit.location = remnant.location"  
+							ng-options="index.location as index.location for index in vm.remnantsIndex" 
+							type="text" 
+							name="location" 
+							ng-model="vm.edit.location">
+							<option value="">----Select----</option>
+						</select>
 				</td>
 				<td>
 					{/remnant.createdAt | limitTo: 10/}
+				</td>
+				<td>
+					<span ng-show="remnant.hold==true && remnant.edit!==true"><i class="fa fa-check-circle"></i></span>
+					<span ng-show="remnant.hold==false && remnant.edit!==true"><i class="fa fa-times"></i></span>
+					<span ng-show="remnant.edit==true">
+						<input type="checkbox" ng-model="remnant.hold">
+					</span>	
 				</td>
 				<td>
 					<span ng-hide="remnant.edit==true">

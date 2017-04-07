@@ -526,7 +526,9 @@
               var columnToCheck = ["manufacturer", "distributor", "materialType", "colourGroup", "description", "matCollection", "itemCode", "thickness", "length", "width", "quarterSheet", "halfSheet", "fullSheet1", "fullSheet5", "fullSheet21", "isa", "sale"];
             } else if(vm.dataBase == 'products') {
               var columnToCheck = ["distributor", 'manufacturer', 'productType', 'description', 'itemCode', 'price', 'formula', 'mandatory', 'nonMandatory'];
-            };
+            } else if (vm.dataBase == 'remnantsIndex') {
+              var columnToCheck = ["location"];
+            };;
             if (jsonArray.data.length !== 0) {
               for (var i = columnToCheck.length - 1; i >= 0; i--) {
                 if (typeof jsonArray.data[0][columnToCheck[i]] === "undefined"){

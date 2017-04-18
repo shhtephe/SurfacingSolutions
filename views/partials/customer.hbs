@@ -9,6 +9,7 @@
 		    <table id="Customer" width=100% class="table table-bordered table-striped">
                 <!--legacy contact format-->
                 <caption ng-show="vm.customer.firstName">
+<<<<<<< HEAD
                     Customer: {/vm.customer.companyName/} - {/vm.customer.custCode/}
                     <div style="float:right">
                         <button type="button" class="btn btn-default" ng-click="vm.newQuote(currentUser)" style="btn">New Quote</button> <button type="button" class="btn" ng-click="vm.addContact()" style="btn">Add Contact</button>
@@ -16,6 +17,9 @@
                             <button type="button" class="btn" ng-click="vm.editCustomer(vm.customer)" style="btn">Edit Customer</button>
                         </span>
                     </div>
+=======
+                    Customer: {/vm.customer.companyName/} - {/vm.customer.custCode/} <div style="float:right"><button type="button" class="btn" ng-click="vm.newQuote(currentUser)" style="btn">New Quote</button> <button type="button" class="btn" ng-click="vm.addContact()" style="btn">Add Contact</button></div>
+>>>>>>> cb1038316f085cc10acd43fafac91589190913cd
                     <br>
                     <!--<br>Salesperson: {/vm.customer.rep/}-->
                     <br><u>Primary Contact</u>
@@ -23,6 +27,7 @@
                     <br>Email: {/vm.customer.email/}
                     <br>Phone: {/vm.customer.mainPhone/} | Mobile Phone: {/vm.customer.mobilePhone/}
                 </caption>
+<<<<<<< HEAD
                 <caption ng-show="!vm.customer.firstName">
                     Customer: {/vm.customer.companyName/} - {/vm.customer.custCode/} 
                     <div style='float:right'>
@@ -31,6 +36,11 @@
                             <button type="button" class="btn" ng-click="vm.editCustomer(vm.customer)" style="btn">Edit Customer</button>
                         </span>
                     </div>
+=======
+                <!-- End legacy contact format-->
+                <caption ng-show="vm.customer.contacts[0] !== undefined">
+                    Customer: {/vm.customer.companyName/} - {/vm.customer.custCode/} <div ng-hide="!vm.customer.firstName && vm.customer.contacts[1].firstName" style='float:right'><button type="btn" class="btn btn-default" ng-click="vm.isContactCollapsed = !vm.isContactCollapsed">View Contacts</button> <button type="button" class="btn" ng-click="vm.addContact()" style="btn">Add Contact</button> <button type="button" class="btn" ng-click="vm.newQuote(currentUser)">New Quote</button></div>
+>>>>>>> cb1038316f085cc10acd43fafac91589190913cd
                 </caption>
             </table>
             <div uib-collapse="!vm.isContactCollapsed">
@@ -51,6 +61,8 @@
                     </td>
                 </tr>
             </table>
+            <br>
+            Temp Debug Info
             <br>
             <!--<pre>{/vm.customer | json/}</pre>-->
         </div>

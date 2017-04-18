@@ -53,6 +53,77 @@
 	    	};
 	    };
 
+	    //Edit Customer Modal
+	    vm.editCustomer = function (customer) {
+			//console.log(groupIndex, counters, size);
+	    	var modalInstance = $uibModal.open({
+		      animation: true,
+		      templateUrl: 'editCustomer.html',
+		      controller: ['$uibModalInstance', 'customer', editCustomerCtrl],
+		      controllerAs: 'vm',
+		      resolve: {
+		        customer: function() {return customer}
+		        }
+      	  	});
+
+      	  	modalInstance.result.then(function (customer) {
+      			//Save the contact and put all the data back onto the main controller
+      			vm.saveEditCustomer(customer);  			 				
+			}, function () {
+      		console.log('Modal dismissed at: ' + new Date());
+    		});
+	    };
+
+	    //Edit Custeomr modal Controller
+	    var editCustomerCtrl = function($uibModalInstance, customer) {
+	    	console.log($uibModalInstance, customer);
+	    	var vm = this;
+	    	vm.customer = customer;
+	    	//convert legacy contacts
+	    	if (vm.customer.firstName) {
+	    		console.log("Legacy Contacts found");
+	    		if(!vm.customer.mainPhone) {
+					vm.customer.mainPhone = vm.customer.mobilePhone;
+				};
+				var newCustomer = {
+				  createdAt: vm.customer.createdAt,
+				  updatedAt: vm.customer.updatedAt,
+				  companyName: vm.customer.companyName,
+				  addressLine1: vm.customer.addressLine1,
+				  city: vm.customer.city,
+				  province: vm.customer.province,
+				  postal: vm.customer.postal,
+				  businessPhone: vm.customer.businessPhone,
+				  custCode: vm.customer.custCode,
+				  contacts: [
+				  	{
+				  		firstName: vm.customer.firstName,
+				  		lastName: vm.customer.lastName,
+				  		title: "",
+				  		phone: vm.customer.mainPhone,
+				  		email: vm.customer.email,
+				  	}
+				  ]
+		  		};
+
+	  			vm.customer = newCustomer;
+	  			console.log(vm.customer)
+	    	};
+
+	    	vm.submitEdit = function(customer) {
+	    		$uibModalInstance.close(customer);
+	    	};
+
+	    	vm.cancel = function() {
+				$uibModalInstance.dismiss('cancel');
+	    	};
+	    };
+
+		vm.saveEditCustomer = function(customer) {
+			console.log(customer);
+			vm.saveCustomer(vm.customer, "update");
+		};
+
 		vm.pushContact = function(contact){
 			console.log(vm.customer.firstName)
 			//refactor old contact format into new

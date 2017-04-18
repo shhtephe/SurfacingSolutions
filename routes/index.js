@@ -129,7 +129,7 @@ router.param('quotedata', function(req, res, next, quoteID) {
 });
 
 createNewQuote = function(custCode, res) {
-  search = mongoose.model('quote').findOne().sort({quoteID : "desc"}).exec(function(err, quote){
+    var search = mongoose.model('quote').findOne().sort({quoteID : "desc"}).exec(function(err, quote){
     var quoteID;
     console.log("Quote: ", quote);
     //Search for highest quote number and increment that by one
@@ -485,6 +485,8 @@ router.post('/updatedb', function(req, res, next) {
   };
 });
 
+
+
 router.post('/updateremnants', function(req, res, next) {
   console.log(req.body);
   if(req.body.action === "update"){
@@ -525,32 +527,46 @@ router.post('/updateremnants', function(req, res, next) {
       };
     });
   } else if(req.body.action === "add"){
-    console.log("Adding remnant");
-    console.log(req.body.data)
-    var newRemnant = new remnants({
-      manufacturer: req.body.data.manufacturer,
-      remnantType: req.body.data.remnantType,
-      colourGroup: req.body.data.colourGroup,
-      description: req.body.data.description,
-      thickness: req.body.data.thickness,
-      length: req.body.data.length,
-      width: req.body.data.width,
-      location: req.body.data.location,
-      hold: req.body.data.hold
-    });
-    console.log("New Remnant", newRemnant);
-    newRemnant.save(function (err, numAffected) {
-      if (err) {
-        console.log("Remnant did not save: " + err);
-        res.sendStatus(500);
+    var search = mongoose.model('remnants').findOne().sort({remnantID : "desc"}).exec(function(err, remnant){
+      var remnantID;
+      console.log("Remnant: ", remnant);
+      //Search for highest quote number and increment that by one
+      if(remnant == null){
+        remnantID = 1001;  
       }
       else {
-        //saved!
-        console.log("Remnant saved!", numAffected);
-        res.sendStatus(200);
-      }
+        remnantID = remnant.remnantID + 1
+      };
+
+      console.log("Found remnantID", remnantID);
+      console.log("Adding remnant");
+      console.log(req.body.data)
+      var newRemnant = new remnants({
+        manufacturer: req.body.data.manufacturer,
+        remnantType: req.body.data.remnantType,
+        colourGroup: req.body.data.colourGroup,
+        description: req.body.data.description,
+        thickness: req.body.data.thickness,
+        length: req.body.data.length,
+        width: req.body.data.width,
+        location: req.body.data.location,
+        hold: req.body.data.hold,
+        remnantID: remnantID
+      });
+      console.log("New Remnant", newRemnant);
+      newRemnant.save(function (err, numAffected) {
+        if (err) {
+          console.log("Remnant did not save: " + err);
+          res.sendStatus(500);
+        }
+        else {
+          //saved!
+          console.log("Remnant saved!", numAffected);
+          res.sendStatus(200);
+        }
+      });
     });
-  }
+  };
 });
 
 
@@ -784,8 +800,9 @@ router.post('/savecustomer', function(req, res){
         console.log("Removing __v");
         delete update.__v;
       };
-    mongoose.model('customers').findOneAndUpdate(conditions, update, options, callback);
-    function callback (err, doc) {
+      console.log(conditions, update, options);
+      mongoose.model('customers').findOneAndUpdate(conditions, update, options, callback);
+      function callback (err, doc) {
       if(err) {
         console.log("Could not update doc: " + err);
         res.sendStatus(500);

@@ -12,7 +12,8 @@ var remnants = new Schema({
 	length: Number,
 	width: Number,
 	location: String, 
-	hold: Boolean
+	hold: Boolean,
+	remnantID: Number
 });
 
 remnants.plugin(timestamps);

@@ -70,7 +70,8 @@
         "province":vm.customer.province,
         "postal":vm.customer.postal,
         "contacts": vm.contacts,
-        "businessPhone" : vm.customer.businessPhone 
+        "businessPhone": vm.customer.businessPhone,
+        "businessFax": vm.customer.businessFax
       };
       //console.log(data);
 

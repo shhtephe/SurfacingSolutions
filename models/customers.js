@@ -11,6 +11,7 @@ var customers = new Schema({
 	province: String,
 	postal: String,
 	businessPhone: String,
+	businessFax: String,
 	contacts: [{
 		firstName: String,
 		lastName: String,

@@ -21,6 +21,7 @@ exports.createCustomer = function(customerData, next){
       province        = customerData.province,
       postal          = customerData.postal,
       businessPhone   = customerData.businessPhone,
+      businessFax     = customerData.businessFax,
       contacts        = customerData.contacts,
       custCode        = highCode
 
@@ -32,6 +33,7 @@ exports.createCustomer = function(customerData, next){
       province       :   province,
     	postal         :   postal,
     	businessPhone  :   businessPhone,
+      businessFax    :   businessFax,
       contacts       :   contacts,
     	custCode       :   highCode
     });

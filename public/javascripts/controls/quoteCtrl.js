@@ -870,9 +870,9 @@
 			//save the quote
 			//Need to declare that it's sending a json doc
 			console.log(user, typeof user, vm.quote.account);
-			if(typeof vm.quote.account === 'undefined'){
+			if(typeof vm.quote.account === 'undefined' || typeof vm.quote.account.userName == 'undefined'){
 				vm.quote.account = {
-				    userName : user.username,
+				    userName : user.userName,
 				    firstName : user.firstName,
 				    lastName : user.lastName,
 				    accountType : user.accountType,

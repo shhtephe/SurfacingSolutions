@@ -270,7 +270,7 @@ renderNightmare = function(req, res, env) {
       var nodemailer = require("nodemailer");
       var transporter = nodemailer.createTransport('smtps://pete%40surfacingsolutions.ca:Soccerball11@surfacing.dmtel.ca');
 
-      console.log("Customer Data: ", req.body.data.cust);
+      //console.log("Customer Data: ", req.body.data.cust);
       //Email body
       var body = req.body.data.emailBody;
       console.log(req.body.data);
@@ -319,6 +319,10 @@ renderNightmare = function(req, res, env) {
           // if you don't want to use this transport object anymore, uncomment following line
           transporter.close(); // shut down the connection pool, no more messages
         });
+      } else {
+        console.log("Account email or email missing.");
+        console.log(req.body.data.account.email, req.body.data.email);
+        console.log(req.body.data);
       };
     };
   }).catch(function(err){
@@ -371,8 +375,8 @@ router.get('/admin', function(req, res, next) {
   res.render('partials/admin');
 });
 
-router.get('/remnantsedit', function(req, res, next) {
-  res.render('partials/remnantsedit');
+router.get('/remnants', function(req, res, next) {
+  res.render('partials/remnants');
 });
 
 router.get('/remnantsview', function(req, res, next) {
@@ -840,13 +844,17 @@ router.get('/customers', function(req, res, next) {
       res.render('partials/customers');
 });
 
+router.get('/customersadmin', function(req, res, next) {
+      res.render('partials/customersadmin');
+});
+
 router.get('/customersdata', function(req, res, next) {
   mongoose.model('customers').find(function(err, data) {
       res.json(data); 
   }); 
 });
 
-router.get('/remnants', function(req, res, next) {
+router.get('/remnantsdata', function(req, res, next) {
   var data = {};
   mongoose.model('remnants').find(function(err, remnants) {
     console.log("remnants", remnants)

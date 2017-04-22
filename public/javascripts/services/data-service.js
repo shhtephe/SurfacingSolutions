@@ -29,7 +29,7 @@
 
 		function getRemnants() {
 			var deferred = $q.defer();
-			$http.get('/remnants')
+			$http.get('/remnantsdata')
 				.success(function(response) {
 					deferred.resolve(response);
 					// update angular's scopes

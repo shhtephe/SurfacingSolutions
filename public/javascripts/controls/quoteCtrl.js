@@ -16,7 +16,7 @@
 		var 
 		LCPSF = 11.75,
 		CCPSF = 5.25,
-		TGM = 35
+		TGM = 35;
 
 
 		var custCode = $stateParams.custCode;

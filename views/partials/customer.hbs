@@ -2,7 +2,7 @@
 <div class="jumbotron">
     <div class="container">
         <div class="col-xs-offset-2 col-xs-8">
-            {/currentUser.accountType == 'admin'/}
+            <!--Admin = {/currentUser.accountType == 'admin'/}-->
             <uib-alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</uib-alert>
             <br>
             <!-- ng-init='customer=<%- JSON.stringify(customer) %>; quotes=<%- JSON.stringify(quotes) %>' -->

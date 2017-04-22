@@ -43,22 +43,13 @@ function($interpolateProvider, $stateProvider, $urlRouterProvider, $locationProv
       controller: 'adminCtrl',
       controllerAs: 'vm'
 	})
-    .state('remnantsedit', {
-      url: '/remnantsedit',
-      templateUrl: '/remnantsedit',
+    .state('remnants', {
+      url: '/remnants',
+      templateUrl: '/remnants',
             data: {
         requireLogin: true
       },
-      controller: 'remnantsEditCtrl',
-      controllerAs: 'vm'
-  })
-    .state('remnantsview', {
-      url: '/remnantsview',
-      templateUrl: '/remnantsview',
-            data: {
-        requireLogin: true
-      },
-      controller: 'remnantsViewCtrl',
+      controller: 'remnantsCtrl',
       controllerAs: 'vm'
   })
     .state('search', {
@@ -103,6 +94,15 @@ function($interpolateProvider, $stateProvider, $urlRouterProvider, $locationProv
       controller: 'quoteFinalCtrl',
       controllerAs: 'vm',
       css: ['stylesheets/quoteprint.css','stylesheets/quotestyle.css']
+  })
+    .state('customersAdmin', {
+      url: '/customersadmin',
+      templateUrl: '/customersadmin',
+            data: {
+        requireLogin: true
+      },
+      controller: 'customersAdminCtrl',
+      controllerAs: 'vm'
   })
     .state('customers', {
       url: '/customers',

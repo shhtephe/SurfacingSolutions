@@ -371,8 +371,12 @@ router.get('/quotesdata', function(req, res, next) {
 });
 
 
-router.get('/admin', function(req, res, next) {
-  res.render('partials/admin');
+router.get('/pricing', function(req, res, next) {
+  res.render('partials/pricing');
+});
+
+router.get('/useradmin', function(req, res, next) {
+  res.render('partials/useradmin');
 });
 
 router.get('/remnants', function(req, res, next) {

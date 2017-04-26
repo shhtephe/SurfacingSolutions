@@ -257,20 +257,6 @@
 					<button type="button" ng-click="vm.addNewProduct(productDescription)" class="btn btn-default">Add</button> 
 				</div>
 			</md-tab>
-<!--User Accounts Tab-->			
-			<md-tab label="User Accounts">
-				Click to Edit:
-				<div class="list group">
-					<div class="col-xs-6 col-sm-4" data-ng-repeat="account in vm.accounts | orderBy:'lastName' track by $index">
-						<a ng-click="vm.accountEditModal(account, $index)" class="list-group-item">
-							<i class="fa fa-user-circle"></i><span ng-click="vm.deleteAccountModal($event, account, $index)" style="float:right ">x</span>
-							<h5>{/account.firstName/} {/account.lastName/}</h5>
-							<h6>Account Name: {/account.username/} Account Type: {/account.accountType/}
-							<br> Email: <br>{/account.email/} Phone Number: {/account.phoneNumber/}</h6>
-						</a>
-					</div>
-				</div>
-			</md-tab>
 <!--Import Data Tab-->
 			<md-tab label="Import Data">
 				DB to replace: <select name="dataBase" ng-model="vm.dataBase">
@@ -299,52 +285,3 @@
         </div>
     </div>
 </div>
-<script type="text/ng-template" id="accountEdit.html">   
-    <form ng-submit="vm.submitAccountEdit(vm.account)" id="createCustomerForm" name="createCustomerForm">
-        <div class="modal-header">
-            <h3 class="modal-title">Edit Account</h3>
-        </div>
-        <br>
-        <div class="form-group row">
-            <label for="firstName" class="col-sm-1 col-form-label">First Name</label>
-            <div class="form-group col-sm-3">
-                <input type='text' class="form-control" ng-model="vm.account.firstName" name='firstName' required>
-            </div>
-            <label for="lastName" class="col-sm-1 col-form-label">Last Name</label>
-            <div class="form-group col-sm-3">
-                <input type='text' class="form-control" ng-model="vm.account.lastName" name='lastName' required>
-            </div>
-            <label for="title" class="col-sm-1 col-form-label">Username</label>
-            <div class="form-group col-sm-3">
-                <input type='text' class="form-control" ng-model="vm.account.username" name='title'>
-            </div>
-            <label for="title" class="col-sm-1 col-form-label">AccountType</label>
-            <div class="form-group col-sm-3">
-                <input type='text' class="form-control" ng-model="vm.account.username" name='title'>
-            </div>
-            <label for="title" class="col-sm-1 col-form-label">Email</label>
-            <div class="form-group col-sm-3">
-                <input type='text' class="form-control" ng-model="vm.account.email" name='title'>
-            </div>
-            <label for="title" class="col-sm-1 col-form-label">Phone Number</label>
-        </div>
-        <div class="form-group row">
-            <label for="phone" class="col-sm-2 col-form-label">Telephone</label>
-            <div class="col-sm-4">
-                <input type='text' ng-model="vm.account.phoneNumber" name='phone' 
-                    maxlength="50"
-                    class="form-control"
-                    restrict="reject" 
-                    mask='(999)-999-9999' 
-                    placeholder="(xxx)-xxx-xxxx"
-                    required>                   </div>
-            <label for="fax" class="col-sm-1 col-form-label">Email</label>
-            <div class="col-sm-5">
-                <input type='email' class="form-control" ng-model="vm.account.email" name='email' required>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <input class="btn btn-default" type="submit" id="submit" value="Submit"/> <button type="button" class="btn" ng-click="vm.cancel()">Cancel</button>
-        </div>
-    </form>
-</script>

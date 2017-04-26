@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <div class="container">
+	{/currentUser.accountType == 'user'/}
 	<md-tabs md-dynamic-height md-border-bottom md-stretch-tabs>
 	<md-tab label="Remnants View">
 	<!--"borrowed" from scotch.io-->
@@ -153,8 +154,9 @@
 	  </table>
 	</div>
 	</md-tab>
-	<md-tab ng-show="currentUser.accountType == 'admin'" label="Remnants Edit">
+	<md-tab ng-if="currentUser.accountType == 'admin'" label="Remnants Edit">
 		<!--<pre>{/vm.remnants |json/}</pre>-->
+		{/currentUser.accountType/}
 		<button class="button" ng-click="vm.showAddRemnants = true">Add Remnants</button>
 		<br>
 		<span ng-show="vm.showAddRemnants">

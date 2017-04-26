@@ -25,6 +25,15 @@ function($interpolateProvider, $stateProvider, $urlRouterProvider, $locationProv
       }
   		//controller: 'loginCtrl'
 	})
+    .state('userAdmin', {
+      url: '/useradmin',
+      templateUrl: '/useradmin',
+            data: {
+        requireLogin: true
+      },
+      controller: 'userAdminCtrl',
+      controllerAs: 'vm'
+  })
     .state('register', {
       url: '/register',
       templateUrl: '/register',
@@ -34,13 +43,13 @@ function($interpolateProvider, $stateProvider, $urlRouterProvider, $locationProv
       controller: 'registerCtrl',
       controllerAs: 'vm'
   })
-    .state('admin', {
-  		url: '/admin',
-  		templateUrl: '/admin',
+    .state('pricing', {
+  		url: '/pricing',
+  		templateUrl: '/pricing',
             data: {
         requireLogin: true
       },
-      controller: 'adminCtrl',
+      controller: 'pricingCtrl',
       controllerAs: 'vm'
 	})
     .state('remnants', {

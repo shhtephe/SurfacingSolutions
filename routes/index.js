@@ -394,13 +394,13 @@ router.post('/saveaccount', function(req, res, next) {
     var account = req.body.account;
     var conditions = {_id:account._id}
       , update = {
-        firstName: account.firstName,
-        lastName: account.lastName,
-        username: account.username,
-        accountType: account.accountType,
-        email: account.email,
-        phoneNumber: account.phoneNumber
-      }
+          firstName: account.firstName,
+          lastName: account.lastName,
+          username: account.username,
+          accountType: account.accountType,
+          email: account.email,
+          phoneNumber: account.phoneNumber
+        }
       , options = { multi: false};
     console.log("conditions", conditions);
     mongoose.model('accounts').update(conditions, update, options, callback);
@@ -430,21 +430,24 @@ router.post('/saveaccount', function(req, res, next) {
       };
     });
   } else if(req.body.action === "password") {
-    var username = req.body.username,
-        newPasswordString = req.body.password;
-
-    account.findByUsername(username).then(function(sanitizedUser){
-    if (sanitizedUser){
-        sanitizedUser.setPassword(newPasswordString, function(){
-            sanitizedUser.save();
-            res.status(200).json({message: 'password reset successful'});
-        });
-    } else {
-        res.status(500).json({message: 'This user does not exist'});
-    }
-},function(err){
-    console.error(err);
-})
+    var username = req.body.account.username,
+        newPasswordString = req.body.account.password;
+    console.log("Finding by username");
+    var search = mongoose.model('accounts').findByUsername(username);
+    search.exec(function(err, sanitizedUser){
+      if (err) {console.log("There was an error: ", err)};
+      if (sanitizedUser){
+          sanitizedUser.setPassword(newPasswordString, function(){
+              sanitizedUser.save();
+              console.log("Password reset successful")
+              res.status(200).json({message: 'password reset successful'});
+          });
+      } else {
+        console.log("User not found")
+          res.status(500).json({message: 'This user does not exist'});
+      };
+    });
+    
   };
 });
 

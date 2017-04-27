@@ -139,7 +139,8 @@
                 + ' <link rel="stylesheet" type="text/css" href="https://cdn.gitcdn.link/cdn/angular/bower-material/v1.1.1/angular-material.css"/>'
                 + ' </head> <body onload="window.print()"> <br><br>' + printContents + '</body> </html>');
             popupWin.document.close();
-        };        
+        }; 
+
         /*
             End of the Remnants View Ctrl Section
         */

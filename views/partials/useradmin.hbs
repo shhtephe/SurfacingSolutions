@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<uib-alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</uib-alert>
 <md-tabs md-dynamic-height="" md-border-bottom="">
 <md-tab label="Register User">
 	<h1>Register</h1>
@@ -51,9 +52,39 @@
 	</div>
 </md-tab>
 <md-tab label="User Permissions/password">
+	<br>
+	Please select a user:
+	<select name="account" ng-model="account" ng-options="account.username for account in vm.accounts | orderBy: 'username'">
+			<option value="">----Select----</option>
+	</select>
+	<span ng-show="account">
+		<br>
+		<br>
+		<i class="fa fa-user-circle"></i>
+		<h5>{/account.firstName/} {/account.lastName/}</h5>
+		<h6>
+			Account Name: {/account.username/} | Account Type: 
+			<select name="accountType" ng-model="account.accountType">
+				<option value="">----Select----</option>
+				<option value="admin">Admin</option>
+				<option value="user">User</option>
+			</select>
+			<br> Email: <br>{/account.email/} Phone Number: {/account.phoneNumber/}
+		</h6>
+		<button type="button" class="btn" ng-click="vm.saveAccount(account, 'update')">Save Account Type</button>
+		<br>
+		<br>
+		New Password: <input type="password" ng-model="account.password">
+		<br>
+		<br>
+		Please re-enter: <input type="password" ng-model="account.password2">
+		<br>
+		<br>
+		<button type="button" class="btn" ng-click="vm.savePassword(account)">Save New Password</button>
+	</span>
 </md-tab>
 </md-tabs>
-<uib-alert ng-repeat="alert in vm.alerts" type="{/alert.type/}" close="vm.closeAlert($index)">{/alert.msg/}</uib-alert>
+
 <script type="text/ng-template" id="accountEdit.html">   
     <form ng-submit="vm.submitAccountEdit(vm.account)" id="createCustomerForm" name="createCustomerForm">
         <div class="modal-header">
@@ -69,7 +100,7 @@
             <div class="form-group col-sm-3">
                 <input type='text' class="form-control" ng-model="vm.account.lastName" name='lastName' required>
             </div>
-            <label for="title" class="col-sm-1 col-form-label">Username</label>
+            <label for="title" class="col-sm-1 col-form-label">User Name</label>
             <div class="form-group col-sm-3">
                 <input type='text' class="form-control" ng-model="vm.account.username" name='title'>
             </div>
@@ -81,7 +112,6 @@
             <div class="form-group col-sm-3">
                 <input type='text' class="form-control" ng-model="vm.account.email" name='title'>
             </div>
-            <label for="title" class="col-sm-1 col-form-label">Phone Number</label>
         </div>
         <div class="form-group row">
             <label for="phone" class="col-sm-2 col-form-label">Telephone</label>
@@ -92,7 +122,8 @@
                     restrict="reject" 
                     mask='(999)-999-9999' 
                     placeholder="(xxx)-xxx-xxxx"
-                    required>                   </div>
+                    required>                   
+                </div>
             <label for="fax" class="col-sm-1 col-form-label">Email</label>
             <div class="col-sm-5">
                 <input type='email' class="form-control" ng-model="vm.account.email" name='email' required>

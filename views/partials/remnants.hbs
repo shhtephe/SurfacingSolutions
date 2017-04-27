@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <div class="container">
-	{/currentUser.accountType == 'user'/}
 	<md-tabs md-dynamic-height md-border-bottom md-stretch-tabs>
 	<md-tab label="Remnants View">
 	<!--"borrowed" from scotch.io-->
@@ -41,8 +40,7 @@
 	<br> <br> <br>
 	User Instructions:
 	<br><br>
-	All measurements are in inches. Click on the headings in the first row to sort by the column below - click twice to change sort from ascending to
-	descending. If you are interested in a remnant please send an email, including the Remnant ID, to <a href="mailto:info@surfacingsolutions.ca?Subject=Remnant%20Request" target="_blank">info@surfacingsolutions.ca</a>.
+	All measurements are in inches. Click on the headings in the first row to sort by the column below - click twice to change sort from ascending to descending. If you are interested in a remnant please click on the email icon to send us an email relating to that remnant.
 	<br>
 	<br>
 	<br>
@@ -149,6 +147,10 @@
 	          <span ng-show="remnant.hold==true && remnant.edit!==true"><i class="fa fa-check-circle"></i></span>
 	          <span ng-show="remnant.hold==false && remnant.edit!==true"><i class="fa fa-times"></i></span>
 	        </td>
+	        <td>
+	        	<a ng-href="mailto:info@surfacingsolutions.ca?Subject=Remnant%20Request - ID {/remnant.remnantID/}" target="_blank"><i class="fa fa-envelope"></i></a>
+	        	
+	        </td>
 	      </tr>
 	    </tbody>
 	  </table>
@@ -156,7 +158,6 @@
 	</md-tab>
 	<md-tab ng-if="currentUser.accountType == 'admin'" label="Remnants Edit">
 		<!--<pre>{/vm.remnants |json/}</pre>-->
-		{/currentUser.accountType/}
 		<button class="button" ng-click="vm.showAddRemnants = true">Add Remnants</button>
 		<br>
 		<span ng-show="vm.showAddRemnants">

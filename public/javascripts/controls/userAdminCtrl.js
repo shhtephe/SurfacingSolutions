@@ -90,6 +90,8 @@
 	            // when the response is available
 	            if(action == 'add'){
 	              vm.addAlert("success", "Account " + action + "ed successfully");
+	            } else if (action== 'password'){
+	              vm.addAlert("success", "Password reset successfully");
 	            } else {
 	              vm.addAlert("success", "Account " + action + "d successfully");
 	            };
@@ -100,6 +102,15 @@
 	            vm.addAlert("danger", "Error: Material did not " + action);
 	            console.log("Nope.jpg");
    			});
+      	};
+
+      	vm.savePassword = function(account) {
+      		if (account.password !== account.password2) {
+				vm.addAlert("warning", "Passwords do not match!");
+      		} else {
+      			vm.saveAccount(account, "password");	
+      		};
+      		
       	};
 
 		//set option to 'user'
@@ -139,6 +150,7 @@
 				};
 			};
 		};
+
 		vm.addAlert = function(type, msg) {
 	      vm.alerts.push({
 	        type: type,

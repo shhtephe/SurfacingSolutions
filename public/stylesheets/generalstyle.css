@@ -1,0 +1,4 @@
+/*Make modal windows wider*/
+.app-modal-window .modal-dialog {
+  width: 500px;
+}

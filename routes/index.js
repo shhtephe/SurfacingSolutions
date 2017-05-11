@@ -825,6 +825,20 @@ router.post('/savecustomer', function(req, res){
   };
 });
 
+router.post('/deletecustomer', function(req, res){
+  var conditions = {custCode:req.body.custCode};
+  mongoose.model('customers').find(conditions).remove(callback);
+  function callback (err) {
+    if (err) {
+      console.log("Could not delete customer: " + err);
+      res.sendStatus(500);
+    } else {
+      console.log("Customer deleted");
+      res.sendStatus(200);
+    };
+  }
+});
+
 
 router.post('/savequote', function(req, res){
   //console.log(req.body.quote.counterGroup[0].addons[0]);

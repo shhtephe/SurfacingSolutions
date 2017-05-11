@@ -31,7 +31,7 @@
 	  	//set Sort type on
 	  	vm.sortType = "updatedAt";
 	  	vm.sortReverse = !vm.sortReverse;
-
+	  	
 	  	vm.buildCustomer = function(customer) {
 	  		var response = "";
 	  		//console.log(customer)
@@ -64,11 +64,13 @@
 
 	  	vm.buildCustName = function(customer) {
 	  		var response = "";
-	  			//console.log(vm.customers);
-				var search = vm.arraySearch(customer, vm.customers, 'custCode');
-				//console.log(search)
+  			//console.log(vm.customers);
+			var search = vm.arraySearch(customer, vm.customers, 'custCode');
+			//console.log(typeof vm.customers[search]);
+			if(typeof vm.customers[search] !== 'undefined') {
 				response = vm.customers[search].companyName;
-	  		return response;
+		  		return response;
+			};
 	  	};
 
 	  	vm.arraySearch = function (nameKey, myArray, property){

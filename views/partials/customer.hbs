@@ -52,9 +52,11 @@
                 </tr>
             </table>
             <br>
-            Temp Debug Info
+            <button ng-show="currentUser.accountType == 'admin'" type="button" class="btn" ng-click="vm.deleteCustomer(vm.customer.custCode)">Delete Customer</button>
             <br>
-            <!--<pre>{/vm.customer | json/}</pre>-->
+            <!--
+            Temp Debug Info
+            <pre>{/vm.customer | json/}</pre>-->
         </div>
     </div>
 </div>

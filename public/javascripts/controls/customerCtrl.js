@@ -174,6 +174,24 @@
 			}
 		};
 
+		vm.deleteCustomer = function(custCode) {
+			console.log("this ran");
+			//Need to declare that it's sending a json doc
+			$http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
+			$http.post('/deletecustomer', {custCode : custCode}).
+	  		success(function(data, status, headers, config) {
+		    	// this callback will be called asynchronously
+		    	// when the response is available
+		    	console.log("Customer deleted");
+		    	$location.path('/customers');
+		  	}).
+	  		error(function(data, status, headers, config) {
+			    // called asynchronously if an error occurs
+			    // or server returns response with an error status.
+				vm.addAlert("danger", "Could not delete customer: ", data);
+	  		});
+		};
+
 		vm.saveCustomer = function(customer, action) {
 			//Need to declare that it's sending a json doc
 			$http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';

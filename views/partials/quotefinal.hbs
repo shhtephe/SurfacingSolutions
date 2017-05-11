@@ -103,7 +103,7 @@ Phone: {/vm.customer.homePhone/}</textarea>
 			    		</td>
 					    <td>
 					    	<div align="right" ng-hide="counter.addon">
-					    		{/group.material[group.material.pricing] | currency:$/}
+					    		{/group.material[group.material.pricing] * vm.quote.jobDifficulty| currency:$/}
 				    		</div>
 				    		<span ng-show="counter.addon">
 					    		<textarea>{/counter.price | currency:$/}</textarea>
@@ -113,8 +113,8 @@ Phone: {/vm.customer.homePhone/}</textarea>
 			        		{/group.TAC | number:2/} SQFT    				    	
 			    		</td>
 					    <td>	
-					    	<div align="right" ng-show="counter.addon"class="price">{/group.GMC | currency: $/}</div>
-					    	<div align="right" ng-hide="counter.addon"class="price">{/group.GMC | currency: $/}</div>	
+					    	<div align="right" ng-show="counter.addon"class="price">{/group.GMC * vm.quote.jobDifficulty| currency: $/}</div>
+					    	<div align="right" ng-hide="counter.addon"class="price">{/group.GMC * vm.quote.jobDifficulty| currency: $/}</div>	
 				    	</td>
 					</tr>
 				<!-- Addon section -->
@@ -126,7 +126,7 @@ Phone: {/vm.customer.homePhone/}</textarea>
 					    	{/addon.description/}
 			    		</td>
 					    <td>
-					    	<div align="right">{/addon.price | currency:$/}</div>
+					    	<div align="right">{/addon.price * vm.quote.jobDifficulty | currency:$/}</div>
 				    	</td>
 					    <td>
 					    	{/addon.quantity/}
@@ -135,7 +135,7 @@ Phone: {/vm.customer.homePhone/}</textarea>
 					    		<span ng-show="addon.formula == 'item'"> items</span>
 			    		</td>
 					    <td>	
-					    	<div align="right" class="price">{/addon.totalPrice | currency: $/}</div>
+					    	<div align="right" class="price">{/addon.totalPrice * vm.quote.jobDifficulty | currency: $/}</div>
 				    	</td>
 					</tr>
 				<!-- totals and summation -->
@@ -205,7 +205,7 @@ Phone: {/vm.customer.homePhone/}</textarea>
 				<tr>
 			    	<td width="75%" class="blank"> </td>
 				    <td colspan="1" class="total-line">HST (13%)</td>
-				    <td class="total-value"><div align="right" id="total">{/vm.quote.totalPrice * 0.13 | currency:$/}</div></td>
+				    <td class="total-value"><div align="right" id="total">{/vm.quote.totalPrice * vm.quote.jobDifficulty * 0.13 | currency:$/}</div></td>
 				</tr>
 				<tr>
 			    	<td width="75%" class="blank"> </td>

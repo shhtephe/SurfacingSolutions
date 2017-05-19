@@ -666,6 +666,8 @@
 				thickness: material.thickness,
 				width: material.width,
 				length: material.length,
+				overrideWidth: material.overrideWidth,
+				overrideLength: material.overrideLength,
 				halfSheet: material.halfSheet,
 				fullSheet1: material.fullSheet1,
 				fullSheet5: material.fullSheet5,
@@ -693,6 +695,8 @@
 				thickness: material.thickness,
 				width: material.width,
 				length: material.length,
+				overrideLength: material.overrideLength,
+				overrideWidth: material.overrideWidth,
 				price: material.price,
 				fullSheet1: material.fullSheet1,
 				halfSheet: material.halfSheet,
@@ -735,8 +739,16 @@
 				//Define the sheets object
 				var sheets = {};
 				console.log(vm.quote.counterGroup[index].TAC, material.length, material.width, vm.quote.counterGroup[index].quantity, material);
+				
 				//Estimate the number of sheets
-				vm.quote.counterGroup[index].estimatedSheets = (vm.quote.counterGroup[index].areaYield / (material.length * material.width/144)) * vm.quote.counterGroup[index].quantity;
+				//check for sheet size override
+				console.log(parseFloat(material.overrideWidth), parseFloat(material.overrideLength));
+				if (parseFloat(material.overrideWidth) !== NaN && parseFloat(material.overrideLength) !== NaN) {
+					vm.quote.counterGroup[index].estimatedSheets = (vm.quote.counterGroup[index].areaYield / (parseFloat(material.overrideLength) * parseFloat(material.overrideWidth)/144)) * vm.quote.counterGroup[index].quantity;
+				}	else {
+					vm.quote.counterGroup[index].estimatedSheets = (vm.quote.counterGroup[index].areaYield / (material.length * material.width/144)) * vm.quote.counterGroup[index].quantity;
+				};
+
 				vm.quote.counterGroup[index].estimatedSheets = Math.round((vm.quote.counterGroup[index].estimatedSheets + 0.00001) * 100) / 100;
 				console.log(vm.quote.counterGroup[index].estimatedSheets);
 				//If sheets has not been entered (is null) make sheets = estimated, then proceed with calculating

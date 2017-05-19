@@ -113,9 +113,6 @@
       		
       	};
 
-		//set option to 'user'
-		//$scope.userForm.accountType = 'user';
-
 		vm.submit = function(form, user){
 			console.log(form);
 			if(user.accountType !== "admin" && form.accountType === "admin" ) {

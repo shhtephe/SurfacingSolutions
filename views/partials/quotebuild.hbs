@@ -22,7 +22,7 @@
 				<span style="float:right">
 					Project Name / Project Description:
 					<br>
-					<textarea ng-model="vm.quote.description"></textarea>
+					<textarea rows="5" cols="50" ng-model="vm.quote.description"></textarea>
 				</span>
 				<span ng-show="vm.customer.firstName">
 					Customer: {/vm.customer.companyName/} - {/vm.customer.lastName/}, {/vm.customer.firstName/}
@@ -112,6 +112,22 @@
 										{/group.material.description/}
 									</td>
 								</tr>
+								<tr>
+									<td>
+										Override Width
+									</td>
+									<td>
+										Override Length
+									</td>	
+								</tr>
+								<tr>
+									<td>
+										{/group.material.overrideWidth/}
+									</td>
+									<td>
+										{/group.material.overrideLength/}
+									</td>
+								</tr>
 							</table>
 							<span ng-show="vm.editMaterial[group.groupNumber]">
 								Choose a Manufacturer:
@@ -135,10 +151,12 @@
 											Thickness: {/materialDescription.thickness/} <br> 
 										</li>	
 										<li class="list-group-item">	
-											Width (In.): {/materialDescription.width/} <br> 
+											Width (In.):   {/materialDescription.width/} 
+											| Override <input type="text" ng-model="materialDescription.overrideWidth"> <br> 
 										</li>				
 										<li class="list-group-item">	
-											Length (In.): {/materialDescription.length/} <br> 
+											Width (In.):   {/materialDescription.length/} 
+											| Override <input type="text" ng-model="materialDescription.overrideLength"> <br>
 										</li>	
 										<li class="list-group-item">	
 											Full Sheet 1-5: {/materialDescription.fullSheet1/} <br> 
@@ -329,10 +347,11 @@
 									Thickness: {/materialDescription.thickness/} <br> 
 								</li>	
 								<li class="list-group-item">	
-									Width (In.): {/materialDescription.width/} <br> 
+									Width (In.):   {/materialDescription.width/} 
+									| Override <input type="text" ng-model="materialDescription.overrideWidth"> <br> 
 								</li>				
 								<li class="list-group-item">	
-									Length (In.): {/materialDescription.length/} <br> 
+									Length (In.): {/materialDescription.length/} | Override <input type="text" ng-model="materialDescription.overrideLength"> <br> 
 								</li>	
 								<li class="list-group-item">	
 									Full Sheet 1-5: {/materialDescription.fullSheet1/} <br> 

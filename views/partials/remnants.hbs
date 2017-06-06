@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<div class="container">
+	<span ng-init="vm.init()">
 	<md-tabs md-dynamic-height md-border-bottom md-stretch-tabs>
 	<md-tab label="Remnants View">
 	<!--"borrowed" from scotch.io-->
@@ -156,6 +156,7 @@
 	  </table>
 	</div>
 	</md-tab>
+<!--Edit Remnants-->
 	<md-tab ng-if="currentUser.accountType == 'admin'" label="Remnants Edit">
 		<!--<pre>{/vm.remnants |json/}</pre>-->
 		<button class="button" ng-click="vm.showAddRemnants = true">Add Remnants</button>
@@ -229,8 +230,8 @@
 			<br>Try adding some!
 		</span>
 		<span ng-hide="!vm.remnants[0]">
-			<br><br>
-
+			<br>
+			<br>
 			<table class="table table-bordered table-striped">
 				<caption>Remnants List</caption>
 			    <thead>
@@ -368,17 +369,18 @@
 					</td>
 					<td>
 						<span ng-hide="remnant.edit==true">
-							<a ng-click="vm.removeRemnant($index)">Remove</a>
-							/ <a ng-click="vm.editRemnant($index)">Edit</a>
+							<a href="" ng-click="vm.removeRemnant(remnant.remnantID)">Remove</a>
+							<br>
+							<a href="" ng-click="vm.editRemnant(remnant.remnantID)">Edit</a>
 						</span>
 						<span ng-show="remnant.edit==true">
-							<a ng-click="
-								vm.cancelEditRemnant($index);
+							<a href="" ng-click="
+								vm.cancelEditRemnant(remnant.remnantID);
 								vm.edit.location = remnant.location;
 								vm.edit.width = remnant.width;
 								vm.edit.length = remnant.length;
 							">Cancel</a>
-							/ <a ng-click="vm.saveEditRemnant($index, vm.edit)">Save</a>
+							/ <a href="" ng-click="vm.saveEditRemnant(vm.edit, remnant.remnantID)">Save</a>
 						</span>
 					</td>
 				</tr>		
@@ -386,4 +388,41 @@
 		</span>
 	</md-tab>
 	</md-tabs>
-</div>
+	<!--
+	Legacy remnant list formatting:
+	[
+	<span ng-repeat="remnant in vm.remnants">
+		 	{
+			"manufacturer": 
+			<span ng-show="remnant.manufacturer">"{/remnant.manufacturer/}",</span>
+			<span ng-show="!remnant.manufacturer">"",</span>
+			"remnantType": 
+			<span ng-show="remnant.remnantType">"{/remnant.remnantType/}",</span>
+			<span ng-show="!remnant.remnantType">"",</span>
+			"colourGroup": 
+			<span ng-show="remnant.colourGroup">"{/remnant.colourGroup/}",</span>
+			<span ng-show="!remnant.colourGroup">"",</span>
+			"description": 
+			<span ng-show="remnant.description">"{/remnant.description/}",</span>
+			<span ng-show="!remnant.description">"",</span>
+			"thickness": 
+			<span ng-show="remnant.thickness">{/remnant.thickness/},</span>
+			<span ng-show="!remnant.thickness">"",</span>
+			"length": 
+			<span ng-show="remnant.length">{/remnant.length/},</span>
+			<span ng-show="!remnant.length">"",</span>
+			"width": 
+			<span ng-show="remnant.width">{/remnant.width/},</span>
+			<span ng-show="!remnant.width">"",</span>
+			"location": 
+			<span ng-show="remnant.location">"{/remnant.location/}",</span>
+			<span ng-show="!remnant.location">"",</span>
+			"hold": 
+			<span ng-show="remnant.hold">"{/remnant.hold/}",</span>
+			<span ng-show="!remnant.hold">"",</span>
+			"remnantID": 
+			<span ng-show="remnant.remnantID">{/remnant.remnantID/}</span>
+			<span ng-show="!remnant.remnantID">""</span>
+			},
+	</span>
+	]-->

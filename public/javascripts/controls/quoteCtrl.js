@@ -741,12 +741,12 @@
 				console.log(vm.quote.counterGroup[index].TAC, material.length, material.width, vm.quote.counterGroup[index].quantity, material);
 				
 				//Estimate the number of sheets
-				//check for sheet size override
-				console.log(parseFloat(material.overrideWidth), parseFloat(material.overrideLength));
-				if (parseFloat(material.overrideWidth) !== NaN && parseFloat(material.overrideLength) !== NaN) {
-					vm.quote.counterGroup[index].estimatedSheets = (vm.quote.counterGroup[index].areaYield / (parseFloat(material.overrideLength) * parseFloat(material.overrideWidth)/144)) * vm.quote.counterGroup[index].quantity;
-				}	else {
+				//check for sheet size override, if either are not a number (null, blank wrong formatting, etc)
+				console.log(parseFloat(material.overrideWidth), parseFloat(material.overrideLength), isNaN(parseFloat(material.overrideWidth)), isNaN(parseFloat(material.overrideLength)));
+				if (isNaN(parseFloat(material.overrideWidth)) || isNaN(parseFloat(material.overrideLength))) {
 					vm.quote.counterGroup[index].estimatedSheets = (vm.quote.counterGroup[index].areaYield / (material.length * material.width/144)) * vm.quote.counterGroup[index].quantity;
+				}	else {
+					vm.quote.counterGroup[index].estimatedSheets = (vm.quote.counterGroup[index].areaYield / (parseFloat(material.overrideLength) * parseFloat(material.overrideWidth)/144)) * vm.quote.counterGroup[index].quantity;
 				};
 
 				vm.quote.counterGroup[index].estimatedSheets = Math.round((vm.quote.counterGroup[index].estimatedSheets + 0.00001) * 100) / 100;

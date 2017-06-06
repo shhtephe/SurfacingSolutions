@@ -20,9 +20,27 @@
           vm.remnantsIndex = data.remnantsIndex;
           console.log(data)
         })
+
+        vm.init = function(){
+            vm.sortType = "remnantID";
+        };     
+
         /*
             Start of the Remnants Edit Ctrl Section
         */
+
+        //nameKey = string to find | myArray = the array | property = which property to find it in)
+        vm.arraySearch = function (nameKey, myArray, property){
+            //console.log(nameKey, myArray, property);
+            for (var i=0; i < myArray.length; i++) {
+                //console.log("my array i", myArray[i], "property", property)
+                if (myArray[i][property] === nameKey) {
+                    return i;
+                };
+            };
+        };
+
+
         vm.addRemnant = function(material) {
         	console.log(material)
             if(typeof vm.remnants == 'undefined'){
@@ -45,36 +63,42 @@
         	vm.saveRemnant(remnant, "add");
         };
 
-        vm.editRemnant = function(index) {
-        	//console.log("Editing remnant ", vm.remnants[index])
-        	vm.remnants[index].edit = true;
+        vm.editRemnant = function(remnantID) {
+            var search = vm.arraySearch(remnantID, vm.remnants, "remnantID");
+            console.log("Editing remnant ", vm.remnants[search]);
+        	vm.remnants[search].edit = true;
         };
 
-        vm.cancelEditRemnant = function(index) {
+        vm.cancelEditRemnant = function(remnantID) {
+            console.log("Closing edit on", remnantID)
         	//Hides edit input boxes
-        	vm.remnants[index].edit = false;
+            var search = vm.arraySearch(remnantID, vm.remnants, "remnantID");
+        	vm.remnants[search].edit = false;
         };
 
-        vm.saveEditRemnant = function(index, edit) {
-        	console.log(index, edit);
-        	vm.remnants[index].edit = false;
+        vm.saveEditRemnant = function(edit, remnantID) {
+        	console.log(reemnantID, edit);
+            //search through vm.remnants for correct position (index changes when sorted)
+            var search = vm.arraySearch(remnantID, vm.remnants, "remnantID");
+        	vm.remnants[search].edit = false;
         	if(typeof edit !== "undefined") {
-
-        		if(edit.length){vm.remnants[index].length = edit.length};
-	        	if(edit.width){vm.remnants[index].width = edit.width};
-	        	if(edit.location){vm.remnants[index].location = edit.location};
-	        	vm.saveRemnant(vm.remnants[index], "update")	
+        		if(edit.length){vm.remnants[search].length = edit.length};
+	        	if(edit.width){vm.remnants[search].width = edit.width};
+	        	if(edit.location){vm.remnants[search].location = edit.location};
+	        	vm.saveRemnant(vm.remnants[search], "update")	
         	};
         };
 
-        vm.removeRemnant = function(index) {
-        	vm.saveRemnant(vm.remnants[index], "remove");
-        	vm.remnants.splice(index, 1);
+        vm.removeRemnant = function(remnantID) {
+            var search = vm.arraySearch(remnantID, vm.remnants, "remnantID");
+            console.log(search, vm.remnants[search]);
+        	vm.saveRemnant(vm.remnants[search], "remove");
+        	vm.remnants.splice(search, 1);
         };
 
         vm.saveRemnant = function(remnants, action){
         	console.log(action + " remnant");
-        	console.log(remnants);
+        	console.log(remnants, action);
 
 	        //declaring json data
 	        $http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
@@ -95,6 +119,7 @@
 	          });
 	         
     	};
+
     	vm.loadRemnants = function() {
     		//Reload all data
 	        dataFactory.getRemnants()

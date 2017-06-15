@@ -4,13 +4,12 @@
     	    <div hl-sticky="" align="right" class="simple">
 				<span style="float:right">
 					<br>
-					<button type="button" class="btn" ng-click="vm.saveQuote(vm.quote.description, currentUser)">Update/Save Quote</button>
-					<a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotefinal" target=""> 
-						<button type="button" class="btn">Office Copy</button> 
-					</a>	
-					<a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotesend" target="">
-						<button type="button" class="btn">Client Copy</button> 
-					</a>
+					<div class="btn-group" style="margin:5px 0 10px;">
+						<button type="button" class="btn" ng-click="vm.saveQuote(vm.quote.description, currentUser)">Update/Save Quote</button>
+						<a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotefinal" class="btn btn-default" target=""> Office Copy</a> 
+						<a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotesend" class="btn btn-default" target="">Client Copy</a> 
+						
+					</div>
 				</span>			
 			</div>
         <div class="col-xs-offset-2 col-xs-8">
@@ -42,10 +41,12 @@
 	      		<br>
 				<div ng-repeat="group in vm.quote.counterGroup | orderBy:'-groupNumber' track by $index">
 <!--{/group.groupNumber|json/}-->
-					<u>Group {/group.groupNumber + 1/}</u> - 
+					<u>Group {/group.groupNumber + 1/}</u> 
 					<div id="quoteBuild">
 						<textarea ng-model="group.description"></textarea>
 						<button type="button" class="btn btn-danger" style="float:right" ng-click="vm.removeGroup(group.groupNumber)">DELETE THIS GROUP</button>
+						<br>
+						<button type="button" class="btn btn-info" style="float:right" ng-click="vm.counterRenderModal (group)">Show Counter/Slabs</button>
 					</div>
 					<br>
 					<br>
@@ -192,71 +193,72 @@
 					<br>
 					<!--START OF COUNTER LOOP-->
 					<div ng-repeat="counter in group.counters track by $index">
-						</u> <button type="button" class="btn btn-danger" style="float:right" ng-click="vm.removeCounter(group.groupNumber, $index)">DELETE THIS COUNTER</button>
-				  			<button type="button" class="btn btn-default" ng-click="isCounterCollapsed = !isCounterCollapsed"><span ng-hide="counter.description">Counter {/$index + 1/}</span> <span ng-show="counter.description">{/counter.description/}</span></button>
-				  			<div uib-collapse="!isCounterCollapsed">
-								<div class="well well-lg">
-									<table class="table table-hover table-bordered">
+						<button type="button" class="btn btn-danger" style="float:right" ng-click="vm.removeCounter(group.groupNumber, $index)">DELETE THIS COUNTER</button>
+						<br><br><br> 
+				  		<button type="button" class="btn btn-default" ng-click="isCounterCollapsed = !isCounterCollapsed"><span ng-hide="counter.description">Counter {/$index + 1/}</span> <span ng-show="counter.description">{/counter.description| limitTo:100/}</span></button>
+			  			<div uib-collapse="!isCounterCollapsed">
+							<div class="well well-lg">
+								<table class="table table-hover table-bordered">
 <!--<br><br>{/counter.sheets|json/}-->
-										Counter Description:
-										<br><textarea rows="4" columns="150" ng-model="counter.description"></textarea>
-										<br>
-							  			<caption><u>Summary</u></caption>
-										<tbody>
-								  			<tr>
-								  				<td>
-								  					Shape: 
-											  		<span ng-show="vm.editCounter[$index]">
-											  			<select name="shape" ng-model="counter.counterShape" convert-to-number id="shape">
-															<option value="" selected='selected'>----Select----</option>
-															<option  value="rectangle">Rectangle</option>
-															<option value="circle">Circle (use radius)</option>
-														</select>
-											  		</span>
-								  					<span ng-hide="vm.editCounter[$index]">
-								  						{/counter.counterShape/}
-						  							</span>
-								  					<br>SQFT:
-									  				<span ng-show="counter.counterShape==='rectangle'">	
-									  					{/(counter.counterLength/12 * counter.counterWidth/12) | number : 2/} 
-								  					</span> 
-								  					<span ng-hide="counter.counterShape==='rectangle'">
-									  					{/((counter.counterLength /12 * counter.counterLength /12) * vm.math.PI) | number : 2/} 
+									Counter Description:
+									<br><textarea rows="4" cols="75" ng-model="counter.description"></textarea>
+									<br>
+						  			<caption><u>Summary</u></caption>
+									<tbody>
+							  			<tr>
+							  				<td>
+							  					Shape: 
+										  		<span ng-show="vm.editCounter[$index]">
+										  			<select name="shape" ng-model="counter.counterShape" convert-to-number id="shape">
+														<option value="" selected='selected'>----Select----</option>
+														<option  value="rectangle">Rectangle</option>
+														<option value="circle">Circle (use radius)</option>
+													</select>
+										  		</span>
+							  					<span ng-hide="vm.editCounter[$index]">
+							  						{/counter.counterShape/}
+					  							</span>
+							  					<br>SQFT:
+								  				<span ng-show="counter.counterShape==='rectangle'">	
+								  					{/(counter.counterLength/12 * counter.counterWidth/12) | number : 2/} 
+							  					</span> 
+							  					<span ng-hide="counter.counterShape==='rectangle'">
+								  					{/((counter.counterLength /12 * counter.counterLength /12) * vm.math.PI) | number : 2/} 
+							  					</span>
+								  			</td>	
+							  				<span ng-hide="vm.editCounter[$index]">
+										      	<td>
+													<span ng-show="counter.counterShape==='rectangle'">
+									  					Length:
+														<span ng-show="vm.editCounter[$index]">
+											  				<input type="text" ng-model="counter.counterLength">
+									  					</span>
+										  				<span ng-hide="vm.editCounter[$index]">
+										  					{/counter.counterLength/}"
+									  					</span> 
 								  					</span>
-									  			</td>	
-								  				<span ng-hide="vm.editCounter[$index]">
-											      	<td>
-														<span ng-show="counter.counterShape==='rectangle'">
-										  					Length:
-															<span ng-show="vm.editCounter[$index]">
-												  				<input type="text" ng-model="counter.counterLength">
-										  					</span>
-											  				<span ng-hide="vm.editCounter[$index]">
-											  					{/counter.counterLength/}"
-										  					</span> 
-									  					</span>
-							  							<span ng-show="counter.counterShape==='rectangle'"><br>Width: </span>
-							  							<span ng-show="counter.counterShape==='circle'"><br>Radius: </span>
-								  						<span ng-show="vm.editCounter[$index]">
-									  						<input type="text" ng-model="counter.counterWidth">
-									  					</span>
-									  					<span ng-hide="vm.editCounter[$index]">
-										  					{/counter.counterWidth/}"
-									  					</span>
-							  					  	</td>
-								  				</span>
+						  							<span ng-show="counter.counterShape==='rectangle'"><br>Width: </span>
+						  							<span ng-show="counter.counterShape==='circle'"><br>Radius: </span>
+							  						<span ng-show="vm.editCounter[$index]">
+								  						<input type="text" ng-model="counter.counterWidth">
+								  					</span>
+								  					<span ng-hide="vm.editCounter[$index]">
+									  					{/counter.counterWidth/}"
+								  					</span>
+						  					  	</td>
+							  				</span>
 <!--{/counter|json/}-->
-									  		</tr>
-						  				</tbody>
-					  				</table>
-					  				<br><button type="button" ng-click="vm.editCounter[$index] = true" ng-hide="vm.editCounter[$index]" class="btn btn-default">Edit this Counter</button>
-					  				<button type="button" ng-click="vm.editCounter[$index]=false" ng-show="vm.editCounter[$index]" class="btn btn-default">Cancel</button>
-					  				<button type="button" ng-click="vm.calcCounter(counter.counterWidth, counter.counterLength, counter.counterShape, $index, group.groupNumber, counter.description); vm.editCounter[$index]=false" ng-show="vm.editCounter[$index]" class="btn btn-default">Save Counter</button>
+								  		</tr>
+					  				</tbody>
+				  				</table>
+				  				<br><button type="button" ng-click="vm.editCounter[$index] = true" ng-hide="vm.editCounter[$index]" class="btn btn-default">Edit this Counter</button>
+				  				<button type="button" ng-click="vm.editCounter[$index]=false" ng-show="vm.editCounter[$index]" class="btn btn-default">Cancel</button>
+				  				<button type="button" ng-click="vm.calcCounter(counter.counterWidth, counter.counterLength, counter.counterShape, $index, group.groupNumber, counter.description); vm.editCounter[$index]=false" ng-show="vm.editCounter[$index]" class="btn btn-default">Save Counter</button>
 <!--<br> {/counter.material | json/} <br>-->
-									<!--This is removed until I retool it to work properly-->			
-							      	<!--<span ng-show="counter.totalPrice">Counter Subtotal: {/counter.totalPrice |currency:$/}</span>-->
-								</div>
-							</div>	
+								<!--This is removed until I retool it to work properly-->			
+						      	<!--<span ng-show="counter.totalPrice">Counter Subtotal: {/counter.totalPrice |currency:$/}</span>-->
+							</div>
+						</div>	
 				      	<hr style="background:#FFFFFF; border:0; height:7px" />
 					</div>
 					<!--END OF COUNTER LOOP-->
@@ -607,13 +609,35 @@
 	</div>
 	<div class="modal-footer">
 		<button type="button" style="btn" ng-click="vm.cancel()">Cancel</button>
-		<!--(shape=='rectangle' && counterLength && counterWidth) || (shape=='circle' && counterWidth)-->
 		<span ng-show="vm.checkIsNumber(counterLength, counterWidth, shape)">
-		<button type="button" style="btn" ng-click="vm.saveCounterModal(counterWidth, counterLength, shape, description, vm.counters, vm.groupIndex); shape=''; counterWidth=''; counterLength='';">Save Counter</button>
+			<button type="button" style="btn" ng-click="vm.saveCounterModal(counterWidth, counterLength, shape, description, vm.counters, vm.groupIndex); shape=''; counterWidth=''; counterLength='';">Save Counter</button>
 		</span>
 	</div>
 </script>
 
+<!--Modal Code rendering slabs/counters-->
+<script type="text/ng-template" id="counterRenderModal.html">	
+	<div class="modal-header">
+		<h3 class="modal-title">Slab Plotting</h3>
+	</div>
+	<br>
+	<div class="modal-body" 
+		style="background-color:#d3d3d3; height:1050px; margin: 0 auto;"
+	>
+		<!-- This is where the magic happens! -->
+		<canvas id="canvas"
+			style="margin: 0 auto; border: 1px gray solid; height:1333x; width:1000px"
+			ng-init="vm.init()">
+			Your browser does not support Canvas
+		</canvas>
+	</div>
+	<div class="modal-footer">
+		<button type="button" style="btn" ng-click="vm.cancel()">Cancel</button>
+		<span ng-show="vm.checkIsNumber(counterLength, counterWidth, shape)">
+			<button type="button" style="btn" ng-click="vm.saveCounterModal(counterWidth, counterLength, shape, description, vm.counters, vm.groupIndex); shape=''; counterWidth=''; counterLength='';">Save Counter</button>
+		</span>
+	</div>
+</script>
 	<!--<br>
 	<u>Debug info:</u>
 	<br>

@@ -3,16 +3,16 @@ var Service = require('node-windows').Service;
 var svc = new Service({
   name:'SSL APP DEV1',
   description: 'SurfacingSolutions Quote APP Development',
-  script: 'C:\\\\Users\\sbailey\\Documents\\GitHub\\SurfacingSolutions Development\\app.js',
+  script: 'C:\\\\Users\\sbailey\\Documents\\GitHub\\SurfacingSolutions\\app.js',
   env:{
     name: "NODE_ENV",
-    value: "dev"
+    value: "production"
   }
 });
 
 var EventLogger = require('node-windows').EventLogger;
 
-var log = new EventLogger('SSI DEV');
+var log = new EventLogger('SSI Production');
 
 log.info('Basic information.');
 log.warn('Watch out!');

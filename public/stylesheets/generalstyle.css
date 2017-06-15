@@ -1,4 +1,8 @@
 /*Make modal windows wider*/
-.app-modal-window .modal-dialog {
-  width: 500px;
+.counter-add-modal .modal-dialog {
+  width: 500px; 
+}
+
+.counter-render-modal .modal-dialog {
+  width: 1200px;
 }

@@ -35,15 +35,17 @@
 				console.log(reason);
 			});		
 
+
+		//***************************
 		//baby's first modal
-		vm.addCounter = function (groupIndex, counters, size) {
+		vm.addCounter = function (groupIndex, counters) {
 			//console.log(groupIndex, counters, size);
 	    	var modalInstance = $uibModal.open({
 		      animation: true,
 		      templateUrl: 'addcounter.html',
 		      controller: ['$uibModalInstance', 'groupIndex', 'counters', addCounterCtrl],
 		      controllerAs: 'vm',
-		      size: size,
+		      windowClass: 'counter-add-modal',
 		      resolve: {
 		        groupIndex: function() {return groupIndex},
 		        counters: function() {return counters}
@@ -60,6 +62,7 @@
 
 	    var addCounterCtrl = function($uibModalInstance, groupIndex, counters) {
 	    	var vm = this;
+
 	    	vm.groupIndex = groupIndex;
 	    	vm.counters = counters;
 
@@ -99,6 +102,181 @@
 	    	};
 	    };
 
+		//***************************	
+		//Visual render and print of countertop and materials
+		vm.counterRenderModal = function (counterGroup) {
+	    	var modalInstance = $uibModal.open({
+		      animation: true,
+		      templateUrl: 'counterRenderModal.html',
+		      controller: ['$uibModalInstance', 'counterGroup', counterRenderModalCtrl],
+		      controllerAs: 'vm',
+		      windowClass: 'counter-render-modal',
+		      resolve: {
+		        counterGroup: function() {return counterGroup}
+		        }
+      	  	});
+
+      	  	modalInstance.result.then(function (counter) {
+      			//Save the countertop and put all the data back onto the main controller
+      			vm.calcCounter(parseFloat(counter.width), parseFloat(counter.length), counter.shape, counter.counters, counter.groupIndex, counter.description, true);  			 				
+			}, function () {
+      		console.log('Modal dismissed at: ' + new Date());
+    		});
+	    };
+
+	    var counterRenderModalCtrl = function($uibModalInstance, counterGroup) {
+	    	var vm = this;
+	    	
+	    	vm.counterGroup = counterGroup;
+
+			//borrowed from http://jsfiddle.net/r4TMq/11/ and massaged
+
+			vm.init = function () {
+		    	//This works like getElementByID
+    			var canvas = document.getElementById('canvas');
+		    	var context = canvas.getContext('2d');
+
+		    	// setup
+			    canvas.width = 500;
+			    canvas.height = 500;
+			    //context.globalAlpha = 1.0;
+			    //context.beginPath(); 
+
+			    for (var i = vm.counterGroup.counters.length - 1; i >= 0; i--) {
+			    	vm.data.counters.push(vm.counterGroup.counters[i]);
+			    };
+
+			    vm.draw(vm.data, context);
+			    console.log(vm.data);
+		    };
+
+			vm.data = {
+       			material: {
+       				description: vm.counterGroup.material.description,
+       				width: vm.counterGroup.material.width,
+       				length: vm.counterGroup.material.length, 
+       				sheets: vm.counterGroup.sheets
+       			},
+       			counters: []
+    		};
+		    
+		    vm.draw = function (data, context) {
+		    	//console.log(data.material.sheets)
+		    	//First draw the material slab(s)
+		    	var startPositionX = 5;
+		    	var startPositionY = 5;
+		    	for (var i = data.material.sheets - 1; i >= 0; i--) {
+		    		if (startPositionX + data.material.width > 500) {
+		    			startPositionX = 5;
+		    			startPositionY += data.material.length + 5;
+		    		};
+		    		drawSlab(data.material, context, startPositionX, startPositionY);
+		    		startPositionX += data.material.width + 5;
+	    		};
+
+	    		startPositionX = 5;
+		    	startPositionY += data.material.length + 5;
+
+		    	var tallestCounter = 0;
+
+		        for(var i=0; i<data.counters.length; i++) {
+		        	console.log(startPositionX, startPositionY, tallestCounter)
+		        	if (data.counters[i].counterLength > tallestCounter) {
+		        		tallestCounter = data.counters[i].counterLength;
+		        	};
+		            if (startPositionX + data.counters[i].counterWidth > 500) {
+		    			console.log("pruned starting position")
+		    			startPositionX = 5;
+		    			startPositionY += tallestCounter + 5;
+		    		};
+		            if (data.counters[i].counterShape == 'rectangle') {
+		            	drawRectangleCounter(data.counters[i], context, startPositionX, startPositionY);	
+		            } else if (data.counters[i].counterShape == 'rectangle') {
+		            	drawCircleCounter(data.counters[i], context, startPositionX, startPositionY);
+		            };
+		    		startPositionX += data.counters[i].counterWidth + 5;
+		        }
+		    }
+		    
+		    function drawSlab(slab, context, startPositionX, startPositionY) {
+		    	console.log(slab, startPositionX, startPositionY)
+		    	context.beginPath();
+		        context.rect(startPositionX, startPositionY, slab.width, slab.length);
+		        context.fillStyle = "#ccddff";
+		        context.fill();
+		        context.lineWidth = 1;
+		        context.strokeStyle = "#000000";
+		        context.stroke();  
+		        drawSlabName(slab, context, startPositionX, startPositionY);
+		    }
+
+		    function drawSlabName(slab, context, x, y) {
+		    	x += 2;
+		    	y += (slab.length / 2);
+		    	context.beginPath();
+		    	context.font = "8px Bodoni";
+		        context.fillStyle = "#000000";
+
+		    	context.fillText(slab.description, x, y);
+		    }
+
+		    function drawRectangleCounter(counter, context, startPositionX, startPositionY) {
+		    	console.log(counter, startPositionY, startPositionX);
+		    	context.beginPath();
+		        context.rect(startPositionX, startPositionY, counter.counterWidth, counter.counterLength);
+		        context.fillStyle = "#783487";
+		        context.fill();
+		        context.lineWidth = 1;
+		        context.strokeStyle = "#666666";
+		        context.stroke();
+		    };
+
+		    function drawCircleCounter(counter, context, startPositionX, startPositionY) {
+		    	context.beginPath();
+		        context.arc(startPositionX, startPositionY, counter.width, 0, 2*Math.PI, false);
+		        context.fillStyle = "#ccddff";
+		        context.fill();
+		        context.lineWidth = 1;
+		        context.strokeStyle = "#666666";
+		        context.stroke();
+		    };
+		    
+		    function drawLine(data1, data2) {
+		        context.beginPath();
+		        context.moveTo(data1.x, data1.y);
+		        context.lineTo(data2.x, data2.y);
+		        context.strokeStyle = "black";
+		        context.stroke();
+		    };
+		    
+	    	vm.cancel = function() {
+				$uibModalInstance.dismiss('cancel');
+	    	};
+
+	    	vm.saveCounterModal = function(width, length, shape, description, counters, groupIndex) {
+	    		//console.log(counters, groupIndex);
+	    		width = parseFloat(width);
+	    		length = parseFloat(length);
+	    		var counter = {
+	    			width: width,
+	    			length: length, 
+	    			shape: shape, 
+	    			description: description,
+	    			groupIndex: groupIndex,
+	    			counters: counters
+	    		};
+
+	    		$uibModalInstance.close(counter);
+	    	};
+
+	    	vm.cancel = function() {
+				$uibModalInstance.dismiss('cancel');
+	    	};
+    	};
+
+		//***************************
+
+		//Stops user from leaving page and reminds them to save.
 	    $scope.$on('$stateChangeStart', function( event ) {
     	var answer = confirm("Please ensure you have saved before leaving this page.")
 	    	if (!answer) {

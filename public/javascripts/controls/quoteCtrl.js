@@ -118,7 +118,7 @@
 
       	  	modalInstance.result.then(function (counter) {
       			//Save the countertop and put all the data back onto the main controller
-      			vm.calcCounter(parseFloat(counter.width), parseFloat(counter.length), counter.shape, counter.counters, counter.groupIndex, counter.description, true);  			 				
+      			//vm.calcCounter(parseFloat(counter.width), parseFloat(counter.length), counter.shape, counter.counters, counter.groupIndex, counter.description, true);  			 				
 			}, function () {
       		console.log('Modal dismissed at: ' + new Date());
     		});
@@ -128,125 +128,236 @@
 	    	var vm = this;
 	    	
 	    	vm.counterGroup = counterGroup;
-
 			//borrowed from http://jsfiddle.net/r4TMq/11/ and massaged
 
 			vm.init = function () {
 		    	//This works like getElementByID
-    			var canvas = document.getElementById('canvas');
-		    	var context = canvas.getContext('2d');
+    			vm.canvas = document.getElementById('canvas');
+		    	vm.context = vm.canvas.getContext('2d');
 
 		    	// setup
-			    canvas.width = 500;
-			    canvas.height = 500;
+			    vm.canvas.width = 850;
+			    vm.canvas.height = 1100;
+			    vm.canvasDisplay = 'slabs';
 			    //context.globalAlpha = 1.0;
 			    //context.beginPath(); 
 
 			    for (var i = vm.counterGroup.counters.length - 1; i >= 0; i--) {
 			    	vm.data.counters.push(vm.counterGroup.counters[i]);
 			    };
-
-			    vm.draw(vm.data, context);
+			    drawSlab(vm.data.material, vm.context);
 			    console.log(vm.data);
 		    };
 
+		    vm.showCounters = function() {
+				vm.canvasDisplay = 'counters';
+				vm.context.clearRect(0, 0, vm.canvas.width, vm.canvas.height);
+				//print Counters
+				drawCounters();
+		    };
+
+		    vm.showSlab = function() {
+				vm.canvasDisplay = 'slabs';
+				vm.context.clearRect(0, 0, vm.canvas.width, vm.canvas.height);
+				//print slab
+				drawSlab(vm.data.material, vm.context);
+		    };
+
+		    vm.printCanvas = function() {
+		    	var img    = vm.canvas.toDataURL("image/png");
+				//var printContents = document.getElementById("modal-body").innerHTML;
+				var popupWin = window.open('', '_blank', 'width=300,height=300');
+				popupWin.document.open();
+				popupWin.document.write('<html><head> <link rel="stylesheet" type="text/css" href="stylesheets/quotestyle.css"/> <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"> <link rel="stylesheet" type="text/css" href="https://cdn.gitcdn.link/cdn/angular/bower-material/v1.1.1/angular-material.css"/> </head> <body onload="window.print()"> <img src="' + img + '"/></body> </html>');
+				popupWin.document.close();
+			};
+
 			vm.data = {
        			material: {
+       				manufacturer: vm.counterGroup.material.manufacturer,
        				description: vm.counterGroup.material.description,
+       				collection: vm.counterGroup.material.collection,
        				width: vm.counterGroup.material.width,
        				length: vm.counterGroup.material.length, 
+       				thickness: vm.counterGroup.material.thickness,
        				sheets: vm.counterGroup.sheets
        			},
        			counters: []
     		};
 		    
-		    vm.draw = function (data, context) {
-		    	//console.log(data.material.sheets)
-		    	//First draw the material slab(s)
-		    	var startPositionX = 5;
-		    	var startPositionY = 5;
-		    	for (var i = data.material.sheets - 1; i >= 0; i--) {
-		    		if (startPositionX + data.material.width > 500) {
-		    			startPositionX = 5;
-		    			startPositionY += data.material.length + 5;
-		    		};
-		    		drawSlab(data.material, context, startPositionX, startPositionY);
-		    		startPositionX += data.material.width + 5;
-	    		};
+		    function drawSlab(slab, context) {
+	    		console.log(slab, context.canvas.width);
+	    		//resize relative to the canvas size
 
-	    		startPositionX = 5;
-		    	startPositionY += data.material.length + 5;
+	    		var slabMultiplier = 850 / slab.length;
+	    		var resizedWidth = slab.width * slabMultiplier;
 
-		    	var tallestCounter = 0;
+		    	var startPositionX = 0;	
+		    	//center the vertical start position
+		    	var startPositionY = (context.canvas.height/2) - (0.5 * resizedWidth);
 
-		        for(var i=0; i<data.counters.length; i++) {
-		        	console.log(startPositionX, startPositionY, tallestCounter)
-		        	if (data.counters[i].counterLength > tallestCounter) {
-		        		tallestCounter = data.counters[i].counterLength;
-		        	};
-		            if (startPositionX + data.counters[i].counterWidth > 500) {
-		    			console.log("pruned starting position")
-		    			startPositionX = 5;
-		    			startPositionY += tallestCounter + 5;
-		    		};
-		            if (data.counters[i].counterShape == 'rectangle') {
-		            	drawRectangleCounter(data.counters[i], context, startPositionX, startPositionY);	
-		            } else if (data.counters[i].counterShape == 'rectangle') {
-		            	drawCircleCounter(data.counters[i], context, startPositionX, startPositionY);
-		            };
-		    		startPositionX += data.counters[i].counterWidth + 5;
-		        }
-		    }
-		    
-		    function drawSlab(slab, context, startPositionX, startPositionY) {
-		    	console.log(slab, startPositionX, startPositionY)
+
+		    	console.log(slab, startPositionX, startPositionY, resizedWidth, slab.length);
 		    	context.beginPath();
-		        context.rect(startPositionX, startPositionY, slab.width, slab.length);
+		        context.rect(startPositionX, startPositionY, 850, resizedWidth );
 		        context.fillStyle = "#ccddff";
 		        context.fill();
 		        context.lineWidth = 1;
 		        context.strokeStyle = "#000000";
 		        context.stroke();  
-		        drawSlabName(slab, context, startPositionX, startPositionY);
+		        drawSlabInfo(slab, context, startPositionX, startPositionY, resizedWidth);
 		    }
 
-		    function drawSlabName(slab, context, x, y) {
-		    	x += 2;
-		    	y += (slab.length / 2);
+		    function drawSlabInfo(slab, context, x, y, resizedWidth) {
+		    	var info = "";
+		    	if (slab.manufacturer) {
+		    		info += slab.manufacturer;
+		    	};
+		    	if (slab.description) {
+		    		info += " " + slab.description;	
+		    	};
+		    	if (slab.collection) {
+		    		info += " - " + slab.collection;
+		    	};
+
+		    	console.log(x, y, resizedWidth)
+		    	x += (context.canvas.width / 2) - 300;
+		    	y += (resizedWidth / 2);
+		    	
 		    	context.beginPath();
-		    	context.font = "8px Bodoni";
+		    	context.font = "28px Bodoni";
 		        context.fillStyle = "#000000";
 
-		    	context.fillText(slab.description, x, y);
+		    	context.fillText(info, x, y);
+
+		    	//move y down one line
+		    	y += 30;
+		    	
+		    	//load info for second line
+		    	info = slab.width + '" X ' + slab.length + '" x ' + slab.thickness + '"';
+		    	context.beginPath();
+				context.fillText(info, x, y);
 		    }
 
-		    function drawRectangleCounter(counter, context, startPositionX, startPositionY) {
+		    function drawCounters() {
+		    	var startPositionX = 0;
+		    	var startPositionY = 0;
+		    	var tallestCounter = 0;
+		    	var data = vm.data;
+		    	var context = vm.context;
+		    	var slabMultiplier = 850 / vm.data.material.length;
+		    	console.log(slabMultiplier);
+
+		        for(var i=0; i<data.counters.length; i++) {
+		        	console.log(startPositionX, startPositionY, tallestCounter, data.counters[i]);
+
+		        	if (data.counters[i].counterShape == "circle") {
+		        		if(data.counters[i].counterLength * 2 * slabMultiplier > tallestCounter){
+						    tallestCounter = data.counters[i].counterLength * 2 * slabMultiplier;
+						};
+
+						//need to revise this to overflow.
+						console.log(startPositionX + (data.counters[i].counterLength * slabMultiplier) * 2);
+			            if (startPositionX + (data.counters[i].counterLength * slabMultiplier) * 2 > 850) {
+			    			console.log("pruned starting position")
+			    			startPositionX = 5;
+			    			startPositionY += tallestCounter + 5;
+			    		};
+		        	};
+
+		        	if (data.counters[i].counterShape == "rectangle") {
+		        		if ((data.counters[i].counterLength * slabMultiplier) > tallestCounter) {
+		        			tallestCounter = data.counters[i].counterLength * slabMultiplier;
+		        		};
+
+		        		//need to revise this to overflow.
+			            if (startPositionX + (data.counters[i].counterWidth * slabMultiplier) > 850) {
+			    			console.log("pruned starting position")
+			    			startPositionX = 5;
+			    			startPositionY += tallestCounter + 5;
+			    		};
+		        	};
+	
+		        	
+		            if (data.counters[i].counterShape == 'rectangle') {
+		            	drawRectangleCounter(data.counters[i], context, startPositionX, startPositionY, slabMultiplier);	
+   			    		startPositionX += (data.counters[i].counterWidth * slabMultiplier) + 5;
+		            } else if (data.counters[i].counterShape == 'circle') {
+		            	drawCircleCounter(data.counters[i], context, startPositionX, startPositionY, slabMultiplier);
+	          			startPositionX += (data.counters[i].counterWidth * 2 * slabMultiplier) + 5;
+		            };
+		        };
+		    };
+
+		    function drawRectangleCounter(counter, context, startPositionX, startPositionY, slabMultiplier) {
 		    	console.log(counter, startPositionY, startPositionX);
 		    	context.beginPath();
-		        context.rect(startPositionX, startPositionY, counter.counterWidth, counter.counterLength);
+		        context.rect(startPositionX, startPositionY, counter.counterWidth * slabMultiplier, counter.counterLength * slabMultiplier);
 		        context.fillStyle = "#783487";
 		        context.fill();
 		        context.lineWidth = 1;
 		        context.strokeStyle = "#666666";
 		        context.stroke();
+
+		        drawRectangleInfo(startPositionX, startPositionY, counter, slabMultiplier, context);
 		    };
 
-		    function drawCircleCounter(counter, context, startPositionX, startPositionY) {
+		    function drawRectangleInfo(startPositionX, startPositionY, counter, slabMultiplier, context) {
+		    	var info = "";
+		    	if (counter.description) {
+		    		info += counter.description;
+		    	};
+
+		    	console.log(startPositionX, startPositionY, counter.counterWidth, info, counter)
+		    	startPositionY += (counter.counterLength * slabMultiplier / 2) - 30;
+		    	startPositionX += 30;
+		    	
 		    	context.beginPath();
-		        context.arc(startPositionX, startPositionY, counter.width, 0, 2*Math.PI, false);
+		    	context.font = "16px Bodoni";
+		        context.fillStyle = "#000000";
+
+		    	context.fillText(info, startPositionX, startPositionY);
+
+		    	info = counter.counterLength + '" X ' + counter.counterWidth + '"';
+		    	startPositionY += 30;
+		    	context.fillText(info, startPositionX, startPositionY);
+		    };
+
+		    function drawCircleCounter(counter, context, startPositionX, startPositionY, slabMultiplier) {
+		    	console.log("Drawing Circle");
+				
+				startPositionX += counter.counterWidth * slabMultiplier;
+		    	startPositionY += counter.counterWidth * slabMultiplier;
+		    	console.log("Starting positions: ", startPositionX, startPositionY);
+		    	context.beginPath();
+		        context.arc(startPositionX, startPositionY, counter.counterWidth * slabMultiplier, 0, 2*Math.PI, false);
 		        context.fillStyle = "#ccddff";
 		        context.fill();
 		        context.lineWidth = 1;
 		        context.strokeStyle = "#666666";
 		        context.stroke();
+		        drawCircleInfo(startPositionX, startPositionY, counter, slabMultiplier, context);
 		    };
-		    
-		    function drawLine(data1, data2) {
-		        context.beginPath();
-		        context.moveTo(data1.x, data1.y);
-		        context.lineTo(data2.x, data2.y);
-		        context.strokeStyle = "black";
-		        context.stroke();
+
+		    function drawCircleInfo(startPositionX, startPositionY, counter, slabMultiplier, context) {
+		    	var info = "";
+		    	if (counter.description) {
+		    		info += counter.description;
+		    	};
+
+		    	console.log(startPositionX, startPositionY, counter.counterWidth, info, counter)
+		    	startPositionY -= 30;
+		    	startPositionX -= 30;
+		    	
+		    	context.beginPath();
+		    	context.font = "16px Bodoni";
+		        context.fillStyle = "#000000";
+
+		    	context.fillText(info, startPositionX, startPositionY);
+
+		    	info = counter.counterLength + '" X ' + counter.counterWidth + '"';
+		    	startPositionY += 30;
+		    	context.fillText(info, startPositionX, startPositionY);
 		    };
 		    
 	    	vm.cancel = function() {

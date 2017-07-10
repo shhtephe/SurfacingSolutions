@@ -621,17 +621,31 @@
 		<h3 class="modal-title">Slab Plotting</h3>
 	</div>
 	<br>
-	<div class="modal-body" 
-		style="background-color:#d3d3d3; height:1050px; margin: 0 auto;"
+	<div id= "modal-body" class="modal-body" 
+		style="background-color:#d3d3d3; height:1120px; width:850 margin: 0 auto;"
 	>
 		<!-- This is where the magic happens! -->
 		<canvas id="canvas"
-			style="margin: 0 auto; border: 1px gray solid; height:1333x; width:1000px"
+			style="margin: 0 auto; border: 1px gray solid; height:1100px; width:850px"
 			ng-init="vm.init()">
 			Your browser does not support Canvas
 		</canvas>
 	</div>
 	<div class="modal-footer">
+		<span ng-show="vm.canvasDisplay == 'counters'">
+			<button type="button" href="#" ng-click="vm.showSlab()">
+				Show Slab
+			</button>
+		</span>
+		<span ng-show="vm.canvasDisplay == 'slabs'">
+			<button type="button" href="#" ng-click="vm.showCounters()">
+				Show Counter
+			</button>
+		</span>
+		<button type="button" href="#" ng-click="vm.printCanvas()">
+			Print
+		</button>
+
 		<button type="button" style="btn" ng-click="vm.cancel()">Cancel</button>
 		<span ng-show="vm.checkIsNumber(counterLength, counterWidth, shape)">
 			<button type="button" style="btn" ng-click="vm.saveCounterModal(counterWidth, counterLength, shape, description, vm.counters, vm.groupIndex); shape=''; counterWidth=''; counterLength='';">Save Counter</button>

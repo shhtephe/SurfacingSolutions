@@ -6,3 +6,8 @@
 .counter-render-modal .modal-dialog {
   width: 1200px;
 }
+
+.remnant-table {
+        overflow-x: auto;
+        white-space: nowrap;
+    }

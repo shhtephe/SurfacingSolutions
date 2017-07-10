@@ -1,6 +1,6 @@
 <service>
-	<id>sslappdev1.exe</id>
-	<name>SSL APP DEV1</name>
+	<id>sslappdev2.exe</id>
+	<name>SSL APP DEV2</name>
 	<description>SurfacingSolutions Quote APP Development</description>
 	<executable>C:\Program Files\nodejs\node.exe</executable>
 	<logmode>rotate</logmode>
@@ -9,7 +9,7 @@
 	<argument>--file</argument>
 	<argument>C:\Users\sbailey\Documents\GitHub\SurfacingSolutions Development\app.js</argument>
 	<argument>--log</argument>
-	<argument>SSL APP DEV1 wrapper</argument>
+	<argument>SSL APP DEV2 wrapper</argument>
 	<argument>--grow</argument>
 	<argument>0.25</argument>
 	<argument>--wait</argument>

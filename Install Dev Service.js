@@ -1,7 +1,7 @@
 var Service = require('node-windows').Service;
 
 var svc = new Service({
-  name:'SSL APP DEV1',
+  name:'SSL APP DEV2',
   description: 'SurfacingSolutions Quote APP Development',
   script: 'C:\\\\Users\\sbailey\\Documents\\GitHub\\SurfacingSolutions Development\\app.js',
   env:{

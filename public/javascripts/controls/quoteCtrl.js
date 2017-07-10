@@ -131,6 +131,7 @@
 			//borrowed from http://jsfiddle.net/r4TMq/11/ and massaged
 
 			vm.init = function () {
+				console.log("Initialize");
 		    	//This works like getElementByID
     			vm.canvas = document.getElementById('canvas');
 		    	vm.context = vm.canvas.getContext('2d');
@@ -362,22 +363,6 @@
 		    
 	    	vm.cancel = function() {
 				$uibModalInstance.dismiss('cancel');
-	    	};
-
-	    	vm.saveCounterModal = function(width, length, shape, description, counters, groupIndex) {
-	    		//console.log(counters, groupIndex);
-	    		width = parseFloat(width);
-	    		length = parseFloat(length);
-	    		var counter = {
-	    			width: width,
-	    			length: length, 
-	    			shape: shape, 
-	    			description: description,
-	    			groupIndex: groupIndex,
-	    			counters: counters
-	    		};
-
-	    		$uibModalInstance.close(counter);
 	    	};
 
 	    	vm.cancel = function() {

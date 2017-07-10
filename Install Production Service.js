@@ -2,7 +2,7 @@ var Service = require('node-windows').Service;
 
 var svc = new Service({
   name:'SSL APP PROD1',
-  description: 'SurfacingSolutions Quote APP Development',
+  description: 'SurfacingSolutions Quote APP Production',
   script: 'C:\\\\Users\\sbailey\\Documents\\GitHub\\SurfacingSolutions\\app.js',
   env:{
     name: "NODE_ENV",
@@ -23,6 +23,7 @@ log.error('Something went wrong.');
 // process is available as a service.
 svc.on('install',function(){
   svc.start();
+  console.log("Installed Successfully");
 });
 
 svc.install();

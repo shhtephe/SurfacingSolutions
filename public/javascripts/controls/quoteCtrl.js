@@ -201,7 +201,7 @@
 		    	console.log(slab, startPositionX, startPositionY, resizedWidth, slab.length);
 		    	context.beginPath();
 		        context.rect(startPositionX, startPositionY, 850, resizedWidth );
-		        context.fillStyle = "#ccddff";
+		        context.fillStyle = "#ffffff";
 		        context.fill();
 		        context.lineWidth = 1;
 		        context.strokeStyle = "#000000";
@@ -228,7 +228,6 @@
 		    	context.beginPath();
 		    	context.font = "28px Bodoni";
 		        context.fillStyle = "#000000";
-
 		    	context.fillText(info, x, y);
 
 		    	//move y down one line
@@ -294,7 +293,7 @@
 		    	console.log(counter, startPositionY, startPositionX);
 		    	context.beginPath();
 		        context.rect(startPositionX, startPositionY, counter.counterWidth * slabMultiplier, counter.counterLength * slabMultiplier);
-		        context.fillStyle = "#783487";
+		        context.fillStyle = "#ffffff";
 		        context.fill();
 		        context.lineWidth = 1;
 		        context.strokeStyle = "#666666";
@@ -332,7 +331,7 @@
 		    	console.log("Starting positions: ", startPositionX, startPositionY);
 		    	context.beginPath();
 		        context.arc(startPositionX, startPositionY, counter.counterWidth * slabMultiplier, 0, 2*Math.PI, false);
-		        context.fillStyle = "#ccddff";
+		        context.fillStyle = "#ffffff";
 		        context.fill();
 		        context.lineWidth = 1;
 		        context.strokeStyle = "#666666";

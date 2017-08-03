@@ -140,6 +140,8 @@
 			    vm.canvas.width = 850;
 			    vm.canvas.height = 1100;
 			    vm.canvasDisplay = 'slabs';
+			    vm.context.fillStyle = "white";
+				vm.context.fillRect(0, 0, canvas.width, canvas.height);
 			    //context.globalAlpha = 1.0;
 			    //context.beginPath(); 
 
@@ -152,14 +154,16 @@
 
 		    vm.showCounters = function() {
 				vm.canvasDisplay = 'counters';
-				vm.context.clearRect(0, 0, vm.canvas.width, vm.canvas.height);
+				vm.context.fillStyle = "white";
+				vm.context.fillRect(0, 0, canvas.width, canvas.height);
 				//print Counters
 				drawCounters();
 		    };
 
 		    vm.showSlab = function() {
 				vm.canvasDisplay = 'slabs';
-				vm.context.clearRect(0, 0, vm.canvas.width, vm.canvas.height);
+				vm.context.fillStyle = "white";
+				vm.context.fillRect(0, 0, canvas.width, canvas.height);
 				//print slab
 				drawSlab(vm.data.material, vm.context);
 		    };
@@ -311,8 +315,8 @@
 		    	console.log(startPositionX, startPositionY, counter.counterWidth, info, counter)
 		    	startPositionY += (counter.counterLength * slabMultiplier / 2) - 30;
 		    	startPositionX += 30;
-		    	
 		    	context.beginPath();
+		    	//context.rotate(Math.PI/2);
 		    	context.font = "16px Bodoni";
 		        context.fillStyle = "#000000";
 

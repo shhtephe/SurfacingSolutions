@@ -215,7 +215,7 @@ Phone: {/vm.customer.homePhone/}</textarea>
 				<tr>
 			    	<td width="75%" class="blank"> </td>
 				    <td colspan="1" class="total-line">Total</td>
-				    <td class="total-value"><div align="right" id="total">{/vm.quote.totalPrice * 1.13 | currency:$/}</div></td>
+				    <td class="total-value"><div align="right" id="total">{/vm.quote.totalPrice * vm.quote.jobDifficulty * 1.13 | currency:$/}</div></td>
 				</tr>
 			</table>
 			<div id="signatures">

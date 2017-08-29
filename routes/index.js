@@ -250,7 +250,7 @@ renderNightmare = function(req, res, env) {
   //Create new nightmare ;)
   var screenshot = new nightmare()
   .goto(pageURL)
-  .wait(5000)
+  .wait(9000)
   .pdf(public_dir + PDFName)
   .run(function(err, nightmare) {
     console.log("Running Nightmare");

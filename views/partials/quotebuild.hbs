@@ -35,6 +35,8 @@
 				<br>
 				Quote Created By: {/vm.quote.account.firstName/} {/vm.quote.account.lastName/}
 				<br>
+				Last Saved By: {/vm.quote.lastSavedBy/}
+				<br>
 				<button type="button" style="btn" ng-click="vm.addGroup()">Create Group</button>
 				<br>
 				<hr style="background:#000000; border:0; height:7px" />
@@ -449,8 +451,8 @@
 							</tr>
 						</table>
 						<br>
-						Sheets required: <input type="number" ng-model='group.sheets' name='group.sheets' ng-change="vm.calcGroup(group.groupNumber, group.material)">
-						Quantity: <input type="number" ng-model='group.quantity' name='group.quantity' ng-change="vm.calcGroup(group.groupNumber, group.material)">
+						Sheets required: <input type="number" ng-model='group.sheets' name='group.sheets' ng-change="vm.calcGroupSearchGroupIndex(group.groupNumber, group.material)">
+						Quantity: <input type="number" ng-model='group.quantity' name='group.quantity' ng-change="vm.calcGroupSearchGroupIndex(group.groupNumber, group.material)">
 					</span> 	
 					<hr style="background:#000000; border:0; height:7px"/>
 				</div>
@@ -610,7 +612,7 @@
 	<div class="modal-footer">
 		<button type="button" style="btn" ng-click="vm.cancel()">Cancel</button>
 		<span ng-show="vm.checkIsNumber(counterLength, counterWidth, shape)">
-			<button type="button" style="btn" ng-click="vm.saveCounterModal(counterWidth, counterLength, shape, description, vm.counters, vm.groupIndex); shape=''; counterWidth=''; counterLength='';">Save Counter</button>
+			<button type="button" style="btn" ng-click="vm.saveCounterModal(counterWidth, counterLength, shape, description, vm.counters, vm.groupNumber); shape=''; counterWidth=''; counterLength='';">Save Counter</button>
 		</span>
 	</div>
 </script>

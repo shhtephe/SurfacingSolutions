@@ -331,7 +331,6 @@ renderNightmare = function(req, res, env) {
   });
 };
 
-
 router.post('/emailrender', function(req, res) {
   console.log("Email Render is running.");
 
@@ -496,8 +495,6 @@ router.post('/updatedb', function(req, res, next) {
   };
 });
 
-
-
 router.post('/updateremnants', function(req, res, next) {
   console.log(req.body);
   if(req.body.action === "update"){
@@ -579,8 +576,6 @@ router.post('/updateremnants', function(req, res, next) {
     });
   };
 });
-
-
 
 router.post('/savematerials', function(req, res, next) {
   console.log(req.body.action + ' materials Ran')

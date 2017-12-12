@@ -7,10 +7,11 @@ var quote = new Schema({
 	account: {
 		firstName: String,
 		lastName: String,
-		username: String,
+		userName: String,
 		phoneNumber: String,
-		email: String
+		email: String,
 	},
+	lastSavedBy: String,
 	quoteID: Number,
 	custCode: Number,
 	totalPrice: Number,

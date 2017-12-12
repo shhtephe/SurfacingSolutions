@@ -38,32 +38,33 @@
 
 		//***************************
 		//baby's first modal
-		vm.addCounter = function (groupIndex, counters) {
+		vm.addCounter = function (groupNumber, counters) {
 			//console.log(groupIndex, counters, size);
 	    	var modalInstance = $uibModal.open({
 		      animation: true,
 		      templateUrl: 'addcounter.html',
-		      controller: ['$uibModalInstance', 'groupIndex', 'counters', addCounterCtrl],
+		      controller: ['$uibModalInstance', 'groupNumber', 'counters', addCounterCtrl],
 		      controllerAs: 'vm',
 		      windowClass: 'counter-add-modal',
 		      resolve: {
-		        groupIndex: function() {return groupIndex},
+		        groupNumber: function() {return groupNumber},
 		        counters: function() {return counters}
 		        }
       	  	});
 
       	  	modalInstance.result.then(function (counter) {
       			//Save the countertop and put all the data back onto the main controller
-      			vm.calcCounter(parseFloat(counter.width), parseFloat(counter.length), counter.shape, counter.counters, counter.groupIndex, counter.description, true);  			 				
+      			console.log(counter.groupNumber);
+      			vm.calcCounter(parseFloat(counter.width), parseFloat(counter.length), counter.shape, counter.counters, counter.groupNumber, counter.description, true);  			 				
 			}, function () {
       		console.log('Modal dismissed at: ' + new Date());
     		});
 	    };
 
-	    var addCounterCtrl = function($uibModalInstance, groupIndex, counters) {
+	    var addCounterCtrl = function($uibModalInstance, groupNumber, counters) {
 	    	var vm = this;
 
-	    	vm.groupIndex = groupIndex;
+	    	vm.groupNumber = groupNumber;
 	    	vm.counters = counters;
 
 			vm.checkIsNumber = function(width, length, shape) {
@@ -81,8 +82,8 @@
 				
 			};
 
-	    	vm.saveCounterModal = function(width, length, shape, description, counters, groupIndex) {
-	    		//console.log(counters, groupIndex);
+	    	vm.saveCounterModal = function(width, length, shape, description, counters, groupNumber) {
+	    		console.log(counters, groupNumber);
 	    		width = parseFloat(width);
 	    		length = parseFloat(length);
 	    		var counter = {
@@ -90,7 +91,7 @@
 	    			length: length, 
 	    			shape: shape, 
 	    			description: description,
-	    			groupIndex: groupIndex,
+	    			groupNumber: groupNumber,
 	    			counters: counters
 	    		};
 
@@ -117,9 +118,9 @@
       	  	});
 
       	  	modalInstance.result.then(function (counter) {
-      			//Save the countertop and put all the data back onto the main controller
-      			//vm.calcCounter(parseFloat(counter.width), parseFloat(counter.length), counter.shape, counter.counters, counter.groupIndex, counter.description, true);  			 				
+      	  		//Nothing happens when the modal is 'saved'
 			}, function () {
+				//close modal
       		console.log('Modal dismissed at: ' + new Date());
     		});
 	    };
@@ -401,9 +402,11 @@
 		    for (var i=0; i < myArray.length; i++) {
 		    	//console.log("my array i", myArray[i], "property", property)
 		        if (myArray[i][property] === nameKey) {
+		            //console.log("Found... returning: ", i);
 		            return i;
 		        };
 		    };
+		    //console.log("Did not find " + nameKey + " in property '" + property +"' in array.", myArray);
 		};
 
 		vm.buildTerms = function(term){
@@ -528,6 +531,7 @@
 	  	};
 
 		vm.removeGroup = function(index) {
+			console.log(index, vm.quote.counterGroup[index])
 			var groupIndex = vm.arraySearch(index, vm.quote.counterGroup, 'groupNumber');
 			//subtract the group total from quote total
 			console.log(vm.quote, vm.quote.counterGroup[groupIndex], groupIndex)
@@ -560,9 +564,10 @@
 		};
 
 	  	//This is called from the add counter modal. Passes the values from the modal to the main page.
-		vm.calcCounter = function(width, length, shape, index, groupIndex, description, modal) {
+		vm.calcCounter = function(width, length, shape, counterIndex, groupIndex, description, modal) {
 			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
-		  	var groupIndex = vm.arraySearch(groupIndex, vm.quote.counterGroup, 'groupNumber');
+		  	//var groupIndex = vm.arraySearch(groupIndex, vm.quote.counterGroup, 'groupNumber');
+		  	console.log("Group Index", groupIndex, "vm.quote.counterGroup", vm.quote.counterGroup, "counter index", counterIndex);
 
 		//Obviously, we set some variables. 
 			var squareFootage = 0;
@@ -620,7 +625,7 @@
 				vm.quote.linearFootage = 0;
 			};
 			//"Save" the counter to vm.quote
-			vm.commitCounter(modal, pushObj, index, groupIndex);
+			vm.commitCounter(modal, pushObj, counterIndex, groupIndex);
 			//Update the addon quantities for the group and mandatory addon quantities and recalculate them 
 			vm.updateGroupAddons(groupIndex, shape, vm.quote.counterGroup[groupIndex].TAC);
 			//Do the same as above for mandatory addons
@@ -631,16 +636,18 @@
 			};
 		};
 
-		vm.commitCounter = function(modal, pushObj, index, groupIndex){
+		vm.commitCounter = function(modal, pushObj, counterIndex, groupNumber){
 			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
-	  		var groupIndex = vm.arraySearch(groupIndex, vm.quote.counterGroup, 'groupNumber');
+			console.log(groupNumber, vm.quote.counterGroup);
+	  		var groupIndex = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
 			//Commits data to arrays depending on whether it's an edit or a new save.
-			console.log(typeof vm.quote.counterGroup[groupIndex].counters[index] === "undefined", vm.quote.counterGroup[groupIndex].counters[index]);
-			if(typeof vm.quote.counterGroup[groupIndex].counters[index] === "undefined"){
+			console.log("Group Index", groupIndex, "Group Contents", vm.quote.counterGroup[groupIndex]);
+			console.log(typeof vm.quote.counterGroup[groupIndex].counters[counterIndex] === "undefined", vm.quote.counterGroup[groupIndex].counters[counterIndex]);
+			if(typeof vm.quote.counterGroup[groupIndex].counters[counterIndex] === "undefined"){
 				//push counter into vm.quote
 				vm.quote.counterGroup[groupIndex].counters.push(pushObj);	
 			} else{
-				vm.quote.counterGroup[groupIndex].counters[index] = pushObj;
+				vm.quote.counterGroup[groupIndex].counters[counterIndex] = pushObj;
 
 				if(typeof vm.quote.counterGroup[groupIndex].material !== 'undefined') {
 					vm.calcGroup(groupIndex, vm.quote.counterGroup[groupIndex].material);
@@ -994,6 +1001,12 @@
 			};
 		};
 		
+		vm.calcGroupSearchGroupIndex = function(groupNumber, material) {
+			var groupIndex = vm.arraySearch(groupNumber, vm.quote.counterGroup, 'groupNumber');
+			console.log(groupIndex);
+			vm.calcGroup(groupIndex, material);
+		};
+
 		/*
 		This function does the following:
 		checks if "sheets" or quantity has a numberic value or will not run.
@@ -1001,75 +1014,75 @@
 		*/
 		vm.calcGroup = function(groupIndex, material, overridePricing){
 			//Because of inverted group order, we have to search for the group in question, because I can't figure out a better/cooler way.
-	  		var index = vm.arraySearch(groupIndex, vm.quote.counterGroup, 'groupNumber');
+	  		console.log(groupIndex, vm.quote.counterGroup[groupIndex]);
 			//If sheets entered is not a number or undefined, don't calculate.
-			console.log(vm.quote.counterGroup[index].areaYield);
-			if((isNaN(parseFloat(vm.quote.counterGroup[index].sheets)) === false 
-				|| typeof vm.quote.counterGroup[index].sheets === "undefined") && (parseFloat(vm.quote.counterGroup[index].quantity) != 0) 
-				|| parseFloat(vm.quote.counterGroup[index].quantity) != 0
-				|| typeof vm.quote.counterGroup[index].counters[0].width ==='undefined'
-				|| typeof vm.quote.counterGroup[index].estimatedSheets === 'NaN'){
+			console.log("groupIndex", groupIndex, "Area Yield", vm.quote.counterGroup[groupIndex].areaYield, "groupIndex", groupIndex);
+			if((isNaN(parseFloat(vm.quote.counterGroup[groupIndex].sheets)) === false 
+				|| typeof vm.quote.counterGroup[groupIndex].sheets === "undefined") && (parseFloat(vm.quote.counterGroup[groupIndex].quantity) != 0) 
+				|| parseFloat(vm.quote.counterGroup[groupIndex].quantity) != 0
+				|| typeof vm.quote.counterGroup[groupIndex].counters[0].width ==='undefined'
+				|| typeof vm.quote.counterGroup[groupIndex].estimatedSheets === 'NaN'){
 				//do not let quantity go into negatives
 				if(vm.quote.counterGroup[groupIndex].quantity < 0){
 					vm.quote.counterGroup[groupIndex].quantity = 0;
 				};
 				//Define the sheets object
 				var sheets = {};
-				console.log(vm.quote.counterGroup[index].TAC, material.length, material.width, vm.quote.counterGroup[index].quantity, material);
+				console.log(vm.quote.counterGroup[groupIndex].TAC, material.length, material.width, vm.quote.counterGroup[groupIndex].quantity, material);
 				
 				//Estimate the number of sheets
 				//check for sheet size override, if either are not a number (null, blank wrong formatting, etc)
 				console.log(parseFloat(material.overrideWidth), parseFloat(material.overrideLength), isNaN(parseFloat(material.overrideWidth)), isNaN(parseFloat(material.overrideLength)));
 				if (isNaN(parseFloat(material.overrideWidth)) || isNaN(parseFloat(material.overrideLength))) {
-					vm.quote.counterGroup[index].estimatedSheets = (vm.quote.counterGroup[index].areaYield / (material.length * material.width/144)) * vm.quote.counterGroup[index].quantity;
+					vm.quote.counterGroup[groupIndex].estimatedSheets = (vm.quote.counterGroup[groupIndex].areaYield / (material.length * material.width/144)) * vm.quote.counterGroup[groupIndex].quantity;
 				}	else {
-					vm.quote.counterGroup[index].estimatedSheets = (vm.quote.counterGroup[index].areaYield / (parseFloat(material.overrideLength) * parseFloat(material.overrideWidth)/144)) * vm.quote.counterGroup[index].quantity;
+					vm.quote.counterGroup[groupIndex].estimatedSheets = (vm.quote.counterGroup[groupIndex].areaYield / (parseFloat(material.overrideLength) * parseFloat(material.overrideWidth)/144)) * vm.quote.counterGroup[groupIndex].quantity;
 				};
 
-				vm.quote.counterGroup[index].estimatedSheets = Math.round((vm.quote.counterGroup[index].estimatedSheets + 0.00001) * 100) / 100;
-				console.log(vm.quote.counterGroup[index].estimatedSheets);
+				vm.quote.counterGroup[groupIndex].estimatedSheets = Math.round((vm.quote.counterGroup[groupIndex].estimatedSheets + 0.00001) * 100) / 100;
+				console.log(vm.quote.counterGroup[groupIndex].estimatedSheets);
 				//If sheets has not been entered (is null) make sheets = estimated, then proceed with calculating
-				console.log(vm.quote.counterGroup[index].sheets, typeof vm.quote.counterGroup[index].sheets === 'undefined');
-				if (typeof vm.quote.counterGroup[index].sheets === 'undefined') {
-					vm.quote.counterGroup[index].sheets = vm.quote.counterGroup[index].estimatedSheets;
+				console.log(vm.quote.counterGroup[groupIndex].sheets, typeof vm.quote.counterGroup[groupIndex].sheets === 'undefined');
+				if (typeof vm.quote.counterGroup[groupIndex].sheets === 'undefined') {
+					vm.quote.counterGroup[groupIndex].sheets = vm.quote.counterGroup[groupIndex].estimatedSheets;
 					//round to 2 digits
-		  			vm.quote.counterGroup[index].sheets = parseFloat(vm.quote.counterGroup[index].sheets.toFixed(2));
+		  			vm.quote.counterGroup[groupIndex].sheets = parseFloat(vm.quote.counterGroup[groupIndex].sheets.toFixed(2));
 				};
 				//Calculate totals with material and number of sheets
-				sheets = vm.calcSheets(material, Math.round(((vm.quote.counterGroup[index].sheets + 0.00001) * 100) / 100), overridePricing);
+				sheets = vm.calcSheets(material, Math.round(((vm.quote.counterGroup[groupIndex].sheets + 0.00001) * 100) / 100), overridePricing);
 				//Set the quote pricing string
-				vm.quote.counterGroup[index].material.pricing = sheets.pricing;
-				//console.log(material[sheets.pricing], sheets.pricing, material, vm.quote.counterGroup[index].sheets);
-				vm.quote.counterGroup[index].GMC = material[sheets.pricing] * vm.quote.counterGroup[index].sheets;
-				vm.quote.counterGroup[index].GMC = parseFloat(vm.quote.counterGroup[index].GMC.toFixed(2));
+				vm.quote.counterGroup[groupIndex].material.pricing = sheets.pricing;
+				console.log(material[sheets.pricing], sheets.pricing, material, vm.quote.counterGroup[groupIndex].sheets);
+				vm.quote.counterGroup[groupIndex].GMC = material[sheets.pricing] * vm.quote.counterGroup[groupIndex].sheets;
+				vm.quote.counterGroup[groupIndex].GMC = parseFloat(vm.quote.counterGroup[groupIndex].GMC.toFixed(2));
 				//Set total quote GMC
-				vm.quote.GMC = vm.quote.counterGroup[index].GMC;
-				//console.log(vm.quote.counterGroup[index].GMC, index, vm.quote.GMC);
+				vm.quote.GMC = vm.quote.counterGroup[groupIndex].GMC;
+				//console.log(vm.quote.counterGroup[groupIndex].GMC, groupIndex, vm.quote.GMC);
 				//Set the total price to GMC then add up the addons to get total cost
-				vm.quote.counterGroup[index].totalPrice = vm.quote.counterGroup[index].GMC;	
+				vm.quote.counterGroup[groupIndex].totalPrice = vm.quote.counterGroup[groupIndex].GMC;	
 				//Set the total price as the material price, then add the addons
 				console.log(vm.quote.totalPrice);
-				vm.quote.totalPrice = vm.quote.counterGroup[index].GMC;
-				console.log(vm.quote.totalPrice, vm.quote.counterGroup[index].TAC);
+				vm.quote.totalPrice = vm.quote.counterGroup[groupIndex].GMC;
+				console.log(vm.quote.totalPrice, vm.quote.counterGroup[groupIndex].TAC);
 				//set the quote TAC
-				vm.quote.TAC = vm.quote.counterGroup[index].TAC * vm.quote.counterGroup[index].quantity;
+				vm.quote.TAC = vm.quote.counterGroup[groupIndex].TAC * vm.quote.counterGroup[groupIndex].quantity;
 
 				//Update the addon quantities for the group and mandatory addon quantities and recalculate them **THIS MIGHT BE FIRING TWICE IN DIFFERENT SPOTS. MIGHT REMOVE**
-				vm.updateGroupAddons(index, shape, vm.quote.counterGroup[index].TAC);
+				vm.updateGroupAddons(groupIndex, shape, vm.quote.counterGroup[groupIndex].TAC);
 				//Add the total price for each addon to the group total price
-				for (var i = vm.quote.counterGroup[index].addons.length - 1; i >= 0; i--) {
-					vm.quote.counterGroup[index].totalPrice += parseFloat(vm.quote.counterGroup[index].addons[i].totalPrice);
-					vm.quote.totalPrice += parseFloat(vm.quote.counterGroup[index].addons[i].totalPrice);
+				for (var i = vm.quote.counterGroup[groupIndex].addons.length - 1; i >= 0; i--) {
+					vm.quote.counterGroup[groupIndex].totalPrice += parseFloat(vm.quote.counterGroup[groupIndex].addons[i].totalPrice);
+					vm.quote.totalPrice += parseFloat(vm.quote.counterGroup[groupIndex].addons[i].totalPrice);
 				};
 				//Calc group material cost per square foot
-				vm.quote.counterGroup[index].GMCPSF = vm.quote.counterGroup[index].GMC / (vm.quote.counterGroup[index].TAC * vm.quote.counterGroup[index].quantity);
+				vm.quote.counterGroup[groupIndex].GMCPSF = vm.quote.counterGroup[groupIndex].GMC / (vm.quote.counterGroup[groupIndex].TAC * vm.quote.counterGroup[groupIndex].quantity);
 				//Calc GCPSF = total price divided by total area of sheets required
-				vm.quote.counterGroup[index].GCPSF = vm.quote.counterGroup[index].totalPrice / (vm.quote.counterGroup[index].TAC * vm.quote.counterGroup[index].quantity);
+				vm.quote.counterGroup[groupIndex].GCPSF = vm.quote.counterGroup[groupIndex].totalPrice / (vm.quote.counterGroup[groupIndex].TAC * vm.quote.counterGroup[groupIndex].quantity);
 				//This is for after it's calculated once, because it adds up all OTHER counters in their groups, and then adds the new value for group total 
-				if(typeof vm.quote.counterGroup[index].totalPrice !== 'undefined'){
+				if(typeof vm.quote.counterGroup[groupIndex].totalPrice !== 'undefined'){
 					for (var t = vm.quote.counterGroup.length - 1; t >= 0; t--) {
 						console.log(typeof(vm.quote.counterGroup[t].material), vm.quote.counterGroup[t].material === 'object')
-						if(t !== index && typeof(vm.quote.counterGroup[t].material) === 'object'){							
+						if(t !== groupIndex && typeof(vm.quote.counterGroup[t].material) === 'object'){							
 							console.log(t, vm.quote.counterGroup[t].TAC, vm.quote.counterGroup[t].totalPrice, vm.quote.counterGroup[t].GMC);
 							vm.quote.TAC += parseFloat(vm.quote.counterGroup[t].TAC) * vm.quote.counterGroup[t].quantity;
 							vm.quote.totalPrice += parseFloat(vm.quote.counterGroup[t].totalPrice);
@@ -1080,7 +1093,7 @@
 					vm.quote.TAC = Math.round((vm.quote.TAC + 0.00001) * 100) / 100;
 
 					//Once TAC has been calculated for the whole quote, get quantities for mandatory addons
-					vm.updateMandatoryAddons(index, vm.quote.TAC);
+					vm.updateMandatoryAddons(groupIndex, vm.quote.TAC);
 					//Add up all Mandatory addons to the total price!
 					for (var i = vm.quote.mandatoryAddons.length - 1; i >= 0; i--) {
 						vm.quote.totalPrice += parseFloat(vm.quote.mandatoryAddons[i].totalPrice);
@@ -1157,9 +1170,9 @@
 
 		vm.saveQuote = function(description, user) {
 			//save the quote
-			//Need to declare that it's sending a json doc
-			console.log(user, typeof user, vm.quote.account);
-			if(typeof vm.quote.account === 'undefined' || typeof vm.quote.account.userName == 'undefined'){
+			
+			//console.log("User", user, "Typeof user", typeof user, "vm account", vm.quote.account, "vm username", vm.quote.account.userName);
+			if(typeof vm.quote.account === 'undefined' || typeof vm.quote.account.userName === 'undefined'){
 				vm.quote.account = {
 				    userName : user.userName,
 				    firstName : user.firstName,
@@ -1168,7 +1181,9 @@
 				    email : user.email,
 				    phoneNumber : user.phoneNumber
 				};
-			};
+			}; 
+			vm.quote.lastSavedBy = user.userName;
+			//Need to declare that it's sending a json doc
 			$http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
 			$http.post('/savequote', {"quote":vm.quote}).
 	  		success(function(data, status, headers, config) {

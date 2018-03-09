@@ -276,7 +276,7 @@ renderNightmare = function(req, res, env) {
       var body = req.body.data.emailBody;
       console.log(req.body.data);
       if(req.body.data.description){
-        var emailSubject = "Surfacing Solutions Quote " + req.body.data.quoteID + " - " + req.body.data.description;//.substring(0,30)  
+        var emailSubject = "Surfacing Solutions Quote " + req.body.data.quoteID + " - " + req.body.data.description; 
       }
       else {
         var emailSubject = "Surfacing Solutions Quote " + req.body.data.quoteID;

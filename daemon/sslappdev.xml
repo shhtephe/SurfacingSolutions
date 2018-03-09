@@ -1,0 +1,26 @@
+<service>
+	<id>sslappdev.exe</id>
+	<name>SSL APP DEV</name>
+	<description>SurfacingSolutions Quote APP Development</description>
+	<executable>C:\Program Files\nodejs\node.exe</executable>
+	<logmode>rotate</logmode>
+	<argument>--harmony</argument>
+	<argument>C:\Users\stephenb\Documents\GitHub\DevSurfacingSolutions\node_modules\node-windows\lib\wrapper.js</argument>
+	<argument>--file</argument>
+	<argument>C:\Users\stephenb\Documents\GitHub\DevSurfacingSolutions\app.js</argument>
+	<argument>--log</argument>
+	<argument>SSL APP DEV wrapper</argument>
+	<argument>--grow</argument>
+	<argument>0.25</argument>
+	<argument>--wait</argument>
+	<argument>1</argument>
+	<argument>--maxrestarts</argument>
+	<argument>3</argument>
+	<argument>--abortonerror</argument>
+	<argument>n</argument>
+	<argument>--stopparentfirst</argument>
+	<argument>undefined</argument>
+	<stoptimeout>30sec</stoptimeout>
+	<env name="NODE_ENV" value="dev"/>
+	<workingdirectory>C:\Users\stephenb\Documents\GitHub\DevSurfacingSolutions</workingdirectory>
+</service>

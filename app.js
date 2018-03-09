@@ -18,15 +18,16 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
-//Handle prodcution or dev 
+//Handle prodcution or dev ports 
 if(process.env.NODE_ENV == 'dev') {
-    app.set('port', process.env.PORT || 8081);
+    app.set('port', 8081);
 } else if (process.env.NODE_ENV == 'production') {
-    app.set('port', process.env.PORT || 8080);   
+    app.set('port', 8080);   
 };
 app.listen(app.get('port'));
-console.log("Express has been started in " + process.env.NODE_ENV + " mode.");
 
+console.log("Express has been started in " + process.env.NODE_ENV + " mode.");
+console.log("Listening via port" + process.env.PORT +"." )
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));

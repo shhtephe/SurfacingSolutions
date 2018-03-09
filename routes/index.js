@@ -240,7 +240,8 @@ renderNightmare = function(req, res, env) {
   var public_dir = '.\\public\\images\\emailquote\\';
   var PDFName = req.body.data.quoteID + ' - ' + req.body.data.createdAt + '.pdf';
   if (env == "production") {
-    var pageURL = "http://" + req.hostname + ":8080" + req.body.data.url;
+    //var pageURL = "http://" + req.hostname + ":8080" + req.body.data.url;
+    pageURL = "http://localhost:8080" + req.body.data.url;
   } else if (env == "dev") {
     var pageURL = "http://" + req.hostname + ":8081" + req.body.data.url;
   };
@@ -275,7 +276,7 @@ renderNightmare = function(req, res, env) {
       var body = req.body.data.emailBody;
       console.log(req.body.data);
       if(req.body.data.description){
-        var emailSubject = "Surfacing Solutions Quote " + req.body.data.quoteID + " - " + req.body.data.description;//.substring(0,30)  
+        var emailSubject = "Surfacing Solutions Quote " + req.body.data.quoteID + " - " + req.body.data.description; 
       }
       else {
         var emailSubject = "Surfacing Solutions Quote " + req.body.data.quoteID;

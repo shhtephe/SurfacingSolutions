@@ -77,7 +77,7 @@
         };
 
         vm.saveEditRemnant = function(edit, remnantID) {
-        	console.log(reemnantID, edit);
+        	console.log(remnantID, edit);
             //search through vm.remnants for correct position (index changes when sorted)
             var search = vm.arraySearch(remnantID, vm.remnants, "remnantID");
         	vm.remnants[search].edit = false;

@@ -104,10 +104,7 @@ router.post('/removeQuote', function(req, res, next){
 //Creating a new quote:
 router.post('/newquote', function(req, res, next) {
   console.log(req.body);
-  createNewQuote(req.body.customer.custCode, res);
-  //var query = {};
-  //query["custCode"] = req.body.custCode;
-  
+  createNewQuote(res, req.body.customer, req.body.copyQuote, req.body.quote);
 });
 
 /*This runs when grabbing the quote*/
@@ -128,46 +125,55 @@ router.param('quotedata', function(req, res, next, quoteID) {
   });
 });
 
-createNewQuote = function(custCode, res) {
-    var search = mongoose.model('quote').findOne().sort({quoteID : "desc"}).exec(function(err, quote){
-    var quoteID;
-    console.log("Quote: ", quote);
-    //Search for highest quote number and increment that by one
-    if(quote == null){
-      quoteID = 1;  
-    }
-    else {
-      quoteID = quote.quoteID + 1
-    };
-    var totalPrice = 0,
-    jobDifficulty = 0,
-    counters = [];
-
-    console.log("quote ID!", quoteID);
-
-    var newQuote = new quotes({
-      quoteID: quoteID,
-      custCode: custCode,
-      totalPrice: totalPrice,
-      jobDifficulty: 1,
-      counterGroup: [],
-      showGCPSF: false
-    });
-
-    newQuote.save(function (err, quote) {
-      if (err) {return errorHandler(err);}
+createNewQuote = function(res, customer, copyQuote, quote) {
+    var search = mongoose.model('quote').findOne().sort({quoteID : "desc"}).exec(function(err, searchQuote){
+      var quoteID;
+      //console.log("Quote: ", quote);
+      //Search for highest quote number and increment that by one
+      if(quote == null){
+        quoteID = 1;  
+      }
       else {
-        // saved!
-        console.log("New quote saved");
-        //req.quote = quote;
-        //console.log("Param Quote");
-        //console.log(req.quote);
-        res.json(quote);
+        quoteID = searchQuote.quoteID + 1
+      };
+     
+      console.log("quote ID!", quoteID);
+      console.log(typeof copyQuote, copyQuote);
+      //console.log(quote);
+
+      if (copyQuote === "False") {
+        //set values for new quote
+        var newQuote = new quotes({
+          quoteID: quoteID,
+          custCode: customer.custCode,
+          totalPrice: 0,
+          jobDifficulty: 1,
+          counterGroup: [],
+          showGCPSF: false
+        });
+      } else if(copyQuote === "True") {
+        //replace current quoteID, replace customer and remove metadata
+        delete quote._id;
+        delete quote.createdAt;
+        delete quote.updatedAt;
+        quote.quoteID = quoteID;
+        quote.custCode = customer.custCode;
+        console.log("Modified Quote:", quote);
+
+        var newQuote = new quotes(quote);
+      } else {
+        res.sendStatus(500);
+      };
+      newQuote.save(function (err, quote) {
+        if (err) {console.log("Error:", err); return errorHandler(err);}
+        else {
+          // saved!
+          console.log("New quote saved");
+          res.json(quote);  
       };
     });
   });
 };
-
 router.get('/customer/:customer/quotedata/:quotedata', function(req, res, next) {
 console.log("Returning Quote")
   if (typeof req.quote[0]==="undefined") {

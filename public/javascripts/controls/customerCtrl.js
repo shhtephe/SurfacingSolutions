@@ -211,7 +211,7 @@
 		vm.newQuote = function(){
 			//Need to declare that it's sending a json doc
 			$http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
-			$http.post('/newquote', {customer : vm.customer}).
+			$http.post('/newquote', {customer : vm.customer, "copyQuote":"False"}).
 	  		success(function(data, status, headers, config) {
 		    	// this callback will be called asynchronously
 		    	// when the response is available

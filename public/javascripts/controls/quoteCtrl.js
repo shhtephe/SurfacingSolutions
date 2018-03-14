@@ -4,9 +4,9 @@
 	angular.module('surfacingSolutions')
 	.controller('quoteCtrl', quoteCtrl);
 
-	quoteCtrl.$inject = ['dataFactory', '$stateParams', '$http', '$scope', '$uibModal'];
+	quoteCtrl.$inject = ['dataFactory', '$stateParams', '$location', '$http', '$scope', '$uibModal'];
 
-	function quoteCtrl(dataFactory, $stateParams, $http, $scope, $uibModal) {
+	function quoteCtrl(dataFactory, $stateParams, $location, $http, $scope, $uibModal) {
 		//'this' replaces $scope
 		var vm = this;
 		//Used on quotebuild.hbs
@@ -34,12 +34,19 @@
 			function(reason) {
 				console.log(reason);
 			});		
-
+		//get customers for copy quote modal
+		dataFactory.getCustomers()
+			.then(function(data) {
+				vm.customers = data;
+			},
+			function(reason) {
+				console.log(reason);
+			});
 
 		//***************************
 		//baby's first modal
 		vm.addCounter = function (groupNumber, counters) {
-			//console.log(groupIndex, counters, size);
+			//console.log(groupNumber, counters);
 	    	var modalInstance = $uibModal.open({
 		      animation: true,
 		      templateUrl: 'addcounter.html',
@@ -102,8 +109,8 @@
 				$uibModalInstance.dismiss('cancel');
 	    	};
 	    };
-
 		//***************************	
+
 		//Visual render and print of countertop and materials
 		vm.counterRenderModal = function (counterGroup) {
 	    	var modalInstance = $uibModal.open({
@@ -375,6 +382,65 @@
     	};
 
 		//***************************
+		//Copy Quote Modal
+		vm.copyQuote = function (quote, currentUser, customers) {
+			var contactSelect = "";
+	    	var modalInstance = $uibModal.open({
+		      animation: true,
+		      templateUrl: 'copyQuote.html', 
+		      controller: ['$uibModalInstance', 'quote', 'currentUser', 'customers', copyQuoteCtrl], //This puts the variables into the modal controller
+		      controllerAs: 'vm',
+		      windowClass: 'copy-quote-modal',
+		      resolve: { //This injects the below variables into the modal
+		      	customers: function() {return customers},
+		        contactSelect: function() {return contactSelect},
+		        quote: function() {return quote},
+		        currentUser: function() {return currentUser}
+		        }
+      	  	});
+
+      	  	modalInstance.result.then(function (contactSelect) {
+      			//Save the countertop and put all the data back onto the main controller
+      			console.log(contactSelect);
+			}, function () {
+      		console.log('Modal dismissed at: ' + new Date());
+    		});
+	    };
+
+	    var copyQuoteCtrl = function($uibModalInstance, quote, currentUser, customers) {
+	    	var vm = this;
+	    	//console.log(quote, currentUser, customers)
+	    	vm.quote = quote;
+	    	vm.currentUser = currentUser;
+	    	vm.customers = customers;
+
+	    	vm.copyQuoteSave = function(contactSelect) {
+	    		//console.log(vm.quote, vm.currentUser, contactSelect);
+				//send copy HTTP call and navigate to that new quote page.
+				$http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
+				$http.post('/newquote', {"quote":vm.quote, "currentUser":vm.currentUser, "customer":contactSelect, "copyQuote":"True"}).
+		  		success(function(data, status, headers, config) {
+			    	// this callback will be called asynchronously
+			    	// when the response is available
+			    	console.log(data);
+			    	//redirect to the new page when created
+			    	//Example path: #/customer/100140/quotebuild/132
+			    	var path = "/customer/" + data.custCode + "/quotebuild/" + data.quoteID
+			    	$location.path(path);
+
+			  	}).
+		  		error(function(data, status, headers, config) {
+				    // called asynchronously if an error occurs
+				    // or server returns response with an error status.
+					//vm.addAlert("danger", "Error: Quote did not get copied");
+		  		});
+	    		$uibModalInstance.close(contactSelect);
+	    	};
+	    	vm.cancel = function() {
+				$uibModalInstance.dismiss('cancel');
+	    	};
+	    };
+	    //*******************************
 
 		//Stops user from leaving page and reminds them to save.
 	    $scope.$on('$stateChangeStart', function( event ) {
@@ -1168,21 +1234,21 @@
 			return(returnObj);
 		};
 
-		vm.saveQuote = function(description, user) {
+		vm.saveQuote = function(description, currentUser) {
 			//save the quote
 			
-			//console.log("User", user, "Typeof user", typeof user, "vm account", vm.quote.account, "vm username", vm.quote.account.userName);
-			if(typeof vm.quote.account === 'undefined' || typeof vm.quote.account.userName === 'undefined'){
+			//console.log("currentUser", currentUser, "Typeof currentUser", typeof currentUser, "vm account", vm.quote.account, "vm currentUsername", vm.quote.account.currentUserName);
+			if(typeof vm.quote.account === 'undefined' || typeof vm.quote.account.currentUserName === 'undefined'){
 				vm.quote.account = {
-				    userName : user.userName,
-				    firstName : user.firstName,
-				    lastName : user.lastName,
-				    accountType : user.accountType,
-				    email : user.email,
-				    phoneNumber : user.phoneNumber
+				    currentUserName : currentUser.currentUserName,
+				    firstName : currentUser.firstName,
+				    lastName : currentUser.lastName,
+				    accountType : currentUser.accountType,
+				    email : currentUser.email,
+				    phoneNumber : currentUser.phoneNumber
 				};
 			}; 
-			vm.quote.lastSavedBy = user.userName;
+			vm.quote.lastSavedBy = currentUser.currentUserName;
 			//Need to declare that it's sending a json doc
 			$http.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
 			$http.post('/savequote', {"quote":vm.quote}).

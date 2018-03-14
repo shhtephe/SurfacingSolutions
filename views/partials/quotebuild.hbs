@@ -3,12 +3,11 @@
     <div class="container">
     	    <div hl-sticky="" align="right" class="simple">
 				<span style="float:right">
-					<br>
 					<div class="btn-group" style="margin:5px 0 10px;">
+						<button type="button" class="btn btn-warning" ng-click="vm.copyQuote(vm.quote, currentUser, vm.customers)">Copy Quote</button>
 						<button type="button" class="btn" ng-click="vm.saveQuote(vm.quote.description, currentUser)">Update/Save Quote</button>
 						<a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotefinal" class="btn btn-default" target=""> Office Copy</a> 
-						<a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotesend" class="btn btn-default" target="">Client Copy</a> 
-						
+						<a ng-href="/#/customer/{/vm.customer.custCode/}/quotebuild/{/vm.quote.quoteID/}/quotesend" class="btn btn-default" target="">Client Copy</a>
 					</div>
 				</span>			
 			</div>
@@ -651,6 +650,31 @@
 		<button type="button" style="btn" ng-click="vm.cancel()">Cancel</button>
 	</div>
 </script>
+
+<!--Modal Code rendering Copy Quote -->
+<script type="text/ng-template" id="copyQuote.html">
+	<div>
+		<h3 class="modal-title">Copy Quote</h3>
+	</div>
+	<br>
+	<div id="modal-body" class="modal-body">
+		Choose a contact: 
+		<select name="contactSelect" ng-model="contactSelect" ng-options="customer.companyName for customer in vm.customers | 
+			unique: 'companyName' | orderBy:'companyName'">
+			<option value="">----Select----</option>
+		</select>
+	</div>
+	<div class="modal-footer">
+		<button type="button" style="btn" ng-click="vm.cancel()">Cancel</button>
+		<span ng-show="contactSelect">
+			<button type="button" style="btn" ng-click="vm.copyQuoteSave(contactSelect)">Copy Quote to Above Customer</button>
+		</span>
+	</div>
+</script>
+
+
+
+
 	<!--<br>
 	<u>Debug info:</u>
 	<br>

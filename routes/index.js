@@ -128,9 +128,9 @@ router.param('quotedata', function(req, res, next, quoteID) {
 createNewQuote = function(res, customer, copyQuote, quote) {
     var search = mongoose.model('quote').findOne().sort({quoteID : "desc"}).exec(function(err, searchQuote){
       var quoteID;
-      //console.log("Quote: ", quote);
+      console.log("Quote: ", searchQuote);
       //Search for highest quote number and increment that by one
-      if(quote == null){
+      if(searchQuote == null){
         quoteID = 1;  
       }
       else {

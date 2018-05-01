@@ -415,8 +415,6 @@
         console.log(vm.dataBase)
         if (vm.dataBase =="") {
           vm.errors = "Please Select a DB";
-        } else {
-
         };
 
         if (vm.importInputText.length > 0) {
@@ -432,7 +430,7 @@
             data : "",
             db : vm.dataBase
           };
-          //console.log(parseOutput);
+          console.log(parseOutput);
           if(!parseOutput.errors){
             jsonArray.data = JSON.parse(parseOutput);
             //console.log(jsonArray.data, jsonArray.data.length);

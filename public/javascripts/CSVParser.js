@@ -79,6 +79,7 @@ var CSVParser = {
         dataArray[i][j] = dataArray[i][j].replace("\t", "\\t");
         dataArray[i][j] = dataArray[i][j].replace("\n", "\\n");
         dataArray[i][j] = dataArray[i][j].replace("\r", "\\r");
+        dataArray[i][j] = dataArray[i][j].trim();
       };
     };
 
@@ -153,13 +154,7 @@ var CSVParser = {
         headerTypes[i] = "string"
       }
     }
-
-
-
-
-
     return {'dataGrid':dataArray, 'headerNames':headerNames, 'headerTypes':headerTypes, 'errors':this.getLog()}
-
   },
 
 

@@ -181,7 +181,7 @@
 				    // called asynchronously if an error occurs
 				    // or server returns response with an error status.
 					vm.addAlert("danger", "Error: Page not rendered.");
-		  			console.log("Failure!");
+		  			console.log("Failure!", data, status. headers, config);
 		  		});
 			};
 		};

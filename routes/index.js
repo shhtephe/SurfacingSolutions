@@ -275,7 +275,7 @@ renderNightmare = function(req, res, env) {
 
       var gutil = require('gulp-util'); //For Colour text in terminal
       var nodemailer = require("nodemailer");
-      var transporter = nodemailer.createTransport('smtps://pete%40surfacingsolutions.ca:Soccerball11@surfacing.dmtel.ca');
+      var transporter = nodemailer.createTransport('smtps://info%40surfacingsolutions.ca:SurfacingSolutions@smtp-relay.gmail.com');
 
       //console.log("Customer Data: ", req.body.data.cust);
       //Email body
@@ -292,7 +292,7 @@ renderNightmare = function(req, res, env) {
         var mailOptions = {
           from: req.body.data.account.email, // sender address
           to:  req.body.data.email, // list of receivers
-          cc: ["quotes@surfacingsolutions.ca", req.body.data.account.email],
+          cc: ["info@surfacingsolutions.ca", req.body.data.account.email],
           subject: emailSubject, // Subject line
           html: body, // html body
           attachments: [{

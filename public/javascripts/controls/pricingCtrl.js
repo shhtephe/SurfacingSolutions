@@ -419,7 +419,6 @@
 
         if (vm.importInputText.length > 0) {
           var parseOutput = CSVParser.parse(vm.importInputText, true, "tab", false, false);
-
           var dataGrid = parseOutput.dataGrid;
           var headerNames = parseOutput.headerNames;
           var headerTypes = parseOutput.headerTypes;

@@ -275,7 +275,7 @@ renderNightmare = function(req, res, env) {
 
       var gutil = require('gulp-util'); //For Colour text in terminal
       var nodemailer = require("nodemailer");
-      var transporter = nodemailer.createTransport('smtps://info%40surfacingsolutions.ca:SurfacingSolutions@smtp-relay.gmail.com');
+      var transporter = nodemailer.createTransport('smtps://info%40surfacingsolutions.ca:10counter11@smtp-relay.gmail.com');
 
       //console.log("Customer Data: ", req.body.data.cust);
       //Email body

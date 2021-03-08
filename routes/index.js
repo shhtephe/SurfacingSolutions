@@ -275,8 +275,19 @@ renderNightmare = function(req, res, env) {
 
       var gutil = require('gulp-util'); //For Colour text in terminal
       var nodemailer = require("nodemailer");
-      var transporter = nodemailer.createTransport('smtps://info%40surfacingsolutions.ca:10Counter11@smtp-relay.gmail.com');
 
+      /*App stopped working after several years of use. Trying to use an object instead of a URL*/
+      //var transporter = nodemailer.createTransport('smtps://info%40surfacingsolutions.ca:10Counter11@smtp-relay.gmail.com');
+      var transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        auth: {
+          type: 'OAuth2',
+          user: "info@surfacingsolutions.ca",
+          pass: "10Counter11"
+        }
+      });
       //console.log("Customer Data: ", req.body.data.cust);
       //Email body
       var body = req.body.data.emailBody;

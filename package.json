@@ -28,7 +28,7 @@
     "headless": "^1.0.0",
     "mongo": "^0.1.0",
     "mongodb": "^1.4.34",
-    "mongoose": "~4.4",
+    "mongoose": "~5.7",
     "mongoose-timestamp": "^0.4.0",
     "morgan": "~1.5.1",
     "nightmare": "^2.8.1",

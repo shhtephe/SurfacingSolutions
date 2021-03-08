@@ -27,7 +27,7 @@ if(process.env.NODE_ENV == 'dev') {
 app.listen(app.get('port'));
 
 console.log("Express has been started in " + process.env.NODE_ENV + " mode.");
-console.log("Listening via port" + process.env.PORT +"." )
+console.log("Listening via port " + app.get('port') + "." );
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
